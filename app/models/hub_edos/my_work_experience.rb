@@ -12,5 +12,9 @@ module HubEdos
       HubEdos::WorkExperience.new({user_id: @uid}).get
     end
 
+    def is_feature_enabled
+      false
+    end
+
   end
 end
