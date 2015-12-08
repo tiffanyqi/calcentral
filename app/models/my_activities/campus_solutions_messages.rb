@@ -22,7 +22,7 @@ module MyActivities
               type: 'campusSolutions',
               title: message[:descr],
               user_id: uid,
-              date: format_date(strptime_in_time_zone(message[:lastupddttm], "%Y-%m-%d-%H.%M.%S.000000")), # 2015-08-26-16.36.29.000000
+              date: format_date(strptime_in_time_zone(message[:lastupddttm], "%Y-%m-%d-%H.%M.%S.%N")), # 2015-12-01-14.09.04.701033
               sourceUrl: message[:url],
               url: message[:url]
             }
