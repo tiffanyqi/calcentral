@@ -30,7 +30,6 @@ module MyBadges
         studentInfo: StudentInfo.new(@uid).get
       }
       merge_google_badges feed
-      logger.debug "#{self.class.name} get_feed is #{feed.inspect}"
       feed
     end
 

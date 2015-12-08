@@ -38,27 +38,27 @@ module MyTasks
     def update_task(params, task_list_id="@default")
       body = format_google_update_task_request params
       google_proxy = GoogleApps::UpdateTask.new(user_id: @uid)
-      logger.debug "update_task, sending to Google (task_list_id, task_id, body): {#{task_list_id}, #{params["id"]}, #{body.inspect}}"
+      logger.debug "update_task where (task_list_id, task_id): {#{task_list_id}, #{params["id"]}}"
       return_response google_proxy.update_task(task_list_id, params["id"], body)
     end
 
     def insert_task(params, task_list_id="@default")
       body = format_google_insert_task_request params
       google_proxy = GoogleApps::InsertTask.new(user_id: @uid)
-      logger.debug "insert_task, sending to Google (task_list_id, body): {#{task_list_id}, #{body.inspect}}"
+      logger.debug "insert_task where task_list_id: #{task_list_id}"
       return_response google_proxy.insert_task(task_list_id, body)
     end
 
     def clear_completed_tasks(task_list_id="@default")
       google_proxy = GoogleApps::ClearTaskList.new(user_id: @uid)
-      logger.debug "clearing task list, sending to Google (task_list_id): {#{task_list_id}}"
+      logger.debug "clearing task list where task_list_id: #{task_list_id}"
       result = google_proxy.clear_task_list(task_list_id)
       {tasksCleared: result}
     end
 
     def delete_task(params, task_list_id="@default")
       google_proxy = GoogleApps::DeleteTask.new(user_id: @uid)
-      logger.debug "delete_task, sending to Google (task_list_id, params): {#{task_list_id}, #{params.inspect}}"
+      logger.debug "delete_task where task_list_id: #{task_list_id}"
       response  = google_proxy.delete_task(task_list_id, params[:task_id])
       {task_deleted: response}
     end
@@ -71,14 +71,11 @@ module MyTasks
         formatted_entry['due'] = Date.strptime(entry['dueDate']).in_time_zone.to_datetime
       end
       formatted_entry['notes'] = entry['notes'] if entry['notes']
-      logger.debug "Formatted body entry for google proxy update_task: #{formatted_entry.inspect}"
       formatted_entry
     end
 
     def format_google_delete_task_request(entry)
-      formatted_entry = entry.slice('id')
-      logger.debug "Formatted body entry for google proxy delete_task: #{formatted_entry.inspect}"
-      formatted_entry
+      entry.slice('id')
     end
 
     def format_google_update_task_request(entry)
@@ -90,7 +87,6 @@ module MyTasks
       if entry['dueDate'] && entry['dueDate']['dateTime']
         formatted_entry['due'] = Date.strptime(entry['dueDate']['dateTime']).in_time_zone.to_datetime
       end
-      logger.debug "Formatted body entry for google proxy update_task: #{formatted_entry.inspect}"
       formatted_entry
     end
 
@@ -127,8 +123,6 @@ module MyTasks
       if formatted_entry[:bucket] == 'Unscheduled'
         format_date_into_entry!(convert_date(entry['updated']), formatted_entry, :updatedDate)
       end
-
-      logger.debug "Formatted body response from google proxy - #{formatted_entry.inspect}"
       formatted_entry
     end
 

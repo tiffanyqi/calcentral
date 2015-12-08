@@ -42,7 +42,6 @@ module GoogleApps
         client = GoogleApps::Client.client.dup
         client.authorization = authorization
         request = client.generate_request(options=request_hash)
-        logger.debug "Google request is #{request.inspect}"
         client.execute(request)
       end
 
