@@ -21,7 +21,6 @@ module MyBadges
     def internal_fetch_counts(params = {})
       google_proxy = GoogleApps::MailList.new(user_id: @uid)
       google_mail_results = google_proxy.mail_unread
-      logger.debug "Processing GMail XML results: #{google_mail_results.inspect}"
       parse_feed google_mail_results
     end
 
@@ -44,8 +43,7 @@ module MyBadges
           end
         end
       rescue => e
-        logger.fatal "Error parsing XML output for GoogleApps::MailList: #{e}"
-        logger.debug "Full dump of xml: #{google_mail_results.response.body}"
+        logger.fatal "Error parsing GoogleApps::MailList response: #{e.message}\n#{e.backtrace.join "\n\t"}"
       end
       {
         count: count,
