@@ -49,7 +49,7 @@ module Oec
     end
 
     def find_first_matching_folder(title, parent=nil)
-      find_folders_by_title(title, folder_id(parent)).first
+      find_folders_by_title(title, parent_id: folder_id(parent)).first
     end
 
     def find_first_matching_item(title, parent=nil)
