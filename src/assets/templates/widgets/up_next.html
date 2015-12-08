@@ -62,8 +62,11 @@
     <div data-ng-if="!items.length && api.user.profile.hasGoogleAccessToken" class="cc-widget-text">
       You have no events scheduled for the rest of the day.
     </div>
-    <div data-ng-if="!items.length && !api.user.profile.hasGoogleAccessToken" class="cc-widget-text">
+    <div data-ng-if="!items.length && !api.user.profile.hasGoogleAccessToken && api.user.profile.officialBmailAddress" class="cc-widget-text">
       <div data-ng-include="'no_bconnected.html'" data-onload="mode='upnext'"></div>
+    </div>
+    <div data-ng-if="!items.length && !api.user.profile.hasGoogleAccessToken && !api.user.profile.officialBmailAddress" class="cc-widget-text">
+      Our records indicate that you do not currently have a bConnected account (UC Berkeley email and calendar). Please see <a href="https://bconnected.berkeley.edu/">bconnected.berkeley.edu</a> for more information about bConnected.
     </div>
 
   </div>
