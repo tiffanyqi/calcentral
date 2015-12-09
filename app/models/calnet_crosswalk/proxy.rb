@@ -7,6 +7,10 @@ module CalnetCrosswalk
     APP_ID = 'calnetcrosswalk'
     APP_NAME = 'Calnet Crosswalk'
 
+    def self.id_type
+      self.name.demodulize.sub(/\ABy/,'').upcase
+    end
+
     def initialize(options = {})
       super(Settings.calnet_crosswalk_proxy, options)
       initialize_mocks if @fake
@@ -31,7 +35,7 @@ module CalnetCrosswalk
 
     def get
       if @uid.blank? && !@fake
-        logger.error "Crosswalk called with empty UID!"
+        logger.error "Crosswalk called with empty #{self.class.id_type}!"
         return {
           errored: true
         }
@@ -39,10 +43,10 @@ module CalnetCrosswalk
       internal_response = self.class.smart_fetch_from_cache(id: instance_key) do
         get_internal
       end
-      if internal_response[:noStudentId] || internal_response[:statusCode] < 400
+      if internal_response[:notFound] || internal_response[:statusCode] < 400
         internal_response
       else
-        logger.error "Got Crosswalk error for UID #{@uid} with response #{internal_response}"
+        logger.error "Got Crosswalk error for #{self.class.id_type} #{@uid} with response #{internal_response}"
         {
           errored: true
         }
@@ -50,14 +54,18 @@ module CalnetCrosswalk
     end
 
     def get_internal
-      logger.info "Fake = #{@fake}; Making request to #{url} on behalf of user #{@uid}; cache expiration #{self.class.expires_in}"
+      logger.info "Fake = #{@fake}; Making request to #{url} on behalf of #{self.class.id_type} #{@uid}; cache expiration #{self.class.expires_in}"
       response = get_response(url, request_options)
       logger.debug "Remote server status #{response.code}, Body = #{response.body}"
-      feed = response.parsed_response
-      {
+      internal_response = {
         statusCode: response.code,
-        feed: feed
+        feed: response.parsed_response
       }
+      if response.code == 404 && response.parsed_response.nil?
+        logger.info "Requested #{self.class.id_type} #{@uid} not found in Crosswalk"
+        internal_response[:notFound] = true
+      end
+      internal_response
     end
 
     def request_options
@@ -87,7 +95,7 @@ module CalnetCrosswalk
       self.class.smart_fetch_from_cache({id: "#{@uid}/#{id_type}"}) do
         id = nil
         response = get
-        if response[:errored]
+        if response[:errored] || response[:notFound]
           return nil
         end
         feed = response[:feed]
@@ -107,7 +115,7 @@ module CalnetCrosswalk
       self.class.smart_fetch_from_cache({id: "#{@uid}/CALNET_UID"}) do
         id = nil
         response = get
-        if response[:errored]
+        if response[:errored] || response[:notFound]
           return nil
         end
         feed = response[:feed]
