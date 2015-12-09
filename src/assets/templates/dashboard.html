@@ -1,15 +1,15 @@
-<div class="medium-5 columns medium-push-3 cc-page-dashboard-column-b">
-  <div data-ng-include="'widgets/hookup_google_reminder.html'" data-ng-if="api.user.profile.officialBmailAddress"></div>
-  <div data-ng-include="'widgets/tasks.html'"></div>
-</div>
-
-<div class="medium-4 columns medium-push-3 cc-page-dashboard-column-c cc-column-last">
-  <div data-ng-include="'widgets/activity.html'"></div>
-</div>
-
-<div class="medium-3 columns medium-pull-9 cc-page-dashboard-column-a">
+<div class="medium-3 columns ">
   <div data-ng-include="'widgets/sir/sir.html'" data-ng-if="api.user.profile.features.csSir"></div>
   <div data-ng-include="'widgets/up_next.html'"></div>
   <div data-ng-include="'widgets/my_classes.html'"></div>
   <div data-ng-include="'widgets/my_groups.html'"></div>
+</div>
+
+<div class="medium-5 columns">
+  <div data-ng-include="'widgets/hookup_google_reminder.html'" data-ng-if="api.user.profile.officialBmailAddress"></div>
+  <div data-ng-include="'widgets/tasks.html'"></div>
+</div>
+
+<div class="medium-4 columns cc-column-last">
+  <div data-ng-include="'widgets/activity.html'"></div>
 </div>
