@@ -83,6 +83,8 @@ module HubEdos
           elsif affiliation[:type][:code] == 'GRAD' && affiliation[:statusCode] == 'ACT'
             result[:roles][:student] = true
             result[:ug_grad_flag] = 'G'
+          elsif affiliation[:type][:code] == 'APPLICANT' && affiliation[:statusCode] == 'ACT'
+            result[:roles][:applicant] = true
           end
         end
       end
@@ -167,4 +169,3 @@ module HubEdos
 
   end
 end
-
