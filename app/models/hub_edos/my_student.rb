@@ -26,6 +26,14 @@ module HubEdos
           merged[:feed][:student].merge!(hub_response[:feed]['student'])
         end
       end
+
+      # When we don't have any identifiers for this student, we should send a 404 to the front-end
+      if !merged[:errored] && !merged[:feed][:student]['identifiers']
+        merged[:statusCode] = 404
+        merged[:errored] = true
+        logger.warn("No identifiers found for student feed uid #{@uid} with feed #{merged}")
+      end
+
       merged
     end
 
