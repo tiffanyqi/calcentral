@@ -10,9 +10,9 @@ module GoogleApps
         @client ||= Google::APIClient.new(options={:application_name => "CalCentral", :application_version => "v1", :auto_refresh_token => true, :retries => 3})
       end
 
-      def discover_resource_method(api, resource, method)
+      def discover_resource_method(api, api_version, resource, method)
         begin
-          discover_api(api).send(resource.to_sym).send(method.to_sym)
+          discover_api(api, api_version).send(resource.to_sym).send(method.to_sym)
         rescue => e
           logger.fatal "#{name}: #{e.to_s} - Unable to resolve resource method"
           nil
@@ -65,8 +65,9 @@ module GoogleApps
         client.preferred_version(api).version
       end
 
-      def discover_api(api)
-        client.discovered_api(api, discover_version(api))
+      def discover_api(api, api_version=nil)
+        api_version ||= discover_version(api)
+        client.discovered_api(api, api_version)
       end
     end
 

@@ -7,8 +7,14 @@ module GoogleApps
     end
 
     def drive_list(optional_params = {}, page_limiter = nil)
-      request :api => 'drive', :resource => 'files', :method => 'list', :params => optional_params,
-              :page_limiter => page_limiter
+      request(
+        api: 'drive',
+        api_version: 'v2',
+        resource: 'files',
+        method: 'list',
+        params: optional_params,
+        page_limiter: page_limiter
+      )
     end
 
     def mock_request
