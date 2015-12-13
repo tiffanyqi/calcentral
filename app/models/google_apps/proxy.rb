@@ -31,7 +31,7 @@ module GoogleApps
     end
 
     def request(request_params={})
-      page_params = setup_page_params(request_params)
+      page_params = setup_page_params request_params
 
       result_pages = Enumerator.new do |yielder|
         logger.info "Making request with @fake = #{@fake}, params = #{request_params}"
@@ -139,15 +139,18 @@ module GoogleApps
       end
     end
 
-
     def setup_page_params(request_params)
+      resource_method = GoogleApps::Client.discover_resource_method(
+        request_params[:api],
+        request_params[:api_version],
+        request_params[:resource],
+        request_params[:method]
+      )
       {
         params: request_params[:params],
         body: request_params[:body],
         headers: request_params[:headers],
-        resource_method: GoogleApps::Client.discover_resource_method(request_params[:api],
-                                                                    request_params[:resource],
-                                                                    request_params[:method]),
+        resource_method: resource_method,
         page_limiter: request_params[:page_limiter]
       }
     end
