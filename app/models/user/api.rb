@@ -52,7 +52,10 @@ module User
       oracle_roles = (@oracle_attributes && @oracle_attributes[:roles]) || {}
       edo_roles = (@edo_attributes && @edo_attributes[:roles]) || {}
       if is_sis_profile_visible? && edo_roles.respond_to?(:slice)
-        oracle_roles.merge edo_roles.slice(*WHITELISTED_EDO_ROLES)
+        edo_roles_to_merge = edo_roles.slice *WHITELISTED_EDO_ROLES
+        # While we're in the split-brain stage, Oracle views remain our most trusted source on ex-student status.
+        edo_roles_to_merge.delete(:student) if oracle_roles[:exStudent]
+        oracle_roles.merge edo_roles_to_merge
       else
         oracle_roles
       end

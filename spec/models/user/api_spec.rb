@@ -295,6 +295,21 @@ describe User::Api do
       end
       include_examples 'handling bad behavior'
     end
+
+    context 'when ex-student is incorrectly reported active' do
+      let(:uid) { '2040' }
+      let(:badly_behaved_edo_attributes) do
+        {
+          roles: {
+            student: true
+          }
+        }
+      end
+      it 'should give precedence to campus Oracle on ex-student status' do
+        expect(feed[:roles][:exStudent]).to eq true
+        expect(feed[:roles][:student]).to eq false
+      end
+    end
   end
 
   context 'proper cache handling' do
