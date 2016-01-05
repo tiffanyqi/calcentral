@@ -245,7 +245,6 @@ body {
     padding-right: 18px;
   }
   .cc-icon-status-person-layover {
-    background: $cc-color-red-dark;
     border-radius: 50%;
     cursor: pointer;
     font-size: 8px;
@@ -257,6 +256,13 @@ body {
     position: absolute;
     top: -2px;
     z-index: 1;
+  }
+  .cc-icon-status-person-layover-red {
+    background: $cc-color-red-dark;
+  }
+  .cc-icon-status-person-layover-white {
+    background: $cc-color-white;
+    color: $cc-color-dark-grey;
   }
   .cc-popover-gear {
     .cc-header-icon {
