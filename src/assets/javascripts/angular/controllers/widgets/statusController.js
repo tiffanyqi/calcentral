@@ -17,7 +17,7 @@ angular.module('calcentral.controllers').controller('StatusController', function
 
     $scope.studentInfo = data.studentInfo;
 
-    if (_.get(data, 'studentInfo.regStatus.code') !== null) {
+    if (_.get(data, 'studentInfo.regStatus.code')) {
       $scope.hasRegistrationData = true;
     }
     if (_.get(data, 'studentInfo.regStatus.needsAction') && apiService.user.profile.features.regstatus) {
