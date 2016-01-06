@@ -57,7 +57,11 @@ module Calendar
     end
 
     def self.terms
-      [Berkeley::Terms.fetch.current, Berkeley::Terms.fetch.next, Berkeley::Terms.fetch.future]
+      [
+        Berkeley::Terms.fetch.current,
+        Berkeley::Terms.fetch.next,
+        Berkeley::Terms.fetch.future
+      ].compact
     end
 
     private
