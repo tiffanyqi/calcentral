@@ -74,7 +74,7 @@
       <div class="cc-clearfix" data-ng-if="task.completedDate && task.dueDate">Due Date:
         <span data-ng-bind="task.dueDate.epoch * 1000 | dateInYearFilter:'MM/dd'"></span>
       </div>
-      <div data-cc-compile-directive="task.notes | linky" class="cc-break-word cc-clearfix cc-text-pre-line"></div>
+      <div data-ng-bind-html="task.notes | linky" class="cc-break-word cc-clearfix cc-text-pre-line"></div>
 
       <div class="cc-clearfix" data-ng-if="task.cs.responsibleContactEmail">
         <strong>Contact:</strong>
