@@ -6,7 +6,7 @@
       data-cc-loading-process="Loading...">
     </div>
   </li>
-  <li class="cc-popover-item" data-ng-if="studentInfo.regStatus.needsAction && api.user.profile.features.regstatus">
+  <li class="cc-popover-item" data-ng-if="api.user.profile.roles.student && studentInfo.regStatus.needsAction && api.user.profile.features.regstatus">
     <a href="/academics">
       <div class="cc-launcher-status-description">
         <i class="fa fa-exclamation-circle cc-icon-red"></i>
@@ -15,7 +15,7 @@
       </div>
     </a>
   </li>
-  <li class="cc-popover-item" data-ng-if="studentInfo.regBlock.needsAction || studentInfo.regBlock.errored">
+  <li class="cc-popover-item" data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)">
     <a href="/academics">
       <div class="cc-launcher-status-description">
         <i class="fa"

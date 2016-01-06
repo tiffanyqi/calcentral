@@ -11,7 +11,7 @@ angular.module('calcentral.controllers').controller('StatusController', function
   var hasLoaded = false;
 
   var loadStudentInfo = function(data) {
-    if (!data.studentInfo) {
+    if (!data.studentInfo || !apiService.user.profile.roles.student) {
       return;
     }
 
