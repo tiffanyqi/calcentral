@@ -70,13 +70,15 @@ describe Calendar::Queries do
         expect(subject[2].slug).to eq 'summer-2014'
       end
     end
-    # Fall 2014 is the last term in the fake test data for CALCENTRAL_TERM_INFO_VW)
-    context 'in Fall 2014' do
-      before(:each) { Settings.terms.stub(:fake_now).and_return(DateTime.parse('2014-10-10')) }
-      it 'should return Fall 2014' do
-        expect(subject[0].slug).to eq 'fall-2014'
+    # Summer 2016 is the last term in the fake test data for CALCENTRAL_TERM_INFO_VW)
+    context 'in Summer 2016' do
+      before(:each) { Settings.terms.stub(:fake_now).and_return(DateTime.parse('2016-7-10')) }
+      it 'should return Summer 2016' do
+        expect(subject[0].slug).to eq 'summer-2016'
+      end
+      it 'should screen out nil values for terms not in database' do
         if Calendar::Queries.test_data?
-          expect(subject.length).to eq 3
+          expect(subject).to have(1).item
         end
       end
     end

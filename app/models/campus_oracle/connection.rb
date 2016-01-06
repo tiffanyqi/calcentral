@@ -9,14 +9,12 @@ module CampusOracle
     end
 
     def self.terms_query_clause(table, terms)
-      if !terms.blank?
-        clause = 'and ('
-        terms.each_index do |idx|
-          clause.concat(' or ') if idx > 0
-          clause.concat("(#{table}.term_cd=#{connection.quote(terms[idx].code)} and #{table}.term_yr=#{terms[idx].year.to_i})")
+      terms.try :compact!
+      if terms.present?
+        term_clauses = terms.map do |term|
+          "(#{table}.term_cd=#{connection.quote(term.code)} and #{table}.term_yr=#{term.year.to_i})"
         end
-        clause.concat(')')
-        clause
+        "and (#{term_clauses.join ' or '})"
       else
         ''
       end
