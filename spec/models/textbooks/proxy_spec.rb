@@ -65,21 +65,14 @@ describe Textbooks::Proxy do
       end
     end
 
-    describe 'order-dependent tests work from recorded data' do
-      subject { Textbooks::Proxy.new({
-        course_catalog: course_catalog,
-        dept: dept,
-        section_numbers: section_numbers,
-        slug: slug,
-        fake: true
-      }).get }
+    context 'fake proxy' do
+      let(:fake_proxy) do
+        Textbooks::Proxy.new(fake: true, course_catalog: '109G', dept: 'POL SCI', section_numbers: ['001'], slug: 'fall-2014')
+      end
+      subject { fake_proxy.get }
 
-      context 'a correct author and title' do
-        let(:course_catalog) { '109G' }
-        let(:dept) { 'POL SCI' }
-        let(:section_numbers) { ['001'] }
-        let(:slug) { 'fall-2014' }
-        it 'provides a bookstore link to get the non-ISBN text' do
+      context 'good fixture data' do
+        it 'properly transforms bookstore feed' do
           it_is_a_normal_server_response
           it_has_at_least_one_title
           items = subject[:books][:items]
@@ -88,8 +81,23 @@ describe Textbooks::Proxy do
         end
       end
 
+      context 'feed including malformed item' do
+        before do
+          fake_proxy.override_json do |json|
+            json.first['materials'][3] = {
+              ean: 'No Number Nonsense',
+              title: ' ()',
+              author: nil
+            }
+          end
+        end
+        it 'logs error and skips bad entry' do
+          expect(Rails.logger).to receive(:error).with /invalid ISBN/
+          it_is_a_normal_server_response
+          expect(subject[:books][:items]).to have(3).items
+        end
+      end
     end
-
   end
 
   describe '#get_as_json' do
