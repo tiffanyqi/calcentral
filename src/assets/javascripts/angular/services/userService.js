@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var angular = require('angular');
 
 angular.module('calcentral.services').service('userService', function($http, $location, $route, analyticsService, httpService, utilService) {
@@ -74,10 +75,25 @@ angular.module('calcentral.services').service('userService', function($http, $lo
   };
 
   /**
+   * Set extra properties for a user
+   */
+  var setExtraProperties = function(profile) {
+    if (profile.roles) {
+      // Set this boolean to true when they only have the applicant role
+      profile.isApplicantOnly = (_.size(profile.roles) === 1 && profile.roles.applicant);
+    }
+
+    return profile;
+  };
+
+  /**
    * Set the current user information
    */
   var handleUserLoaded = function(data) {
     angular.extend(profile, data);
+
+    // Set extra properties on the profile
+    profile = setExtraProperties(profile);
 
     events.isLoaded = true;
     // Check whether the current user is authenticated or not
