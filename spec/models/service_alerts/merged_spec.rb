@@ -1,5 +1,5 @@
 describe ServiceAlerts::Merged do
-  let(:feed) { ServiceAlerts::Merged.new.get_feed }
+  let(:feed) { ServiceAlerts::Merged.new.get_feed_internal }
 
   shared_examples 'a feed with a release note' do
     it 'should include a well-formed release note' do

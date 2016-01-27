@@ -1,7 +1,7 @@
 module ServiceAlerts
   class Merged
     include Cache::CachedFeed
-    include Cache::JsonAddedCacher
+    include Cache::JsonifiedFeed
 
     def get_feed_internal
       feed = {}
@@ -13,7 +13,7 @@ module ServiceAlerts
     end
 
     def instance_key
-      self.class.cache_key
+      nil
     end
 
   end
