@@ -71,8 +71,8 @@ module HubEdos
         response = get_response(url, opts)
         logger.debug "Remote server status #{response.code}, Body = #{response.body.force_encoding('UTF-8')}"
         if response.code == 404
-          if response['StudentResponse'] && response['StudentResponse']['message'] == 'Student Not Found'
-            logger.warn "Student Not Found for UID #{@uid}, Campus Solutions ID #{@campus_solutions_id}"
+          if response['StudentResponse'] && response['StudentResponse']['message'].in?(['Student Not Found', 'Data not found.'])
+            logger.warn "Response '#{response['StudentResponse']['message']}' for UID #{@uid}, Campus Solutions ID #{@campus_solutions_id}"
             feed = build_feed response
             student_not_found = true
           else
