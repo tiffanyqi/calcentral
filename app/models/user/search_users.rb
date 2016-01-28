@@ -10,14 +10,15 @@ module User
       self.class.fetch_from_cache "#{@id}" do
         if Settings.features.cs_profile
           results = []
-          [CalnetCrosswalk::ByUid, CalnetCrosswalk::BySid].each do |proxy_class|
+          [CalnetCrosswalk::ByUid, CalnetCrosswalk::BySid, CalnetCrosswalk::ByCsId].each do |proxy_class|
             proxy = proxy_class.new(user_id: @id)
             sid = proxy.lookup_student_id
             uid = proxy.lookup_ldap_uid
             if sid.present? || uid.present?
               results << {
                 'ldap_uid' => uid,
-                'student_id' => sid
+                'student_id' => sid,
+                'campus_solutions_id' => proxy.lookup_campus_solutions_id
               }
             end
           end
