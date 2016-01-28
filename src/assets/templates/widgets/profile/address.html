@@ -1,0 +1,31 @@
+<div>
+  <label for="cc-page-widget-profile-address-country">
+    <span data-ng-if="isWorkExperience"><strong>Country</strong> <span class="cc-text-light">(Required)</span> </span>
+    <span data-ng-if="!isWorkExperience">Country <span class="cc-text-light">(Required)</span> </span>
+  </label>
+</div>
+<div class="cc-select">
+  <select data-ng-options="country.country as country.descr for country in countries" data-ng-model="currentObject.data.country" id="cc-page-widget-profile-address-country" required aria-required="true" />
+</div>
+
+<div data-cc-spinner-directive="currentObject.stateFieldLoading">
+  <div data-ng-repeat="field in currentObject.fields" data-ng-if="field.field !== 'country'">
+    <div data-ng-if="field.field !== 'state'">
+      <label data-ng-attr-for="cc-page-widget-profile-field-{{$index}}">
+        <strong data-ng-if="isWorkExperience" data-ng-bind="field.label"></strong>
+        <span data-ng-if="!isWorkExperience" data-ng-bind="field.label"></span>
+      </label>
+      <input type="text" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-model="currentObject.data[field.field]" data-ng-attr-maxlength="{{field.length}}" />
+    </div>
+    <div data-ng-if="field.field === 'state' && states.length">
+      <label data-ng-attr-for="cc-page-widget-profile-field-{{$index}}">
+        <span data-ng-bind="field.label"></span>
+      </label>
+      <div class="cc-select">
+        <select data-ng-options="state.state as state.descr for state in states" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-model="currentObject.data[field.field]">
+          <option value="" data-ng-bind-template="-- Choose {{field.label}} --"></option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

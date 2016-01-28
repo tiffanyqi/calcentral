@@ -10,34 +10,34 @@ describe CampusSolutions::WorkExperience do
       let(:params) { {
         bogus: 1,
         invalid: 2,
-        addressType: 'HOME'
+        titleLong: 'Karate Instructor'
       } }
       subject { proxy.filter_updateable_params(params) }
       it 'should strip out invalid fields' do
-        expect(subject.keys.length).to eq 19
+        expect(subject.keys.length).to eq 14
         expect(subject[:bogus]).to be_nil
         expect(subject[:invalid]).to be_nil
-        expect(subject[:addressType]).to eq 'HOME'
+        expect(subject[:titleLong]).to eq 'Karate Instructor'
       end
     end
 
     context 'converting params to Campus Solutions field names' do
       let(:params) { {
-        addressType: 'HOME'
+        hoursPerWeek: '40'
       } }
       subject {
         result = proxy.construct_cs_post(params)
         MultiXml.parse(result)['Prior_Work_Exp']
       }
       it 'should convert the CalCentral params to Campus Solutions params without exploding on bogus fields' do
-        expect(subject['ADDRESS_TYPE']).to eq 'HOME'
+        expect(subject['HOURS_PER_WEEK']).to eq '40'
       end
     end
 
     context 'performing a post' do
       let(:params) { {
-        addressType: 'HOME',
-        isRetired: 'N'
+        employmentDescr: 'Millionaire',
+        country: 'USA'
       } }
       subject {
         proxy.get
@@ -50,24 +50,19 @@ describe CampusSolutions::WorkExperience do
 
   context 'with a real external service', testext: true, ignore: true  do
     let(:params) { {
-      sequenceNbr: '1',
-      extOrganizationId: '9000000008',
-      isRetired: 'N',
-      workExpAddrType: 'NONE',
+      sequenceNbr: '',
+      employmentDescr: 'Petting Zoo',
       country: 'USA',
-      addressType: 'HOME',
       city: 'ventura',
       state: 'CA',
-      phoneType: '',
       phone: '1234',
-      startDt: '2012-08-11',
-      endDt: '2015-08-11',
-      retirementDt: '',
+      startDt: '08/11/2012',
+      endDt: '08/11/2015',
       titleLong: 'Test Title',
       employFrac: '10',
       hoursPerWeek: '4',
       endingPayRate: '10000',
-      currencyCd: 'USD',
+      currencyType: 'USD',
       payFrequency: 'M'
     } }
     let(:proxy) { CampusSolutions::WorkExperience.new(fake: false, user_id: user_id, params: params) }

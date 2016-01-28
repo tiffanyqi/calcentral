@@ -12,6 +12,7 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
   // var urlLanguageCodes = '/dummy/json/language_codes.json';
   var urlLanguageCodes = '/api/campus_solutions/language_code';
   // var urlPerson = '/dummy/json/student_with_languages.json';
+  var urlCurrencies = '/api/campus_solutions/currency_code';
   var urlPerson = '/api/edos/student';
   var urlStates = '/api/campus_solutions/state';
   var urlTypes = '/api/campus_solutions/translate';
@@ -26,6 +27,7 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
   var urlPostLanguage = '/api/campus_solutions/language';
   var urlPostName = '/api/campus_solutions/person_name';
   var urlPostPhone = '/api/campus_solutions/phone';
+  var urlPostWorkExperience = '/api/campus_solutions/work_experience';
 
   // Delete
   var deleteAddress = function(options) {
@@ -40,6 +42,9 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
   var deletePhone = function(options) {
     return $http.delete(urlPostPhone + '/' + options.type, options);
   };
+  var deleteWorkExperience = function(options) {
+    return $http.delete(urlPostWorkExperience + '/' + options.sequenceNbr, options);
+  };
 
   // Get - General
   var getAddressFields = function(options) {
@@ -50,6 +55,9 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
   };
   var getLanguageCodes = function(options) {
     return apiService.http.request(options, urlLanguageCodes);
+  };
+  var getCurrencies = function(options) {
+    return apiService.http.request(options, urlCurrencies);
   };
   var getPerson = function(options) {
     return apiService.http.request(options, urlPerson);
@@ -91,13 +99,18 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
   var postPhone = function(options) {
     return $http.post(urlPostPhone, options);
   };
+  var postWorkExperience = function(options) {
+    return $http.post(urlPostWorkExperience, options);
+  };
 
   return {
     deleteAddress: deleteAddress,
     deleteEmail: deleteEmail,
     deleteLanguage: deleteLanguage,
     deletePhone: deletePhone,
+    deleteWorkExperience: deleteWorkExperience,
     getCountries: getCountries,
+    getCurrencies: getCurrencies,
     getAddressFields: getAddressFields,
     getLanguageCodes: getLanguageCodes,
     getPerson: getPerson,
@@ -111,6 +124,7 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
     postEmail: postEmail,
     postLanguage: postLanguage,
     postName: postName,
-    postPhone: postPhone
+    postPhone: postPhone,
+    postWorkExperience: postWorkExperience
   };
 });
