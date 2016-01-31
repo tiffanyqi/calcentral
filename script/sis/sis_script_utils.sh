@@ -28,7 +28,7 @@ validate_api_response() {
     echo "      [ERROR] File not found: ${path_to_file}"
     echo "               Absolute URL: ${url}"
   else
-    error_count=$(grep -i 'error\|unable to find a routing\|not authorized' ${path_to_file} | wc -l)
+    error_count=$(grep -i 'error\|unable to find a routing\|not authorized\|no service was found' ${path_to_file} | wc -l)
     if [ "${error_count}" -ne "0" ]; then
       echo "      [WARN] Errors found in ${path_to_file}"
       echo "             Absolute URL: ${url}"
