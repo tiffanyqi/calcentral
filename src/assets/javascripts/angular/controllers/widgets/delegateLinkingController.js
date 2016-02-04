@@ -34,6 +34,7 @@ angular.module('calcentral.controllers').controller('DelegateLinkingController',
 
   var showLinkedStudents = function() {
     // TODO: We're waiting on design and text, SISRP-11142
+    // apiService.util.redirectToToolbox();
   };
 
   $scope.getTermsAndConditions = function() {
