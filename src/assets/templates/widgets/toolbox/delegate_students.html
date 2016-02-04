@@ -22,10 +22,10 @@
               <strong class="cc-text-big" data-ng-bind="student.fullName"></strong>
               <div>
                 <div class="cc-text-small" data-ng-if="student.privileges.phone">
-                  (TBD person-or-phone-only privilege)
+                  By Phone and In-Person Only
                 </div>
                 <div class="cc-text-small" data-ng-if="!student.privileges.phone">
-                  No Privileges.
+                  No Privileges
                 </div>
               </div>
             </div>
@@ -34,12 +34,19 @@
       </ul>
       <hr>
       <div>
+        <p data-ng-if="showPhoneInPersonPrivilegesMessage">
+          <!-- using the p tag for bottom padding/margin which divs don't have -->
+          <strong>
+            By Phone and In-Person Only:
+          </strong>
+          The indicated student(s) have granted you phone and in-person privileges only. You have no online privileges.
+        </p>
         <p data-ng-if="showNoPrivilegesMessage">
           <!-- using the p tag for bottom padding/margin which divs don't have -->
           <strong>
             No privileges:
           </strong>
-          The indicated student(s) above have not granted you any privileges.
+          The indicated student(s) have not granted you any privileges.
         </p>
         <div>
           <strong>

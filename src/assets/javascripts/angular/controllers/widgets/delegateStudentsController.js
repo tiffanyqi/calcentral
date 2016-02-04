@@ -37,11 +37,20 @@ angular.module('calcentral.controllers').controller('DelegateStudentsController'
     student.delegateAccess = viewable;
 
     /**
-     * If at least one student grants no privileges, this flag let's us show the
+     * If at least one student grants no privileges, this flag lets us show the
      * global 'No privileges' explanatory paragraph in the template.
      */
     if (!viewable && !$scope.showNoPrivilegesMessage && !student.privileges[phone]) {
       $scope.showNoPrivilegesMessage = true;
+    }
+
+    /**
+     * If at least one student grants only phone privilege, this flag lets us
+     * show the global 'phone-and-in-person privileges' explanatory paragraph in
+     * the template.
+     */
+    if (!viewable && !$scope.showPhoneInPersonPrivilegesMessage && student.privileges[phone]) {
+      $scope.showPhoneInPersonPrivilegesMessage = true;
     }
   };
 
@@ -64,13 +73,15 @@ angular.module('calcentral.controllers').controller('DelegateStudentsController'
     return delegateFactory.getStudents().then(function(data) {
       angular.extend($scope, _.get(data, 'data.feed'));
 
+      var students = _.get(data, 'data.feed.students');
       /**
        * TODO: replace setStudentPhotoApi() function with back-end photo URL
        * property (see above).
        */
-      _.each($scope.students, setStudentPhotoApi);
+      _.each(students, setStudentPhotoApi);
 
-      _.each($scope.students, setDelegateAccess);
+      _.each(students, setDelegateAccess);
+      $scope.students = students;
       $scope.delegateStudents.isLoading = false;
     });
   };
