@@ -134,9 +134,10 @@ if [ "${yml_features_cs_delegated_access}" == "true" ] ; then
 fi
 
 if [ "${yml_features_cs_enrollment_card}" == "true" ] ; then
-  API_CALLS+=("/UC_SR_CURR_TERMS.v1/GetCurrentItems?EMPLID=#{CAMPUS_SOLUTIONS_ID}")
+  API_CALLS+=("/UC_SR_CURR_TERMS.v1/GetCurrentItems?EMPLID=${CAMPUS_SOLUTIONS_ID}")
   API_CALLS+=("/UC_SR_STDNT_CLASS_ENROLL.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168")
   API_CALLS+=("/UC_SR_ACADEMIC_PLAN.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168")
+  API_CALLS+=("/UC_SR_COLLEGE_SCHDLR_URL.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168&ACAD_CAREER=UGRD&INSTITUTION=UCB01")
 fi
 
 for path in ${API_CALLS[@]}; do
