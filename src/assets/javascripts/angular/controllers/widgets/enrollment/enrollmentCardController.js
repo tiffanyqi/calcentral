@@ -59,15 +59,12 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
    * Set the data for a specific term
    */
   var setTermData = function(data) {
-    var termIndex = _.indexOf(
-      $scope.enrollment.terms,
-      _.find($scope.enrollment.terms, {
-        termId: data.term
-      })
-    );
+    var term = _.find($scope.enrollment.terms, {
+      termId: data.term
+    });
 
-    if (termIndex !== -1) {
-      $scope.enrollment.terms.splice(termIndex, 1, data);
+    if (term) {
+      angular.extend(term, data);
     }
   };
 
