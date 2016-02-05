@@ -32,7 +32,7 @@ eval $(parse_yaml ${yaml_filename} 'yml_')
 # --------------------
 UID_CROSSWALK=1022796
 SID=11667051
-CAMPUS_SOLUTIONS_ID=11667051
+CAMPUS_SOLUTIONS_ID=3030556855
 
 echo "DESCRIPTION"
 echo "    Verify API endpoints: Crosswalk, Campus Solutions, Hub"; echo
@@ -89,6 +89,32 @@ API_CALLS=(
 
   # GoLive 4: show_notifications_archive_link
   "/UC_CC_COMM_DB_URL.v1/dashboard/url/"
+
+  # GoLive 5: CalCentral code might not have these URLs; they are used by the Hub to query Campus Solutions.
+  "/UcEmailAddressesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_PER_ADDR_GET.v1/person/address/get?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcSccAflPersonRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcPersPhonesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcIdentifiersRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcNamesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcApiEmergencyContactGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcCitizenshpIRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcUrlRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcEthnicityIGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcGenderRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcMilitaryStatusRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcPassportsRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcLanguagesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcVisasRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_PERSON_DOB_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcConftlStdntRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_CC_WORK_EXPERIENCES_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UcPersonsFullLoadRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_CC_STDNT_DEMOGRAPHIC_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_CC_STDNT_CONTACTS_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_SR_STDNT_REGSTRTN_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_CC_INTERNTNL_STDNTS_R.v1/Students?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_CM_UID_CROSSWALK.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 )
 
 if [ "${yml_features_cs_fin_aid}" == "true" ] ; then
