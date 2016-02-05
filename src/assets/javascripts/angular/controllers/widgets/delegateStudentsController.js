@@ -40,18 +40,14 @@ angular.module('calcentral.controllers').controller('DelegateStudentsController'
      * If at least one student grants no privileges, this flag lets us show the
      * global 'No privileges' explanatory paragraph in the template.
      */
-    if (!viewable && !$scope.showNoPrivilegesMessage && !student.privileges[phone]) {
-      $scope.showNoPrivilegesMessage = true;
-    }
+    $scope.showNoPrivilegesMessage = $scope.showNoPrivilegesMessage || (!viewable && !student.privileges[phone]);
 
     /**
      * If at least one student grants only phone privilege, this flag lets us
      * show the global 'phone-and-in-person privileges' explanatory paragraph in
      * the template.
      */
-    if (!viewable && !$scope.showPhoneInPersonPrivilegesMessage && student.privileges[phone]) {
-      $scope.showPhoneInPersonPrivilegesMessage = true;
-    }
+    $scope.showPhoneInPersonPrivilegesMessage = $scope.showPhoneInPersonPrivilegesMessage || (!viewable && student.privileges[phone]);
   };
 
   /**
