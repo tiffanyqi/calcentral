@@ -186,6 +186,9 @@ Calcentral::Application.routes.draw do
   delete '/api/campus_solutions/phone/:type' => 'campus_solutions/phone#delete', :via => :delete, :defaults => { :format => 'json' }
   delete '/api/campus_solutions/ethnicity/:ethnicGroupCode/:regRegion' => 'campus_solutions/ethnicity#delete', :via => :delete, :defaults => { :format => 'json' }
 
+  # Redirect to College Scheduler
+  get '/college_scheduler/:acad_career/:term_id' => 'campus_solutions/college_scheduler#get'
+
   # EDOs from integration hub
   get '/api/edos/student' => 'hub_edo#student', :via => :get, :defaults => { :format => 'json' }
   get '/api/edos/work_experience' => 'hub_edo#work_experience', :via => :get, :defaults => { :format => 'json' }
