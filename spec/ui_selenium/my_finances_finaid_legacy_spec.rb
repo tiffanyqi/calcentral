@@ -107,7 +107,7 @@ describe 'My Finances financial aid messages', :testui => true do
                   end
 
                   # Status popover
-                  has_popover = my_finances_page.profile_icon_element.visible?
+                  has_popover = my_finances_page.popover_icon_element.visible?
                   if has_popover
                     my_finances_page.open_profile_popover
                     has_popover_alert = my_finances_page.finaid_status_alert_element.visible?

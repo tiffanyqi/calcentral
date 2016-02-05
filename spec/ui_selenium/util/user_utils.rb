@@ -50,7 +50,7 @@ class UserUtils
 
   def self.initialize_output_csv(spec)
     output_dir = Rails.root.join('tmp', 'ui_selenium_ouput')
-    output_file = spec.inspect.sub('RSpec::ExampleGroups::', '') + '.csv'
+    output_file = "#{spec.inspect.sub('RSpec::ExampleGroups::', '')}"
     logger.info("Initializing test output CSV named #{output_file}")
     unless File.exists?(output_dir)
       FileUtils.mkdir_p(output_dir)
