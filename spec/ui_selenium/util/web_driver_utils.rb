@@ -106,6 +106,10 @@ class WebDriverUtils
     date.strftime("%m/%d/%Y")
   end
 
+  def self.currency_to_f(dollar_amount)
+    dollar_amount.delete('$, ').to_f
+  end
+
   def self.wait_for_page_and_click(element)
     element.when_present timeout=page_load_timeout
     element.when_visible timeout=page_event_timeout
@@ -155,6 +159,14 @@ class WebDriverUtils
       end
       driver.switch_to.window driver.window_handles.first
     end
+  end
+
+  def self.save_screenshot(driver, uid, page_title)
+    output_dir = Rails.root.join('tmp', 'ui_selenium_ouput', 'screenshots')
+    unless File.exists?(output_dir)
+      FileUtils.mkdir_p(output_dir)
+    end
+    driver.save_screenshot Rails.root.join(output_dir, "#{uid}-#{page_title}.png")
   end
 
 end

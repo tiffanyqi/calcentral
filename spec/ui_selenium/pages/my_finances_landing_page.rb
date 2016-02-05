@@ -34,22 +34,20 @@ module CalCentralPages
       unordered_list(:fin_resources_list, :xpath => '//ul[@class="cc-list-links"]')
       link(:student_billing_svcs_link, :xpath => '//a[contains(text(),"Billing Services")]')
       link(:ebills_link, :xpath => '//a[contains(text(),"e-bills")]')
-      link(:ship_waiver_link, :xpath => '//a[contains(text(),"How does my SHIP Waiver affect my billing?")]')
       link(:payment_options_link, :xpath => '//a[contains(text(),"Payment Options")]')
       link(:reg_fees_link, :xpath => '//a[contains(text(),"Registration Fees")]')
       link(:tax_1098t_form_link, :xpath => '//a[contains(text(),"Tax 1098-T Form")]')
       link(:fafsa_link, :xpath => '//a[contains(text(),"FAFSA")]')
       link(:fin_aid_scholarships_link, :xpath => '//a[contains(text(),"Financial Aid & Scholarships Office")]')
       link(:grad_fin_support_link, :xpath => '//a[contains(text(),"Graduate Financial Support")]')
-      link(:loan_replay_calc_link, :xpath => '//a[contains(text(),"Loan Repayment Calculator")]')
-      link(:my_fin_aid_link, :xpath => '//a[contains(text(),"MyFinAid")]')
+      link(:my_fin_aid_link, :xpath => '//div[@data-ng-controller="FinancesLinksController"]//a[contains(text(),"MyFinAid")]')
       link(:student_budgets_link, :xpath => '//a[contains(text(),"Student Budgets")]')
       link(:work_study_link, :xpath => '//a[contains(text(),"Work-Study")]')
       link(:have_loan_link, :xpath => '//a[contains(text(),"Have a loan?")]')
       link(:withdraw_cancel_link, :xpath => '//a[contains(text(),"Withdrawing or Canceling?")]')
       link(:sched_and_dead_link, :xpath => '//a[contains(text(),"Schedule & Deadlines")]')
       link(:summer_session_link, :xpath => '//a[contains(text(),"Summer Session")]')
-      link(:cal_student_central_link, :xpath => '//a[contains(text(),"Cal Student Central")]')
+      link(:cal_student_central_link, :xpath => '//div[@data-ng-controller="FinancesLinksController"]//a[contains(text(),"Cal Student Central")]')
 
       # FINANCIAL AID MESSAGES CARD
       h2(:fin_messages_heading, :xpath => '//h2[text()="Financial Messages"]')
@@ -69,10 +67,12 @@ module CalCentralPages
         navigate_to "#{WebDriverUtils.base_url}/finances"
       end
 
-      def click_details_link
-        details_link
-        activity_heading_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
+      def load_fin_aid_summary(aid_year = nil)
+        load_page
+        finaid_content_element.when_visible WebDriverUtils.page_load_timeout
       end
+
+      # FINANCIAL AID - LEGACY CARD
 
       def all_fin_aid_message_titles
         titles = []

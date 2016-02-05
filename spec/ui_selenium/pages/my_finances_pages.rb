@@ -28,6 +28,43 @@ module CalCentralPages
     link(:view_statements_link, :xpath => '//a[contains(text(),"View Statements")]')
     link(:make_payment_link, :xpath => '//a[@href="http://studentbilling.berkeley.edu/carsPaymentOptions.htm"]')
 
+    # FINANCIAL AID SUMMARY CARD
+    div(:finaid_content, :xpath => '//div[@data-ng-if="!finaidSummaryInfo.errored"]')
+    div(:finaid_summary_info, :xpath => '//div[@data-onload="netCostInfo.card = \'summary\'"]')
+    div(:finaid_summary_label, :class => 'cc-widget-finaid-summary-label')
+    div(:finaid_summary_message, :class => 'cc-widget-finaid-summary-message-title')
+    div(:no_finaid_message, :xpath => '//div[contains(.,"You do not currently have any Financial Aid information ready to view.")]')
+
+    span(:finaid_single_year, :xpath => '//span[@data-ng-bind="selected.finaidYear.name"]')
+    select_list(:finaid_multi_year_select, :id => 'cc-widget-finaid-summary-select-year')
+    span(:finaid_semesters, :xpath => '//span[@data-ng-bind="selected.finaidYear.availableSemesters | andFilter"]')
+
+    div(:net_cost_section, :class => 'cc-widget-finaid-summary-netcost-summary')
+    div(:finaid_cost_of_attend, :xpath => '//div[@data-ng-if="finaidSummaryData.netCost"]//span[text()="Estimated Cost of Attendance"]/../following-sibling::div')
+    div(:finaid_gift_aid, :xpath => '//div[@data-ng-if="finaidSummaryData.netCost"]//span[text()="Gift Aid"]/../following-sibling::div')
+    div(:finaid_net_cost, :xpath => '//div[@data-ng-if="finaidSummaryData.netCost"]//span[text()="Net Cost"]/../following-sibling::div')
+
+    div(:finaid_funding_offered_ttl, :xpath => '//div[@data-ng-if="finaidSummaryData.fundingOffered"]//span[text()="Funding Offered"]/../following-sibling::div')
+    div(:finaid_funding_offered_toggle, :xpath => '//div[@data-ng-if="finaidSummaryData.fundingOffered"]/div')
+    div(:finaid_funding_gift_aid, :xpath => '//div[@data-ng-if="showFundingOfferedDetails"]//span[text()="Gift Aid"]/../following-sibling::div')
+    div(:finaid_funding_grants, :xpath => '//div[@data-ng-if="showFundingOfferedDetails"]//span[text()="Grants and Scholarships"]/../following-sibling::div')
+    div(:finaid_funding_waivers, :xpath => '//div[@data-ng-if="showFundingOfferedDetails"]//span[text()="Fee Waivers"]/../following-sibling::div')
+    div(:finaid_funding_other, :xpath => '//div[@data-ng-if="showFundingOfferedDetails"]//span[text()="Other Funding"]/../following-sibling::div')
+    div(:finaid_funding_loans, :xpath => '//div[@data-ng-if="showFundingOfferedDetails"]//span[text()="Loans"]/../following-sibling::div')
+    div(:finaid_funding_work_study, :xpath => '//div[@data-ng-if="showFundingOfferedDetails"]//span[text()="Work Study"]/../following-sibling::div')
+
+    link(:finaid_t_and_c_link, :text => 'Complete Terms and Conditions')
+    link(:finaid_title_iv_link, :text => 'Complete Title IV')
+    link(:finaid_details_link, :xpath => '//h2[text()="Financial Aid and Scholarships"]/following-sibling::a')
+    link(:awards_link, :xpath => '//div[@data-ng-controller="FinaidSummaryController"]//a[contains(.,"View Awards")]')
+    link(:shopping_sheet_link, :xpath => '//a[contains(.,"Shopping Sheet")]')
+
+    link(:learn_more_link, :xpath => '//a[contains(.,"Learn more about Financial Aid")]')
+    link(:faso_link, :xpath => '//div[@data-ng-controller="FinaidSummaryController"]//a[contains(.,"Financial Aid & Scholarships")]')
+    link(:csu_link, :xpath => '//div[@data-ng-controller="FinaidSummaryController"]//a[contains(.,"Cal Student Central")]')
+
+    # BILLING AND PAYMENTS
+
     def show_last_statement_bal
       unless last_statement_bal_element_element.visible?
         toggle_last_statement_bal
@@ -42,7 +79,7 @@ module CalCentralPages
       end
     end
 
-    def click_details_link
+    def click_billing_details_link
       details_link
       activity_heading_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
     end
@@ -80,6 +117,34 @@ module CalCentralPages
     def dpp_normal_install
       dpp_normal_install_element_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
       dpp_normal_install_element.delete('$, ')
+    end
+
+    # FINANCIAL AID - CS CARD
+
+
+    def click_fin_aid_details_link
+      logger.debug 'Clicking link to FinAid Details'
+      details_link
+      activity_heading_element.when_visible WebDriverUtils.page_load_timeout
+    end
+
+    def select_fin_aid_year(available_years, desired_year)
+      logger.debug "Viewing FinAid for #{desired_year}"
+      finaid_summary_label_element.when_visible WebDriverUtils.page_load_timeout
+      WebDriverUtils.wait_for_element_and_select(finaid_multi_year_select_element, desired_year) unless available_years.length == 1
+      wait_until(WebDriverUtils.page_event_timeout) { finaid_details_link_element.attribute('href').include? desired_year }
+    end
+
+    def click_t_and_c_link(finaid_page)
+      logger.info 'Clicking T&C link'
+      WebDriverUtils.wait_for_element_and_click finaid_t_and_c_link_element
+      finaid_page.t_and_c_heading_element.when_visible WebDriverUtils.page_load_timeout
+    end
+
+    def click_title_iv_link(finaid_page)
+      logger.info 'Clicking Title IV link'
+      WebDriverUtils.wait_for_element_and_click finaid_title_iv_link_element
+      finaid_page.title_iv_heading_element.when_visible WebDriverUtils.page_load_timeout
     end
 
   end
