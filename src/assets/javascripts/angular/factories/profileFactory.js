@@ -13,6 +13,7 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
   var urlTypes = '/api/campus_solutions/translate';
   var urlTypesAddress = '/api/campus_solutions/address_type';
   var urlTypesEmail = urlTypes + '?field_name=E_ADDR_TYPE';
+  var urlTypesPayFrequency = urlTypes + '?field_name=PAY_FREQ_ABBRV';
   var urlTypesPhone = urlTypes + '?field_name=PHONE_TYPE';
   var urlWorkExperience = '/api/edos/work_experience';
 
@@ -59,6 +60,9 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
   var getTypesPhone = function(options) {
     return apiService.http.request(options, urlTypesPhone);
   };
+  var getTypesPayFrequency = function(options) {
+    return apiService.http.request(options, urlTypesPayFrequency);
+  };
 
   // Post
   var postAddress = function(options) {
@@ -84,6 +88,7 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
     getStates: getStates,
     getTypesAddress: getTypesAddress,
     getTypesEmail: getTypesEmail,
+    getTypesPayFrequency: getTypesPayFrequency,
     getTypesPhone: getTypesPhone,
     getWorkExperience: getWorkExperience,
     postAddress: postAddress,
