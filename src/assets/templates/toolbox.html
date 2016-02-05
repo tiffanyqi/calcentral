@@ -3,17 +3,18 @@
     <div class="column">
       <h1 class="cc-heading-page-title">My Toolbox</h1>
     </div>
-    <div class="medium-4 columns">
-      <div data-ng-include="'widgets/toolbox/view_as.html'" data-ng-if="api.user.profile.isViewer || api.user.profile.roles.advisor"></div>
-      <div data-ng-include="'widgets/toolbox/delegate_intro_to_calcentral.html'" data-ng-if="api.user.profile.isDelegateUser"></div>
+    <div class="medium-4 columns" data-ng-if="api.user.profile.isViewer || api.user.profile.isSuperuser">
+      <div data-ng-include="'widgets/toolbox/view_as.html'"></div>
+      <div data-ng-include="'widgets/toolbox/delegate_intro_to_calcentral.html'" data-ng-if="api.user.profile.isDelegateUser && api.user.profile.features.csDelegatedAccess"></div>
     </div>
-    <div class="medium-4 columns">
-      <div data-ng-include="'widgets/toolbox/delegate_students.html'" data-ng-if="api.user.profile.isDelegateUser"></div>
-      <div data-ng-include="'widgets/toolbox/uid_lookup.html'" data-ng-if="api.user.profile.isViewer || api.user.profile.roles.advisor"></div>
+    <div class="medium-4 columns" data-ng-if="api.user.profile.isViewer || api.user.profile.isSuperuser">
+      <div data-ng-include="'widgets/toolbox/delegate_students.html'" data-ng-if="api.user.profile.isDelegateUser && api.user.profile.features.csDelegatedAccess"></div>
+      <div data-ng-include="'widgets/toolbox/uid_lookup.html'"></div>
     </div>
-    <div class="medium-4 columns cc-column-last" data-ng-if="api.user.profile.isSuperuser || api.user.profile.isDelegateUser">
-      <div data-ng-include="'widgets/toolbox/api_test.html'" data-ng-if="api.user.profile.isSuperuser"></div>
-      <div data-ng-include="'widgets/toolbox/delegate_quick_links.html'" data-ng-if="api.user.profile.isDelegateUser"></div>
+    <div class="medium-4 columns cc-column-last" data-ng-if="api.user.profile.isSuperuser">
+      <div data-ng-include="'widgets/toolbox/api_test.html'"></div>
+      <div data-ng-include="'widgets/toolbox/academic_dates.html'" data-ng-if="api.user.profile.isDelegateUser"></div>
+      <div data-ng-include="'widgets/toolbox/delegate_quick_links.html'" data-ng-if="api.user.profile.isDelegateUser && api.user.profile.features.csDelegatedAccess"></div>
     </div>
   </div>
 </div>

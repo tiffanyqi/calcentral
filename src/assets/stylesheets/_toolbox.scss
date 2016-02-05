@@ -46,18 +46,28 @@
     }
     .cc-toolbox-widget-delegate-student-profile {
       margin: 0 0 10px;
-
       .cc-toolbox-widget-delegate-student-profile-img {
         border: 1px solid $cc-color-lighter-medium-grey;
         height: 96px;
         width: 72px;
       }
-
       .cc-toolbox-widget-delegate-student-profile-img-not-available {
         background: url('/assets/images/svg/photo_unavailable_bear_72x96.svg');
         border: 1px solid $cc-color-lighter-medium-grey;
         height: 96px;
         width: 72px;
+      }
+    }
+    .cc-toolbox-widget-academic-calendar-item {
+      display: table;
+      padding: 5px 0;
+      &:first-of-type {
+        padding-top: 20px;
+      }
+      .cc-toolbox-widget-academic-calendar-date {
+        display: table-cell;
+        padding: 0 5px 0 0;
+        white-space: nowrap;
       }
     }
   }
