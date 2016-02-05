@@ -9,7 +9,13 @@ module CampusSolutions
     end
 
     def update(params = {})
-      CampusSolutions::DelegateAccessCreate.new(user_id: @uid, params: params).get
+      feed = CampusSolutions::DelegateAccessCreate.new(user_id: @uid, params: params).get
+    rescue => e
+      logger.error "#{self.class.name} failed where uid = #{@uid}"
+      raise e
+    else
+      DelegateStudentsExpiry.expire @uid
+      feed
     end
 
   end
