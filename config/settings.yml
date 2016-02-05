@@ -260,6 +260,9 @@ cache:
     CampusSolutions::AddressType: <%= 29.days %>
     CampusSolutions::Country: <%= 29.days %>
     CampusSolutions::CurrencyCode: <%= 29.days %>
+    CampusSolutions::DelegateManagementURL: <%= 24.hours %>
+    CampusSolutions::DelegateStudents: <%= 24.hours %>
+    CampusSolutions::DelegateTermsAndConditions: <%= 24.hours %>
     CampusSolutions::EthnicitySetup: <%= 29.days %>
     CampusSolutions::LanguageCode: <%= 29.days %>
     CampusSolutions::ListOfValues: <%= 24.hours %>
