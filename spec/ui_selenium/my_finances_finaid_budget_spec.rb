@@ -37,7 +37,6 @@ describe 'My Finances Financial Aid Estimated Cost of Attendance card', :testui 
             @api_aid_years.get_json @driver
 
             unless @api_aid_years.feed.nil?
-              testable_users << uid
 
               api_aid_years = @api_aid_years.fin_aid_years
               api_aid_years.each { |year| aid_years << year['id'] }
@@ -213,7 +212,7 @@ describe 'My Finances Financial Aid Estimated Cost of Attendance card', :testui 
                     end
 
                   else
-                    # TODO: when test data available, verify "you have no budget" scenario
+                    # TODO: when test data available, verify 'you have no budget' scenario
                   end
                 end
               end

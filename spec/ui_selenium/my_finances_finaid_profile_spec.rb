@@ -11,7 +11,7 @@ describe 'My Finances Financial Aid Profile card', :testui => true do
       test_output = UserUtils.initialize_output_csv(self)
 
       CSV.open(test_output, 'wb') do |row|
-        row << ['UID', 'Aid Years', 'Career', 'Grad Date', 'Enrollment', 'Residency', 'Family in College', 'Housing', ]
+        row << ['UID', 'Aid Years', 'Career', 'Grad Date', 'Enrollment', 'Residency', 'Family in College', 'Housing']
       end
 
       @api_aid_years = ApiCSAidYearsPage.new @driver

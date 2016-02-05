@@ -121,7 +121,6 @@ module CalCentralPages
 
     # FINANCIAL AID - CS CARD
 
-
     def click_fin_aid_details_link
       logger.debug 'Clicking link to FinAid Details'
       details_link

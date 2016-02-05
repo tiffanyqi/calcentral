@@ -37,6 +37,12 @@ module CalCentralPages
         WebDriverUtils.wait_for_element_and_click authorize_title_iv_element
       end
 
+      def go_back_to_finances
+        logger.debug 'Clicking Back to Finances button'
+        WebDriverUtils.wait_for_element_and_click back_to_finances_element
+        finaid_content_element.when_visible WebDriverUtils.page_load_timeout
+      end
+
       # AWARDS CARD
       div(:coa_ttl, :xpath => '//span[text()="Estimated Cost of Attendance"]/../following-sibling::div')
       div(:gift_aid_ttl, :xpath => '//span[text()="Gift Aid"]/../following-sibling::div')
@@ -73,21 +79,13 @@ module CalCentralPages
         navigate_to "#{WebDriverUtils.base_url}/finances/finaid/#{aid_year}"
       end
 
+      def wait_for_fin_aid_semesters
+        finaid_content_element.when_visible WebDriverUtils.page_load_timeout
+      end
+
       def load_fin_aid_summary(aid_year)
         load_page aid_year
-        finaid_content_element.when_visible WebDriverUtils.page_load_timeout
-      end
-
-      def wait_for_fin_aid_semesters
-        finaid_semesters_element.when_visible WebDriverUtils.page_load_timeout
-        # TODO: add flow control
-        sleep 3
-      end
-
-      def go_back_to_finances(my_finances_page)
-        logger.debug 'Clicking Back to Finances button'
-        WebDriverUtils.wait_for_element_and_click back_to_finances_element
-        finaid_content_element.when_visible WebDriverUtils.page_load_timeout
+        wait_for_fin_aid_semesters
       end
 
       # BUDGET / ESTIMATED COST OF ATTENDANCE

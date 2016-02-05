@@ -42,7 +42,6 @@ describe 'My Finances Financial Aid summary card', :testui => true do
             @splash_page.load_page
             @splash_page.basic_auth uid
             @api_aid_years.get_json @driver
-            @finances_page.load_fin_aid_summary
 
             unless @api_aid_years.feed.nil?
 
@@ -80,7 +79,7 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                     it ("allows UID #{uid} to decline the terms and conditions") { expect(has_declined_msg).to be true }
 
                     # Accept T&C
-                    @fin_aid_page.go_back_to_finances @finances_page
+                    @fin_aid_page.go_back_to_finances
                     @finances_page.click_t_and_c_link @fin_aid_page
                     @fin_aid_page.accept_t_and_c
 
@@ -117,13 +116,8 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                     @fin_aid_page.wait_for_fin_aid_semesters
                     package_visible = @fin_aid_page.net_cost_section_element.visible?
 
-                    # Confirm updates
-                    @api_aid_years.get_json @driver
-                    updated_title_iv = @api_aid_years.title_iv_approval
-
                     it "allows UID #{uid} to authorize Title IV after accepting the terms and conditions" do
                       expect(package_visible).to be true
-                      expect(updated_title_iv).to be true
                     end
 
                   end
@@ -189,7 +183,6 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                       else
                         WebDriverUtils.wait_for_element_and_click page.finaid_funding_offered_toggle_element
                         ui_funding_offered_ttl = WebDriverUtils.currency_to_f page.finaid_funding_offered_ttl
-                        logger.info "Funding offered is #{api_funding_offered_ttl}"
                         it ("shows the right Funding Offered total for UID #{uid}") { expect(ui_funding_offered_ttl).to eql(api_funding_offered_ttl) }
                       end
 
@@ -217,7 +210,6 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                             it ("shows no Grants and Scholarships amount for UID #{uid}") { expect(ui_shows_grants).to be false }
                           else
                             ui_grants =WebDriverUtils.currency_to_f page.finaid_funding_grants
-                            logger.info "Grants total is #{api_grants_amt}"
                             it ("shows the right Grants and Scholarships amount for UID #{uid}") { expect(ui_grants).to eql(api_grants_amt) }
                           end
 
@@ -255,7 +247,6 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                           else
                             has_work_study = true
                             ui_work_study = WebDriverUtils.currency_to_f page.finaid_funding_work_study
-                            logger.info "Work Study total is #{api_work_study_amt}"
                             it ("shows the right Work Study for UID #{uid}") { expect(ui_work_study).to eql (api_work_study_amt) }
                           end
 
@@ -269,7 +260,6 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                           else
                             has_loans = true
                             ui_loans = WebDriverUtils.currency_to_f page.finaid_funding_loans
-                            logger.info "Loans total is #{api_loans_amt}"
                             it ("shows the right Loans total for UID #{uid}") { expect(ui_loans).to eql(api_loans_amt) }
                           end
 

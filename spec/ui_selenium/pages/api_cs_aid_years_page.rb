@@ -62,7 +62,7 @@ class ApiCSAidYearsPage
   end
 
   def title_iv
-    fin_aid_summary.nil? ? nil : fin_aid_summary['title4']
+    fin_aid_summary['title4']
   end
 
   def title_iv_approval
