@@ -1,0 +1,20 @@
+{
+  "statusCode": 200,
+  "feed": {
+    "studentId": "24437121",
+    "updateAcademicPlan": {
+      "name": "Update",
+      "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_PLNR_FL.SCI_PLNR_FL.GBL?ucInstitution=UCB01",
+      "isCsLink": true
+    }
+  },
+  "lastModified": {
+    "hash": "c7c7dea3b5817449edd08adc289e1a6f38d8599a",
+    "timestamp": {
+      "epoch": 1454961240,
+      "dateTime": "2016-02-08T11:54:00-08:00",
+      "dateString": "2/08"
+    }
+  },
+  "feedName": "CampusSolutions::MyAcademicPlan"
+}
