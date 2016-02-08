@@ -184,7 +184,7 @@ describe 'MyTasks::Merged' do
     tasks = my_tasks_model.get_feed[:tasks]
     tasks.size.should be > 0
     tasks.each do |task|
-      expect([GoogleApps::Proxy::APP_ID, Slate::Checklist::APP_ID, CampusSolutions::Proxy::APP_NAME]).to include task[:emitter]
+      expect([GoogleApps::Proxy::APP_ID, CampusSolutions::Proxy::APP_NAME]).to include task[:emitter]
     end
   end
 
