@@ -1,6 +1,6 @@
 describe 'My Dashboard My Classes card', :testui => true do
 
-  if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
+  if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production' && !Date.today.sunday?
 
     include ClassLogger
 
