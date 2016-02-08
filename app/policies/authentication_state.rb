@@ -20,17 +20,6 @@ class AuthenticationState
     @original_advisor_user_id.present?
   end
 
-  def delegate_permissions
-    return nil unless authenticated_as_delegate? &&
-      (response = CampusSolutions::DelegateStudents.new(user_id: @original_delegate_user_id).get)
-    if response[:feed] && (students = response[:feed][:students])
-      campus_solutions_id = CalnetCrosswalk::ByUid.new(user_id: @user_id).lookup_campus_solutions_id
-      students.detect { |s| campus_solutions_id == s[:campusSolutionsId] }
-    else
-      nil
-    end
-  end
-
   def directly_authenticated?
     user_id && !lti_authenticated_only &&
       (original_advisor_user_id.blank? || (user_id == original_advisor_user_id)) &&

@@ -16,7 +16,26 @@ describe MyAcademics::FilteredForDelegate do
     fake_classes.each do |klass|
       allow(klass).to receive(:new).and_return klass.new(user_id: uid, fake: true)
     end
-    allow_any_instance_of(AuthenticationState).to receive(:delegate_permissions).and_return fake_delegate_permissions
+    campus_solutions_id = random_id
+    response = {
+      feed: {
+        students: [
+          {
+            campusSolutionsId: campus_solutions_id,
+            uid: uid,
+            privileges: {
+              financial: false,
+              viewEnrollments: view_enrollments,
+              viewGrades: view_grades,
+              phone: false
+            }
+          }
+        ]
+      }
+    }
+    proxy = double lookup_campus_solutions_id: campus_solutions_id
+    expect(CalnetCrosswalk::ByUid).to receive(:new).with(user_id: uid).once.and_return proxy
+    expect(CampusSolutions::DelegateStudents).to receive(:new).once.and_return double get: response
   end
   let(:feed) { JSON.parse described_class.new(uid).get_feed_as_json }
 
@@ -30,7 +49,8 @@ describe MyAcademics::FilteredForDelegate do
 
   context 'when feature is not enabled' do
     let(:is_feature_enabled) { false }
-    let(:fake_delegate_permissions) { ['View grades', 'View enrollments'] }
+    let(:view_enrollments) { true }
+    let(:view_grades) { true }
     it 'should include default metadata but nothing else' do
       expect(feed.keys).to match_array %w(lastModified feedName)
     end
@@ -38,7 +58,8 @@ describe MyAcademics::FilteredForDelegate do
 
   context 'when delegate permissions include grades', if: CampusOracle::Connection.test_data?  do
     let(:is_feature_enabled) { true }
-    let(:fake_delegate_permissions) { ['View grades', 'View enrollments'] }
+    let(:view_enrollments) { true }
+    let(:view_grades) { true }
     include_examples 'filtered feed'
 
     it 'should return grades' do
@@ -53,7 +74,8 @@ describe MyAcademics::FilteredForDelegate do
 
   context 'when delegate permissions do not include grades', if: CampusOracle::Connection.test_data? do
     let(:is_feature_enabled) { true }
-    let(:fake_delegate_permissions) { ['View enrollments', 'View finances'] }
+    let(:view_enrollments) { true }
+    let(:view_grades) { false }
     include_examples 'filtered feed'
 
     it 'should not return grades' do
