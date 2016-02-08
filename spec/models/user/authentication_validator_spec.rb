@@ -94,6 +94,27 @@ describe User::AuthenticationValidator do
       end
       it {should be_falsey}
     end
+    context 'Reverted released-admit' do
+      let(:calnet_row) { nil_calnet_row }
+      let(:cs_affiliations) do
+        {:statusCode=>200,
+          :feed=>
+            {'student'=>
+              {'affiliations'=>
+                [{'type'=>
+                  {'code'=>'ADMT_UX',
+                    'description'=>'Admitted Students CalCentral Access'},
+                  'statusCode'=>'INA',
+                  'statusDescription'=>'Inactive',
+                  'fromDate'=>'2016-01-11'},
+                  {'type'=>{'code'=>'APPLICANT', 'description'=>'Applicant'},
+                    'statusCode'=>'ACT',
+                    'statusDescription'=>'Active',
+                    'fromDate'=>'2016-01-06'}]}},
+          :studentNotFound=>nil}
+      end
+      it {should be_truthy}
+    end
   end
 
   describe '#validated_user_id' do
