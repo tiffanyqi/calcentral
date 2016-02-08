@@ -5,7 +5,6 @@ describe UserSpecificModel do
       let(:session_extras) { {} }
       it 'should be directly_authenticated' do
         expect(subject.directly_authenticated?).to be true
-        expect(subject.delegate_permissions).to be_nil
       end
     end
     context 'standard view-as mode' do
@@ -16,7 +15,6 @@ describe UserSpecificModel do
       }
       it 'should identify user as not directly_authenticated' do
         expect(subject.directly_authenticated?).to be false
-        expect(subject.delegate_permissions).to be_nil
       end
     end
     context 'delegate view-as mode' do
@@ -25,35 +23,19 @@ describe UserSpecificModel do
           'original_delegate_user_id' => random_id
         }
       }
-      before {
-        permissions = ['Power-to-rule-the-Universe!']
-        allow_any_instance_of(AuthenticationState).to receive(:delegate_permissions).and_return permissions
-      }
-      it 'should identify user as having delegate_permissions' do
+      it 'should identify delegated-access session' do
         expect(subject.directly_authenticated?).to be false
-        expect(subject.delegate_permissions).to_not be_nil
       end
     end
     context 'advisor view-as mode' do
-      let(:session_extras) {
-        {
-          'original_advisor_user_id' => random_id
-        }
-      }
+      let(:session_extras) { { 'original_advisor_user_id' => random_id } }
       it 'should identify user as having delegate_permissions' do
         expect(subject.directly_authenticated?).to be false
       end
     end
     context 'when only authenticated from an external app' do
-      let(:session_extras) {
-        {
-          'lti_authenticated_only' => true
-        }
-      }
-      it {
-        expect(subject.directly_authenticated?).to be false
-        expect(subject.delegate_permissions).to be_nil
-      }
+      let(:session_extras) { { 'lti_authenticated_only' => true } }
+      it { is_expected.to_not be_directly_authenticated }
     end
   end
 end

@@ -1,7 +1,7 @@
 <!-- Top Navbar -->
 <div class="row cc-navigation-bar" data-ng-cloak data-ng-show="api.user.events.isAuthenticated">
   <ul>
-    <li data-ng-class="{true:'active'}[controllerName=='DashboardController']" data-ng-if="!api.user.profile.delegateActingAsUid && !api.user.profile.advisorActingAsUid">
+    <li data-ng-class="{true:'active'}[controllerName=='DashboardController']" data-ng-if="api.user.profile.hasDashboardTab">
       <a href="/dashboard" data-ng-click="offCanvasMenu.show=false"><i class="fa fa-home"></i>My Dashboard</a>
     </li>
     <li data-ng-class="{true:'active'}[controllerName=='AcademicsController']" data-ng-if="api.user.profile.hasAcademicsTab">

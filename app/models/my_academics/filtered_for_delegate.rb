@@ -52,7 +52,14 @@ module MyAcademics
     end
 
     def show_grades?
-      delegate_permissions.include? 'View grades'
+      response = CampusSolutions::DelegateStudents.new(user_id: authentication_state.original_delegate_user_id).get
+      if response[:feed] && (students = response[:feed][:students])
+        campus_solutions_id = CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_campus_solutions_id
+        student = students.detect { |s| campus_solutions_id == s[:campusSolutionsId] }
+        student && student[:privileges] && student[:privileges][:viewGrades]
+      else
+        false
+      end
     end
   end
 end

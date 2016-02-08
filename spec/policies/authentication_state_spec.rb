@@ -117,31 +117,6 @@ describe AuthenticationState do
       }}
       it 'should not find delegate session attribute' do
         expect(subject.authenticated_as_delegate?).to be false
-        expect(subject.delegate_permissions).to be_nil
-      end
-    end
-    context 'when in delegate-view-as mode' do
-      let(:user_id) { random_id }
-      let(:campus_solutions_id) { '23009422' }
-      let(:fake_session) {{
-        'user_id' => user_id,
-        'original_delegate_user_id' => random_id
-      }}
-      before do
-        allow(CalnetCrosswalk::ByUid).to receive(:new).with(user_id: user_id).and_return double(lookup_campus_solutions_id: campus_solutions_id)
-      end
-      it 'should get student of delegate user' do
-        expect(subject).to be_authenticated_as_delegate
-        permissions = subject.delegate_permissions
-        expect(permissions).to_not be_nil
-        expect(permissions[:fullName]).to eq 'Tom Tulliver'
-        expect(permissions[:campusSolutionsId]).to eq campus_solutions_id
-        expect(permissions[:privileges]).to eq({
-           financial: false,
-           viewEnrollments: false,
-           viewGrades: false,
-           phone: true
-         })
       end
     end
     context 'when in advisor-view-as mode' do
@@ -161,14 +136,12 @@ describe AuthenticationState do
       }}
       it 'should force delegate session to false' do
         expect(subject.authenticated_as_delegate?).to be false
-        expect(subject.delegate_permissions).to be_nil
       end
     end
     context 'when not logged in' do
       let(:fake_session) { {} }
       it 'should force delegate session to false' do
         expect(subject.authenticated_as_delegate?).to be false
-        expect(subject.delegate_permissions).to be_nil
       end
     end
   end
