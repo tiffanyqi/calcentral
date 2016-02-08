@@ -34,11 +34,13 @@ module CalCentralPages
       unordered_list(:fin_resources_list, :xpath => '//ul[@class="cc-list-links"]')
       link(:student_billing_svcs_link, :xpath => '//a[contains(text(),"Billing Services")]')
       link(:ebills_link, :xpath => '//a[contains(text(),"e-bills")]')
+      link(:ship_waiver_link, :xpath => '//a[contains(text(),"How does my SHIP Waiver affect my billing?")]')
       link(:payment_options_link, :xpath => '//a[contains(text(),"Payment Options")]')
       link(:reg_fees_link, :xpath => '//a[contains(text(),"Registration Fees")]')
       link(:tax_1098t_form_link, :xpath => '//a[contains(text(),"Tax 1098-T Form")]')
       link(:fafsa_link, :xpath => '//a[contains(text(),"FAFSA")]')
       link(:fin_aid_scholarships_link, :xpath => '//a[contains(text(),"Financial Aid & Scholarships Office")]')
+      link(:loan_replay_calc_link, :xpath => '//a[contains(text(),"Loan Repayment Calculator")]')
       link(:grad_fin_support_link, :xpath => '//a[contains(text(),"Graduate Financial Support")]')
       link(:my_fin_aid_link, :xpath => '//div[@data-ng-controller="FinancesLinksController"]//a[contains(text(),"MyFinAid")]')
       link(:student_budgets_link, :xpath => '//a[contains(text(),"Student Budgets")]')
@@ -60,7 +62,7 @@ module CalCentralPages
       elements(:finaid_message_toggle, :link, :xpath => '//ul[@class="cc-widget-activities-list"]/li//div[@data-ng-click="api.widget.toggleShow($event, filteredList, activity, \'Recent Activity\')"]')
       elements(:finaid_message_year, :div, :xpath => '//ul[@class="cc-widget-activities-list"]/li//div[@data-ng-if="activity.termYear"]')
       elements(:finaid_message_icon, :image, :xpath => '//ul[@class="cc-widget-activities-list"]/li//i')
-      elements(:finaid_message_link, :link, :xpath => '//ul[@class="cc-widget-activities-list"]/li//a[@data-ng-if="activityItem.sourceUrl"]')
+      elements(:finaid_message_link, :link, :xpath => '//ul[@class="cc-widget-activities-list"]/li//a[contains(.,"More info")]')
 
       def load_page
         logger.info('Loading My Finances landing page')
