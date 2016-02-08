@@ -59,15 +59,9 @@
       }
     }
     .cc-toolbox-widget-academic-calendar-item {
-      display: table;
       padding: 5px 0;
       &:first-of-type {
         padding-top: 20px;
-      }
-      .cc-toolbox-widget-academic-calendar-date {
-        display: table-cell;
-        padding: 0 5px 0 0;
-        white-space: nowrap;
       }
     }
   }

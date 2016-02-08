@@ -5,7 +5,9 @@
   <div class="cc-widget-list">
     <ul class="cc-toolbox-widget-academic-calendar">
       <li class="cc-toolbox-widget-academic-calendar-item" data-ng-repeat="item in academicDates.items">
-        <strong class="cc-toolbox-widget-academic-calendar-date" data-ng-bind="item.date"></strong>
+        <strong class="cc-nowrap">
+          <span data-ng-bind="item.date | dateInYearFilter:'Mmm dd'"></span>:
+        </strong>
         <span data-ng-bind="item.title"></span>
       </li>
     </ul>
@@ -15,12 +17,12 @@
     <h3>Links</h3>
     <ul class="cc-list-links">
       <li>
-        <a class="cc-outbound-link" href="http://registrar.berkeley.edu/CalendarDisp.aspx">
+        <a href="http://registrar.berkeley.edu/CalendarDisp.aspx">
           Subscribe to the Academic Calendar
         </a>
       </li>
       <li>
-        <a class="cc-outbound-link" href="http://grad.berkeley.edu/academic-progress/deadlines/">
+        <a href="http://grad.berkeley.edu/academic-progress/deadlines/">
           Graduate Division Degree Deadlines
         </a>
       </li>
