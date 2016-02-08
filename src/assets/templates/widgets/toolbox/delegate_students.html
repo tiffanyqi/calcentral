@@ -15,7 +15,7 @@
             <div data-ng-if="!student.profilePhotoApi" class="cc-toolbox-widget-delegate-student-profile-img-not-available"></div>
           </div>
           <div class="cc-widget-padding">
-            <button class="cc-button-link" data-ng-click="delegateStudents.actAs(student.emplid)" data-ng-if="student.delegateAccess">
+            <button class="cc-button-link" data-ng-click="delegateStudents.actAs(student.uid)" data-ng-if="student.delegateAccess">
               <span class="cc-text-big" data-ng-bind="student.fullName"></span>
             </button>
             <div data-ng-if="!student.delegateAccess">
