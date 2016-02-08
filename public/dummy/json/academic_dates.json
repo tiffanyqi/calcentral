@@ -1,0 +1,62 @@
+{
+  "feed": {
+    "academicDates": [
+      {
+        "date": "Mar 21-25",
+        "title": "Spring Recess"
+      },
+      {
+        "date": "Mar 25",
+        "title": "Academic and Administrative Holiday"
+      },
+      {
+        "date": "Apr 16",
+        "title": "Cal Day"
+      },
+      {
+        "date": "Apr 29",
+        "title": "Formal Classes End"
+      },
+      {
+        "date": "May 2-6",
+        "title": "Reading/Review/Recitation Week"
+      },
+      {
+        "date": "May 6",
+        "title": "Last Day of Instruction"
+      },
+      {
+        "date": "May 9-13",
+        "title": "Final Examinations"
+      },
+      {
+        "date": "May 13",
+        "title": "SPRING SEMESTER ENDS"
+      },
+      {
+        "date": "May 14",
+        "title": "Commencement"
+      },
+      {
+        "date": "May 23 - Aug 12",
+        "title": "Summer Sessions"
+      },
+      {
+        "date": "May 23",
+        "title": "First Six-Week Session begins"
+      },
+      {
+        "date": "May 30",
+        "title": "Academic and Administrative Holiday"
+      },
+      {
+        "date": "Jun 6",
+        "title": "Ten-Week Session begins"
+      },
+      {
+        "date": "Jun 20",
+        "title": "Eight-Week Session begins"
+      }
+    ]
+  }
+}
