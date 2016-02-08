@@ -62,7 +62,7 @@ module CalCentralPages
       elements(:finaid_message_toggle, :link, :xpath => '//ul[@class="cc-widget-activities-list"]/li//div[@data-ng-click="api.widget.toggleShow($event, filteredList, activity, \'Recent Activity\')"]')
       elements(:finaid_message_year, :div, :xpath => '//ul[@class="cc-widget-activities-list"]/li//div[@data-ng-if="activity.termYear"]')
       elements(:finaid_message_icon, :image, :xpath => '//ul[@class="cc-widget-activities-list"]/li//i')
-      elements(:finaid_message_link, :link, :xpath => '//ul[@class="cc-widget-activities-list"]/li//a[@data-ng-if="activityItem.sourceUrl"]')
+      elements(:finaid_message_link, :link, :xpath => '//ul[@class="cc-widget-activities-list"]/li//a[contains(.,"More info")]')
 
       def load_page
         logger.info('Loading My Finances landing page')

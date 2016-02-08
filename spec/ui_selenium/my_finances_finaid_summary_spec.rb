@@ -43,6 +43,8 @@ describe 'My Finances Financial Aid summary card', :testui => true do
             @splash_page.basic_auth uid
             @api_aid_years.get_json @driver
 
+            @finances_page.load_fin_aid_summary
+
             unless @api_aid_years.feed.nil?
 
               api_aid_years = @api_aid_years.fin_aid_years
