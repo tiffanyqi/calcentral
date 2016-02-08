@@ -44,7 +44,10 @@
                   <th width="20%" scope="col">
                     SID
                   </th>
-                  <th width="60%" scope="col">
+                  <th width="40%" scope="col">
+                    Name
+                  </th>
+                  <th width="20%" scope="col">
                     <span data-ng-if="block.storeUser" class="cc-visuallyhidden">Save</span>
                     <span data-ng-if="block.clearUser" class="cc-visuallyhidden">Delete</span>
                   </th>
@@ -57,7 +60,12 @@
                     <button type="submit" class="cc-button-link" data-ng-click="admin.updateIDField(user.ldap_uid)" data-ng-bind="user.ldap_uid"></button>
                   </td>
                   <td class="cc-table-top-border">
-                    <span data-ng-bind="user.student_id || 'none'">
+                    <span data-ng-bind="user.student_id || 'none'"></span>
+                  </td>
+                  <td class="cc-table-top-border cc-table-ellipsis">
+                    <span data-ng-if="!user.first_name || !user.last_name">none</span>
+                    <span data-ng-if="user.first_name && user.last_name" data-ng-bind="user.first_name"></span>
+                    <span data-ng-if="user.last_name && user.last_name" data-ng-bind="user.last_name"></span>
                   </td>
                   <td class="cc-table-right cc-table-top-border">
                     <span data-ng-if="block.storeUser && !user.saved"><button type="button" class="cc-button-link" data-ng-click="block.storeUser(user)">save <span class="cc-visuallyhidden" data-ng-bind="'UID ' + user.ldap_uid"></span></button></span>

@@ -39,6 +39,12 @@
   ul {
     margin-left: 35px;
   }
+  .cc-table-ellipsis {
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .cc-table-center {
     text-align: center;
   }
