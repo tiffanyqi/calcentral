@@ -1,13 +1,20 @@
 module Cache
   module RelatedCacheKeyTracker
 
+    def get_feed(force_cache_write=false)
+      extended_instance_keys.each do |key|
+        self.class.save_related_cache_key(@uid, self.class.cache_key(key))
+      end
+      super force_cache_write
+    end
+
     def self.included base
       base.extend ClassMethods
     end
 
     module ClassMethods
       def user_key(uid)
-        "related-cache-keys-#{uid}"
+        cache_key "related-cache-keys-#{uid}"
       end
 
       def expire(uid=nil)
