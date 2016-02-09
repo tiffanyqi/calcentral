@@ -6,7 +6,7 @@ module CampusSolutions
 
     def initialize(options = {})
       super options
-      @aid_year = options[:aid_year] || '0'
+      @aid_year = options[:aid_year]
       initialize_mocks if @fake
     end
 
