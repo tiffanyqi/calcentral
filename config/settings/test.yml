@@ -49,6 +49,7 @@ features:
   cs_enrollment_card: true
   cs_fin_aid: true
   cs_holds: true
+  cs_logout: true
   cs_profile_emergency_contacts: true
   cs_profile_work_experience: true
   webcast_sign_up_on_calcentral: true

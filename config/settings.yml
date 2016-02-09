@@ -325,6 +325,7 @@ features:
   cs_enrollment_card: false
   cs_fin_aid: false
   cs_holds: false
+  cs_logout: false
   cs_profile: true
   cs_profile_emergency_contacts: false
   cs_profile_work_experience: false
@@ -406,6 +407,9 @@ campus_solutions_proxy:
   base_url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/PSIGW/RESTListeningConnector/PSFT_CS'
   username: secret
   password: secret
+
+campus_solutions_logout:
+  url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/EMPLOYEE/HRMS/?cmd=logout'
 
 hub_edos_proxy:
   fake: true
