@@ -3,6 +3,7 @@ module CampusSolutions
 
     include Cache::LiveUpdatesEnabled
     include Cache::JsonAddedCacher
+    include Cache::RelatedCacheKeyTracker
     include EnrollmentCardFeatureFlagged
 
     attr_accessor :term_id

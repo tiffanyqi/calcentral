@@ -16,6 +16,10 @@ module Cache
       end
     end
 
+    def extended_instance_keys
+      super << self.class.json_key(instance_key)
+    end
+
     module ClassMethods
       def json_key(id)
         "json-#{id}"
