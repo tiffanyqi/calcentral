@@ -205,7 +205,7 @@ module User
         hasGoogleAccessToken: GoogleApps::Proxy.access_granted?(@uid),
         hasStudentHistory: has_student_history,
         hasInstructorHistory: has_instructor_history,
-        hasDashboardTab: !authentication_state.original_advisor_user_id && !authentication_state.original_delegate_user_id,
+        hasDashboardTab: !authentication_state.original_delegate_user_id,
         hasAcademicsTab: has_academics_tab?(roles, has_instructor_history, has_student_history, delegate_view_as_privileges),
         hasFinancialsTab: has_financials_tab?(roles, delegate_view_as_privileges),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
