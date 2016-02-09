@@ -51,8 +51,8 @@ describe MyAcademics::FilteredForDelegate do
     let(:is_feature_enabled) { false }
     let(:view_enrollments) { true }
     let(:view_grades) { true }
-    it 'should include default metadata but nothing else' do
-      expect(feed.keys).to match_array %w(lastModified feedName)
+    it 'should get nothing' do
+      expect(feed.keys).to be_empty
     end
   end
 

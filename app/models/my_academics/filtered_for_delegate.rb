@@ -1,8 +1,7 @@
 module MyAcademics
   class FilteredForDelegate < UserSpecificModel
 
-    include Cache::LiveUpdatesEnabled
-    include Cache::FreshenOnWarm
+    include Cache::CachedFeed
     include Cache::JsonAddedCacher
     include CampusSolutions::DelegatedAccessFeatureFlagged
     include MergedModel

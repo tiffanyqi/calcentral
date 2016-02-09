@@ -52,7 +52,6 @@ describe MyAcademicsController do
       it 'should get a filtered feed' do
         get :get_feed
         json_response = JSON.parse response.body
-        expect(json_response['feedName']).to eq 'MyAcademics::FilteredForDelegate'
         expect(json_response).not_to include 'examSchedule'
         expect(json_response['gpaUnits']).not_to include 'cumulativeGpa'
         expect(json_response).not_to include 'otherSiteMemberships'
