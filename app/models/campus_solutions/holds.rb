@@ -15,8 +15,7 @@ module CampusSolutions
     end
 
     def build_feed(response)
-      return {} if response.parsed_response.blank?
-      feed = response.parsed_response
+      return {} unless (feed = response.parsed_response) && feed['SERVICE_INDICATORS']
       feed['SERVICE_INDICATORS'].each do |indicator|
         if indicator['START_DATE']
           # Convert to a CalCentral date
