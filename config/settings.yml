@@ -405,11 +405,9 @@ advising_proxy:
 campus_solutions_proxy:
   fake: true
   base_url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/PSIGW/RESTListeningConnector/PSFT_CS'
+  logout_url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/EMPLOYEE/HRMS/?cmd=logout'
   username: secret
   password: secret
-
-campus_solutions_logout:
-  url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/EMPLOYEE/HRMS/?cmd=logout'
 
 hub_edos_proxy:
   fake: true

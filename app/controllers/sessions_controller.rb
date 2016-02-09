@@ -84,9 +84,9 @@ class SessionsController < ApplicationController
   def destroy
     logout
     url = request.protocol + ApplicationController.correct_port(request.host_with_port, request.env['HTTP_REFERER'])
-    if Settings.features.cs_logout
-      url = "#{Settings.campus_solutions_logout.url}&redirect_url=#{CGI.escape url}"
-    end
+
+    url = "#{Settings.campus_solutions_proxy.logout_url}&redirect_url=#{CGI.escape url}" if Settings.features.cs_logout
+
     render :json => {
       :redirectUrl => "#{Settings.cas_logout_url}?service=#{CGI.escape url}"
     }.to_json
