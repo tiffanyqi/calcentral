@@ -2,6 +2,7 @@ module User
   class AuthenticationValidator
     extend Cache::Cacheable
     include Cache::UserCacheExpiry
+    include Berkeley::UserRoles
     include ClassLogger
 
     attr_reader :auth_uid
@@ -49,11 +50,15 @@ module User
       return false if calnet_attributes.present? &&
         calnet_attributes['affiliations'].present? &&
         calnet_attributes['affiliations'] != 'STUDENT-TYPE-NOT-REGISTERED'
-      cs_affiliations = HubEdos::Affiliations.new(user_id: @auth_uid).get
-      cs_affiliations[:feed] && cs_affiliations[:feed]['student'] &&
-        cs_affiliations[:feed]['student']['affiliations'].present? &&
-        cs_affiliations[:feed]['student']['affiliations'].length == 1 &&
-        cs_affiliations[:feed]['student']['affiliations'][0]['type']['code'] == 'APPLICANT'
+      cs_feed = HubEdos::Affiliations.new(user_id: @auth_uid).get
+      if cs_feed[:feed] && cs_feed[:feed]['student']
+        cs_feed = HashConverter.symbolize cs_feed[:feed]['student']
+        parsed_feed = roles_from_cs_affiliations cs_feed[:affiliations]
+        parsed_feed[:roles].blank? && parsed_feed[:applicant_in_process]
+      else
+        # We don't know much about this person, but they're not a held applicant.
+        false
+      end
     end
 
   end
