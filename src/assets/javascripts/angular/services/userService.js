@@ -38,10 +38,18 @@ angular.module('calcentral.services').service('userService', function($http, $lo
   /**
    * Redirect user to the dashboard when you're on the splash page
    */
-  var redirectToDashboard = function() {
+  var redirectToHome = function() {
     if ($location.path() === '/') {
       analyticsService.sendEvent('Authentication', 'Redirect to dashboard');
-      utilService.redirect('dashboard');
+      if (profile.hasDashboardTab) {
+        utilService.redirect('dashboard');
+      } else if (profile.hasAcademicsTab) {
+        utilService.redirect('academics');
+      } else if (profile.hasFinancialsTab) {
+        utilService.redirect('finances');
+      } else {
+        utilService.redirect('campus');
+      }
     }
   };
 
@@ -50,7 +58,7 @@ angular.module('calcentral.services').service('userService', function($http, $lo
    */
   var setFirstLogin = function() {
     profile.firstLoginAt = (new Date()).getTime();
-    redirectToDashboard();
+    redirectToHome();
   };
 
   /**
@@ -70,7 +78,7 @@ angular.module('calcentral.services').service('userService', function($http, $lo
       $http.post('/api/my/record_first_login').success(setFirstLogin);
     // Redirect to the dashboard when you're accessing the root page and are authenticated
     } else if (events.isAuthenticated) {
-      redirectToDashboard();
+      redirectToHome();
     }
   };
 
@@ -200,6 +208,7 @@ angular.module('calcentral.services').service('userService', function($http, $lo
     handleUserLoaded: handleUserLoaded,
     optOut: optOut,
     profile: profile,
+    redirectToHome: redirectToHome,
     removeOAuth: removeOAuth,
     setFirstLogin: setFirstLogin,
     signIn: signIn,
