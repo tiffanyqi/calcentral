@@ -62,7 +62,7 @@ angular.module('calcentral.directives').directive('a', function() {
       var updateAnchorTag = function(url) {
         // We only want to change anchor tags that link to a different domain
         // Since this gets executed a couple of times, we add a class to the screenreader message & check for it
-        if (!isSameDomain(url, location.href) && !element[0].querySelector('.cc-outbound-link')) {
+        if ((attr.ccOutboundEnabled === 'true' || !isSameDomain(url, location.href)) && !element[0].querySelector('.cc-outbound-link')) {
           var screenReadMessage = document.createElement('span');
           screenReadMessage.className = 'cc-outbound-link cc-visuallyhidden cc-print-hide';
           screenReadMessage.innerHTML = ' - opens in new window';

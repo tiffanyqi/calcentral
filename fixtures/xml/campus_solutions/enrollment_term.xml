@@ -30,36 +30,11 @@
       <IS_CS_LINK type="boolean">true</IS_CS_LINK>
       <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SSS_BROWSE_CATLG.GBL?</URL>
     </COURSE_CATALOG>
-    <DECAL>
-      <NAME>DeCal (student-run education programs)</NAME>
-      <IS_CS_LINK type="boolean">false</IS_CS_LINK>
-      <URL>http://www.decal.org/</URL>
-    </DECAL>
-    <DISCOVERY_COURSES>
-      <NAME>Discovery Courses</NAME>
-      <IS_CS_LINK type="boolean">true</IS_CS_LINK>
-      <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/UC_FA_AWD_MGT_FLU.UC_FA_AWD_MGT_FLU.GBL</URL>
-    </DISCOVERY_COURSES>
-    <BIG_IDEAS>
-      <NAME>Big Ideas Courses</NAME>
-      <IS_CS_LINK type="boolean">true</IS_CS_LINK>
-      <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/UC_FA_AWD_MGT_FLU.UC_FA_AWD_MGT_FLU.GBL</URL>
-    </BIG_IDEAS>
-    <FRESHMAN_SEMINARS>
-      <NAME>Freshman and Sophomore Seminars</NAME>
-      <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/UC_FA_AWD_MGT_FLU.UC_FA_AWD_MGT_FLU.GBL</URL>
-      <IS_CS_LINK type="boolean">true</IS_CS_LINK>
-    </FRESHMAN_SEMINARS>
     <CHOOSE_CLASSES>
       <NAME>Choose classes</NAME>
       <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/ESTABLISH_COURSES.CLASS_SEARCH.GBL?</URL>
       <IS_CS_LINK type="boolean">true</IS_CS_LINK>
     </CHOOSE_CLASSES>
-    <ENROLLMENT_RULES>
-      <NAME>Enrollment rules and information</NAME>
-      <URL>http://registrar.berkeley.edu/Records/tbinfo.html</URL>
-      <IS_CS_LINK type="boolean">false</IS_CS_LINK>
-    </ENROLLMENT_RULES>
     <UPDATE_ENROLLED_CLASSES>
       <NAME>Update enrolled classes</NAME>
       <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SSR_SSENRL_EDIT.GBL?</URL>

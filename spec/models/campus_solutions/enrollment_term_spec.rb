@@ -19,7 +19,7 @@ describe CampusSolutions::EnrollmentTerm do
       enrollment_feed = subject[:feed][:enrollmentTerm]
       expect(enrollment_feed[:studentId]).to eq '12701798'
       expect(enrollment_feed[:advisors][1][:name]).to eq 'Marsh Man'
-      expect(enrollment_feed[:links][:decal][:url]).to eq 'http://www.decal.org/'
+      expect(enrollment_feed[:links][:scheduleClasses][:url]).to eq 'https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?'
       expect(enrollment_feed[:enrollmentPeriod][0][:id]).to eq 'phase1'
       expect(enrollment_feed[:enrolledClasses][0][:id]).to eq '12081'
       expect(enrollment_feed[:waitlistedClasses][0][:id]).to eq '15636'

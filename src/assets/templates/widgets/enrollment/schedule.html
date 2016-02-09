@@ -6,7 +6,9 @@
 ></div>
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
-  <a data-ng-href="/college_scheduler/{{enrollmentTerm.acadCareer}}/{{enrollmentTerm.term}}" target="_self">
+  <a
+    data-cc-outbound-enabled="true"
+    data-ng-href="/college_scheduler/{{enrollmentTerm.acadCareer}}/{{enrollmentTerm.term}}">
     Organize and preview your upcoming semester
   </a>
   based on your scheduling needs.
