@@ -14,6 +14,9 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
       isLoading: true,
       hasHolds: false
     },
+    academicPlan: {
+      isLoading: true
+    },
     isLoading: true,
     terms: [],
     sections: [
@@ -58,9 +61,9 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   /**
    * Set the data for a specific term
    */
-  var setTermData = function(data) {
+  var setTermData = function(data, termId) {
     var term = _.find($scope.enrollment.terms, {
-      termId: data.term
+      termId: termId
     });
 
     if (term) {
@@ -109,8 +112,7 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
 
     termData = mapEnrollmentPeriodsById(termData);
     termData = mapLinks(termData);
-
-    setTermData(termData);
+    setTermData(termData, termData.term);
   };
 
   /**
@@ -147,7 +149,7 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
    * Load the enrollment data and fire off subsequent events
    */
   var loadEnrollmentData = function() {
-    enrollmentFactory.getEnrollmentTerms()
+    return enrollmentFactory.getEnrollmentTerms()
       .then(parseEnrollmentTerms)
       .then(stopMainSpinner);
   };
@@ -164,12 +166,37 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   };
 
   /**
+   * Parse the academic plan information
+   */
+  var parseAcademicPlan = function(data) {
+    var feedData = _.get(data, 'data.feed');
+
+    if (feedData.updateAcademicPlan) {
+      $scope.enrollment.academicPlan.updateLink = feedData.updateAcademicPlan;
+      _.each(feedData.academicplans, function(academicPlan) {
+        setTermData({
+          academicPlan: academicPlan
+        }, academicPlan.term);
+      });
+    }
+
+    $scope.enrollment.academicPlan.isLoading = false;
+  };
+
+  /**
+   * Load the academic plan URL and information
+   */
+  var loadAcademicPlan = function() {
+    return enrollmentFactory.getAcademicPlan().then(parseAcademicPlan);
+  };
+
+  /**
    * We should check the roles of the current person since we should only load
    * the enrollment card for students
    */
   var checkRoles = function(data) {
     if (_.get(data, 'student')) {
-      loadEnrollmentData();
+      loadEnrollmentData().then(loadAcademicPlan);
       loadHolds();
     } else {
       stopMainSpinner();

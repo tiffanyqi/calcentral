@@ -7,7 +7,9 @@ var angular = require('angular');
  * Academics controller
  */
 angular.module('calcentral.controllers').controller('AcademicsController', function(academicsFactory, academicsService, apiService, badgesFactory, $q, $routeParams, $scope) {
-  apiService.util.setTitle('My Academics');
+  var title = 'My Academics';
+  apiService.util.setTitle(title);
+  $scope.backToText = title;
 
   var checkPageExists = function(page) {
     if (!page) {
