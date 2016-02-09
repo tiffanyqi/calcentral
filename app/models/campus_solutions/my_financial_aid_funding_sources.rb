@@ -12,6 +12,7 @@ module CampusSolutions
 
     def get_feed_internal
       return {} unless is_feature_enabled
+      self.aid_year ||= CampusSolutions::MyAidYears.new(@uid).default_aid_year
       logger.debug "User #{@uid}; aid year #{aid_year}"
       CampusSolutions::FinancialAidFundingSources.new({user_id: @uid, aid_year: aid_year}).get
     end
