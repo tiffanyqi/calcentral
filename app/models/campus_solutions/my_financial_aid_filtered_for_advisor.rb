@@ -15,9 +15,11 @@ module CampusSolutions
     end
 
     def get_feed_internal
-      return {} unless is_feature_enabled
-      self.aid_year ||= CampusSolutions::MyAidYears.new(@uid).default_aid_year
-      filter_for_advisor CampusSolutions::FinancialAidData.new({user_id: @uid, aid_year: aid_year}).get
+      if is_feature_enabled && (self.aid_year ||= CampusSolutions::MyAidYears.new(@uid).default_aid_year)
+        filter_for_advisor CampusSolutions::FinancialAidData.new(user_id: @uid, aid_year: aid_year).get
+      else
+        {}
+      end
     end
 
     def filter_for_advisor(feed)
