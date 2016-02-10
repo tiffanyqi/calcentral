@@ -14,6 +14,7 @@ angular.module('calcentral.directives').directive('ccFinaidPermissionsDirective'
       buttonGoBack: '=',
       buttonTextApprove: '=',
       buttonTextDontApprove: '=',
+      canPost: '=',
       header: '=',
       text: '=',
       title: '='
