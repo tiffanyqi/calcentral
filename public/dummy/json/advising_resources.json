@@ -1,0 +1,70 @@
+{
+  "feed": {
+    "ucAdvisingResources": {
+      "ucAdvisingFavoriteReports": [
+        {
+          "isCsLink": true,
+          "name": "Assign Checklist Item ACLUTR",
+          "queryName": "UCCS_AD_UG_ASSIGN_ACLUTR",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/q/?ICAction=ICQryNameURL=PUBLIC.UCCS_AD_UG_ASSIGN_ACLUTR"
+        },
+        {
+          "isCsLink": true,
+          "name": "Assign Checklist Item AHSTR",
+          "queryName": "UCCS_AD_UG_ASSIGN_AHSTR",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/q/?ICAction=ICQryNameURL=PUBLIC.UCCS_AD_UG_ASSIGN_AHSTR"
+        },
+        {
+          "isCsLink": true,
+          "name": "Assign Checklist AUFRFN",
+          "queryName": "UCCS_AD_UG_ASSIGN_AUFRFN",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/q/?ICAction=ICQryNameURL=PUBLIC.UCCS_AD_UG_ASSIGN_AUFRFN"
+        },
+        {
+          "isCsLink": true,
+          "name": "Assign SIR Checklist",
+          "queryName": "UCCS_AD_UG_ASSIGN_AUSIR",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/q/?ICAction=ICQryNameURL=PUBLIC.UCCS_AD_UG_ASSIGN_AUSIR"
+        }
+      ],
+      "ucAdvisingLinks": {
+        "ucAcademicRequirements": {
+          "isCsLink": true,
+          "name": "Academic Requirements",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/MANAGE_ACADEMIC_RECORDS.STDNT_ACTIVATION.GBL?EMPLID=17154428"
+        },
+        "ucAdviseeStudentCenter": {
+          "isCsLink": true,
+          "name": "Advisee Student Center",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SSR_ADVISEE_OVRD.SSS_STUDENT_CENTER.GBL?"
+        },
+        "ucEnrollmentLimit": {
+          "isCsLink": true,
+          "name": "Enrollment Limit",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/MANAGE_ACADEMIC_RECORDS.STDNT_ACTIVATION.GBL?EMPLID=17154428"
+        },
+        "ucGteformsWorkcenter": {
+          "isCsLink": true,
+          "name": "GT eForms Work Center",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/s/WEBLIB_PTAL.ISCRIPT1.FieldFormula.IScript_PTAL_DASHBOARD?tab=G3WORKCENTER"
+        },
+        "ucReportingCenter": {
+          "isCsLink": true,
+          "name": "Reporting Center",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/s/WEBLIB_PTAL.ISCRIPT1.FieldFormula.IScript_PTAL_DASHBOARD?tab=UC_CS_RP_RC_RPT_DASHBOARD"
+        },
+        "ucServiceIndicator": {
+          "isCsLink": true,
+          "name": "Service Indicators",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/MAINTAIN_SERVICE_IND_STDNT.ACTIVE_SRVC_INDICA.GBL?EMPLID=17154428&ACAD_CAREER="
+        },
+        "ucStudentAdvisor": {
+          "isCsLink": true,
+          "name": "Student Advisor",
+          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/TRACK_STUDENT_CAREERS.STDNT_ADVISOR.GBL?EMPLID=17154428"
+        }
+      }
+    }
+  },
+  "statusCode": 200
+}

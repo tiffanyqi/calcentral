@@ -172,6 +172,9 @@ CS_ENDPOINTS=(
 
   # GoLive 4: show_notifications_archive_link
   "/UC_CC_COMM_DB_URL.v1/dashboard/url/"
+
+  # GoLive 5: advising resources
+  "/UC_AA_ADVISING_RESOURCES.v1/UC_ADVISING_RESOURCES?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 )
 
 if [[ "${CS_BASE_URL}" == *"dev"* ]] ; then
