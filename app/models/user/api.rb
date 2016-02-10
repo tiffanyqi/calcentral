@@ -190,6 +190,7 @@ module User
       has_instructor_history = CampusOracle::UserCourses::HasInstructorHistory.new(user_id: @uid).has_instructor_history?
       delegate_view_as_privileges = get_delegate_view_as_privileges
       roles = get_campus_roles
+      can_view_academics = has_academics_tab?(roles, has_instructor_history, has_student_history, delegate_view_as_privileges)
       feed = {
         isSuperuser: current_user_policy.can_administrate?,
         isViewer: current_user_policy.can_view_as?,
@@ -206,7 +207,8 @@ module User
         hasStudentHistory: has_student_history,
         hasInstructorHistory: has_instructor_history,
         hasDashboardTab: !authentication_state.original_delegate_user_id,
-        hasAcademicsTab: has_academics_tab?(roles, has_instructor_history, has_student_history, delegate_view_as_privileges),
+        hasAcademicsTab: can_view_academics,
+        canViewGrades: can_view_academics && (!delegate_view_as_privileges || delegate_view_as_privileges[:viewGrades]),
         hasFinancialsTab: has_financials_tab?(roles, delegate_view_as_privileges),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
         hasPhoto: User::Photo.has_photo?(@uid),
