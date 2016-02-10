@@ -48,6 +48,8 @@ describe User::Api do
       expect(api[:isCampusSolutionsStudent]).to be true
       expect(api[:isDelegateUser]).to be false
       expect(api[:showSisProfileUI]).to be true
+      expect(api[:hasAcademicsTab]).to be true
+      expect(api[:canViewGrades]).to be true
       expect(api[:hasToolboxTab]).to be false
       expect(api[:officialBmailAddress]).to eq 'foo@foo.com'
       expect(api[:campusSolutionsID]).to eq 'CC12345678'
@@ -131,6 +133,7 @@ describe User::Api do
             expect(api[:isDelegateUser]).to be false
             expect(api[:hasToolboxTab]).to be false
             expect(api[:hasAcademicsTab]).to be true
+            expect(api[:canViewGrades]).to be true
             expect(api[:hasFinancialsTab]).to be false
             expect(api[:showSisProfileUI]).to be false
             privileges = api[:delegateViewAsPrivileges]
@@ -139,9 +142,17 @@ describe User::Api do
           end
         end
         context 'tabs per privileges' do
+          let(:privilege_view_enrollments) { true }
+          it 'should show My Academics tab and hide grades' do
+            expect(api[:hasAcademicsTab]).to be true
+            expect(api[:canViewGrades]).to be false
+          end
+        end
+        context 'tabs per privileges' do
           let(:privilege_financial) { true }
           it 'should show My Finances tab' do
             expect(api[:hasAcademicsTab]).to be false
+            expect(api[:canViewGrades]).to be false
             expect(api[:hasFinancialsTab]).to be true
             expect(api[:delegateViewAsPrivileges]).to include financial: true, viewEnrollments: false, viewGrades: false, phone: false
           end
@@ -244,6 +255,7 @@ describe User::Api do
       })
       api = User::Api.new(@uid).get_feed
       expect(api[:hasAcademicsTab]).to eq false
+      expect(api[:canViewGrades]).to be false
     end
   end
 
@@ -467,6 +479,8 @@ describe User::Api do
         expect(subject[:isSuperuser]).to be true
         expect(subject[:isViewer]).to be true
         expect(subject[:hasToolboxTab]).to be true
+        expect(subject[:hasAcademicsTab]).to be true
+        expect(subject[:canViewGrades]).to be true
       end
     end
     context 'proper handling of viewer permissions' do
@@ -481,6 +495,7 @@ describe User::Api do
         expect(subject[:isSuperuser]).to be false
         expect(subject[:isViewer]).to be true
         expect(subject[:hasToolboxTab]).to be true
+        expect(subject[:canViewGrades]).to be true
       end
     end
   end
