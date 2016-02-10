@@ -7,8 +7,9 @@
       <div>
         <strong data-ng-bind="item.employer"></strong>
       </div>
-      <div data-ng-if="item.payFrequency.fromDate">
+      <div data-ng-if="item.payFrequency.fromDate || item.payFrequency.toDate">
         <span data-ng-bind="item.payFrequency.fromDate"></span>
+        <span data-ng-if="!item.payFrequency.fromDate">No start date</span>
         -
         <span data-ng-bind="item.payFrequency.toDate"></span>
       </div>
