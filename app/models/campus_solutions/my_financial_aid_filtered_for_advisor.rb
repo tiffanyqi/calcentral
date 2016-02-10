@@ -16,13 +16,13 @@ module CampusSolutions
 
     def get_feed_internal
       if is_feature_enabled && (self.aid_year ||= CampusSolutions::MyAidYears.new(@uid).default_aid_year)
-        filter_for_advisor CampusSolutions::FinancialAidData.new(user_id: @uid, aid_year: aid_year).get
+        apply_filter CampusSolutions::FinancialAidData.new(user_id: @uid, aid_year: aid_year).get
       else
         {}
       end
     end
 
-    def filter_for_advisor(feed)
+    def apply_filter(feed)
       advisor_uid = authentication_state.original_advisor_user_id
       raise RuntimeError, "Only advisors have access to this filtered #{instance_key} FinAid feed" unless advisor_uid
       logger.debug "Advisor #{advisor_uid} viewing user #{@uid} financial aid feed where aid_year = #{aid_year}"
