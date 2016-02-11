@@ -148,7 +148,7 @@ module CanvasCsv
           new_account_data = canvas_user_from_campus_row(campus_row)
         else
           return unless Settings.canvas_proxy.inactivate_expired_users
-          if (ldap_result = CanvasCsv::Ldap.new.search_by_uid(ldap_uid)).present?
+          if (ldap_result = CalnetLdap::Client.new.search_by_uid(ldap_uid)).present?
             # Our LDAP bind does not provide enough data to fully update the Canvas account, and so
             # all we can do is log the disconnect between LDAP and our campus DB.
             logger.error "UID #{ldap_uid} is not in DB but LDAP reports #{ldap_result.inspect}"
