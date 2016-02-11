@@ -1,0 +1,52 @@
+<div class="cc-flex cc-flex-space-between">
+  <div>
+    <strong>Enrolled Classes</strong>
+  </div>
+  <div
+    data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
+    class="cc-flex cc-flex-space-between-horizontal-5"
+  >
+    <div
+      data-cc-enrollment-link-directive
+      data-link="enrollmentTerm.links.updateEnrolledClasses"
+      data-text="Update"
+    ></div>
+    <div aria-hidden data-ng-if="enrollmentTerm.enrolledClasses.length">
+      |
+    </div>
+    <div
+      data-cc-enrollment-link-directive
+      data-link="enrollmentTerm.links.withdrawFromSemester"
+      data-text="Withdraw"
+      data-ng-if="enrollmentTerm.enrolledClasses.length"
+    ></div>
+  </div>
+</div>
+
+<div data-ng-if="!enrollmentTerm.enrolledClasses.length">
+  You are currently not enrolled in any classes for
+  <span data-ng-bind="enrollmentTerm.termDescr"></span>.
+</div>
+
+<div data-ng-if="enrollmentTerm.enrolledClasses.length">
+  <div class="cc-table">
+    <table>
+      <thead>
+        <th scope="col" class="cc-table-right-spacing">Class</th>
+        <th scope="col">When</th>
+        <th scope="col" class="cc-table-right">Units</th>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="class in enrollmentTerm.enrolledClasses">
+          <td data-ng-bind="class.subjectCatalog" class="cc-table-right-spacing"></td>
+          <td data-ng-bind="class.when"></td>
+          <td data-ng-bind="class.units | number:1" class="cc-table-right"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cc-right">
+    Total Units:
+    <strong data-ng-bind="enrollmentTerm.enrolledClassesTotalUnits | number:1"></strong>
+  </div>
+</div>
