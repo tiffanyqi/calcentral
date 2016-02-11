@@ -1,0 +1,15 @@
+<div data-ng-if="enrollmentTerm.enrollmentTerm.waitlistClasses.length">
+  <div class="cc-flex cc-flex-space-between">
+    <div>
+      <strong>Waitlisted</strong>
+    </div>
+    <div
+      data-cc-enrollment-link-directive
+      data-link="enrollmentTerm.links.dropWaitlistedClasses"
+      data-text="Drop"
+      data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
+    ></div>
+  </div>
+
+  <!-- TODO SISRP-14820 Add waitlisted classes list as soon as we have any test data in DEV -->
+</div>
