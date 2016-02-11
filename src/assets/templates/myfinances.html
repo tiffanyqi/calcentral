@@ -1,4 +1,4 @@
-<div class="cc-page-myfinances">
+<div class="cc-page-myfinances" data-ng-if="api.user.profile.hasFinancialsTab">
   <div class="row collapse">
 
     <div class="column">
@@ -21,3 +21,4 @@
 
   </div>
 </div>
+<div data-ng-include="'404.html'" data-ng-if="!api.user.profile.hasFinancialsTab"></div>

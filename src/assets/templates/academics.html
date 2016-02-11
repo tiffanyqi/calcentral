@@ -1,6 +1,4 @@
-<div
-  class="cc-page-academics"
-  data-cc-spinner-directive>
+<div class="cc-page-academics" data-cc-spinner-directive>
   <div data-ng-if="canViewAcademics">
     <div class="column">
       <h1 class="cc-heading-page-title">My Academics</h1>
@@ -34,14 +32,4 @@
     </div>
   </div>
 </div>
-<div class="cc-page-academics" data-ng-if="!canViewAcademics" data-ng-cloak>
-  <div class="small-12 columns">
-    <h2>Data not available</h2>
-    <p>
-      This page displays academic status information for UC Berkeley students and faculty, and is not available to staff.
-    </p>
-    <p>
-      If you believe you are seeing this message in error, please <a href="http://www.ets.berkeley.edu/calcentral-support">let us know</a>.
-    </p>
-  </div>
-</div>
+<div data-ng-include="'404.html'" data-ng-if="!canViewAcademics"></div>
