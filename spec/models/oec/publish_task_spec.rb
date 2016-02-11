@@ -111,7 +111,7 @@ describe Oec::PublishTask do
       let(:end_date) { '5/3/2015' }
       before do
         merged_course_confirmations_csv.concat(
-          "#{course_id},#{course_id},LGBT C146A LEC 002 REP SEXUALITY/LIT,Y,GWS/LGBT C146A LEC 002,LGBT,C146A,LEC,002,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,Y,LGBT,G,Y,#{start_date},#{end_date}")
+          "#{course_id},#{course_id},LGBT C146A LEC 002 REP SEXUALITY/LIT,Y,GWS/LGBT C146A LEC 002,LGBT,C146A,LEC,002,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,23,Y,LGBT,G,Y,#{start_date},#{end_date}")
       end
 
       it 'should normalize dates' do
@@ -125,7 +125,7 @@ describe Oec::PublishTask do
     context 'data with suffixed course IDs' do
       before do
         merged_course_confirmations_csv.concat(
-          '2015-B-34821_GSI,2015-B-34821_GSI,LGBT C146A LEC 001 REP SEXUALITY/LIT,,,LGBT,C146A,LEC,001,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,Y,LGBT,G,,01-26-2015,05-11-2015')
+          '2015-B-34821_GSI,2015-B-34821_GSI,LGBT C146A LEC 001 REP SEXUALITY/LIT,,,LGBT,C146A,LEC,001,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,23,Y,LGBT,G,,01-26-2015,05-11-2015')
         expect(Oec::Queries).to receive(:enrollments_for_cntl_nums)
                                   .with(term_code, ['34821'])
                                   .and_return student_ids.map { |id| {'course_id' => '2015-B-34821', 'ldap_uid' => id} }
