@@ -87,9 +87,9 @@ fi
 eval $(parse_yaml ${yaml_filename} 'yml_')
 
 # --------------------
-UID_CROSSWALK=1022796
-SID=11667051
-CAMPUS_SOLUTIONS_ID=24188949
+UID_CROSSWALK=${UID_CROSSWALK:-1022796}
+SID=${SID:-11667051}
+CAMPUS_SOLUTIONS_ID=${CAMPUS_SOLUTIONS_ID:-24188949}
 
 CROSSWALK_BASE_URL="${yml_calnet_crosswalk_proxy_base_url//\'}"
 CROSSWALK_CREDENTIALS="${yml_calnet_crosswalk_proxy_username//\'}:${yml_calnet_crosswalk_proxy_password//\'}"
@@ -248,6 +248,7 @@ HUB_ENDPOINTS=(
   "/${CAMPUS_SOLUTIONS_ID}/demographic"
   "/${CAMPUS_SOLUTIONS_ID}/all"
   "/${CAMPUS_SOLUTIONS_ID}/work-experiences"
+  "/${CAMPUS_SOLUTIONS_ID}?id-type=uid"
 )
 
 for path in ${HUB_ENDPOINTS[@]}; do
