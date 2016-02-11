@@ -27,6 +27,7 @@ module Oec
         FIRST_NAME
         LAST_NAME
         EMAIL_ADDRESS
+        BLUE_ROLE
         EVALUATE
         DEPT_FORM
         EVALUATION_TYPE
