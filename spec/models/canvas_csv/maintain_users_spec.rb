@@ -224,7 +224,7 @@ describe CanvasCsv::MaintainUsers do
     let(:ldap_record) { nil }
     before do
       allow(Settings.canvas_proxy).to receive(:inactivate_expired_users).and_return(inactivate_expired_users)
-      allow_any_instance_of(CanvasCsv::Ldap).to receive(:search_by_uid).with(uid.to_i).and_return(ldap_record)
+      allow_any_instance_of(CalnetLdap::Client).to receive(:search_by_uid).with(uid.to_i).and_return(ldap_record)
       subject.categorize_user_account(existing_account, campus_rows)
     end
     context 'when the campus DB account is marked as having no active CalNet account' do
