@@ -1,17 +1,12 @@
 module CanvasCsv
-  class Ldap < Base
-    require 'net/ldap'
-
-    PEOPLE_DN = 'ou=people,dc=berkeley,dc=edu'
-    GUEST_DN = 'ou=guests,dc=berkeley,dc=edu'
-    TIMESTAMP_FORMAT = '%Y%m%d%H%M%SZ'
+  class UpdateGuests < Base
 
     # Performs Canvas import of updated guest users
-    def update_guests
+    def run
       sync_settings = Synchronization.get
       current_time = Time.now.utc
       logger.warn "Querying LDAP for guest updates since #{sync_settings.last_guest_user_sync.utc}"
-      guests = search_updated_guests sync_settings.last_guest_user_sync
+      guests = CalnetLdap::Client.new.guests_modified_since sync_settings.last_guest_user_sync
       if guests.any?
         user_csv_rows = prepare_guest_user_csv_rows guests
         logger.warn "Sending SIS Import for #{user_csv_rows.count} guest users to Canvas"
@@ -21,42 +16,6 @@ module CanvasCsv
       end
       sync_settings.update(last_guest_user_sync: current_time)
       logger.warn "Guest synchronization completed for #{current_time} at #{Time.now.utc.to_s}"
-    end
-
-    # Returns initialized Net::LDAP client
-    def client
-      @client ||= Net::LDAP.new({
-        host: Settings.ldap.host,
-        port: Settings.ldap.port,
-        encryption: { method: :simple_tls },
-        auth: {
-          method: :simple,
-          username: Settings.ldap.application_bind,
-          password: Settings.ldap.application_password
-        }
-      })
-    end
-
-    def search(args = {})
-      ActiveSupport::Notifications.instrument('proxy', {class: self.class, search: args}) do
-        client.search args
-      end
-    end
-
-    def search_by_uid(uid)
-      filter = Net::LDAP::Filter.eq('uid', uid.to_s)
-      results = search(base: PEOPLE_DN, filter: filter)
-      if results.empty?
-        results = search(base: GUEST_DN, filter: filter)
-      end
-      results.first
-    end
-
-    # Performs search for guest users updated since last import
-    def search_updated_guests(timestamp)
-      ldap_timestamp = timestamp.to_time.utc.strftime(TIMESTAMP_FORMAT)
-      modified_timestamp_filter = Net::LDAP::Filter.ge('modifytimestamp', ldap_timestamp)
-      search(base: GUEST_DN, filter: modified_timestamp_filter)
     end
 
     # Transforms guest user array into data structure intended for Canvas CSV Import
