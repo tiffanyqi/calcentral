@@ -1,8 +1,7 @@
 module User
   module Student
     def lookup_student_id
-      student = CampusOracle::UserAttributes.new(user_id: @uid).get_feed
-      student.try(:[], "student_id")
+      student_id_from_ldap || student_id_from_oracle
     end
 
     def lookup_campus_solutions_id
@@ -12,5 +11,22 @@ module User
     def lookup_student_id_from_crosswalk
       CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_student_id
     end
+
+    def lookup_delegate_user_id
+      CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_delegate_user_id
+    end
+
+    private
+
+    def student_id_from_ldap
+      id = (ldap_feed = CalnetLdap::UserAttributes.new(user_id: @uid).get_feed) && ldap_feed[:student_id]
+      id if id.present?
+    end
+
+    def student_id_from_oracle
+      id = (oracle_feed = CampusOracle::UserAttributes.new(user_id: @uid).get_feed) && oracle_feed['student_id']
+      id if id.present?
+    end
+
   end
 end
