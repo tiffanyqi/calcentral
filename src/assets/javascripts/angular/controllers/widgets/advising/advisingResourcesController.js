@@ -17,7 +17,6 @@ angular.module('calcentral.controllers').controller('AdvisingResourcesController
    * Add the back to text (used for Campus Solutions) to the link
    */
   var addBackToTextLink = function(link) {
-    console.log(link.url);
     link.backToText = backToText;
     return link;
   };
