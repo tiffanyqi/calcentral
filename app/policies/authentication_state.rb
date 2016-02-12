@@ -29,7 +29,8 @@ class AuthenticationState
 
   def original_user_auth
     @original_user_auth ||= User::Auth.get original_user_id
-    # If the previous line resulted in nil then we look for delegate user
+    # If the previous line resulted in nil then we look for other view-as types
+    @original_user_auth ||= User::Auth.get original_advisor_user_id
     @original_user_auth ||= User::Auth.get original_delegate_user_id
   end
 
@@ -38,7 +39,7 @@ class AuthenticationState
   end
 
   def real_user_auth
-    if (original_user_id || original_delegate_user_id) && user_id
+    if (original_user_id || original_advisor_user_id || original_delegate_user_id) && user_id
       return original_user_auth
     elsif lti_authenticated_only
       # Public permissions only.
@@ -52,6 +53,8 @@ class AuthenticationState
     if user_id.present?
       if original_user_id.present?
         return original_user_id
+      elsif original_advisor_user_id.present?
+        return original_advisor_user_id
       elsif original_delegate_user_id.present?
         return original_delegate_user_id
       elsif canvas_masquerading_user_id
@@ -68,7 +71,7 @@ class AuthenticationState
 
   # For better exception messages.
   def to_s
-    session_props = %w(user_id original_user_id original_delegate_user_id canvas_masquerading_user_id lti_authenticated_only).map do |prop|
+    session_props = %w(user_id original_user_id original_advisor_user_id original_delegate_user_id canvas_masquerading_user_id lti_authenticated_only).map do |prop|
       if (prop_value = self.send prop.to_sym)
         "#{prop}=#{prop_value}"
       end
@@ -82,7 +85,7 @@ class AuthenticationState
 
   def viewing_as?
     # Return true if either of the two view_as modes is active
-    original_uid = original_user_id || original_delegate_user_id
+    original_uid = original_user_id || original_advisor_user_id || original_delegate_user_id
     original_uid.present? && user_id.present? && (original_uid != user_id)
   end
 
