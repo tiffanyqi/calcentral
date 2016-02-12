@@ -12,6 +12,7 @@ module User
       use_pooled_connection {
         @calcentral_user_data ||= User::Data.where(:uid => @uid).first
       }
+      @ldap_attributes ||= CalnetLdap::UserAttributes.new(user_id: @uid).get_feed
       @oracle_attributes ||= CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       if is_cs_profile_feature_enabled
         @edo_attributes ||= HubEdos::UserAttributes.new(user_id: @uid).get
@@ -33,7 +34,7 @@ module User
       response && response[:feed] && response[:feed][:students]
     end
 
-    # split brain until SIS GoLive5 makes registration data available
+    # Split brain three ways until some subset of the brain proves more trustworthy.
     def get_campus_attribute(field, format)
       if is_sis_profile_visible? && @edo_attributes[:noStudentId].blank? && (edo_attribute = @edo_attributes[field.to_sym])
         begin
@@ -42,7 +43,7 @@ module User
           logger.error "EDO attribute #{field} failed validation for UID #{@uid}: expected a #{format}, got #{edo_attribute}"
         end
       end
-      validated_edo_attribute || @oracle_attributes[field]
+      validated_edo_attribute || @ldap_attributes[field.to_sym] || @oracle_attributes[field]
     end
 
     def validate_attribute(value, format)
@@ -59,15 +60,17 @@ module User
     WHITELISTED_EDO_ROLES = [:student, :applicant, :advisor]
 
     def get_campus_roles
+      ldap_roles = (@ldap_attributes && @ldap_attributes[:roles]) || {}
       oracle_roles = (@oracle_attributes && @oracle_attributes[:roles]) || {}
-      edo_roles = (@edo_attributes && @edo_attributes[:roles]) || {}
-      if is_sis_profile_visible? && edo_roles.respond_to?(:slice)
+      campus_roles = oracle_roles.merge ldap_roles
+      if is_sis_profile_visible?
+        edo_roles = (@edo_attributes && @edo_attributes[:roles]) || {}
         edo_roles_to_merge = edo_roles.slice *WHITELISTED_EDO_ROLES
-        # While we're in the split-brain stage, Oracle views remain our most trusted source on ex-student status.
-        edo_roles_to_merge.delete(:student) if oracle_roles[:exStudent]
-        oracle_roles.merge edo_roles_to_merge
+        # While we're in the split-brain stage, LDAP and Oracle are more trusted on ex-student status.
+        edo_roles_to_merge.delete(:student) if campus_roles[:exStudent]
+        campus_roles.merge edo_roles_to_merge
       else
-        oracle_roles
+        campus_roles
       end
     end
 
