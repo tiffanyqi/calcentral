@@ -35,6 +35,18 @@ describe CalnetLdap::UserAttributes do
       expect(feed[:roles][:exStudent]).to eq false
       expect(feed[:student_id]).to eq '11667051'
     end
+
+    context 'no affiliation data in LDAP' do
+      let(:ldap_result) do
+        {
+          mail: ['oski@berkeley.edu'],
+          uid: ['61889'],
+        }
+      end
+      it 'returns empty roles hash' do
+        expect(feed[:roles]).to be_blank
+      end
+    end
   end
 
   context 'test user from real LDAP connection', testext: true do
