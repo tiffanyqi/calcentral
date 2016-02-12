@@ -44,6 +44,17 @@ angular.module('calcentral.directives').directive('ccCampusSolutionsLinkDirectiv
     return link;
   };
 
+  /**
+   * Sometimes Campus Solutions gives us links that end with a question mark, we should clean those up
+   * /EMPLOYEE/HRMS/c/MAINTAIN_SERVICE_IND_STDNT.ACTIVE_SRVC_INDICA.GBL?
+   */
+  var fixLastQuestionMark = function(link) {
+    if (link.indexOf('?', link.length - 1) !== -1) {
+      link = link.slice(0, -1);
+    }
+    return link;
+  };
+
   return {
     priority: 99, // it needs to run after the attributes are interpolated
     restrict: 'A',
@@ -53,6 +64,7 @@ angular.module('calcentral.directives').directive('ccCampusSolutionsLinkDirectiv
           return;
         }
         if (/^http/.test(value) && scope.$eval(attrs.ccCampusSolutionsLinkDirectiveEnabled) !== false) {
+          value = fixLastQuestionMark(value);
           value = updateQueryStringParameter(value, 'ucFrom', 'CalCentral');
           var link = getCalCentralLink(scope.$eval(attrs.ccCampusSolutionsLinkDirectiveCache));
           value = updateQueryStringParameter(value, 'ucFromLink', link);

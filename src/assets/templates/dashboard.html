@@ -13,6 +13,7 @@
 
   <div class="medium-4 columns cc-column-last">
     <div data-ng-include="'widgets/activity.html'"></div>
+    <div data-ng-include="'widgets/advisor/resources.html'" data-ng-if="api.user.profile.roles.advisor"></div>
   </div>
 </div>
 <div data-ng-include="'404.html'" data-ng-if="!api.user.profile.hasDashboardTab"></div>
