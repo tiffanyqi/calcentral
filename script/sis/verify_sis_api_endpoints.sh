@@ -31,7 +31,7 @@ report_error() {
   local http_code="${2}"
   local url="${3}"
   local path_to_file="${4}"
-  echo; echo
+  echo
   echo "  [ERROR]"
   echo "    API Endpoint: ${api_path}"
   echo "    HTTP status: ${http_code}"
@@ -60,6 +60,46 @@ validate_api_response() {
   fi
 }
 
+verify_sis_endpoints() {
+  echo "----------------------------------------------------------------------------------------------------"
+  local sis_system="${1}"
+  local endpoint_array=$2[@]
+  local endpoints=("${!endpoint_array}")
+  local feature_flag_name="${3:-GLOBAL}"
+  local feature_flag_value="${4:-true}"
+  echo; echo "${sis_system} > feature flag ${feature_flag_name} = ${feature_flag_value}"
+  echo
+  if [ "${feature_flag_value}" == "true" ] ; then
+    for path in ${endpoints[@]}; do
+      case "${sis_system}" in
+        ("Campus Solutions")
+          mkdir -p "${LOG_DIRECTORY}/campus_solutions"
+          log_file="${LOG_DIRECTORY}/campus_solutions/${path//\//_}.log"
+          url="${CS_BASE_URL}${path}"
+          http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" -u "${CS_CREDENTIALS}" "${url}")
+          validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
+          ;;
+        ("Crosswalk")
+          mkdir -p "${LOG_DIRECTORY}/calnet_crosswalk"
+          log_file="${LOG_DIRECTORY}/calnet_crosswalk/${path//\//_}.log"
+          url="${CROSSWALK_BASE_URL}${path}"
+          http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" --digest -u "${CROSSWALK_CREDENTIALS}" "${url}")
+          validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
+          ;;
+        ("Hub")
+          mkdir -p "${LOG_DIRECTORY}/hub_edos"
+          log_file="${LOG_DIRECTORY}/hub_edos/${path//\//_}.log"
+          url="${HUB_BASE_URL}${path}"
+          http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" -H "Accept:application/json" -u "${HUB_CREDENTIALS}" --header "app_id: ${HUB_APP_ID}" --header "app_key: ${HUB_APP_KEY}" "${url}")
+          validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
+          ;;
+        (*) echo; echo "[ERROR] Unknown SIS system: ${sis_system}"; echo ;;
+      esac
+    done
+  fi
+  echo
+}
+
 # cd to 'calcentral' directory
 cd $( dirname "${BASH_SOURCE[0]}" )/../..
 
@@ -73,6 +113,22 @@ LOG_DIRECTORY="${PWD}/${LOG_RELATIVE_PATH}"
 
 if [[ $# -eq 0 ]] ; then
   echo; echo "USAGE"; echo "    ${0} [Path to YAML file]"; echo
+  echo; echo "[OPTIONAL] Environment variables:"; echo
+  echo "  export TRANSITIVE_DEPENDENCIES=true"
+  echo
+  echo "    The 'TRANSITIVE_DEPENDENCIES' are endpoints used by the Hub when proxying to"
+  echo "    Campus Solutions. You won't find them referenced in CalCentral"
+  echo "    code. To test these particular endpoints, in addition to the rest,"
+  echo "    set environment variable as above."
+  echo
+  echo "  export UID_CROSSWALK=123"
+  echo "  export SID=456"
+  echo "  export CAMPUS_SOLUTIONS_ID=789"
+  echo
+  echo "    The script uses hard-coded IDs (i.e., test users) to construct"
+  echo "    API calls. You can override those defaults with the environment"
+  echo "    variables above."
+  echo
   exit 0
 fi
 
@@ -102,14 +158,7 @@ HUB_CREDENTIALS="${yml_hub_edos_proxy_username//\'}:${yml_hub_edos_proxy_passwor
 HUB_APP_ID="${yml_hub_edos_proxy_app_id//\'}"
 HUB_APP_KEY="${yml_hub_edos_proxy_app_key//\'}"
 
-# Feature flags
-[ "${yml_features_cs_fin_aid}" == "true" ] ; CS_FIN_AID=$?
-[ "${yml_features_cs_delegated_access}" == "true" ] ; CS_DELEGATED_ACCESS=$?
-[ "${yml_features_cs_enrollment_card}" == "true" ] ; CS_ENROLLMENT_CARD=$?
-[ "${yml_features_cs_profile_emergency_contacts}" == "true" ] ; CS_PROFILE_EMERGENCY_CONTACTS=$?
-
 # --------------------
-
 echo "DESCRIPTION"
 echo "    Verify API endpoints: Crosswalk, Campus Solutions, Hub"; echo
 
@@ -121,37 +170,21 @@ echo "SIS ENVIRONMENTS"; echo
 echo "  Campus Solutions: ${CS_BASE_URL}"
 echo "  Crosswalk: ${CROSSWALK_BASE_URL}"
 echo "  Hub: ${HUB_BASE_URL}"
-echo
-echo "----------------------------------------------------------------------------------------------------"
-echo "FEATURE FLAGS (ONLY THE RELEVANT)"; echo
-echo "  cs_fin_aid=${CS_FIN_AID}"
-echo "  cs_delegated_access=${CS_DELEGATED_ACCESS}"
-echo "  cs_enrollment_card=${CS_ENROLLMENT_CARD}"
-echo "  cs_profile_emergency_contacts=${CS_PROFILE_EMERGENCY_CONTACTS}"
-echo
-echo "----------------------------------------------------------------------------------------------------"
-echo "VERIFY: CROSSWALK API"; echo
-mkdir -p "${LOG_DIRECTORY}/calnet_crosswalk"
+echo; echo
 
-CROSSWALK_ENDPOINTS=(
+CROSSWALK_GENERAL=(
   "/CAMPUS_SOLUTIONS_ID/${CAMPUS_SOLUTIONS_ID}"
   "/LEGACY_SIS_STUDENT_ID/${SID}"
   "/UID/${UID_CROSSWALK}"
 )
+verify_sis_endpoints "Crosswalk" CROSSWALK_GENERAL
 
-for path in ${CROSSWALK_ENDPOINTS[@]}; do
-  log_file="${LOG_DIRECTORY}/calnet_crosswalk/${path//\//_}.log"
-  url="${CROSSWALK_BASE_URL}${path}"
-  http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" --digest -u "${CROSSWALK_CREDENTIALS}" "${url}")
-  validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
-done
+CS_GENERAL=(
+  "/UC_AA_ADVISING_RESOURCES.v1/UC_ADVISING_RESOURCES?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+)
+verify_sis_endpoints "Campus Solutions" CS_GENERAL
 
-echo; echo "----------------------------------------------------------------------------------------------------"
-echo "VERIFY: CAMPUS SOLUTIONS API"; echo
-mkdir -p "${LOG_DIRECTORY}/campus_solutions"
-
-CS_ENDPOINTS=(
-  # GoLive 4: cs_profile
+CS_PROFILE=(
   "/UC_CC_ADDR_LBL.v1/get?COUNTRY=ESP"
   "/UC_CC_ADDR_TYPE.v1/getAddressTypes/"
   "/UC_COUNTRY.v1/country/get"
@@ -164,85 +197,77 @@ CS_ENDPOINTS=(
   "/UC_SIR_CONFIG.v1/get/sir/config/?INSTITUTION=UCB01"
   "/UC_STATE_GET.v1/state/get/?COUNTRY=ESP"
   "/UC_CM_XLAT_VALUES.v1/GetXlats?FIELDNAME=PHONE_TYPE"
+)
+verify_sis_endpoints "Campus Solutions" CS_PROFILE "cs_profile" "${yml_features_cs_profile}"
 
-  # GoLive 4: cs_sir
+CS_SIR=(
   "/UC_CC_CHECKLIST.v1/get/checklist?EMPLID=${CAMPUS_SOLUTIONS_ID}"
   "/UC_DEPOSIT_AMT.v1/deposit/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&ADM_APPL_NBR=00000087"
   "/UC_OB_HIGHER_ONE_URL_GET.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-
-  # GoLive 4: show_notifications_archive_link
-  "/UC_CC_COMM_DB_URL.v1/dashboard/url/"
-
-  # GoLive 5: advising resources
-  "/UC_AA_ADVISING_RESOURCES.v1/UC_ADVISING_RESOURCES?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 )
+verify_sis_endpoints "Campus Solutions" CS_SIR "cs_sir" "${yml_features_cs_sir}"
 
-if [[ "${CS_BASE_URL}" == *"dev"* ]] ; then
-  # --------------------------------------------
-  # These endpoints are used by the Hub when proxying to Campus Solutions. You won't find them referenced in
-  # CalCentral code. We only verify these endpoints in dev because they are more restricted in QAT and PROD.
-  # --------------------------------------------
-  CS_ENDPOINTS+=("/UcEmailAddressesRGet.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_PER_ADDR_GET.v1/person/address/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcSccAflPersonRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcPersPhonesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcIdentifiersRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcNamesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcApiEmergencyContactGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcCitizenshpIRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcUrlRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcEthnicityIGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcGenderRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcMilitaryStatusRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcPassportsRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcLanguagesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcVisasRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_PERSON_DOB_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcConftlStdntRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_CC_WORK_EXPERIENCES_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UcPersonsFullLoadRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_CC_STDNT_DEMOGRAPHIC_R.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_CC_STDNT_CONTACTS_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_SR_STDNT_REGSTRTN_R.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_CC_INTERNTNL_STDNTS_R.v1/Students/?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_CM_UID_CROSSWALK.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}")
+CS_ARCHIVE_LINK=(
+  "/UC_CC_COMM_DB_URL.v1/dashboard/url/"
+)
+verify_sis_endpoints "Campus Solutions" CS_ARCHIVE_LINK "show_notifications_archive_link" "${yml_features_show_notifications_archive_link}"
+
+CS_TRANSITIVE_DEPENDENCIES=(
+	"/UcEmailAddressesRGet.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UC_PER_ADDR_GET.v1/person/address/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcSccAflPersonRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcPersPhonesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcIdentifiersRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcNamesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcApiEmergencyContactGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcCitizenshpIRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcUrlRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcEthnicityIGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcGenderRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcMilitaryStatusRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcPassportsRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcLanguagesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcVisasRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UC_PERSON_DOB_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcConftlStdntRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UC_CC_WORK_EXPERIENCES_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UcPersonsFullLoadRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UC_CC_STDNT_DEMOGRAPHIC_R.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UC_CC_STDNT_CONTACTS_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UC_SR_STDNT_REGSTRTN_R.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UC_CC_INTERNTNL_STDNTS_R.v1/Students/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+	"/UC_CM_UID_CROSSWALK.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+)
+verify_sis_endpoints "Campus Solutions" CS_TRANSITIVE_DEPENDENCIES "cs_transitive_dependencies" "${TRANSITIVE_DEPENDENCIES:-false}"
+
+CS_FIN_AID=(
+  "/UC_FA_FINANCIAL_AID_DATA.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016"
+  "/UC_FA_FUNDING_SOURCES.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016"
+  "/UC_FA_FUNDING_SOURCES_TERM.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016"
+  "/UC_FA_GET_T_C.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01"
+)
+verify_sis_endpoints "Campus Solutions" CS_FIN_AID "cs_fin_aid" "${yml_features_cs_fin_aid}"
+
+CS_DELEGATED_ACCESS=(
+  "/UC_CC_DELEGATED_ACCESS.v1/DelegatedAccess/get?SCC_DA_PRXY_OPRID=${UID_CROSSWALK}"
+  "/UC_CC_DELEGATED_ACCESS_URL.v1/get"
+)
+verify_sis_endpoints "Campus Solutions" CS_DELEGATED_ACCESS "cs_delegated_access" "${yml_features_cs_delegated_access}"
+
+CS_ENROLLMENT_CARD=(
+  "/UC_SR_CURR_TERMS.v1/GetCurrentItems?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_SR_STDNT_CLASS_ENROLL.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
+  "/UC_SR_ACADEMIC_PLAN.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
+  "/UC_SR_COLLEGE_SCHDLR_URL.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168&ACAD_CAREER=UGRD&INSTITUTION=UCB01"
+)
+verify_sis_endpoints "Campus Solutions" CS_ENROLLMENT_CARD "cs_enrollment_card" "${yml_features_cs_enrollment_card}"
+
+if [ "${yml_features_cs_profile_emergency_contacts}" == "true" ] ; then
+  echo; echo "----------------------------------------------------------------------------------------------------"
+  echo "  [INFO] No API endpoints associated with cs_profile_emergency_contacts feature flag"; echo
 fi
 
-if [ ${CS_FIN_AID} == 0 ] ; then
-  CS_ENDPOINTS+=("/UC_FA_FINANCIAL_AID_DATA.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016")
-  CS_ENDPOINTS+=("/UC_FA_FUNDING_SOURCES.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016")
-  CS_ENDPOINTS+=("/UC_FA_FUNDING_SOURCES_TERM.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016")
-  CS_ENDPOINTS+=("/UC_FA_GET_T_C.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01")
-fi
-
-if [ ${CS_DELEGATED_ACCESS} == 0 ] ; then
-  CS_ENDPOINTS+=("/UC_CC_DELEGATED_ACCESS.v1/DelegatedAccess/get?SCC_DA_PRXY_OPRID=${UID_CROSSWALK}")
-  CS_ENDPOINTS+=("/UC_CC_DELEGATED_ACCESS_URL.v1/get")
-fi
-
-if [ ${CS_ENROLLMENT_CARD} == 0 ] ; then
-  CS_ENDPOINTS+=("/UC_SR_CURR_TERMS.v1/GetCurrentItems?EMPLID=${CAMPUS_SOLUTIONS_ID}")
-  CS_ENDPOINTS+=("/UC_SR_STDNT_CLASS_ENROLL.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168")
-  CS_ENDPOINTS+=("/UC_SR_ACADEMIC_PLAN.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168")
-  CS_ENDPOINTS+=("/UC_SR_COLLEGE_SCHDLR_URL.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168&ACAD_CAREER=UGRD&INSTITUTION=UCB01")
-fi
-
-if [ ${CS_PROFILE_EMERGENCY_CONTACTS} == 0 ] ; then
-  echo "  [INFO] No API endpoints associated with cs_profile_emergency_contacts feature flag"
-fi
-
-for path in ${CS_ENDPOINTS[@]}; do
-  log_file="${LOG_DIRECTORY}/campus_solutions/${path//\//_}.log"
-  url="${CS_BASE_URL}${path}"
-  http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" -u "${CS_CREDENTIALS}" "${url}")
-  validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
-done
-
-echo; echo "----------------------------------------------------------------------------------------------------"
-echo "VERIFY: HUB API"; echo
-mkdir -p "${LOG_DIRECTORY}/hub_edos"
-
-HUB_ENDPOINTS=(
+HUB_GENERAL=(
   "/${CAMPUS_SOLUTIONS_ID}/affiliation"
   "/${CAMPUS_SOLUTIONS_ID}/contacts"
   "/${CAMPUS_SOLUTIONS_ID}/demographic"
@@ -250,13 +275,7 @@ HUB_ENDPOINTS=(
   "/${CAMPUS_SOLUTIONS_ID}/work-experiences"
   "/${CAMPUS_SOLUTIONS_ID}?id-type=uid"
 )
-
-for path in ${HUB_ENDPOINTS[@]}; do
-  log_file="${LOG_DIRECTORY}/hub_edos/${path//\//_}.log"
-  url="${HUB_BASE_URL}${path}"
-  http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" -H "Accept:application/json" -u "${HUB_CREDENTIALS}" --header "app_id: ${HUB_APP_ID}" --header "app_key: ${HUB_APP_KEY}" "${url}")
-  validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
-done
+verify_sis_endpoints "Hub" HUB_GENERAL
 
 echo; echo "----------------------------------------------------------------------------------------------------"; echo
 echo "DONE"; echo "    Results can be found in the directory: ${LOG_RELATIVE_PATH}"; echo; echo
