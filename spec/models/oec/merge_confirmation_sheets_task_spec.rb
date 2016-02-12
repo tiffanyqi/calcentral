@@ -196,9 +196,9 @@ describe Oec::MergeConfirmationSheetsTask do
   context 'when supervisor data conflicts between department forms' do
     let(:local_write) { 'Y' }
     before do
-      supervisors[:csv].concat '999999,UID:999999,Alice,Sheldon,raccoona@berkeley.edu,DEPT_ADMIN,Y,,MCELLBI,GWS,,,'
-      gws_supervisor_confirmation[:csv].concat '999999,Raccoona,Sheldon,raccoona@berkeley.edu,DEPT_ADMIN,Y,,MCELLBI,GWS,,,'
-      mcellbi_supervisor_confirmation[:csv].concat '999999,James,Tiptree,raccoona@berkeley.edu,DEPT_ADMIN,Y,,MCELLBI,GWS,,,'
+      supervisors[:csv].concat '999999,UID:999999,Alice,Sheldon,raccoona@berkeley.edu,DEPT_ADMIN,Y,,MCELLBI,GWS,,,,,,,,'
+      gws_supervisor_confirmation[:csv].concat '999999,Raccoona,Sheldon,raccoona@berkeley.edu,DEPT_ADMIN,Y,,MCELLBI,GWS,,,,,,,,'
+      mcellbi_supervisor_confirmation[:csv].concat '999999,James,Tiptree,raccoona@berkeley.edu,DEPT_ADMIN,Y,,MCELLBI,GWS,,,,,,,,'
     end
 
     it 'should record errors' do
@@ -222,7 +222,7 @@ describe Oec::MergeConfirmationSheetsTask do
   context 'when confirmed supervisor data cannot be matched to supervisors sheet' do
     let(:local_write) { 'Y' }
     before do
-      mcellbi_supervisor_confirmation[:csv].concat '999999,Alice,Sheldon,raccoona@berkeley.edu,DEPT_ADMIN,,,MCELLBI,GWS,,,'
+      mcellbi_supervisor_confirmation[:csv].concat '999999,Alice,Sheldon,raccoona@berkeley.edu,DEPT_ADMIN,,,MCELLBI,GWS,,,,,,,,'
     end
 
     it 'should record errors' do
