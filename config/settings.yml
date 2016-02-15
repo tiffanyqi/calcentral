@@ -265,7 +265,6 @@ cache:
     CampusSolutions::DelegateTermsAndConditions: <%= 24.hours %>
     CampusSolutions::EthnicitySetup: <%= 29.days %>
     CampusSolutions::LanguageCode: <%= 29.days %>
-    CampusSolutions::ListOfValues: <%= 24.hours %>
     CampusSolutions::MyChecklist: <%= 15.minutes %>
     CampusSolutions::MyDeposit: <%= 2.minutes %>
     CampusSolutions::MyHigherOneUrl: <%= 1.seconds %>
