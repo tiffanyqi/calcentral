@@ -171,7 +171,7 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   var parseAcademicPlan = function(data) {
     var feedData = _.get(data, 'data.feed');
 
-    if (feedData.updateAcademicPlan) {
+    if (_.get(feedData, 'updateAcademicPlan')) {
       $scope.enrollment.academicPlan.updateLink = feedData.updateAcademicPlan;
       _.each(feedData.academicplans, function(academicPlan) {
         setTermData({
