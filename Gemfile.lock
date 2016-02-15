@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: https://github.com/ets-berkeley-edu/omniauth-cas.git
-  revision: 743dc90e2aee9418e55ef085ed94e997f168dd83
+  revision: b9fe20f75263a343d794465004760245c33237a9
   specs:
     omniauth-cas (1.1.0)
       addressable (~> 2.3)

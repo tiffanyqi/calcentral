@@ -25,5 +25,9 @@ module Cache
       self.class.expire(instance_key)
     end
 
+    def extended_instance_keys
+      [instance_key]
+    end
+
   end
 end

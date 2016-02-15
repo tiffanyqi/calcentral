@@ -2063,23 +2063,6 @@
       ]
     },
     {
-      "name": "Living At Cal",
-      "description": "UC Berkeley housing options",
-      "url": "http://www.housing.berkeley.edu/livingatcal/",
-      "roles": {
-        "student": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Food \u0026 Housing",
-          "subcategory": "Housing"
-        }
-      ]
-    },
-    {
       "name": "Mail Services",
       "description": "United States Postal Service-incoming and outgoing mail",
       "url": "http://mailservices.berkeley.edu/",
@@ -2522,9 +2505,9 @@
       ]
     },
     {
-      "name": "Residential \u0026 Student Service Programs",
+      "name": "Residence Halls \u0026 Housing Options",
       "description": "UC Berkeley housing options",
-      "url": "http://www.housing.berkeley.edu/",
+      "url": "http://reslife.berkeley.edu/",
       "roles": {
         "student": true,
         "staff": false,

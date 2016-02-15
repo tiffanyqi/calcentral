@@ -2,6 +2,7 @@ module Textbooks
   class Proxy < BaseProxy
 
     include ClassLogger
+    include Proxies::Mockable
     include SafeJsonParser
 
     APP_ID = 'textbooks'
@@ -14,6 +15,7 @@ module Textbooks
       @term = get_term(@slug)
 
       super(Settings.textbooks_proxy, options)
+      initialize_mocks if @fake
     end
 
 
@@ -34,7 +36,12 @@ module Textbooks
     end
 
     def process_material(material, sections_with_books)
-      isbn = material['ean']
+      begin
+        isbn = Integer(material['ean'], 10).to_s
+      rescue
+        logger.error "Textbook feed for #{@slug} #{@dept} #{@course_catalog} #{@section_numbers.join ', '} includes invalid ISBN \"#{material['ean']}\"; skipping entry"
+        return nil
+      end
       google_info = google_book(isbn)
 
       amazon_url = 'http://www.amazon.com/gp/search?index=books&linkCode=qs&keywords='
@@ -77,9 +84,10 @@ module Textbooks
       sections_with_books = get_sections_with_books(response)
 
       response.each do |item|
-        if item['materials']
-          item['materials'].each do |material|
-            books.push(process_material(material, sections_with_books))
+        next unless item['materials']
+        item['materials'].each do |material|
+          if (processed_material = process_material(material, sections_with_books))
+            books << processed_material
           end
         end
       end
@@ -135,8 +143,6 @@ module Textbooks
     end
 
     def request_bookstore_list(section_numbers)
-      return fake_list(section_numbers) if @fake
-
       url = bookstore_link(section_numbers)
       logger.info "Fake = #{@fake}; Making request to #{url}; cache expiration #{self.class.expires_in}"
       response = get_response(url,
@@ -148,13 +154,10 @@ module Textbooks
       response.parsed_response
     end
 
-    def fake_list(section_numbers)
-      path = Rails.root.join('fixtures', 'json', "textbooks-#{@slug}-#{@dept}-#{@course_catalog}-#{section_numbers.join('-')}.json").to_s
-      logger.info "Fake = #{@fake}, getting textbook data from JSON fixture file #{path}"
-      unless File.exists?(path)
-        raise Errors::ProxyError.new("Unrecorded textbook response #{path}")
-      end
-      safe_json File.read(path)
+    private
+
+    def mock_json
+      read_file('fixtures', 'json', 'textbooks.json')
     end
 
   end

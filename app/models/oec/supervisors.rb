@@ -16,13 +16,18 @@ module Oec
         DEPT_NAME_3
         DEPT_NAME_4
         DEPT_NAME_5
+        DEPT_NAME_6
+        DEPT_NAME_7
+        DEPT_NAME_8
+        DEPT_NAME_9
+        DEPT_NAME_10
       )
     end
 
     def matching_dept_name(dept_name)
       return [] if dept_name.blank?
       select do |row|
-        (1..5).map { |i| row["DEPT_NAME_#{i}"] }.include? dept_name
+        (1..10).map { |i| row["DEPT_NAME_#{i}"] }.include? dept_name
       end
     end
 

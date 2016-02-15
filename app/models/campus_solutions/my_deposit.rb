@@ -19,10 +19,5 @@ module CampusSolutions
       "#{@uid}-#{adm_appl_nbr}"
     end
 
-    def get_feed(force_cache_write=false)
-      self.class.save_related_cache_key(@uid, self.class.cache_key(instance_key))
-      super force_cache_write
-    end
-
   end
 end
