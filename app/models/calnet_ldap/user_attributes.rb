@@ -17,6 +17,7 @@ module CalnetLdap
       if (result = CalnetLdap::Client.new.search_by_uid @uid)
         if result[:berkeleyeduaffiliations].present?
           roles = Berkeley::UserRoles.roles_from_affiliations(result[:berkeleyeduaffiliations].join ',')
+          filter_student_status_conflicts roles
         end
         {
           email_address: result[:mail].try(:first),
@@ -32,5 +33,10 @@ module CalnetLdap
       end
     end
 
+    def filter_student_status_conflicts(roles)
+      if roles[:exStudent] && roles[:student]
+        [:exStudent, :registered, :student].each { |key| roles.delete key }
+      end
+    end
   end
 end
