@@ -6,7 +6,7 @@ var angular = require('angular');
 /**
  * Status controller
  */
-angular.module('calcentral.controllers').controller('StatusController', function(activityFactory, apiService, badgesFactory, financesFactory, holdsFactory, $scope, $q) {
+angular.module('calcentral.controllers').controller('StatusController', function(activityFactory, apiService, badgesFactory, financesFactory, holdsFactory, profileFactory, $http, $scope, $q) {
   // Keep track on whether the status has been loaded or not
   var hasLoaded = false;
 
@@ -85,6 +85,16 @@ angular.module('calcentral.controllers').controller('StatusController', function
     // Hides the spinner
     $scope.statusLoading = '';
   };
+
+  /**
+   * Listen for this event in order to make a refresh request which updates the
+   * displayed `api.user.profile.firstName` in the gear_popover.
+   */
+  $scope.$on('calcentral.custom.api.preferredname.update', function() {
+    apiService.user.fetch({
+      refreshCache: true
+    });
+  });
 
   $scope.$on('calcentral.api.user.isAuthenticated', function(event, isAuthenticated) {
     if (isAuthenticated && !hasLoaded) {

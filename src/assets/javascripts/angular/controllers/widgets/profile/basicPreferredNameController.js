@@ -6,7 +6,7 @@ var _ = require('lodash');
 /**
  * Preferred Name Controller
  */
-angular.module('calcentral.controllers').controller('BasicPreferredNameController', function(apiService, profileFactory, $scope) {
+angular.module('calcentral.controllers').controller('BasicPreferredNameController', function(apiService, profileFactory, $scope, $rootScope) {
   angular.extend($scope, {
     emptyObject: {},
     items: {
@@ -50,6 +50,9 @@ angular.module('calcentral.controllers').controller('BasicPreferredNameControlle
   };
 
   var saveCompleted = function(data) {
+    // Notify other controllers about the preferredName update.
+    $rootScope.$broadcast('calcentral.custom.api.preferredname.update');
+
     $scope.isSaving = false;
     actionCompleted(data);
   };
