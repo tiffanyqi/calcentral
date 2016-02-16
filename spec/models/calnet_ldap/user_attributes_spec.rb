@@ -47,6 +47,21 @@ describe CalnetLdap::UserAttributes do
         expect(feed[:roles]).to be_blank
       end
     end
+
+    context 'when both active and expired student affiliations appear' do
+      let(:ldap_result) do
+        {
+          berkeleyeduaffiliations: ['EMPLOYEE-TYPE-STAFF', 'STUDENT-STATUS-EXPIRED', 'STUDENT-TYPE-REGISTERED'],
+          uid: ['61889']
+        }
+      end
+      it 'knows they can\'t both be right but makes no presumptions' do
+        expect(feed[:roles]).not_to include :exStudent
+        expect(feed[:roles]).not_to include :registered
+        expect(feed[:roles]).not_to include :student
+        expect(feed[:roles][:staff]).to eq true
+      end
+    end
   end
 
   context 'test user from real LDAP connection', testext: true do
