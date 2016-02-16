@@ -51,20 +51,22 @@ describe CampusSolutions::SirResponse do
     let(:proxy) { CampusSolutions::SirResponse.new(fake: false, user_id: user_id, params: params) }
     subject { proxy.get }
 
-    context 'a successful post' do
-      let(:params) { {
-        acadCareer: 'UGRD',
-        studentCarNbr: '0',
-        admApplNbr: '00000097',
-        applProgNbr: '0',
-        chklstItemCd: 'AGS001',
-        actionReason: 'SREQ',
-        progAction: 'WAPP',
-        responseReason: '',
-        responseDescription: ''
-      } }
-      context 'performing a real post' do
-        it_behaves_like 'a proxy that got data successfully'
+    pending 'SISRP-13071' do
+      context 'a successful post' do
+        let(:params) { {
+          acadCareer: 'UGRD',
+          studentCarNbr: '0',
+          admApplNbr: '00000097',
+          applProgNbr: '0',
+          chklstItemCd: 'AGS001',
+          actionReason: 'SREQ',
+          progAction: 'WAPP',
+          responseReason: '',
+          responseDescription: ''
+        } }
+        context 'performing a real post' do
+          it_behaves_like 'a proxy that got data successfully'
+        end
       end
     end
 
