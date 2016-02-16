@@ -2,6 +2,7 @@ require 'net/ldap'
 
 module CalnetLdap
   class Client
+    include ClassLogger
 
     PEOPLE_DN = 'ou=people,dc=berkeley,dc=edu'
     GUEST_DN = 'ou=guests,dc=berkeley,dc=edu'
@@ -39,7 +40,13 @@ module CalnetLdap
 
     def search(args = {})
       ActiveSupport::Notifications.instrument('proxy', {class: self.class, search: args}) do
-        @ldap.search args
+        response = @ldap.search args
+        if response.nil?
+          logger.error "LDAP error returned: #{@ldap.get_operation_result}"
+          []
+        else
+          response
+        end
       end
     end
 

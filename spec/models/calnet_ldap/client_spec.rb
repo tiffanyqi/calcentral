@@ -66,4 +66,10 @@ describe CalnetLdap::Client do
     expect(results[0][:sn][0]).to eq 'Jaffe'
     expect(results[0][:mail][0]).to eq 'rjaffe@lmi.net'
   end
+
+  it 'deals gracefully with errors' do
+    allow_any_instance_of(Net::LDAP).to receive(:search).and_return(nil)
+    results = subject.search_by_uid random_id
+    expect(results).to eq nil
+  end
 end
