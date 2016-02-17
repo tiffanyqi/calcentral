@@ -32,6 +32,17 @@ module MyTasks
       collected_results
     end
 
+    def format_status_date(result)
+      if result[:statusDt]
+        status_date = strptime_in_time_zone(result[:statusDt], "%Y-%m-%d")
+      else
+        # Campus Solutions has a setting where they don't send over any date (due / status)
+        # in that case, set it to today since the front-end needs it for sorting
+        status_date = DateTime.now.midnight
+      end
+      status_date
+    end
+
     def entry_from_result(result)
       status = 'inprogress'
       if %w(Completed Paidoff Waived Cancelled).include?(result[:itemStatus])
@@ -61,7 +72,7 @@ module MyTasks
         })
       end
       if status == 'completed'
-        completedDate = format_date(strptime_in_time_zone(result[:statusDt], "%Y-%m-%d"))
+        completedDate = format_date(format_status_date(result))
         formatted_entry[:completedDate] = completedDate
         formatted_entry[:completedDate][:hasTime] = false # CS dates never have times
       end
@@ -92,8 +103,7 @@ module MyTasks
         formatted_entry[:dueDate][:hasTime] = due_date.is_a?(DateTime)
       end
       if formatted_entry[:bucket] == 'Unscheduled'
-        # TODO front-end code needs an updated_date for sorting. See if we can get that from the CS feed somehow.
-        updated_date = DateTime.now.midnight
+        updated_date = format_status_date(result)
         format_date_into_entry!(updated_date, formatted_entry, :updatedDate)
       end
       formatted_entry
