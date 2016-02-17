@@ -12,6 +12,7 @@ describe CampusSolutions::PersonNameController do
       before do
         session['user_id'] = user_id
         User::Auth.stub(:where).and_return([User::Auth.new(uid: user_id, is_superuser: false, active: true)])
+        expect(CampusSolutions::UserApiExpiry).to receive(:expire).once.with user_id
       end
       it 'should let an authenticated user post' do
         post :post,
