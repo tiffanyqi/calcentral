@@ -15,6 +15,7 @@ module CampusSolutions
       raise e
     else
       DelegateStudentsExpiry.expire @uid
+      User::Api.expire @uid
       feed
     end
 

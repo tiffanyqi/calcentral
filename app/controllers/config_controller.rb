@@ -13,7 +13,8 @@ class ConfigController < ApplicationController
 
   def proxies
     return {} unless current_user.policy.can_administrate?
-    { proxies:
+    {
+      proxies:
       {
         campusSolutions: Settings.campus_solutions_proxy.base_url,
         hubEdos: Settings.hub_edos_proxy.base_url,
@@ -23,5 +24,4 @@ class ConfigController < ApplicationController
       }
     }
   end
-
 end
