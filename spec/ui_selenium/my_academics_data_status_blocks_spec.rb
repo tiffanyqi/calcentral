@@ -154,13 +154,14 @@ describe 'My Academics Status and Blocks', :testui => true do
 
               # CALIFORNIA RESIDENCY
 
-              if academics_api_page.transition_term?
+              if academics_api_page.transition_term? || academics_api_page.colleges.include?('Haas School of Business')
 
                 has_residency_status = my_academics_page.res_status_summary?
 
                 it "shows no residency status for UID #{uid} during the transition term" do
                   expect(has_residency_status).to be false
                 end
+
               else
 
                 api_res_status = badges_api_page.residency_summary

@@ -41,6 +41,8 @@ describe 'My Academics profile and university requirements cards', :testui => tr
             if (status_api_page.has_academics_tab? && status_api_page.is_student?) || status_api_page.has_student_history?
               profile_card.profile_card_element.when_visible(timeout=WebDriverUtils.academics_timeout)
 
+              testable_users << uid unless academics_api_page.transition_term?
+
               # NAME AND IDS
               logger.warn "Expecting UID #{uid}, and UID displayed is #{profile_card.uid}"
               api_full_name = status_api_page.full_name
@@ -275,7 +277,6 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                   api_term_transition = "Academic status as of #{academics_api_page.term_name}"
                   if status_api_page.is_student?
                     user_type = 'existing student'
-                    testable_users.push(uid)
                     my_academics_term_transition = profile_card.term_transition_heading
                     it "show the term transition heading to UID #{uid}" do
                       expect(my_academics_term_transition).to eql(api_term_transition)
@@ -314,7 +315,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
         end
       end
 
-      it 'have academic profile data for at least one of the test UIDs' do
+      it 'shows academic profile for a current term for at least one of the test UIDs' do
         expect(testable_users.any?).to be true
       end
 
