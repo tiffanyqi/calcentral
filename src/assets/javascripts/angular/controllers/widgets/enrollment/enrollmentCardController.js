@@ -9,6 +9,33 @@ var _ = require('lodash');
  */
 angular.module('calcentral.controllers').controller('EnrollmentCardController', function(apiService, enrollmentFactory, holdsFactory, $scope, $q) {
   var backToText = 'Class Enrollment';
+  var sections = [
+    {
+      id: 'meet_advisor',
+      title: 'Meet Advisor'
+    },
+    {
+      id: 'plan',
+      title: 'Plan'
+    },
+    {
+      id: 'explore',
+      title: 'Explore'
+    },
+    {
+      id: 'schedule',
+      title: 'Schedule'
+    },
+    {
+      id: 'decide',
+      title: 'Decide',
+      show: true
+    },
+    {
+      id: 'adjust',
+      title: 'Adjust'
+    }
+  ];
   $scope.enrollment = {
     holds: {
       isLoading: true,
@@ -18,34 +45,7 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
       isLoading: true
     },
     isLoading: true,
-    terms: [],
-    sections: [
-      {
-        id: 'meet_advisor',
-        title: 'Meet Advisor'
-      },
-      {
-        id: 'plan',
-        title: 'Plan'
-      },
-      {
-        id: 'explore',
-        title: 'Explore'
-      },
-      {
-        id: 'schedule',
-        title: 'Schedule'
-      },
-      {
-        id: 'decide',
-        title: 'Decide',
-        show: true
-      },
-      {
-        id: 'adjust',
-        title: 'Adjust'
-      }
-    ]
+    terms: []
   };
 
   /**
@@ -72,20 +72,6 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   };
 
   /**
-   * Map enrollment periods by id (e.g. 'phase1')
-   * This makes it easier to look it up in JavaScript
-   */
-  var mapEnrollmentPeriodsById = function(data) {
-    if (!data.enrollmentPeriod) {
-      return data;
-    }
-
-    data.enrollmentPeriodsById = _.indexBy(data.enrollmentPeriod, 'id');
-
-    return data;
-  };
-
-  /**
    * Add aditional metadata to the links
    */
   var mapLinks = function(data) {
@@ -101,6 +87,11 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     return data;
   };
 
+  var setSections = function(data) {
+    data.sections = angular.copy(sections);
+    return data;
+  };
+
   /**
    * Parse a certain enrollment term
    */
@@ -110,8 +101,8 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
       return;
     }
 
-    termData = mapEnrollmentPeriodsById(termData);
     termData = mapLinks(termData);
+    termData = setSections(termData);
     setTermData(termData, termData.term);
   };
 
