@@ -86,7 +86,7 @@ angular.module('calcentral.controllers').controller('SirController', function(si
     }
 
     checklistItems.forEach(function(checklistItem) {
-      var result = _.findWhere($scope.sir.checklistItems, {
+      var result = _.find($scope.sir.checklistItems, {
         chklstItemCd: checklistItem.chklstItemCd,
         checkListMgmtAdmp: checklistItem.checkListMgmtAdmp
       });

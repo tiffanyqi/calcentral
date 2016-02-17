@@ -55,7 +55,7 @@ angular.module('calcentral.services').service('profileService', function() {
     if (!values) {
       return [];
     }
-    var currentTypes = _.pluck(items.content, 'type.code');
+    var currentTypes = _.map(items.content, 'type.code');
     return _.filter(values, function(value) {
       return currentTypes.indexOf(value.fieldvalue) === -1 && value.typeControl !== 'D';
     });

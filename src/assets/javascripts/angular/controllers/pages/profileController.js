@@ -11,7 +11,7 @@ angular.module('calcentral.controllers').controller('ProfileController', functio
    * Find the category object when we get a categoryId back
    */
   var findCategory = function(categoryId, navigation) {
-    return _.find(_.flatten(_.pluck(navigation, 'categories')), {
+    return _.find(_.flatten(_.map(navigation, 'categories')), {
       id: categoryId
     });
   };
