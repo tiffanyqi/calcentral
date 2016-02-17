@@ -147,8 +147,7 @@ module User
     end
 
     def is_campus_solutions_student?
-      # no, really, BCS users are identified by having 10-digit IDs.
-      @edo_attributes.present? && @edo_attributes[:campus_solutions_id].present? && @edo_attributes[:campus_solutions_id].to_s.length >= 10
+      @edo_attributes.present? && (@edo_attributes[:is_legacy_user] == false)
     end
 
     def is_delegate_user?

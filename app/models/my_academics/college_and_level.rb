@@ -4,25 +4,75 @@ module MyAcademics
     include AcademicsModule
     include ClassLogger
     include Cache::UserCacheExpiry
+    include User::Student
 
     def merge(data)
-      college_and_level = self.class.fetch_from_cache @uid do
-        response = Bearfacts::Profile.new(user_id: @uid).get
-        feed = response.delete :feed
-        # The Bear Facts API can return empty profiles if the user is no longer (or not yet) considered an active student.
-        # Partial profiles can be returned for incoming students around the start of the term.
-        if (feed.nil? || feed['studentProfile']['studentGeneralProfile'].blank? || feed['studentProfile']['ugGradFlag'].blank?)
-          response[:empty] = true
+      data[:collegeAndLevel] = self.class.fetch_from_cache @uid do
+        if !Settings.features.cs_academic_profile || legacy_user?
+          bearfacts_college_and_level
         else
-          response.merge! parse_feed(feed)
+          hub_college_and_level
         end
-        response[:termName] = parse_term_name feed
-        response
       end
-      data[:collegeAndLevel] = college_and_level
     end
 
-    def parse_feed(feed)
+    def bearfacts_college_and_level
+      response = Bearfacts::Profile.new(user_id: @uid).get
+      feed = response.delete :feed
+      # The Bear Facts API can return empty profiles if the user is no longer (or not yet) considered an active student.
+      # Partial profiles can be returned for incoming students around the start of the term.
+      if (feed.nil? || feed['studentProfile']['studentGeneralProfile'].blank? || feed['studentProfile']['ugGradFlag'].blank?)
+        response[:empty] = true
+      else
+        response.merge! parse_bearfacts_feed(feed)
+      end
+      response[:termName] = parse_term_name feed
+      response
+    end
+
+    def hub_college_and_level
+      response = HubEdos::AcademicStatus.new(user_id: @uid).get
+      if (status = parse_hub_academic_status response)
+        response[:careers] = parse_hub_careers status
+        response[:level] = parse_hub_level status
+        response[:majors] = parse_hub_majors status
+        response[:termName] = parse_hub_term_name status
+      else
+        response[:empty] = true
+      end
+      response
+    end
+
+    def parse_hub_careers(status)
+      [].tap do |careers|
+        if (career = status['studentCareer'].try(:[], 'academicCareer').try(:[], 'description'))
+          careers << career
+        end
+      end
+    end
+
+    def parse_hub_level(status)
+      status['currentRegistration'].try(:[], 'academicLevel').try(:[], 'level').try(:[], 'description')
+    end
+
+    def parse_hub_majors(status)
+      [].tap do |majors|
+        status['studentPlans'].each do |student_plan|
+          if (academic_plan = student_plan['academicPlan'])
+            majors << {
+              college: academic_plan['academicProgram'].try(:[], 'program').try(:[], 'description'),
+              major: academic_plan['plan'].try(:[], 'description')
+            }
+          end
+        end
+      end
+    end
+
+    def parse_hub_term_name(status)
+      status['currentRegistration'].try(:[], 'term').try(:[], 'name')
+    end
+
+    def parse_bearfacts_feed(feed)
       careers = []
       ug_grad_flag = feed['studentProfile']['ugGradFlag'].to_text
       case ug_grad_flag.upcase

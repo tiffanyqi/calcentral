@@ -1,5 +1,9 @@
 module User
   module Student
+    def campus_solutions_id
+      @campus_solutions_id ||= lookup_campus_solutions_id
+    end
+
     def lookup_student_id
       student_id_from_ldap || student_id_from_oracle
     end
@@ -14,6 +18,11 @@ module User
 
     def lookup_delegate_user_id
       CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_delegate_user_id
+    end
+
+    def legacy_user?
+      # Legacy IDs migrated to Campus Solutions have fewer than ten digits.
+      campus_solutions_id.blank? || campus_solutions_id.to_s.length < 10
     end
 
     private
