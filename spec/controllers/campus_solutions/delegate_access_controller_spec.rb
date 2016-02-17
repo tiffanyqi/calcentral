@@ -23,6 +23,7 @@ describe CampusSolutions::DelegateAccessController do
     context 'post' do
       before do
         expect(CampusSolutions::DelegateStudentsExpiry).to receive(:expire).once.with user_id
+        expect(User::Api).to receive(:expire).once.with user_id
       end
       it 'should link a claimed student' do
         post :post, {
@@ -39,6 +40,7 @@ describe CampusSolutions::DelegateAccessController do
     context 'get' do
       before do
         expect(CampusSolutions::DelegateStudentsExpiry).to receive(:expire).never
+        expect(User::Api).to receive(:expire).never
       end
       it 'should get students list' do
         get :get_students
