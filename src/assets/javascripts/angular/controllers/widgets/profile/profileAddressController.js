@@ -82,7 +82,7 @@ angular.module('calcentral.controllers').controller('ProfileAddressController', 
    * Removes previous address data, we need to do this every time you change the country
    */
   var removePreviousAddressData = function() {
-    $scope.currentObject.data = _.object(_.map($scope.currentObject.data, function(value, key) {
+    $scope.currentObject.data = _.fromPairs(_.map($scope.currentObject.data, function(value, key) {
       if (['country', 'type'].indexOf(key) === -1) {
         return [key, ''];
       } else {
@@ -183,10 +183,10 @@ angular.module('calcentral.controllers').controller('ProfileAddressController', 
    * We need to map the address fields for the current country and the ones (depending on country) that the user has entered
    */
   var matchFields = function(fields, item) {
-    var fieldIds = _.pluck(fields, 'field');
+    var fieldIds = _.map(fields, 'field');
     var returnObject = {};
     _.forEach(item, function(value, key) {
-      if (_.contains(fieldIds, key)) {
+      if (_.includes(fieldIds, key)) {
         returnObject[key] = value || '';
       }
     });
