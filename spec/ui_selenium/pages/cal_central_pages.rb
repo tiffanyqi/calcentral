@@ -25,6 +25,7 @@ module CalCentralPages
   # Popover: Profile, Status, Log Out
   list_item(:status_loading, :xpath => '//li[@data-ng-show="statusLoading"]')
   button(:profile_icon, :xpath => '//button[@title="Settings"]')
+  span(:popover_first_name, :class => 'cc-popover-gear-first-name')
   span(:status_alert_count, :xpath => '//span[@data-ng-if="hasAlerts"]/span[@data-ng-bind="count"]')
   h4(:status_popover_heading, :xpath => '//div[@class="cc-popover-title"]/h4')
   div(:no_status_alert, :xpath => '//div[@class="cc-popover-noitems ng-scope"]')
