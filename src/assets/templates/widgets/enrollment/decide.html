@@ -1,8 +1,8 @@
 <div
   data-cc-enrollment-card-header-directive
   data-count="$index + 1"
-  data-date="{{enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'h:mm a'}}"
-  data-date-important="{{enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'EEE MMM d'}}"
+  data-date="{{enrollmentTerm.enrollmentPeriod[0] ? (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'h:mm a') : ''}}"
+  data-date-important="{{enrollmentTerm.enrollmentPeriod[0] ? (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'EEE MMM d'): ''}}"
   data-title="section.title"
 ></div>
 
@@ -15,6 +15,11 @@
       data-cache="enrollment"
     ></span> for the upcoming semester.<br/>
     Learn more about <a href="http://registrar.berkeley.edu/Records/tbinfo.html">enrollment rules and information</a>.
+  </div>
+
+  <div
+    data-ng-if="!api.user.profile.actAsOptions.canSeeCSLinks"
+    data-ng-include="'widgets/enrollment/enrollment_hide_links.html'">
   </div>
 
   <div data-ng-if="enrollmentTerm.enrollmentPeriod.length">
@@ -43,6 +48,5 @@
       </table>
     </div>
   </div>
-
 
 </div>

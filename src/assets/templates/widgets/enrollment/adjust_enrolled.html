@@ -7,7 +7,7 @@
     class="cc-flex cc-flex-space-between-horizontal-5"
   >
     <div
-      data-cc-enrollment-link-directive
+      data-cc-campus-solutions-link-item-directive
       data-link="enrollmentTerm.links.updateEnrolledClasses"
       data-text="Update"
       data-cache="enrollment"
@@ -16,7 +16,7 @@
       |
     </div>
     <div
-      data-cc-enrollment-link-directive
+      data-cc-campus-solutions-link-item-directive
       data-link="enrollmentTerm.links.withdrawFromSemester"
       data-text="Withdraw"
       data-ng-if="enrollmentTerm.enrolledClasses.length"
@@ -47,8 +47,10 @@
       </tbody>
     </table>
   </div>
-  <div class="cc-right">
-    Total Units:
-    <strong data-ng-bind="enrollmentTerm.enrolledClassesTotalUnits | number:1"></strong>
+  <div class="cc-flex cc-flex-justify-end">
+    <div>
+      Total Units:
+      <strong data-ng-bind="enrollmentTerm.enrolledClassesTotalUnits | number:1"></strong>
+    </div>
   </div>
 </div>
