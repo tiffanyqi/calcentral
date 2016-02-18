@@ -10,36 +10,52 @@ class ApiMyBadgesPage
     @parsed = JSON.parse(body)
   end
 
+  def student_info
+    @parsed['studentInfo']
+  end
+
+  def residency
+    student_info['californiaResidency']
+  end
+
   def residency_summary
-    @parsed['studentInfo']['californiaResidency']['summary']
+    residency['summary']
   end
 
   def residency_explanation
-    @parsed['studentInfo']['californiaResidency']['explanation']
+    residency['explanation']
   end
 
   def residency_needs_action
-    @parsed['studentInfo']['californiaResidency']['needsAction']
+    residency['needsAction']
+  end
+
+  def reg_status
+    student_info['regStatus']
   end
 
   def reg_status_summary
-    @parsed['studentInfo']['regStatus']['summary']
+    reg_status['summary']
   end
 
   def reg_status_explanation
-    @parsed['studentInfo']['regStatus']['explanation']
+    reg_status['explanation']
   end
 
   def reg_status_needs_action
-    @parsed['studentInfo']['regStatus']['needsAction']
+    reg_status['needsAction']
+  end
+
+  def reg_block
+    student_info['regBlock']
   end
 
   def active_block_needs_action
-    @parsed['studentInfo']['regBlock']['needsAction']
+    reg_block['needsAction']
   end
 
   def active_block_number_str
-    @parsed['studentInfo']['regBlock']['activeBlocks'].to_s
+    reg_block['activeBlocks'].to_s
   end
 
 end

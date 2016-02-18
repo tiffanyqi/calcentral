@@ -154,7 +154,7 @@ describe 'My Academics Status and Blocks', :testui => true do
 
               # CALIFORNIA RESIDENCY
 
-              if academics_api_page.transition_term? || academics_api_page.colleges.include?('Haas School of Business')
+              if academics_api_page.transition_term?
 
                 has_residency_status = my_academics_page.res_status_summary?
 
@@ -163,24 +163,30 @@ describe 'My Academics Status and Blocks', :testui => true do
                 end
 
               else
-
-                api_res_status = badges_api_page.residency_summary
-                api_res_needs_action = badges_api_page.residency_needs_action
-                my_acad_res_status = my_academics_page.res_status_summary
-
-                it "shows residency status of '#{my_acad_res_status}' for UID #{uid}" do
-                  expect(my_acad_res_status).to eql(api_res_status)
-                end
-
-                if api_res_needs_action == true
-                  has_red_res_status_icon = my_academics_page.res_status_icon_red?
-                  it "shows a red residency status icon for UID #{uid}" do
-                    expect(has_red_res_status_icon).to be true
+                if badges_api_page.residency.nil?
+                  has_res_status = my_academics_page.res_status_summary?
+                  it "shows no residency status for UID #{uid}" do
+                    expect(has_res_status).to be false
                   end
                 else
-                  has_green_res_status_icon = my_academics_page.res_status_icon_green?
-                  it "shows a green residency status icon for UID #{uid}" do
-                    expect(has_green_res_status_icon).to be true
+                  api_res_status = badges_api_page.residency_summary
+                  api_res_needs_action = badges_api_page.residency_needs_action
+                  my_acad_res_status = my_academics_page.res_status_summary
+
+                      it "shows residency status of '#{my_acad_res_status}' for UID #{uid}" do
+                        expect(my_acad_res_status).to eql(api_res_status)
+                      end
+
+                  if api_res_needs_action == true
+                    has_red_res_status_icon = my_academics_page.res_status_icon_red?
+                    it "shows a red residency status icon for UID #{uid}" do
+                      expect(has_red_res_status_icon).to be true
+                    end
+                  else
+                    has_green_res_status_icon = my_academics_page.res_status_icon_green?
+                    it "shows a green residency status icon for UID #{uid}" do
+                      expect(has_green_res_status_icon).to be true
+                    end
                   end
                 end
               end

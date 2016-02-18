@@ -104,7 +104,7 @@ module CalCentralPages
         date = row[2].text
         dates.push(date)
       end
-      dates.drop(1)
+      dates.drop(1).sort!
     end
   end
 end
