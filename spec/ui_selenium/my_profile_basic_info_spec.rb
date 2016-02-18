@@ -47,7 +47,10 @@ describe 'My Profile Basic Info', :testui => true, :order => :defined do
 
       it 'allows the student to save an edited name' do
         @basic_info_card.edit_pref_name @preferred_name
-        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) { @basic_info_card.preferred_name == @preferred_name }
+        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) do
+          @basic_info_card.preferred_name == @preferred_name
+          @basic_info_card.popover_first_name == @preferred_name
+        end
       end
 
       it 'allows the student to cancel an edited name' do
@@ -55,19 +58,30 @@ describe 'My Profile Basic Info', :testui => true, :order => :defined do
         @basic_info_card.click_edit_pref_name_button
         @basic_info_card.enter_preferred_name @preferred_name
         @basic_info_card.click_cancel_pref_name_button
-        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) { @basic_info_card.preferred_name == original_name }
+        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) do
+          @basic_info_card.preferred_name == original_name
+          @basic_info_card.popover_first_name == original_name
+        end
       end
 
       it 'allows a maximum of 30 characters for an edited name' do
         max_char_name = @student_info['preferredName']['maxChar']
+        name_truncated = max_char_name[0..29]
         @basic_info_card.edit_pref_name max_char_name
-        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) { @basic_info_card.preferred_name == max_char_name[0..29] }
+        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) do
+          @basic_info_card.preferred_name == name_truncated
+          @basic_info_card.popover_first_name == name_truncated
+        end
       end
 
       it 'permits but trims leading or trailing spaces in an edited name' do
         whitespace_name = @student_info['preferredName']['leadingWhitespace']
+        name_stripped = whitespace_name.strip
         @basic_info_card.edit_pref_name whitespace_name
-        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) { @basic_info_card.preferred_name == whitespace_name.strip }
+        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) do
+          @basic_info_card.preferred_name == name_stripped
+          @basic_info_card.popover_first_name == name_stripped
+        end
       end
 
     end
