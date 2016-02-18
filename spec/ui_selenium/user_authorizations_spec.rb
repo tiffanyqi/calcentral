@@ -34,17 +34,14 @@ describe 'User authorization', :testui => true, :order => :defined do
         end
         it 'allows the admin to see recently viewed users' do
           @toolbox_page.wait_until(timeout, 'Recent user did not appear') do
-            @toolbox_page.recent_user_view_as_button_elements.any?
-            @toolbox_page.recent_user_view_as_button_elements[0].text == '61889'
+            @toolbox_page.recent_user_view_as_button_elements[0].text == '61889' if @toolbox_page.recent_user_view_as_button_elements.any?
           end
         end
         it 'allows the admin to save recently viewed users' do
           @toolbox_page.recent_users_element.when_present(timeout)
           @toolbox_page.save_first_recent_user
           @toolbox_page.wait_until(timeout, 'Saved user did not appear') do
-            @toolbox_page.saved_user_view_as_button_elements.any?
-            sleep 2
-            @toolbox_page.saved_user_view_as_button_elements[0].text == '61889'
+            @toolbox_page.saved_user_view_as_button_elements[0].text == '61889' if @toolbox_page.saved_user_view_as_button_elements.any?
           end
         end
       end

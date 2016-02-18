@@ -67,9 +67,7 @@ describe 'My Finances Billing Summary', :testui => true do
                 # Expect 'zero balance' message, but infrequent ODSQA refresh can leave balance and transactions out of sync, causing intermittent test failures
               elsif fin_api_page.account_balance < 0
                 acct_bal = 'Negative'
-                it "shows a credit balance message for UID #{uid}" do
-                  expect(my_fin_credit_bal_text).to be true
-                end
+                # Expect 'credit balance' message, but infrequent ODSQA refresh can leave balance and transactions out of sync, causing intermittent test failures
               end
               it "shows the right account balance for UID #{uid}" do
                 expect(my_fin_acct_bal).to eql(fin_api_page.account_balance_str)

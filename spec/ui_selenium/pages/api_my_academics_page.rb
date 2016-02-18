@@ -253,7 +253,7 @@ class ApiMyAcademicsPage
       date = (Time.strptime(block_cleared_date(item), '%m/%d/%Y')).strftime('%m/%d/%y')
       dates.push(date)
     end
-    dates
+    dates.sort!
   end
 
   # FINAL EXAMS
