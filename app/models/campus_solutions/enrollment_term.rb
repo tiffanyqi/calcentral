@@ -13,8 +13,7 @@ module CampusSolutions
 
     def build_feed(response)
       return {} unless response &&
-        (enrollment_term = response['UC_SR_CLASS_ENROLLMENT']) &&
-        enrollment_term['ENROLLMENT_PERIOD'].present?
+        (enrollment_term = response['UC_SR_CLASS_ENROLLMENT'])
 
       # Though its name is in the singular, ENROLLMENT_PERIOD is an array containing multiple periods.
       enrollment_term['ENROLLMENT_PERIOD'].each do |period|

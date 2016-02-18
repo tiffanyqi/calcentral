@@ -1,7 +1,7 @@
 <div
   data-cc-enrollment-card-header-directive
   data-count="$index + 1"
-  data-date="Prior to {{enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'MMM d'}}"
+  data-date="{{enrollmentTerm.enrollmentPeriod[0] ? 'Prior to ' + (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'MMM d'): ''}}"
   data-title="section.title"
 ></div>
 
@@ -19,7 +19,7 @@
 
 <div data-ng-if="section.show">
   <div class="cc-enrollment-card-section-content">
-    <ul class="cc-enrollment-card-advisors">
+    <ul class="cc-enrollment-card-advisors" data-ng-if="enrollmentTerm.advisors.length">
       <li data-ng-repeat="advisor in enrollmentTerm.advisors">
         <div>
           <strong data-ng-bind="advisor.title"></strong>
@@ -39,5 +39,8 @@
         </div>
       </li>
     </ul>
+    <div data-ng-if="!enrollmentTerm.advisors.length">
+      You don't have any advisors assigned to you. Please check again later.
+    </div>
   </div>
 </div>

@@ -1,10 +1,10 @@
-<div data-ng-if="enrollmentTerm.enrollmentTerm.waitlistClasses.length">
+<div data-ng-if="enrollmentTerm.waitlistedClasses.length" class="cc-clearfix cc-enrollment-card-margin-top">
   <div class="cc-flex cc-flex-space-between">
     <div>
       <strong>Waitlisted</strong>
     </div>
     <div
-      data-cc-enrollment-link-directive
+      data-cc-campus-solutions-link-item-directive
       data-link="enrollmentTerm.links.dropWaitlistedClasses"
       data-text="Drop"
       data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
@@ -12,5 +12,26 @@
     ></div>
   </div>
 
-  <!-- TODO SISRP-14820 Add waitlisted classes list as soon as we have any test data in DEV -->
+  <div class="cc-table">
+    <table>
+      <thead>
+        <th scope="col" class="cc-table-right-spacing">Class</th>
+        <th scope="col">Position</th>
+        <th scope="col" class="cc-table-right">Units</th>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="class in enrollmentTerm.waitlistedClasses">
+          <td data-ng-bind="class.subjectCatalog" class="cc-table-right-spacing"></td>
+          <td data-ng-bind="class.position"></td>
+          <td data-ng-bind="class.units | number:1" class="cc-table-right"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cc-flex cc-flex-justify-end">
+    <div>
+      Total Units:
+      <strong data-ng-bind="enrollmentTerm.waitlistedClassesTotalUnits | number:1"></strong>
+    </div>
+  </div>
 </div>

@@ -6,8 +6,14 @@
         <span class="cc-widget-title-sub" data-ng-bind="enrollmentTerm.termDescr"></span>
       </h2>
     </div>
+
     <div class="cc-widget-text cc-enrollment-card-head">
-      <div class="cc-flex cc-flex-space-between cc-text-light">
+      <div data-ng-if="!enrollmentTerm.enrollmentPeriod[0]">
+        Please check back regularly for your assigned dates.
+      </div>
+      <div
+        class="cc-flex cc-flex-space-between cc-text-light"
+        data-ng-class="{'cc-enrollment-card-margin-top':(!enrollmentTerm.enrollmentPeriod[0])}">
         <div>
           <strong>Action</strong>
         </div>
