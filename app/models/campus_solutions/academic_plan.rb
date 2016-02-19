@@ -11,7 +11,7 @@ module CampusSolutions
     end
 
     def build_feed(response)
-      (response && response['UC_SR_ACADEMIC_PLAN']) || {}
+      (response && response['UC_SR_ACADEMIC_PLANNER']) || {}
     end
 
     def xml_filename
@@ -19,7 +19,7 @@ module CampusSolutions
     end
 
     def url
-      "#{@settings.base_url}/UC_SR_ACADEMIC_PLAN.v1/get?EMPLID=#{@campus_solutions_id}".tap do |url|
+      "#{@settings.base_url}/UC_SR_ACADEMIC_PLANNER.v1/get?EMPLID=#{@campus_solutions_id}".tap do |url|
         url << "&STRM=#{@term_id}" if @term_id
       end
     end

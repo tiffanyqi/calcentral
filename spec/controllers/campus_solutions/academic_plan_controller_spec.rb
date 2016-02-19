@@ -10,13 +10,13 @@ describe CampusSolutions::AcademicPlanController do
     it_behaves_like 'an unauthenticated user'
 
     context 'authenticated user' do
-      let(:feed_key) { 'updateAcademicPlan' }
+      let(:feed_key) { 'updateAcademicPlanner' }
       it_behaves_like 'a successful feed'
       it 'has some plan data' do
         session['user_id'] = user_id
         get feed, {term_id: '2162', format: 'json'}
         json = JSON.parse response.body
-        expect(json['feed']['updateAcademicPlan']['url']).to be
+        expect(json['feed']['updateAcademicPlanner']['url']).to be
       end
     end
   end

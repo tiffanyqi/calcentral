@@ -162,9 +162,9 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   var parseAcademicPlan = function(data) {
     var feedData = _.get(data, 'data.feed');
 
-    if (_.get(feedData, 'updateAcademicPlan')) {
-      $scope.enrollment.academicPlan.updateLink = feedData.updateAcademicPlan;
-      _.each(feedData.academicplans, function(academicPlan) {
+    if (_.get(feedData, 'updateAcademicPlanner')) {
+      $scope.enrollment.academicPlan.updateLink = feedData.updateAcademicPlanner;
+      _.each(feedData.academicplanner, function(academicPlan) {
         setTermData({
           academicPlan: academicPlan
         }, academicPlan.term);
@@ -178,6 +178,10 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
    * Load the academic plan URL and information
    */
   var loadAcademicPlan = function() {
+    if (!apiService.user.profile.features.csAcademicPlanner) {
+      $scope.enrollment.academicPlan.isLoading = false;
+      return true;
+    }
     return enrollmentFactory.getAcademicPlan().then(parseAcademicPlan);
   };
 

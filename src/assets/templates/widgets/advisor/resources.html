@@ -25,7 +25,7 @@
             data-link="ucAdvisingResources.ucAdvisingLinks.ucAdviseeStudentCenter"
           ></div>
         </li>
-        <li>
+        <li data-ng-if="api.user.profile.features.csAcademicProgressReport">
           <div
             data-cc-campus-solutions-link-item-directive
             data-link="ucAdvisingResources.ucAdvisingLinks.ucAcademicRequirements"

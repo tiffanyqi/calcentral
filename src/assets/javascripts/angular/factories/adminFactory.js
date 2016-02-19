@@ -29,7 +29,7 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
   };
 
   var actAs = function(user) {
-    var isAdvisorOnly = apiService.user.profile.roles.advisor && !apiService.api.user.profile.isSuperuser && !apiService.api.user.profile.isViewer;
+    var isAdvisorOnly = apiService.user.profile.roles.advisor && !apiService.user.profile.isSuperuser && !apiService.user.profile.isViewer;
     var url = isAdvisorOnly ? advisorActAsUrl : actAsUrl;
     return $http.post(url, user);
   };
