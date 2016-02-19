@@ -57,6 +57,11 @@ module CalCentralPages
   text_field(:basic_auth_password_input, :name => 'password')
   button(:basic_auth_login_button, :xpath => '//button[contains(text(),"Login")]')
 
+  button(:stop_viewing_as, :xpath => '//button[@data-ng-click="admin.stopActAs()"]')
+
+  # 404
+  h3(:not_found, :xpath => '//h3[text()="Cannot Find That Page"]')
+
   def click_my_dashboard_link
     logger.info('Clicking My Dashboard link')
     WebDriverUtils.wait_for_page_and_click my_dashboard_link_element
@@ -162,6 +167,11 @@ module CalCentralPages
 
   def click_class_link_by_url(url)
     WebDriverUtils.wait_for_page_and_click link_element(:xpath => "//a[@href='#{url}']")
+  end
+
+  def stop_viewing_as
+    WebDriverUtils.wait_for_element_and_click stop_viewing_as_element
+    stop_viewing_as_element.when_not_present WebDriverUtils.page_event_timeout
   end
 
 end

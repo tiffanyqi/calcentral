@@ -6,7 +6,12 @@ module CalCentralPages
     include CalCentralPages
     include ClassLogger
 
-    # View As
+    def load_page
+      navigate_to "#{WebDriverUtils.base_url}/toolbox"
+    end
+
+    # VIEW AS
+
     text_area(:view_as_input, :id => 'cc-toolbox-view-as-uid')
     button(:view_as_submit_button, :xpath => '//button[text()="Submit"]')
     div(:saved_users, :xpath => '//div[@class="cc-toolbox-user-section ng-scope"][1]')
@@ -17,17 +22,6 @@ module CalCentralPages
     button(:clear_recent_users_button, :xpath => '//strong[text()="Recent Users"]/following-sibling::button[text()="clear all"]')
     elements(:recent_user_view_as_button, :div, :xpath => '//strong[text()="Recent Users"]/following-sibling::ul//button[@data-ng-click="admin.updateIDField(user.ldap_uid)"]')
     elements(:recent_user_save_button, :button, :xpath => '//button[text()="save"]')
-
-    # UID/SID Lookup
-    text_area(:lookup_input, :id => 'cc-toolbox-id')
-    button(:lookup_button, :xpath => '//button[text()="Look Up"]')
-    table(:lookup_results_table, :xpath => '//form[@data-ng-submit="admin.lookupUser()"]//table')
-
-    def load_page
-      navigate_to "#{WebDriverUtils.base_url}/toolbox"
-    end
-
-    # VIEW-AS
 
     def view_as_user(id)
       WebDriverUtils.wait_for_element_and_type(view_as_input_element, id)
@@ -59,13 +53,40 @@ module CalCentralPages
       recent_user_save_button_elements[0].click
     end
 
-    # LOOK UP USER
+    # UID/SID LOOKUP
+
+    text_area(:lookup_input, :id => 'cc-toolbox-id')
+    button(:lookup_button, :xpath => '//button[text()="Look Up"]')
+    table(:lookup_results_table, :xpath => '//form[@data-ng-submit="admin.lookupUser()"]//table')
 
     def look_up_user(id)
       WebDriverUtils.wait_for_element_and_type(lookup_input_element, id)
       lookup_button
     end
 
-  end
+    # DELEGATED ACCESS
 
+    # TODO div(:delegate_msg_heading, :xpath => '//h3[text()="You are a Delegate"]')
+    # TODO div(:delegate_instructions, :xpath => '//div[contains(.,"")]')
+    # TODO button(:show_more, :xpath => '//button[contains(.,"Show More")]')
+    # TODO button(:show_less, :xpath => '//button[contains(.,"Show Less")]')
+    # TODO elements(:delegate_student, :button, :xpath => '//button[]')
+    # TODO elements(:academic_date, ?, ?)
+    # TODO link(:subscribe_to_calendar, :xpath => '//a[contains(.,"Subscribe to the Academic Calendar")]')
+    # TODO link(:grad_div_deadlines, :xpath => '//a[contains(.,"Graduate Division Degree Deadlines")]')
+    # TODO link(:cal_parents, :xpath => '//a[contains(.,"CalParents")]')
+    # TODO link(:academic_calendar, :xpath => '//a[contains(.,"Academic Calendar")]')
+    # TODO link(:news_center, :xpath => '//a[contains(.,"UC Berkeley NewsCenter")]')
+    # TODO link(:berkeley_news, :xpath => '//a[contains(.,"Berkeley in the News")]')
+    # TODO link(:daily_cal, :xpath => '//a[contains(.,"The Daily Californian")]')
+
+    def show_more
+      WebDriverUtils.wait_for_element_and_click show_more_element
+    end
+
+    def show_less
+      WebDriverUtils.wait_for_element_and_click show_less_element
+    end
+
+  end
 end

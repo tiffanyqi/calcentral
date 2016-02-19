@@ -50,6 +50,14 @@ class ApiMyStatusPage
     roles['concurrentEnrollmentStudent']
   end
 
+  def is_advisor?
+    roles['advisor']
+  end
+
+  def is_delegate?
+    roles['isDelegateUser']
+  end
+
   def is_eap?
     @parsed['inEducationAbroadProgram']
   end

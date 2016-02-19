@@ -158,7 +158,6 @@ class ApiMyAcademicsPage
     end
   end
 
-
   # BLOCKS
 
   def active_blocks

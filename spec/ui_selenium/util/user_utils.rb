@@ -50,7 +50,7 @@ class UserUtils
 
   def self.initialize_output_csv(spec)
     output_dir = Rails.root.join('tmp', 'ui_selenium_ouput')
-    output_file = "#{spec.inspect.sub('RSpec::ExampleGroups::', '')}"
+    output_file = "#{spec.inspect.sub('RSpec::ExampleGroups::', '')}.csv"
     logger.info("Initializing test output CSV named #{output_file}")
     unless File.exists?(output_dir)
       FileUtils.mkdir_p(output_dir)
@@ -61,6 +61,10 @@ class UserUtils
   def self.load_test_users
     logger.info('Loading test UIDs')
     JSON.parse(File.read(WebDriverUtils.live_users))['users']
+  end
+
+  def self.load_delegated_access_users
+    load_test_users.select { |user| user['delegatedAccess'] }
   end
 
   def self.load_profile_test_data

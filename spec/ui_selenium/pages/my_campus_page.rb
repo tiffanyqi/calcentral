@@ -10,6 +10,7 @@ module CalCentralPages
 
     h3(:academic_heading, :xpath => '//h3[text()="Academic"]')
     h3(:administrative_heading, :xpath => '//h3[text()="Administrative"]')
+    unordered_list(:links_list, :class => 'cc-list-links')
 
     def load_page
       logger.info('Loading the My Campus page')
