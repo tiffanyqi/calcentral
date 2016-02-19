@@ -1,6 +1,6 @@
 describe 'My Profile Basic Info', :testui => true, :order => :defined do
 
-  if ENV['UI_TEST'] && Settings.ui_selenium.layer == 'local'
+  if ENV['UI_TEST'] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 
