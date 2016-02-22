@@ -2,7 +2,6 @@
   <div class="cc-widget-title">
     <h2>Profile</h2>
   </div>
-
   <div data-ng-if="showProfileMessage" class="cc-widget-profile-message">
     <div data-ng-if="collegeAndLevel.errored">
       There was a problem reaching campus services.
@@ -72,13 +71,16 @@
     <h3 data-ng-if="!isProfileCurrent && api.user.profile.roles.student && collegeAndLevel.termName">Academic status as of <span data-ng-bind="collegeAndLevel.termName"></span></h3>
     <div data-ng-if="showProfileMessage" class="cc-table-top-border"></div>
 
-    <div class="cc-left cc-widget-profile-picture">
+    <div class="cc-left cc-widget-profile-picture" data-ng-if="!api.user.profile.delegateActingAsUid">
       <div data-ng-if="api.user.profile.hasPhoto">
         <img data-cc-image-loaded-directive="profilePictureLoading" alt="{{api.user.profile.fullName}}'s Profile Picture" data-ng-src="/api/my/photo" width="72" height="96">
       </div>
       <div data-ng-if="!api.user.profile.hasPhoto" class="cc-widget-profile-picture-not-available">
         <i class="fa fa-user"></i>
       </div>
+    </div>
+    <div class="cc-left cc-widget-profile-picture" data-ng-if="api.user.profile.delegateActingAsUid">
+      <div data-ng-include="'widgets/delegate_student_img.html'"></div>
     </div>
 
     <div class="cc-widget-profile-content">

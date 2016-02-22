@@ -7,12 +7,10 @@
       <ul>
         <li class="cc-flex cc-flex-align-center cc-toolbox-widget-delegate-student" data-ng-repeat="student in students">
           <div class="cc-toolbox-widget-delegate-student-profile">
-
-            <!-- TODO: Replace the `profilePhotoApi` setting method in the DelegateStudents controller with back-end property setting on the student object returned in the feed. -->
-            <div data-ng-if="student.profilePhotoApi">
-              <img class="cc-toolbox-widget-delegate-student-profile-img" border="1" height="96" width="72" data-cc-image-loaded-directive="profilePictureLoading" data-ng-attr-alt="{{student.fullName}}'s Profile Picture" data-ng-src="{{student.profilePhotoApi}}">
-            </div>
-            <div data-ng-if="!student.profilePhotoApi" class="cc-toolbox-widget-delegate-student-profile-img-not-available"></div>
+            <button class="cc-button-link" data-ng-click="delegateStudents.actAs(student.uid)" data-ng-if="student.delegateAccess">
+              <div data-ng-include="'widgets/delegate_student_img.html'"></div>
+            </button>
+            <div data-ng-if="!student.delegateAccess" data-ng-include="'widgets/delegate_student_img.html'"></div>
           </div>
           <div class="cc-widget-padding">
             <button class="cc-button-link" data-ng-click="delegateStudents.actAs(student.uid)" data-ng-if="student.delegateAccess">
