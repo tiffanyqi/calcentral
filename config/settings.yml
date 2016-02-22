@@ -406,7 +406,7 @@ advising_proxy:
 campus_solutions_proxy:
   fake: true
   base_url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/PSIGW/RESTListeningConnector/PSFT_CS'
-  logout_url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/uc_cust/data/portal/html/logout.html?cmd=logout'
+  logout_url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/uc_cust/data/portal/html/uc_splash.html?cmd=logout'
   username: secret
   password: secret
 
