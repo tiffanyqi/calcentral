@@ -541,4 +541,23 @@ describe CanvasCsv::MaintainUsers do
 
   end
 
+  describe '#parse_login_id' do
+    let(:uid) { random_id }
+    it 'understands an inactive ID' do
+      parsed = CanvasCsv::MaintainUsers.parse_login_id "inactive-#{uid}"
+      expect(parsed[:ldap_uid]).to eq uid.to_i
+      expect(parsed[:inactive_account]).to be_truthy
+    end
+    it 'understands an active ID' do
+      parsed = CanvasCsv::MaintainUsers.parse_login_id uid
+      expect(parsed[:ldap_uid]).to eq uid.to_i
+      expect(parsed[:inactive_account]).to be_falsey
+    end
+    it 'does not even try to deal with anything else' do
+      parsed = CanvasCsv::MaintainUsers.parse_login_id 'forgetit'
+      expect(parsed[:ldap_uid]).to be_nil
+      expect(parsed[:inactive_account]).to be_falsey
+    end
+  end
+
 end
