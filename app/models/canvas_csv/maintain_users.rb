@@ -51,7 +51,7 @@ module CanvasCsv
       end
       {
         ldap_uid: ldap_uid,
-        inactive_account: inactive_account.nil?
+        inactive_account: inactive_account.present?
       }
     end
 
