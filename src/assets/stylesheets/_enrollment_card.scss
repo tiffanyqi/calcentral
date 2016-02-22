@@ -7,6 +7,14 @@
       }
     }
   }
+  .cc-enrollment-card-enrolled-links {
+    > div:not(:last-child) {
+      padding-right: 5px;
+      &::after {
+        content: "|";
+      }
+    }
+  }
   .cc-enrollment-card-head {
     margin: 0 10px;
     padding-bottom: 0;

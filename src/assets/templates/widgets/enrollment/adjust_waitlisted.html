@@ -1,15 +1,6 @@
 <div data-ng-if="enrollmentTerm.waitlistedClasses.length" class="cc-clearfix cc-enrollment-card-margin-top">
-  <div class="cc-flex cc-flex-space-between">
-    <div>
-      <strong>Waitlisted</strong>
-    </div>
-    <div
-      data-cc-campus-solutions-link-item-directive
-      data-link="enrollmentTerm.links.dropWaitlistedClasses"
-      data-text="Drop"
-      data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
-      data-cache="enrollment"
-    ></div>
+  <div>
+    <strong>Waitlisted</strong>
   </div>
 
   <div class="cc-table">

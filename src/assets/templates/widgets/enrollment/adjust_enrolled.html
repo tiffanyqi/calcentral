@@ -1,20 +1,29 @@
-<div class="cc-flex cc-flex-space-between">
+<div class="cc-flex cc-flex-space-between cc-flex-space-between-horizontal-5">
   <div>
     <strong>Enrolled Classes</strong>
   </div>
   <div
     data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
-    class="cc-flex cc-flex-space-between-horizontal-5"
+    class="cc-flex cc-flex-wrap cc-enrollment-card-enrolled-links"
   >
     <div
       data-cc-campus-solutions-link-item-directive
-      data-link="enrollmentTerm.links.updateEnrolledClasses"
-      data-text="Update"
+      data-link="enrollmentTerm.links.addEnrolledClasses"
+      data-text="Add"
       data-cache="enrollment"
     ></div>
-    <div aria-hidden data-ng-if="enrollmentTerm.enrollmentPeriod[0]">
-      |
-    </div>
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.dropEnrolledClasses"
+      data-text="Drop"
+      data-cache="enrollment"
+    ></div>
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.swapEnrolledClasses"
+      data-text="Swap"
+      data-cache="enrollment"
+    ></div>
     <div
       data-cc-campus-solutions-link-item-directive
       data-link="enrollmentTerm.links.withdrawFromSemester"
