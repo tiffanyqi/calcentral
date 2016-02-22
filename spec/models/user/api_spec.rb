@@ -1,5 +1,6 @@
 describe User::Api do
   let(:uid) { random_id }
+  let(:original_delegate_user_id) { nil }
   let(:preferred_name) { 'Sid Vicious' }
   let(:edo_attributes) do
     {
@@ -20,7 +21,8 @@ describe User::Api do
   before(:each) do
     allow(HubEdos::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get: edo_attributes)
     allow(CalnetLdap::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: ldap_attributes)
-    allow(CampusSolutions::DelegateStudents).to receive(:new).with(user_id: uid).and_return double(get: delegate_students)
+    delegate_uid = original_delegate_user_id || uid
+    allow(CampusSolutions::DelegateStudents).to receive(:new).with(user_id: delegate_uid).and_return double(get: delegate_students)
   end
 
   context 'user attributes' do
@@ -74,7 +76,6 @@ describe User::Api do
       User::Api.from_session(session).get_feed
     }
     context 'has no students' do
-      let(:original_delegate_user_id) { nil }
       context 'never nominated as delegate' do
         let(:response) { nil }
         it 'delegate has student with only phone privilege' do
@@ -117,7 +118,6 @@ describe User::Api do
         }
       }
       context 'before view-as session' do
-        let(:original_delegate_user_id) { nil }
         it 'shows toolbox' do
           expect(api[:isDelegateUser]).to be true
           expect(api[:hasToolboxTab]).to be true
