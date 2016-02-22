@@ -12,14 +12,14 @@
       data-text="Update"
       data-cache="enrollment"
     ></div>
-    <div aria-hidden data-ng-if="enrollmentTerm.enrolledClasses.length">
+    <div aria-hidden data-ng-if="enrollmentTerm.enrollmentPeriod[0]">
       |
     </div>
     <div
       data-cc-campus-solutions-link-item-directive
       data-link="enrollmentTerm.links.withdrawFromSemester"
       data-text="Withdraw"
-      data-ng-if="enrollmentTerm.enrolledClasses.length"
+      data-ng-if="enrollmentTerm.enrollmentPeriod[0]"
       data-cache="enrollment"
     ></div>
   </div>
