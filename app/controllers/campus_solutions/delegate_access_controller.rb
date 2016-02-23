@@ -10,8 +10,7 @@ module CampusSolutions
     end
 
     def get_terms_and_conditions
-      # TODO: Remove fake:true when CS API is implemented
-      json_passthrough(CampusSolutions::DelegateTermsAndConditions, fake: true)
+      json_passthrough CampusSolutions::DelegateTermsAndConditions
     end
 
     def post

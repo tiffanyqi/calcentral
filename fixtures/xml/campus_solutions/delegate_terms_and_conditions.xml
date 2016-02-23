@@ -1,4 +1,12 @@
 <?xml version='1.0'?>
-<DA_AGREE_TO_TERMS>
-  <TERMS_AND_CONDITIONS>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</TERMS_AND_CONDITIONS>
-</DA_AGREE_TO_TERMS>
+<ROOT>
+  <GET_MESSAGE_CAT_DEFN>
+    <MESSAGE_SET_NBR>25000</MESSAGE_SET_NBR>
+    <MESSAGE_NBR>15</MESSAGE_NBR>
+    <MESSAGE_TEXT>Terms and Conditions</MESSAGE_TEXT>
+    <MSG_SEVERITY>M</MSG_SEVERITY>
+    <DESCRLONG>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </DESCRLONG>
+  </GET_MESSAGE_CAT_DEFN>
+</ROOT>
