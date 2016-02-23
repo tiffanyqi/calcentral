@@ -23,11 +23,12 @@ class ActAsController < ApplicationController
   end
 
   def stop
-    return redirect_to root_path unless session['user_id'] && session[@act_as_session_key]
-
-    # TODO: We might have to be aggressive with cache invalidation.
-    Cache::UserCacheExpiry.notify session['user_id']
-    logger.warn "Stop: #{session[@act_as_session_key]} act as #{session['user_id']}"
+    exiting_uid = session['user_id']
+    return redirect_to root_path unless exiting_uid && session[@act_as_session_key]
+    # Cached user data might have been filtered during view-as session so we flush to reset.
+    Cache::UserCacheExpiry.notify exiting_uid
+    CampusSolutions::UserApiExpiry.expire exiting_uid
+    logger.warn "Stop: #{session[@act_as_session_key]} act as #{exiting_uid}"
     session['user_id'] = session[@act_as_session_key]
     session[@act_as_session_key] = nil
 
