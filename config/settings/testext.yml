@@ -42,6 +42,7 @@ features:
   cs_profile_work_experience: true
   webcast_sign_up_on_calcentral: true
   show_notifications_archive_link: true
+  class_enrollment_summer_2016: true
 
 cache:
   store: "memory"

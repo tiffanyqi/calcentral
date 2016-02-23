@@ -337,6 +337,7 @@ features:
   authentication_validator: false
   webcast_sign_up_on_calcentral: false
   prevent_acting_as_users_from_posting: true
+  class_enrollment_summer_2016: false
 
 youtube_splash_id: 'EQ-a7xrfVag'
 
