@@ -1,11 +1,11 @@
 module CampusOracle
-  class Connection < ActiveRecord::Base
+  class Connection < OracleBase
     # WARNING: Default Rails SQL query caching (done for the lifetime of a controller action) apparently does not apply
     # to anything but the primary DB connection. Any Oracle query caching needs to be handled explicitly.
     establish_connection :campusdb
 
-    def self.test_data?
-      Settings.campusdb.adapter == "h2"
+    def self.settings
+      Settings.campusdb
     end
 
     def self.terms_query_clause(table, terms)
@@ -35,47 +35,6 @@ module CampusOracle
       string
     end
 
-    def self.stringify_ints!(results, additional_columns=[])
-      columns = %w(ldap_uid student_id term_yr catalog_root course_cntl_num student_ldap_uid) + additional_columns
-      if results.respond_to?(:to_ary)
-        results.to_ary.each { |row| stringify_row!(row, columns) }
-      else
-        stringify_row!(results, columns)
-      end
-    end
-
-    def self.stringify_row!(row, columns)
-      columns.each { |column| stringify_column!(row, column) }
-      row
-    end
-
-    def self.stringify_column!(row, column)
-      if row && row[column]
-        if column == 'course_cntl_num'
-          row[column] = '%05d' % row[column].to_i
-        else
-          row[column] = row[column].to_i.to_s
-        end
-      end
-    end
-
-    # Oracle and H2 have no timestamp formatting function in common.
-    def self.timestamp_format(timestamp_column)
-      if test_data?
-        "formatdatetime(#{timestamp_column}, 'yyyy-MM-dd HH:mm:ss')"
-      else
-        "to_char(#{timestamp_column}, 'yyyy-mm-dd hh24:mi:ss')"
-      end
-    end
-
-    def self.timestamp_parse(datetime)
-      if test_data?
-        "parsedatetime('#{datetime.utc.to_s(:db)}', 'yyyy-MM-dd HH:mm:ss')"
-      else
-        "to_date('#{datetime.utc.to_s(:db)}', 'yyyy-mm-dd hh24:mi:ss')"
-      end
-    end
-
     def self.filter_multi_entry_codes(results)
       # if a course has multiple schedule entries, and the first one's PRINT_CD = "A",
       # then do not display other rows for that course.
@@ -99,5 +58,13 @@ module CampusOracle
       filtered_rows
     end
 
+    def self.stringify_column!(row, column, zero_padding = 0)
+      zero_padding = 5 if column == 'course_cntl_num'
+      super(row, column, zero_padding)
+    end
+
+    def self.stringified_columns
+      %w(ldap_uid student_id term_yr catalog_root course_cntl_num student_ldap_uid)
+    end
   end
 end

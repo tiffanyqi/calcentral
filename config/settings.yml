@@ -34,14 +34,23 @@ postgres:
   port: <%= ENV['DB_PORT_5432_TCP_PORT'] || '5432' %>
   pool: 95
 
+edodb:
+  fake: true
+  adapter: h2
+  driver: org.h2.Driver
+  url: jdbc:h2:mem:h2EdoOracle::EdoDataSource;DB_CLOSE_DELAY=-1;MODE=Oracle
+  username: sa
+  password: sa
+  pool: 95
+
 campusdb:
+  fake: false
   adapter: h2
   driver: org.h2.Driver
   url: jdbc:h2:mem:h2CampusOracle::CampusDataSource;DB_CLOSE_DELAY=-1;MODE=Oracle
   username: sa
   password: sa
   pool: 95
-  fake: false
   fake_user_id: "300939"
 
 terms:

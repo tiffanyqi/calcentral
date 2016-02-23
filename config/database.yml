@@ -48,3 +48,11 @@ campusdb:
   pool: <%=Settings.campusdb.pool %>
   timeout: <%=Settings.campusdb.timeout %>
 
+edodb:
+  adapter: <%= Settings.edodb.adapter %>
+  driver: <%=Settings.edodb.driver %>
+  url: <%=Settings.edodb.url %>
+  username: <%=Settings.edodb.username %>
+  password: <%=Settings.edodb.password %>
+  pool: <%=Settings.edodb.pool %>
+  timeout: <%=Settings.edodb.timeout %>
