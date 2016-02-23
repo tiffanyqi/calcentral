@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<UC_SR_FERPA>
+  <FERPA_DEEPLINK>
+    <NAME>Manage FERPA Restrictions</NAME>
+    <IS_CS_LINK type="boolean">true</IS_CS_LINK>
+    <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/PSIGW/RESTListeningConnector/PSFT_CS/UC_CC_STDNT_FERPA.v1/FERPA/GET?EMPLID=25738808</URL>
+  </FERPA_DEEPLINK>
+</UC_SR_FERPA>
