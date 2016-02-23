@@ -17,8 +17,9 @@ describe User::AuthenticationValidator do
           {'student'=>
             {'affiliations'=>
               [{'type'=>{'code'=>'APPLICANT', 'description'=>'Applicant'},
-                'statusCode'=>'ACT',
-                'statusDescription'=>'Active',
+                'status'=> {
+                  'code'=>'ACT',
+                  'description'=>'Active'},
                 'fromDate'=>'2016-01-06'}]}},
         :studentNotFound=>nil}
     end
@@ -30,12 +31,14 @@ describe User::AuthenticationValidator do
               [{'type'=>
                 {'code'=>'ADMT_UX',
                   'description'=>'Admitted Students CalCentral Access'},
-                'statusCode'=>'ACT',
-                'statusDescription'=>'Active',
+                'status'=> {
+                  'code'=>'ACT',
+                  'description'=>'Active'},
                 'fromDate'=>'2016-01-11'},
                 {'type'=>{'code'=>'APPLICANT', 'description'=>'Applicant'},
-                  'statusCode'=>'ACT',
-                  'statusDescription'=>'Active',
+                  'status'=> {
+                    'code'=>'ACT',
+                    'description'=>'Active'},
                   'fromDate'=>'2016-01-06'}]}},
         :studentNotFound=>nil}
     end
@@ -83,12 +86,14 @@ describe User::AuthenticationValidator do
             {"student"=>
               {"affiliations"=>
                 [{"type"=>{"code"=>"STUDENT", "description"=>""},
-                  "statusCode"=>"ACT",
-                  "statusDescription"=>"Active",
+                  'status'=> {
+                    'code'=>'ACT',
+                    'description'=>'Active'},
                   "fromDate"=>"2015-12-14"},
                   {"type"=>{"code"=>"UNDERGRAD", "description"=>"Undergraduate Student"},
-                    "statusCode"=>"ACT",
-                    "statusDescription"=>"Active",
+                    'status'=> {
+                      'code'=>'INA',
+                      'description'=>'Inactive'},
                     "fromDate"=>"2015-12-14"}]}},
           :studentNotFound=>nil}
       end
@@ -104,12 +109,14 @@ describe User::AuthenticationValidator do
                 [{'type'=>
                   {'code'=>'ADMT_UX',
                     'description'=>'Admitted Students CalCentral Access'},
-                  'statusCode'=>'INA',
-                  'statusDescription'=>'Inactive',
+                  'status'=> {
+                    'code'=>'INA',
+                    'description'=>'Inactive'},
                   'fromDate'=>'2016-01-11'},
                   {'type'=>{'code'=>'APPLICANT', 'description'=>'Applicant'},
-                    'statusCode'=>'ACT',
-                    'statusDescription'=>'Active',
+                    'status'=> {
+                      'code'=>'ACT',
+                      'description'=>'Active'},
                     'fromDate'=>'2016-01-06'}]}},
           :studentNotFound=>nil}
       end

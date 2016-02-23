@@ -26,7 +26,7 @@ module Berkeley
       result = {roles: {}}
 
       # TODO We still need to cover staff, guests, concurrent-enrollment students and registration status.
-      cs_affiliations.select { |a| a[:statusCode] == 'ACT' }.each do |active_affiliation|
+      cs_affiliations.select { |a| a[:status][:code] == 'ACT' }.each do |active_affiliation|
         case active_affiliation[:type][:code]
           when 'ADMT_UX'
             result[:roles][:applicant] = true
@@ -46,7 +46,7 @@ module Berkeley
             result[:ug_grad_flag] = 'U'
         end
       end
-      cs_affiliations.select { |a| a[:statusCode] == 'INA' }.each do |inactive_affiliation|
+      cs_affiliations.select { |a| a[:status][:code] == 'INA' }.each do |inactive_affiliation|
         if !result[:roles][:student] && %w(GRADUATE STUDENT UNDERGRAD).include?(inactive_affiliation[:type][:code])
           result[:roles][:exStudent] = true
         end

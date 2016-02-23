@@ -19,7 +19,10 @@
                 "code": "APPLICANT",
                 "description": "Applicant"
               },
-              "statusCode": "INA",
+              "status": {
+                "code": "INA",
+                "description": "Inactive"
+              },
               "statusDescription": "Inactive",
               "fromDate": "2015-10-02",
               "toDate": "2015-10-28"
@@ -29,7 +32,10 @@
                 "code": "ADMT_UX",
                 "description": "Admitted Students CalCentral Access"
               },
-              "statusCode": "ACT",
+              "status": {
+                "code": "ACT",
+                "description": "Active"
+              },
               "statusDescription": "Active",
               "fromDate": "2015-10-22"
             }

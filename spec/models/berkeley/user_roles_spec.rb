@@ -11,8 +11,10 @@ describe Berkeley::UserRoles do
               :code => 'STUDENT',
               :description => ''
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           },
           {
@@ -20,8 +22,10 @@ describe Berkeley::UserRoles do
               :code => 'UNDERGRAD',
               :description => 'Undergraduate Student'
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -40,8 +44,10 @@ describe Berkeley::UserRoles do
               :code => 'STUDENT',
               :description => ''
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           },
           {
@@ -49,8 +55,10 @@ describe Berkeley::UserRoles do
               :code => 'GRADUATE',
               :description => 'Graduate Student'
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -69,8 +77,10 @@ describe Berkeley::UserRoles do
               :code => 'STUDENT',
               :description => ''
             },
-            :statusCode => 'INA',
-            :statusDescription => 'Inactive',
+            :status => {
+              :code =>'INA',
+              :description => 'Inactive'
+            },
             :fromDate => '2014-05-15'
           },
           {
@@ -78,8 +88,10 @@ describe Berkeley::UserRoles do
               :code => 'GRADUATE',
               :description => 'Graduate Student'
             },
-            :statusCode => 'INA',
-            :statusDescription => 'Inactive',
+            :status => {
+              :code =>'INA',
+              :description => 'Inactive'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -99,8 +111,10 @@ describe Berkeley::UserRoles do
               :code => 'STUDENT',
               :description => ''
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           },
           {
@@ -108,8 +122,10 @@ describe Berkeley::UserRoles do
               :code => 'GRADUATE',
               :description => 'Graduate Student'
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           },
           {
@@ -117,8 +133,10 @@ describe Berkeley::UserRoles do
               :code => 'UNDERGRAD',
               :description => 'Undergraduate Student'
             },
-            :statusCode => 'INA',
-            :statusDescription => 'Inactive',
+            :status => {
+              :code =>'INA',
+              :description => 'Inactive'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -138,8 +156,10 @@ describe Berkeley::UserRoles do
               :code => 'ADMT_UX',
               :description => ''
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -158,8 +178,10 @@ describe Berkeley::UserRoles do
               :code => 'APPLICANT',
               :description => ''
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -178,8 +200,10 @@ describe Berkeley::UserRoles do
               :code => 'STUDENT',
               :description => ''
             },
-            :statusCode => 'INA',
-            :statusDescription => 'Inactive',
+            :status => {
+              :code =>'INA',
+              :description => 'Inactive'
+            },
             :fromDate => '2014-05-15'
           },
           {
@@ -187,8 +211,10 @@ describe Berkeley::UserRoles do
               :code => 'APPLICANT',
               :description => ''
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -206,8 +232,10 @@ describe Berkeley::UserRoles do
               :code => 'APPLICANT',
               :description => ''
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           },
           {
@@ -215,8 +243,10 @@ describe Berkeley::UserRoles do
               :code => 'ADMT_UX',
               :description => ''
             },
-            :statusCode => 'INA',
-            :statusDescription => 'Inactive',
+            :status => {
+              :code =>'INA',
+              :description => 'Inactive'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -235,8 +265,10 @@ describe Berkeley::UserRoles do
               :code => 'INSTRUCTOR',
               :description => 'Instructor'
             },
-            :statusCode => 'ACT',
-            :statusDescription => 'Active',
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -255,8 +287,10 @@ describe Berkeley::UserRoles do
               :code => 'ADVISOR',
               :description => 'Advisor'
             },
-            :statusCode => status_code,
-            :statusDescription => status_description,
+            :status => {
+              :code => status_code,
+              :description => status_description
+            },
             :fromDate => '2014-05-15'
           }
         ]
@@ -286,8 +320,10 @@ describe Berkeley::UserRoles do
               :code => 'INSTRUCTOR',
               :description => 'Instructor'
             },
-            :statusCode => 'INA',
-            :statusDescription => 'Inactive',
+            :status => {
+              :code =>'INA',
+              :description => 'Inactive'
+            },
             :fromDate => '2014-05-15'
           }
         ]
