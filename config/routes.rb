@@ -186,6 +186,7 @@ Calcentral::Application.routes.draw do
   delete '/api/campus_solutions/person_name/:type' => 'campus_solutions/person_name#delete', :via => :delete, :defaults => { :format => 'json' }
   delete '/api/campus_solutions/phone/:type' => 'campus_solutions/phone#delete', :via => :delete, :defaults => { :format => 'json' }
   delete '/api/campus_solutions/ethnicity/:ethnicGroupCode/:regRegion' => 'campus_solutions/ethnicity#delete', :via => :delete, :defaults => { :format => 'json' }
+  delete '/api/campus_solutions/work_experience/:sequenceNbr' => 'campus_solutions/work_experience#delete', :via => :delete, :defaults => { :format => 'json' }
 
   # Redirect to College Scheduler
   get '/college_scheduler/:acad_career/:term_id' => 'campus_solutions/college_scheduler#get'

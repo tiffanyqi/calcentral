@@ -4,7 +4,11 @@ module CampusSolutions
     before_filter :exclude_acting_as_users
 
     def post
-      render json: CampusSolutions::MyWorkExperience.from_session(session).update(params)
+      post_passthrough CampusSolutions::MyWorkExperience
+    end
+
+    def delete
+      delete_passthrough CampusSolutions::MyWorkExperience
     end
 
   end

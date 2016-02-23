@@ -14,7 +14,7 @@ describe CampusSolutions::WorkExperience do
       } }
       subject { proxy.filter_updateable_params(params) }
       it 'should strip out invalid fields' do
-        expect(subject.keys.length).to eq 18
+        expect(subject.keys.length).to eq 19
         expect(subject[:bogus]).to be_nil
         expect(subject[:invalid]).to be_nil
         expect(subject[:addressType]).to eq 'HOME'
@@ -50,9 +50,10 @@ describe CampusSolutions::WorkExperience do
 
   context 'with a real external service', testext: true, ignore: true  do
     let(:params) { {
+      sequenceNbr: '1',
       extOrganizationId: '9000000008',
       isRetired: 'N',
-      workExpAddrType: 'ADDR',
+      workExpAddrType: 'NONE',
       country: 'USA',
       addressType: 'HOME',
       city: 'ventura',

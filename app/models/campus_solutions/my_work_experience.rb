@@ -1,10 +1,14 @@
 module CampusSolutions
   class MyWorkExperience < UserSpecificModel
 
+    include PersonDataUpdatingModel
+
     def update(params = {})
-      proxy = CampusSolutions::WorkExperience.new({user_id: @uid, params: params})
-      PersonDataExpiry.expire @uid
-      proxy.get
+      passthrough(CampusSolutions::WorkExperience, params)
+    end
+
+    def delete(params = {})
+      passthrough(CampusSolutions::WorkExperienceDelete, params)
     end
 
   end
