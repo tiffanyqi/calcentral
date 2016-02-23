@@ -3,6 +3,6 @@
   <FERPA_DEEPLINK>
     <NAME>Manage FERPA Restrictions</NAME>
     <IS_CS_LINK type="boolean">true</IS_CS_LINK>
-    <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/PSIGW/RESTListeningConnector/PSFT_CS/UC_CC_STDNT_FERPA.v1/FERPA/GET?EMPLID=25738808</URL>
+    <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/PSIGW/RESTListeningConnector/psc/bcsdev/EMPLOYEE/HRMS/c/CC_SERVICES_DATA.FERPA_PERS.GBL</URL>
   </FERPA_DEEPLINK>
 </UC_SR_FERPA>

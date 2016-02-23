@@ -7,7 +7,7 @@ describe CampusSolutions::FerpaDeeplink do
     it 'returns data with the expected structure' do
       expect(subject[:feed][:ucSrFerpa][:ferpaDeeplink][:name]).to eq 'Manage FERPA Restrictions'
       expect(subject[:feed][:ucSrFerpa][:ferpaDeeplink][:isCsLink]).to be true
-      expect(subject[:feed][:ucSrFerpa][:ferpaDeeplink][:url]).to include "/UC_CC_STDNT_FERPA.v1/FERPA/GET?EMPLID="
+      expect(subject[:feed][:ucSrFerpa][:ferpaDeeplink][:url]).to include "/EMPLOYEE/HRMS/c/CC_SERVICES_DATA.FERPA_PERS.GBL"
     end
   end
 
