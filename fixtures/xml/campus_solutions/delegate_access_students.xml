@@ -6,7 +6,7 @@
         <EMPLID>23009422</EMPLID>
         <NAME>Tom Tulliver</NAME>
         <ROLENAMES type="array">
-          <ROLENAME>UC DA InPerson Call Access</ROLENAME>
+          <ROLENAME>UC_CS_DA_THIRD_PARTY_RELEASE</ROLENAME>
         </ROLENAMES>
       </STUDENT>
       <STUDENT>
@@ -14,7 +14,7 @@
         <NAME>Maggie Tulliver</NAME>
         <ROLENAMES type="array">
           <ROLENAME>UC DA Financial View</ROLENAME>
-          <ROLENAME>UC DA InPerson Call Access</ROLENAME>
+          <ROLENAME>UC_CS_DA_THIRD_PARTY_RELEASE</ROLENAME>
         </ROLENAMES>
       </STUDENT>
       <STUDENT>
@@ -37,7 +37,7 @@
         <ROLENAMES type="array">
           <ROLENAME>UC DA Financial View</ROLENAME>
           <ROLENAME>UC_CS_DA_ENROLLMENTS_GRADES_VW</ROLENAME>
-          <ROLENAME>UC DA InPerson Call Access</ROLENAME>
+          <ROLENAME>UC_CS_DA_THIRD_PARTY_RELEASE</ROLENAME>
         </ROLENAMES>
       </STUDENT>
       <STUDENT>

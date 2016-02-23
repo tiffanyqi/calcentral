@@ -39,7 +39,7 @@ module CampusSolutions
               when /financial/ then transformation['privileges']['financial'] = true
               when /enrollments_view/ then transformation['privileges']['view_enrollments'] = true
               when /grades/ then transformation['privileges']['view_grades'] = true
-              when /person call/ then transformation['privileges']['phone'] = true
+              when /release/ then transformation['privileges']['phone'] = true
             end
           end
         end
