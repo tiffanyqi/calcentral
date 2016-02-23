@@ -1,8 +1,14 @@
 module Notifications
   class JmsMessageHandler
 
-    def initialize(processors = [Notifications::RegStatusEventProcessor.new, Notifications::FinalGradesEventProcessor.new])
-      @processors = processors
+    PROCESSOR_CLASSES = [
+      Notifications::FinalGradesEventProcessor,
+      Notifications::RegStatusEventProcessor,
+      Notifications::SisExpiryProcessor
+    ]
+
+    def initialize(processors = nil)
+      @processors = processors || PROCESSOR_CLASSES.map(&:new)
     end
 
     def handle(message)
@@ -11,8 +17,8 @@ module Notifications
         message_data = JSON.parse message[:text]
         if message_data['eventNotification'] && message_data['eventNotification']['event']
           begin
-            if message_data['eventNotification']["event"]["timestamp"]
-              timestamp = DateTime.parse(message_data['eventNotification']["event"]["timestamp"])
+            if message_data['eventNotification']['event']['timestamp']
+              timestamp = DateTime.parse(message_data['eventNotification']['event']['timestamp'])
             else
               timestamp = Time.now.to_datetime
             end
@@ -20,7 +26,7 @@ module Notifications
             timestamp = Time.now.to_datetime
           end
           @processors.each do |processor|
-            processor.process(message_data['eventNotification']["event"], timestamp)
+            processor.process(message_data['eventNotification']['event'], timestamp)
           end
         else
           Rails.logger.warn "#{self.class.name} #{Thread.current} JMS message has text but no eventNotification => event, skipping"

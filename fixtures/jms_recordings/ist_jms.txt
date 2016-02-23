@@ -13,3 +13,7 @@
 ---
 :timestamp: 2013-06-01 07:15:12.000000000 -0700
 :text: ! '{"eventNotification":{"event":{"topic":"Bearfacts:EndOfTermGrades","timestamp":"broken date","payload":{"course":[{"ccn":12345,"term":{"year":2013,"name":"C"}}]}}}}'
+
+---
+:timestamp: 2013-06-01 07:15:12.000000000 -0700
+:text: ! '{"eventNotification":{"event":{"payload":{"student":{"ChangeSourceEvent":"SCC_FERPA_DATA_MSG","ChangeSourceType":"MESSAGE","StudentId":17154428}},"timestamp":"2013-06-01T07:15:01.000-07:00","topic":"sis:student:ferpa"}}}'
