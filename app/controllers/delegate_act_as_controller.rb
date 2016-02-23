@@ -1,7 +1,5 @@
 class DelegateActAsController < ActAsController
 
-  skip_before_filter :check_reauthentication, :only => [:stop_delegate_act_as]
-
   def initialize
     super(act_as_session_key: 'original_delegate_user_id')
   end

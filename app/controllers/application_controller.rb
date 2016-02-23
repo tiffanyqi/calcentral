@@ -45,8 +45,7 @@ class ApplicationController < ActionController::Base
       delete_reauth_cookie
       return
     end
-    return unless Settings.features.reauthentication
-    reauthenticate(redirect_path: '/') if current_user.viewing_as? && !cookies[:reauthenticated]
+    reauthenticate(redirect_path: '/') if session_state_requires_reauthentication?
   end
 
   def delete_reauth_cookie
@@ -122,6 +121,12 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def session_state_requires_reauthentication?
+    Settings.features.reauthentication &&
+      (current_user.original_user_id || current_user.original_advisor_user_id) &&
+      !cookies[:reauthenticated]
+  end
 
   def get_settings
     @server_settings = ServerRuntime.get_settings
