@@ -26,7 +26,7 @@ module Berkeley
       result = {roles: {}}
 
       # TODO We still need to cover staff, guests, concurrent-enrollment students and registration status.
-      cs_affiliations.select { |a| a[:statusCode] == 'ACT' }.each do |active_affiliation|
+      cs_affiliations.select { |a| a[:status][:code] == 'ACT' }.each do |active_affiliation|
         case active_affiliation[:type][:code]
           when 'ADMT_UX'
             result[:roles][:applicant] = true
