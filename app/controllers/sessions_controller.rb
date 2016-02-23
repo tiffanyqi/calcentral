@@ -31,10 +31,9 @@ class SessionsController < ApplicationController
 
     if params['renew'] == 'true'
       # If we're re-authenticating due to view-as, then the CAS-provided UID should match original_user_id in session.
-      original_uid = session['original_user_id'] || session['original_advisor_user_id'] || session['original_delegate_user_id']
-      if original_uid
+      if (original_uid = get_original_viewer_uid)
         if original_uid != auth_uid
-          logger.warn "ACT-AS: CAS returned UID #{auth_uid} not matching active session: #{session_message}. Logging user out."
+          logger.warn "User #{original_uid} was view-as on UID #{auth_uid}. Log everyone out. Session message: #{session_message}"
           logout
           return redirect_to Settings.cas_logout_url
         else
@@ -122,11 +121,20 @@ class SessionsController < ApplicationController
 
   def logout
     begin
+      if (uid = session['user_id']) && get_original_viewer_uid
+        # Cached user data might have been filtered during view-as session so we flush to reset.
+        Cache::UserCacheExpiry.notify uid
+        CampusSolutions::UserApiExpiry.expire uid
+      end
       delete_reauth_cookie
       reset_session
     ensure
       ActiveRecord::Base.clear_active_connections!
     end
+  end
+
+  def get_original_viewer_uid
+    session['original_user_id'] || session['original_advisor_user_id'] || session['original_delegate_user_id']
   end
 
 end
