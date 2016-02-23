@@ -23,7 +23,6 @@
                 "code": "INA",
                 "description": "Inactive"
               },
-              "statusDescription": "Inactive",
               "fromDate": "2015-10-02",
               "toDate": "2015-10-28"
             },
@@ -36,7 +35,6 @@
                 "code": "ACT",
                 "description": "Active"
               },
-              "statusDescription": "Active",
               "fromDate": "2015-10-22"
             }
           ],
