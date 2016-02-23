@@ -22,8 +22,7 @@
     <ul class="cc-enrollment-card-advisors" data-ng-if="enrollmentTerm.advisors.length">
       <li data-ng-repeat="advisor in enrollmentTerm.advisors">
         <div>
-          <strong data-ng-bind="advisor.title"></strong>
-          <span class="cc-text-light" data-ng-bind="advisor.program"></span>
+          <span data-ng-bind="advisor.program"></span>
         </div>
         <div>
           <a
