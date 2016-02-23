@@ -33,7 +33,7 @@
         <input type="checkbox" id="cc-delegate-linking-terms" data-ng-model="delegate.currentObject.data.agreeToTerms" required aria-required="true">
         <label for="cc-delegate-linking-terms">I agree to the Terms and Conditions.</label>
         <button class="cc-button-link" data-ng-if="!delegate.termsAndConditionsVisible" data-ng-click="getTermsAndConditions()">Show</button>
-        <p class="cc-delegate-linking-agreement" data-ng-if="delegate.termsAndConditionsVisible" data-ng-bind="daAgreeToTerms.termsAndConditions"></p>
+        <p class="cc-delegate-linking-agreement" data-ng-if="delegate.termsAndConditionsVisible" data-ng-bind="termsAndConditions"></p>
       </div>
       <div>
         <button class="cc-button cc-button-blue" type="submit" data-ng-disabled="cc_delegate_linking_form.$invalid || delegate.isSaving">

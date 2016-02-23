@@ -251,6 +251,7 @@ verify_sis_endpoints "Campus Solutions" CS_FIN_AID "cs_fin_aid" "${yml_features_
 CS_DELEGATED_ACCESS=(
   "/UC_CC_DELEGATED_ACCESS.v1/DelegatedAccess/get?SCC_DA_PRXY_OPRID=${UID_CROSSWALK}"
   "/UC_CC_DELEGATED_ACCESS_URL.v1/get"
+  "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=25000&MESSAGE_NBR=15"
 )
 verify_sis_endpoints "Campus Solutions" CS_DELEGATED_ACCESS "cs_delegated_access" "${yml_features_cs_delegated_access}"
 
