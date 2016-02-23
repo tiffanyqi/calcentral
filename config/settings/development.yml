@@ -77,6 +77,7 @@ features:
   cs_profile_work_experience: true
   prevent_acting_as_users_from_posting: false
   show_notifications_archive_link: true
+  class_enrollment_summer_2016: true
 
 advising_proxy:
   fake: true

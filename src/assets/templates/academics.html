@@ -20,7 +20,7 @@
     </div>
 
     <div class="medium-4 columns cc-column-last">
-      <div data-ng-include="'widgets/telebears.html'" data-ng-if="telebearsSemesters.length"></div>
+      <div data-ng-include="'widgets/enrollment_card_summer_2016.html'" data-ng-if="api.user.profile.features.classEnrollmentSummer2016 && api.user.profile.roles.student"></div>
 
       <div data-ng-include="'widgets/enrollment_card.html'" data-ng-if="api.user.profile.features.csEnrollmentCard"></div>
 
