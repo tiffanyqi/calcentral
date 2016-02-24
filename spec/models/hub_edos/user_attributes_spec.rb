@@ -28,6 +28,18 @@ describe HubEdos::UserAttributes do
     expect(subject[:roles]).to eq({applicant: true})
   end
 
+  context 'unexpected errors from Hub calls' do
+    before do
+      allow_any_instance_of(HubEdos::Affiliations).to receive(:get).and_return({'non' => 'sense'})
+    end
+    it 'returns from errors' do
+      expect(subject).to eq({
+        body: 'An unknown server error occurred',
+        statusCode: 503
+      })
+    end
+  end
+
   it 'delegates role parsing' do
     expect_any_instance_of(Berkeley::UserRoles).to receive(:roles_from_cs_affiliations).and_return(
       {

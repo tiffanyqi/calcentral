@@ -3,6 +3,8 @@ module HubEdos
 
     include User::Student
     include Berkeley::UserRoles
+    include ResponseWrapper
+    include ClassLogger
 
     def initialize(options = {})
       @uid = options[:user_id]
@@ -22,24 +24,27 @@ module HubEdos
     end
 
     def get
-      result = {}
-      if (edo = get_edo)
-        set_ids(result)
-        extract_passthrough_elements(edo, result)
-        extract_names(edo, result)
-        extract_roles(edo, result)
-        extract_emails(edo, result)
-        extract_education_level(edo, result)
-        extract_total_units(edo, result)
-        extract_special_program_code(edo, result)
-        extract_reg_status(edo, result)
-        extract_residency(edo, result)
-        result[:statusCode] = 200
-      else
-        logger.error "Could not get Student EDO data for uid #{@uid}"
-        result[:noStudentId] = true
+      wrapped_result = handling_exceptions(@uid) do
+        result = {}
+        if (edo = get_edo)
+          set_ids(result)
+          extract_passthrough_elements(edo, result)
+          extract_names(edo, result)
+          extract_roles(edo, result)
+          extract_emails(edo, result)
+          extract_education_level(edo, result)
+          extract_total_units(edo, result)
+          extract_special_program_code(edo, result)
+          extract_reg_status(edo, result)
+          extract_residency(edo, result)
+          result[:statusCode] = 200
+        else
+          logger.error "Could not get Student EDO data for UID #{@uid}"
+          result[:noStudentId] = true
+        end
+        result
       end
-      result
+      wrapped_result[:response]
     end
 
     def has_role?(*roles)
