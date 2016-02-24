@@ -34,6 +34,11 @@
     height: 175px;
     width: 200px;
   }
+  .cc-page-status-please-wait {
+    background-image: url('../images/please-wait_200x200.png');
+    height: 200px;
+    width: 200px;
+  }
 
   @media #{$small-only} {
     img {
