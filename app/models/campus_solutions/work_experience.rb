@@ -12,6 +12,7 @@ module CampusSolutions
     def self.field_mappings
       @field_mappings ||= FieldMapping.to_hash(
         [
+          FieldMapping.required(:sequenceNbr, :SEQUENCE_NBR),
           FieldMapping.required(:extOrganizationId, :EXT_ORGNIZATION_ID),
           FieldMapping.required(:isRetired, :IS_RETIRED),
           FieldMapping.required(:workExpAddrType, :WORK_EXP_ADDR_TYPE),
