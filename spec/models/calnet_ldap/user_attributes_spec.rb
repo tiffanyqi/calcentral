@@ -11,6 +11,7 @@ describe CalnetLdap::UserAttributes do
         o: ['University of California, Berkeley'],
         ou: ['people'],
         mail: ['oski@berkeley.edu'],
+        berkeleyeduofficialemail: ['oski_bearable@berkeley.edu'],
         berkeleyeduaffiliations: ['AFFILIATE-TYPE-ADVCON-STUDENT', 'AFFILIATE-TYPE-ADVCON-ATTENDEE', 'STUDENT-TYPE-NOT REGISTERED'],
         givenname: ['Oski'],
         berkeleyeduconfidentialflag: ['false'],
@@ -26,6 +27,7 @@ describe CalnetLdap::UserAttributes do
     before { allow(CalnetLdap::Client).to receive(:new).and_return double(search_by_uid: ldap_result) }
     it 'translates LDAP attributes' do
       expect(feed[:email_address]).to eq 'oski@berkeley.edu'
+      expect(feed[:official_bmail_address]).to eq 'oski_bearable@berkeley.edu'
       expect(feed[:first_name]).to eq 'Oski'
       expect(feed[:last_name]).to eq 'BEAR'
       expect(feed[:ldap_uid]).to eq '61889'

@@ -1,0 +1,46 @@
+<div
+  class="cc-widget-text cc-page-widget-profile-sections"
+  data-ng-controller="BasicController"
+  data-cc-spinner-directive="basicInformation.isLoading">
+
+  <div class="cc-page-widget-profile-note">
+    <i class="fa fa-exclamation-triangle cc-icon cc-icon-gold" aria-hidden="true"></i>
+    <strong>Note:</strong> Althought active students will use CalCentral to view and update personal data in
+    UC Berkeley's Student Information System (SIS), non-students should continue to rely on the
+    <a href="https://calnet.calnet.berkeley.edu/directory/update/">CalNet Directory</a>.
+  </div>
+
+  <!-- Name -->
+  <div class="cc-page-widget-profile-section">
+    <div class="cc-page-widget-profile-section-label">Name</div>
+    <div class="cc-page-widget-profile-section-content">
+      <div data-ng-bind="api.user.profile.fullName"></div>
+    </div>
+  </div>
+  <!-- Student ID -->
+  <div data-ng-include="'widgets/profile/basic_student_id.html'"></div>
+  <!-- User ID -->
+  <div data-ng-include="'widgets/profile/basic_user_id.html'"></div>
+  <!-- Email -->
+  <div class="cc-page-widget-profile-section">
+    <div class="cc-page-widget-profile-section-label">Email</div>
+    <div class="cc-page-widget-profile-section-content">
+      <div data-ng-if="!api.user.profile.officialBmailAddress && !api.user.profile.primaryEmailAddress" class="cc-page-widget-profile-section-not-available">
+        Not available
+      </div>
+      <div data-ng-if="api.user.profile.officialBmailAddress" class="cc-page-widget-profile-section-content-item">
+        <div>
+          <strong>Official Email Address</strong>
+        </div>
+        <div data-ng-bind="api.user.profile.officialBmailAddress" class="cc-break-word"></div>
+      </div>
+      <div data-ng-if="api.user.profile.primaryEmailAddress && (api.user.profile.primaryEmailAddress != api.user.profile.officialBmailAddress)" class="cc-page-widget-profile-section-content-item">
+        <div>
+          <strong>Primary Email Address</strong>
+        </div>
+        <div data-ng-bind="api.user.profile.primaryEmailAddress" class="cc-break-word"></div>
+      </div>
+    </div>
+  </div>
+
+</div>

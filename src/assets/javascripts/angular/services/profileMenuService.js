@@ -13,20 +13,39 @@ angular.module('calcentral.services').factory('profileMenuService', function(api
       categories: [
         {
           id: 'basic',
-          name: 'Basic Information'
+          name: 'Basic Information',
+          roles: {
+            student: true
+          }
+        },
+        {
+          id: 'basic_nonstudent',
+          name: 'Basic Information',
+          roles: {
+            student: false
+          }
         },
         {
           id: 'contact',
-          name: 'Contact Information'
+          name: 'Contact Information',
+          roles: {
+            student: true
+          }
         },
         {
           id: 'emergency',
           name: 'Emergency Contact',
-          featureFlag: 'csProfileEmergencyContacts'
+          featureFlag: 'csProfileEmergencyContacts',
+          roles: {
+            student: true
+          }
         },
         {
           id: 'demographic',
-          name: 'Demographic Information'
+          name: 'Demographic Information',
+          roles: {
+            student: true
+          }
         }
       ]
     },
@@ -64,12 +83,18 @@ angular.module('calcentral.services').factory('profileMenuService', function(api
       categories: [
         {
           id: 'languages',
-          name: 'Languages'
+          name: 'Languages',
+          roles: {
+            student: true
+          }
         },
         {
           id: 'work-experience',
           name: 'Work Experience',
-          featureFlag: 'csProfileWorkExperience'
+          featureFlag: 'csProfileWorkExperience',
+          roles: {
+            student: true
+          }
         }
       ]
     },
