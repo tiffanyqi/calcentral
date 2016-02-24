@@ -49,6 +49,11 @@ angular.module('calcentral.config').config(function($routeProvider) {
     controller: 'DashboardController',
     fireUpdatedFeeds: true
   }).
+  when('/delegate_landing', {
+    templateUrl: 'delegate_landing.html',
+    controller: 'DelegateLandingController',
+    isPublic: true
+  }).
   when('/delegate_welcome', {
     templateUrl: 'delegate_welcome.html',
     controller: 'DelegateWelcomeController'
