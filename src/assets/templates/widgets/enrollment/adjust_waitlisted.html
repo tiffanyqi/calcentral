@@ -1,6 +1,20 @@
-<div data-ng-if="enrollmentTerm.waitlistedClasses.length" class="cc-clearfix cc-enrollment-card-margin-top">
-  <div>
-    <strong>Waitlisted</strong>
+<div data-ng-if="enrollmentTerm.waitlistedClasses.length" class=" cc-enrollment-card-margin-top">
+  <div class="cc-flex cc-flex-space-between cc-flex-space-between-horizontal-5">
+    <div>
+      <strong>Waitlisted</strong>
+    </div>
+    <div
+      data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
+      class="cc-flex cc-flex-wrap cc-enrollment-card-enrolled-links"
+    >
+      <div
+        data-cc-campus-solutions-link-item-directive
+        data-link="enrollmentTerm.links.dropEnrolledClasses"
+        data-text="Drop"
+        data-cache="enrollment"
+        data-ng-if="enrollmentTerm.isClassScheduleAvailable"
+      ></div>
+    </div>
   </div>
 
   <div class="cc-table">
