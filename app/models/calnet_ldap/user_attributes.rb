@@ -26,7 +26,8 @@ module CalnetLdap
           ldap_uid: result[:uid].try(:first).try(:to_s),
           person_name: result[:displayname].try(:first),
           roles: roles,
-          student_id: result[:berkeleyedustuid].try(:first).try(:to_s)
+          student_id: result[:berkeleyedustuid].try(:first).try(:to_s),
+          official_bmail_address: result[:berkeleyeduofficialemail].try(:first)
         }
       else
         {}

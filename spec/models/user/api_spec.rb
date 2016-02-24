@@ -271,6 +271,55 @@ describe User::Api do
     end
   end
 
+  describe 'profile source of record' do
+    let(:delegate_students) { {} }
+    subject { User::Api.new(uid).get_feed }
+    let(:ldap_attributes) do
+      {
+        official_bmail_address: 'bar@bar.edu',
+        roles: {
+          student: is_active_student,
+          exStudent: !is_active_student,
+          faculty: false,
+          staff: true
+        }
+      }
+    end
+    context 'active student' do
+      let(:is_active_student) { true }
+      it 'relies on CS data' do
+        expect(subject[:officialBmailAddress]).to eq 'foo@foo.com'
+      end
+    end
+    context 'former student' do
+      let(:is_active_student) { false }
+      it 'relies on LDAP and Oracle' do
+        expect(subject[:officialBmailAddress]).to eq 'bar@bar.edu'
+      end
+    end
+    context 'applicant' do
+      let(:edo_attributes) do
+        {
+          person_name: preferred_name,
+          student_id: '1234567890',
+          campus_solutions_id: 'CC12345678',
+          official_bmail_address: 'foo@foo.com',
+          roles: {
+            student: false,
+            exStudent: false,
+            faculty: false,
+            staff: true,
+            applicant: true
+          }
+        }
+      end
+      let(:is_active_student) { false }
+      it 'relies on CS data' do
+        expect(subject[:officialBmailAddress]).to eq 'foo@foo.com'
+      end
+    end
+  end
+
   describe 'My Finances tab' do
     let(:delegate_students) { {} }
     subject { User::Api.new(uid).get_feed[:hasFinancialsTab] }
