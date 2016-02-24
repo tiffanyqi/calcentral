@@ -26,6 +26,10 @@ describe User::Api do
   end
 
   context 'user attributes' do
+    before do
+      # Protect against random UID matches in testext Oracle DB.
+      allow(CampusOracle::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: {})
+    end
     let(:delegate_students) { {} }
     it 'should find user with default name' do
       u = User::Api.new uid
@@ -67,6 +71,10 @@ describe User::Api do
   end
 
   context 'delegate user' do
+    before do
+      # Protect against random UID matches in testext Oracle DB.
+      allow(CampusOracle::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: {})
+    end
     let(:delegate_students) { {} }
     let(:api) {
       session = {
@@ -167,6 +175,10 @@ describe User::Api do
   end
 
   context 'with a legacy student' do
+    before do
+      # Protect against random UID matches in testext Oracle DB.
+      allow(CampusOracle::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: {})
+    end
     let(:delegate_students) { {} }
     let(:api) { User::Api.new(uid).get_feed }
     let(:edo_attributes) do
@@ -202,6 +214,10 @@ describe User::Api do
   end
 
   context 'session metadata' do
+    before do
+      # Protect against random UID matches in testext Oracle DB.
+      allow(CampusOracle::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: {})
+    end
     let(:delegate_students) { {} }
     it 'should return whether the user is registered with Canvas' do
       expect(Canvas::Proxy).to receive(:has_account?).and_return(true, false)
@@ -272,6 +288,10 @@ describe User::Api do
   end
 
   describe 'profile source of record' do
+    before do
+      # Protect against random UID matches in testext Oracle DB.
+      allow(CampusOracle::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: {})
+    end
     let(:delegate_students) { {} }
     subject { User::Api.new(uid).get_feed }
     let(:ldap_attributes) do
@@ -321,6 +341,10 @@ describe User::Api do
   end
 
   describe 'My Finances tab' do
+    before do
+      # Protect against random UID matches in testext Oracle DB.
+      allow(CampusOracle::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: {})
+    end
     let(:delegate_students) { {} }
     subject { User::Api.new(uid).get_feed[:hasFinancialsTab] }
     context 'active student' do
@@ -341,6 +365,10 @@ describe User::Api do
   end
 
   describe 'My Toolbox tab' do
+    before do
+      # Protect against random UID matches in testext Oracle DB.
+      allow(CampusOracle::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: {})
+    end
     let(:delegate_students) { {} }
     context 'superuser' do
       before { User::Auth.new_or_update_superuser! uid }
@@ -533,6 +561,10 @@ describe User::Api do
 
   context 'permissions' do
     let(:delegate_students) { {} }
+    before do
+      # Protect against random UID matches in testext Oracle DB.
+      allow(CampusOracle::UserAttributes).to receive(:new).with(user_id: uid).and_return double(get_feed: {})
+    end
     context 'proper cache handling' do
       it 'should update the last modified hash when content changes' do
         user_api = User::Api.new uid
