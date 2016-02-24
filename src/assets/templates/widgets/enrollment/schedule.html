@@ -6,10 +6,15 @@
 ></div>
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
-  <a
-    data-cc-outbound-enabled="true"
-    data-ng-href="/college_scheduler/{{enrollmentTerm.acadCareer}}/{{enrollmentTerm.term}}">
-    Organize and preview your upcoming semester
-  </a>
-  based on your scheduling needs.
+  <div data-ng-if="enrollmentTerm.isClassScheduleAvailable">
+    <a
+      data-cc-outbound-enabled="true"
+      data-ng-href="/college_scheduler/{{enrollmentTerm.acadCareer}}/{{enrollmentTerm.term}}">
+      Organize and preview your upcoming semester
+    </a>
+    based on your scheduling needs.
+  </div>
+  <div data-ng-if="!enrollmentTerm.isClassScheduleAvailable">
+    Schedule of classes will be available soon. Please try again later.
+  </div>
 </div>
