@@ -12,7 +12,7 @@ module CampusSolutions
     def self.field_mappings
       @field_mappings ||= FieldMapping.to_hash(
         [
-          FieldMapping.required(:jpmCatItemId, :JPM_CAT_ITEM_ID)
+          FieldMapping.required(:languageCode, :JPM_CAT_ITEM_ID)
         ]
       )
     end

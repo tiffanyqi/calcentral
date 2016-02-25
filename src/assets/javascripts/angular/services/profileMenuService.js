@@ -84,6 +84,7 @@ angular.module('calcentral.services').factory('profileMenuService', function(api
         {
           id: 'languages',
           name: 'Languages',
+          featureFlag: 'csProfileLanguages',
           roles: {
             student: true
           }

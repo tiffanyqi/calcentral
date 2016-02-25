@@ -74,6 +74,7 @@ features:
   cs_holds: true
   cs_logout: true
   cs_profile_emergency_contacts: true
+  cs_profile_languages: true
   cs_profile_work_experience: true
   prevent_acting_as_users_from_posting: false
   show_notifications_archive_link: true
