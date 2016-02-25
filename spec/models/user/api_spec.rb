@@ -126,6 +126,7 @@ describe User::Api do
           expect(api[:isDelegateUser]).to be true
           expect(api[:hasToolboxTab]).to be true
           expect(api[:delegateViewAsPrivileges]).to be_nil
+          expect(api[:hasPhoto]).to be false
         end
       end
       context 'view-as session' do
@@ -148,6 +149,7 @@ describe User::Api do
             privileges = api[:delegateViewAsPrivileges]
             expect(privileges).to be_a Hash
             expect(privileges).to include financial: false, viewEnrollments: false, viewGrades: true, phone: false
+            expect(api[:hasPhoto]).to be false
           end
         end
         context 'tabs per privileges' do
@@ -155,6 +157,7 @@ describe User::Api do
           it 'should show My Academics tab and hide grades' do
             expect(api[:hasAcademicsTab]).to be true
             expect(api[:canViewGrades]).to be false
+            expect(api[:hasPhoto]).to be false
           end
         end
         context 'tabs per privileges' do
@@ -164,6 +167,7 @@ describe User::Api do
             expect(api[:canViewGrades]).to be false
             expect(api[:hasFinancialsTab]).to be true
             expect(api[:delegateViewAsPrivileges]).to include financial: true, viewEnrollments: false, viewGrades: false, phone: false
+            expect(api[:hasPhoto]).to be false
           end
         end
       end
