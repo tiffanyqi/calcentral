@@ -44,6 +44,14 @@
       padding: 10px;
       white-space: pre-line;
     }
+    .cc-page-widget-profile-section-error {
+      background-color: $cc-color-red-light;
+      border-bottom: 1px solid $cc-color-red;
+      border-top: 1px solid $cc-color-red;
+      color: $cc-color-red;
+      margin: 10px -10px;
+      padding: 10px;
+    }
     .cc-page-widget-profile-section-input-error {
       background-color: $cc-color-red;
       border: 1px solid $cc-color-red;
