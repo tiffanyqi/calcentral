@@ -6,9 +6,7 @@ module HubEdos
     end
 
     def json_filename
-      # student_edo.json contains the bmeta contract as defined at http://bmeta.berkeley.edu/common/personExampleV0.json
-      # student_api_via_hub.json contains dummy of what we really get from ihub api
-      'student_api_via_hub.json'
+      'hub_student.json'
     end
 
     def build_feed(response)
@@ -25,7 +23,6 @@ module HubEdos
     end
 
     def transform_address_keys(response)
-      # TODO: this should really be done in the Integration Hub
       get_students(response).each do |student|
         if student['addresses'].present?
           student['addresses'].each do |address|

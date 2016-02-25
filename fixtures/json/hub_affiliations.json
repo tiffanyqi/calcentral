@@ -1,0 +1,50 @@
+{
+  "apiResponse": {
+    "correlationId": "d1b3e543-a7a2-4bde-a753-c638a415125e",
+    "response": {
+      "any": {
+        "students": [
+          {
+            "affiliations": [
+              {
+                "detail": "",
+                "fromDate": "2015-10-02",
+                "status": {
+                  "code": "INA",
+                  "description": "Inactive"
+                },
+                "toDate": "2015-10-28",
+                "type": {
+                  "code": "APPLICANT",
+                  "description": "Applicant"
+                }
+              },
+              {
+                "detail": "Active",
+                "fromDate": "2015-10-22",
+                "status": {
+                  "code": "ACT",
+                  "description": "Active"
+                },
+                "type": {
+                  "code": "ADMT_UX",
+                  "description": "Admitted Students CalCentral Access"
+                }
+              }
+            ],
+            "confidential": false,
+            "identifiers": [
+              {
+                "disclose": false,
+                "id": "CC00000001",
+                "type": "student-id"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "responseType": "edu.berkeley.sis.model.edo.student.generated.Students",
+    "source": "UCB-SIS-STUDENT"
+  }
+}

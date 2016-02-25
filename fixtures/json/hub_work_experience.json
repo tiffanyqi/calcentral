@@ -1,0 +1,137 @@
+{
+  "apiResponse": {
+    "correlationId": "5713af86-b04e-4e03-bef5-6a6196040e0d",
+    "response": {
+      "any": {
+        "students": [
+          {
+            "confidential": false,
+            "identifiers": [
+              {
+                "disclose": false,
+                "id": "11667051",
+                "type": "student-id"
+              },
+              {
+                "disclose": false,
+                "id": "61889",
+                "type": "campus-uid"
+              },
+              {
+                "disclose": false,
+                "id": "000-00-0000",
+                "type": "Social Security Number"
+              },
+              {
+                "disclose": false,
+                "fromDate": "1902-02-01",
+                "id": "11667051",
+                "type": "DB2"
+              }
+            ],
+            "workExperiences": {
+              "workExperiences": [
+                {
+                  "employer": "Mat-Su Youth Facility",
+                  "sicCode": "",
+                  "address": {
+                    "type": {
+                      "code": ""
+                    },
+                    "city": "PALMER",
+                    "stateCode": "AK",
+                    "countryCode": "USA"
+                  },
+                  "phone": {
+                    "type": {
+                      "code": ""
+                    },
+                    "number": ""
+                  },
+                  "socCode": "",
+                  "fullTimePercentage": 0,
+                  "weeklyHours": 0,
+                  "payRate": 0,
+                  "payCurrency": {
+                    "code": "USD",
+                    "description": "US Dollar"
+                  },
+                  "payFrequency": {
+                    "code": "M",
+                    "description": "Month"
+                  },
+                  "description": ""
+                },
+                {
+                  "employer": "Mat-Su Youth Facility",
+                  "sicCode": "",
+                  "address": {
+                    "type": {
+                      "code": ""
+                    },
+                    "city": "PALMER",
+                    "stateCode": "AK",
+                    "countryCode": "USA"
+                  },
+                  "phone": {
+                    "type": {
+                      "code": ""
+                    },
+                    "number": ""
+                  },
+                  "socCode": "",
+                  "fullTimePercentage": 0,
+                  "weeklyHours": 0,
+                  "payRate": 0,
+                  "payCurrency": {
+                    "code": "USD",
+                    "description": "US Dollar"
+                  },
+                  "payFrequency": {
+                    "code": "M",
+                    "description": "Month"
+                  },
+                  "description": ""
+                },
+                {
+                  "employer": "Planet Express",
+                  "sicCode": "",
+                  "address": {
+                    "type": {
+                      "code": ""
+                    },
+                    "city": "",
+                    "stateCode": "",
+                    "countryCode": "USA"
+                  },
+                  "phone": {
+                    "type": {
+                      "code": ""
+                    },
+                    "number": ""
+                  },
+                  "socCode": "",
+                  "fullTimePercentage": 1,
+                  "weeklyHours": 40,
+                  "payRate": 0,
+                  "payCurrency": {
+                    "code": "USD",
+                    "description": "US Dollar"
+                  },
+                  "payFrequency": {
+                    "code": "M",
+                    "description": "Month",
+                    "fromDate": "2015-10-01"
+                  },
+                  "description": "picks up and drops off boxes and packages."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "responseType": "edu.berkeley.sis.model.edo.student.generated.Students",
+    "source": "UCB-SIS-STUDENT"
+  }
+}

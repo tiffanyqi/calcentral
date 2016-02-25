@@ -10,7 +10,7 @@ module HubEdos
     end
 
     def json_filename
-      'demographics.json'
+      'hub_demographics.json'
     end
 
     def include_fields

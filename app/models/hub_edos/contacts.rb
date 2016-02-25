@@ -10,7 +10,7 @@ module HubEdos
     end
 
     def json_filename
-      'student_contacts.json'
+      'hub_contacts.json'
     end
 
     def include_fields
