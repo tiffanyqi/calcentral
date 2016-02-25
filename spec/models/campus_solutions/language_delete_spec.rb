@@ -9,20 +9,22 @@ describe CampusSolutions::LanguageDelete do
     context 'converting params to Campus Solutions field names' do
       let(:params) { {
         bogus: 'foo',
-        jpmCatItemId: 'EN'
+        languageCode: 'LEN'
       } }
       subject {
         proxy.construct_cs_post(params)
       }
+      it 'should convert languageCode param to JPM_CAT_ITEM_ID' do
+        expect(subject[:query][:JPM_CAT_ITEM_ID]).to eq 'LEN'
+      end
       it 'should convert the CalCentral params to Campus Solutions params without exploding on bogus fields' do
-        expect(subject[:query][:JPM_CAT_ITEM_ID]).to eq 'EN'
         expect(subject[:query].keys.length).to eq 2
       end
     end
 
     context 'performing a delete' do
       let(:params) { {
-        jpmCatItemId: 'EN'
+        languageCode: 'LEN'
       } }
       subject {
         proxy.get
@@ -35,7 +37,7 @@ describe CampusSolutions::LanguageDelete do
 
   context 'with a real external service', testext: true do
     let(:create_params) { {
-      languageCode: 'EN',
+      languageCode: 'LEN',
       isNative: 'N',
       isTranslateToNative: 'N',
       isTeachLanguage: 'N',
@@ -52,7 +54,7 @@ describe CampusSolutions::LanguageDelete do
 
     context 'a successful delete' do
       let(:params) { {
-        jpmCatItemId: 'EN'
+        languageCode: 'LEN'
       } }
       context 'performing a real delete' do
         it_behaves_like 'a proxy that got data successfully'

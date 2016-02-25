@@ -17,7 +17,7 @@ describe CampusSolutions::LanguageController do
         post :post,
              {
                bogus_field: 'abc',
-               languageCode: 'EN',
+               languageCode: 'LEN',
                isNative: 'N',
                isTranslateToNative: 'N',
                isTeachLanguage: 'N',
@@ -36,7 +36,7 @@ describe CampusSolutions::LanguageController do
 
   context 'deleting language' do
     it 'should not let an unauthenticated user delete' do
-      delete :delete, {format: 'json', jpmCatItemId: '100'}
+      delete :delete, {format: 'json', languageCode: '100'}
       expect(response.status).to eq 401
     end
 
@@ -49,7 +49,7 @@ describe CampusSolutions::LanguageController do
         delete :delete,
                {
                  bogus_field: 'abc',
-                 jpmCatItemId: 'EN'
+                 languageCode: 'LEN'
                }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
@@ -61,4 +61,3 @@ describe CampusSolutions::LanguageController do
   end
 
 end
-
