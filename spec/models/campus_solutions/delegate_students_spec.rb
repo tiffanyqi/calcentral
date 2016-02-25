@@ -15,7 +15,7 @@ describe CampusSolutions::DelegateStudents do
       allow(tom).to receive(:lookup_ldap_uid).and_return tom_uid
       allow(CalnetCrosswalk::ByCsId).to receive(:new).with(user_id: '24363318').and_return (maggie = double)
       allow(maggie).to receive(:lookup_ldap_uid).and_return maggie_uid
-      %w(17986976 23623575 24346769 24549574).each do |sid|
+      %w(17986976 23623575 24346769 24549574 232132138971298721398231).each do |sid|
         allow(CalnetCrosswalk::ByCsId).to receive(:new).with(user_id: sid).and_return (proxy = double)
         allow(proxy).to receive(:lookup_ldap_uid).and_return random_id
       end

@@ -46,6 +46,15 @@
         <ROLENAMES type="array">
         </ROLENAMES>
       </STUDENT>
+      <STUDENT>
+        <EMPLID>232132138971298721398231</EMPLID>
+        <NAME>Student Withouta UID</NAME>
+        <ROLENAMES type="array">
+          <ROLENAME>UC DA Financial View</ROLENAME>
+          <ROLENAME>UC_CS_DA_ENROLLMENTS_GRADES_VW</ROLENAME>
+          <ROLENAME>UC_CS_DA_THIRD_PARTY_RELEASE</ROLENAME>
+        </ROLENAMES>
+      </STUDENT>
     </STUDENTS>
   </STUDENT_DELEGATED_ACCESS>
 </ROOT>

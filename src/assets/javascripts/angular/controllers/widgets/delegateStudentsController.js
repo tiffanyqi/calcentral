@@ -48,6 +48,12 @@ angular.module('calcentral.controllers').controller('DelegateStudentsController'
      * the template.
      */
     $scope.showPhoneInPersonPrivilegesMessage = $scope.showPhoneInPersonPrivilegesMessage || (!viewable && student.privileges[phone]);
+
+    /**
+     * If at least one student has a null UID, this flag lets us show the global
+     * `Account Issue` explanatory paragraph in the template.
+     */
+    $scope.showAccountIssueMessage = $scope.showAccountIssueMessage || (!student.uid);
   };
 
   var getStudents = function() {
