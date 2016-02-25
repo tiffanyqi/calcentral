@@ -1,10 +1,12 @@
 describe Oec::Queries do
 
-  let(:term_code) { '2015-B' }
-  let(:test_ccn) { Oec::Queries.test_data? ? '7309' : '7203' }
+  let(:term_year) { '2015'}
+  let(:semester_code) { Oec::Queries.test_data? ? 'B' : 'D' }
+  let(:term_code) { "#{term_year}-#{semester_code}" }
+  let(:test_ccn) { Oec::Queries.test_data? ? '7309' : '7253' }
 
   before do
-    term = OpenStruct.new({ :year => 2015, :code => 'B' })
+    term = OpenStruct.new({ :year => 2015, :code => term_code })
     expect(Settings.oec).to receive(:current_terms_codes).at_most(10).times.and_return([ term ])
   end
 
@@ -121,8 +123,8 @@ describe Oec::Queries do
   end
 
   context 'crosslisting and room share lookup', testext: true do
-    let(:ccns) { %w(54041 54044) }
-    let(:ccn_aggregates) { [ '54041,54320', '54044,54323' ] }
+    let(:ccns) { %w(7677 7682) }
+    let(:ccn_aggregates) { [ '07677,20542', '07682,21120' ] }
     subject { Oec::Queries.courses_for_cntl_nums(term_code, ccns) }
     it 'returns correct aggregated ccns' do
       expect(subject.map { |row| row['cross_listed_ccns'] }).to match_array ccn_aggregates
