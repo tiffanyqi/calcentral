@@ -219,7 +219,7 @@ module User
         canViewGrades: can_view_academics && (!delegate_view_as_privileges || delegate_view_as_privileges[:viewGrades]),
         hasFinancialsTab: has_financials_tab?(roles, delegate_view_as_privileges),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
-        hasPhoto: User::Photo.has_photo?(@uid),
+        hasPhoto: User::Photo.has_photo?(@uid) && !authentication_state.original_delegate_user_id,
         inEducationAbroadProgram: @oracle_attributes[:education_abroad],
         googleEmail: google_mail,
         canvasEmail: canvas_mail,
