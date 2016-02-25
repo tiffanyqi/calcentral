@@ -1,3 +1,4 @@
-<div class="medium-4 columns cc-delegate-welcome" ng-if="api.user.profile.features.csDelegatedAccess">
+<div class="medium-4 columns cc-delegate-welcome" ng-if="api.user.profile.features.csDelegatedAccess && !api.user.profile.delegateActingAsUid">
   <div data-ng-include src="'widgets/delegate/linking.html'"></div>
 </div>
+<div data-ng-include="'404.html'" data-ng-if="api.user.profile.delegateActingAsUid"></div>
