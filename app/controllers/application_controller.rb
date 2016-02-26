@@ -122,6 +122,18 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def get_active_view_as_session_type
+    SessionKey::VIEW_AS_TYPES.each do |key|
+      return key if session.has_key? key
+    end
+    nil
+  end
+
+  def get_original_viewer_uid
+    key = get_active_view_as_session_type
+    key && session[key]
+  end
+
   def session_state_requires_reauthentication?
     Settings.features.reauthentication &&
       (current_user.original_user_id || current_user.original_advisor_user_id) &&
@@ -144,7 +156,7 @@ class ApplicationController < ActionController::Base
   end
 
   def session_message
-    session_keys = %w(user_id original_user_id original_advisor_user_id original_delegate_user_id canvas_user_id canvas_masquerading_user_id canvas_course_id)
+    session_keys = %w(user_id canvas_user_id canvas_course_id) + SessionKey::CANVAS_MASQUERADE_TYPES + SessionKey::VIEW_AS_TYPES
     session_keys.map { |key| "#{key}: #{session[key]}" if session[key] }.compact.join('; ')
   end
 
@@ -152,12 +164,8 @@ class ApplicationController < ActionController::Base
     # HTTP_X_FORWARDED_FOR is the client's IP when we're behind Apache; REMOTE_ADDR otherwise
     remote = request.env['HTTP_X_FORWARDED_FOR'] || request.env['REMOTE_ADDR']
     line = "ACCESS_LOG #{remote} #{request.request_method} #{request.filtered_path} #{status}"
-    if session['original_user_id']
-      line += " uid=#{session['original_user_id']}_acting_as_uid=#{session['user_id']}"
-    elsif session['original_advisor_user_id']
-      line += " uid=#{session['original_advisor_user_id']}_advisor_acting_as_uid=#{session['user_id']}"
-    elsif session['original_delegate_user_id']
-      line += " uid=#{session['original_delegate_user_id']}_delegate_acting_as_uid=#{session['user_id']}"
+    if (key = get_active_view_as_session_type)
+      line += " #{key}=#{session[key]} is viewing uid=#{session['user_id']}"
     else
       line += " uid=#{session['user_id']}"
     end

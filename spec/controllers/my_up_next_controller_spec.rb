@@ -28,17 +28,17 @@ describe MyUpNextController do
       allow(Settings.features).to receive(:reauthentication).and_return(false)
     end
     it 'should not give a real user a cached censored feed' do
-      session['original_user_id'] = original_user_id
+      session[SessionKey.original_user_id] = original_user_id
       get :get_feed
       expect(JSON.parse(response.body)['items']).to be_empty
-      session['original_user_id'] = nil
+      session[SessionKey.original_user_id] = nil
       get :get_feed
       expect(JSON.parse(response.body)['items']).to be_present
     end
     it 'should not return a cached real-user feed' do
       get :get_feed
       expect(JSON.parse(response.body)['items']).to be_present
-      session['original_user_id'] = original_user_id
+      session[SessionKey.original_user_id] = original_user_id
       get :get_feed
       expect(JSON.parse(response.body)['items']).to be_empty
     end

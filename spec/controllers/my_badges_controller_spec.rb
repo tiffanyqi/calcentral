@@ -7,14 +7,14 @@ describe MyBadgesController do
     allow(Settings.features).to receive(:reauthentication).and_return(false)
   end
 
-  it "should be an empty badges feed on non-authenticated user" do
+  it 'should be an empty badges feed on non-authenticated user' do
     get :get_feed
     assert_response :success
     json_response = JSON.parse(response.body)
     json_response.should == {}
   end
 
-  it "should be an non-empty badges feed on authenticated user" do
+  it 'should be an non-empty badges feed on authenticated user' do
     GoogleApps::Proxy.stub(:access_granted?).and_return(true)
     GoogleApps::DriveList.stub(:new).and_return(@fake_drive_list)
     GoogleApps::EventsRecentItems.stub(:new).and_return(@fake_events_list)
@@ -22,18 +22,18 @@ describe MyBadgesController do
     get :get_feed
     json_response = JSON.parse(response.body)
 
-    json_response["badges"].present?.should be_truthy
-    json_response["badges"].is_a?(Hash).should be_truthy
-    json_response["badges"].keys.count.should == 3
+    json_response['badges'].present?.should be_truthy
+    json_response['badges'].is_a?(Hash).should be_truthy
+    json_response['badges'].keys.count.should == 3
 
     existing_badges = %w(bcal bdrive bmail)
     existing_badges.each do |badge|
-      json_response["badges"][badge]["count"].should_not be_nil
+      json_response['badges'][badge]['count'].should_not be_nil
     end
 
-    json_response["studentInfo"].present?.should be_truthy
-    json_response["studentInfo"].is_a?(Hash).should be_truthy
-    json_response["studentInfo"].keys.count.should == 4
+    json_response['studentInfo'].present?.should be_truthy
+    json_response['studentInfo'].is_a?(Hash).should be_truthy
+    json_response['studentInfo'].keys.count.should == 4
   end
 
   context 'viewing-as' do
@@ -45,13 +45,13 @@ describe MyBadgesController do
       expect(Settings.bearfacts_proxy).to receive(:fake).at_least(:once).and_return(true)
     end
     it 'should not give a real user a cached censored feed' do
-      session['original_user_id'] = original_user_id
+      session[SessionKey.original_user_id] = original_user_id
       get :get_feed
       feed = JSON.parse(response.body)
       ['bcal', 'bdrive', 'bmail'].each do |service|
         expect(feed['badges'][service]['count']).to eq 0
       end
-      session['original_user_id'] = nil
+      session[SessionKey.original_user_id] = nil
       get :get_feed
       feed = JSON.parse(response.body)
       ['bcal', 'bdrive', 'bmail'].each do |service|
@@ -65,7 +65,7 @@ describe MyBadgesController do
       ['bcal', 'bdrive', 'bmail'].each do |service|
         expect(feed['badges'][service]['count']).to be > 0
       end
-      session['original_user_id'] = original_user_id
+      session[SessionKey.original_user_id] = original_user_id
       get :get_feed
       feed = JSON.parse(response.body)
       expect(feed['studentInfo']['regBlock']).to be_present

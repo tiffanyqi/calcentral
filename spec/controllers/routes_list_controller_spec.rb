@@ -33,7 +33,7 @@ describe RoutesListController do
       end
     end
     session['user_id'] = @user_id
-    session['original_user_id'] = viewer_id
+    session[SessionKey.original_user_id] = viewer_id
     get :smoke_test_routes
     expect(response.status).to eq 403
     expect(response.body).to be_blank

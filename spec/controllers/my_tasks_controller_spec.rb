@@ -90,11 +90,11 @@ describe MyTasksController do
     end
     context 'with real-user data cached' do
       it 'should not give a real user a cached censored feed' do
-        session['original_user_id'] = original_user_id
+        session[SessionKey.original_user_id] = original_user_id
         get :get_feed
         feed = JSON.parse(response.body)
         expect(feed['tasks'].index {|t| t['emitter'] == 'Google'}).to be_nil
-        session['original_user_id'] = nil
+        session[SessionKey.original_user_id] = nil
         get :get_feed
         feed = JSON.parse(response.body)
         expect(feed['tasks'].index {|t| t['emitter'] == 'Google'}).to_not be_nil
@@ -104,7 +104,7 @@ describe MyTasksController do
         feed = JSON.parse(response.body)
         expect(feed['tasks'].index {|t| t['emitter'] == 'bCourses'}).to_not be_nil
         expect(feed['tasks'].index {|t| t['emitter'] == 'Google'}).to_not be_nil
-        session['original_user_id'] = original_user_id
+        session[SessionKey.original_user_id] = original_user_id
         get :get_feed
         feed = JSON.parse(response.body)
         expect(feed['tasks'].index {|t| t['emitter'] == 'bCourses'}).to_not be_nil
@@ -112,7 +112,7 @@ describe MyTasksController do
       end
     end
     it 'should not add a Google task to the real user account' do
-      session['original_user_id'] = original_user_id
+      session[SessionKey.original_user_id] = original_user_id
       expect_any_instance_of(MyTasks::GoogleTasks).to receive(:insert_task).never
       hash = {
         'emitter' => 'Google',

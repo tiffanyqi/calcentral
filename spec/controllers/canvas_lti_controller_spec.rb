@@ -34,7 +34,7 @@ describe CanvasLtiController do
       end
       it 'does not initiate a view-as session' do
         subject.send(:authenticate_by_lti, lti)
-        expect(session).not_to include 'original_user_id'
+        expect(session).not_to include SessionKey.original_user_id
       end
     end
     context 'when the LTI user is not masquerading' do

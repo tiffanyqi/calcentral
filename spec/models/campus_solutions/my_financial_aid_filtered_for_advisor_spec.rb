@@ -19,7 +19,7 @@ describe CampusSolutions::MyFinancialAidFilteredForAdvisor do
         end
       end
       context 'advisor session' do
-        let(:state) { { 'fake' => true, 'user_id' => random_id, 'original_advisor_user_id' => random_id } }
+        let(:state) { { 'fake' => true, 'user_id' => random_id, SessionKey.original_advisor_user_id => random_id } }
         let(:feed) { subject.get_feed }
         let(:json) { feed.to_json }
         it 'should indicate feed as filtered for advisor' do

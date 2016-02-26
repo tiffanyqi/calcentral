@@ -114,7 +114,7 @@ class SessionsController < ApplicationController
       redirect_to url_for_path('/uid_error')
     else
       # Unless we're re-authenticating after view-as, initialize the session.
-      session['user_id'] = uid unless session['original_user_id'] || session['original_advisor_user_id'] || session['original_delegate_user_id']
+      session['user_id'] = uid unless get_original_viewer_uid
       redirect_to smart_success_path, :notice => 'Signed in!'
     end
   end
@@ -131,10 +131,6 @@ class SessionsController < ApplicationController
     ensure
       ActiveRecord::Base.clear_active_connections!
     end
-  end
-
-  def get_original_viewer_uid
-    session['original_user_id'] || session['original_advisor_user_id'] || session['original_delegate_user_id']
   end
 
 end
