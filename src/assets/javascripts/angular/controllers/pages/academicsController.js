@@ -1,6 +1,7 @@
 /* jshint camelcase: false */
 'use strict';
 
+var _ = require('lodash');
 var angular = require('angular');
 
 /**
@@ -129,9 +130,9 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     }
 
     $scope.isLSStudent = academicsService.isLSStudent($scope.collegeAndLevel);
-    $scope.isUndergraduate = ($scope.collegeAndLevel && $scope.collegeAndLevel.standing === 'Undergraduate');
+    $scope.isUndergraduate = _.contains(_.get($scope.collegeAndLevel, 'careers'), 'Undergraduate');
     $scope.isProfileCurrent = !$scope.transitionTerm || $scope.transitionTerm.isProfileCurrent;
-    $scope.showProfileMessage = (!$scope.isProfileCurrent || !$scope.collegeAndLevel || !$scope.collegeAndLevel.standing);
+    $scope.showProfileMessage = (!$scope.isProfileCurrent || !$scope.collegeAndLevel || _.isEmpty($scope.collegeAndLevel.careers));
 
     $scope.hasTeachingClasses = academicsService.hasTeachingClasses(data.teachingSemesters);
     if (data.teachingSemesters) {

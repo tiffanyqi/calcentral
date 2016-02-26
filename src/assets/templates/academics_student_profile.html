@@ -5,7 +5,9 @@
   <div data-ng-if="showProfileMessage" class="cc-widget-profile-message">
     <div data-ng-if="collegeAndLevel.errored">
       There was a problem reaching campus services.
-      Please try again later, or check <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a>.
+      <span data-ng-if="!api.user.profile.isCampusSolutionsStudent">
+        Please try again later, or check <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a>.
+      </span>
     </div>
     <div data-ng-if="!collegeAndLevel.errored">
       <div data-ng-if="api.user.profile.roles.concurrentEnrollmentStudent">
@@ -26,9 +28,11 @@
       <div data-ng-if="api.user.profile.roles.student && !api.user.profile.roles.concurrentEnrollmentStudent">
         <div data-ng-if="!isProfileCurrent">
           <div data-ng-if="transitionTerm.registered" class="cc-widget-profile-message-text">
-            You are registered for the <span data-ng-bind="transitionTerm.termName"></span> term, but complete profile information is not available. Please check
-            <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a>
-            for the most current information.
+            You are registered for the <span data-ng-bind="transitionTerm.termName"></span> term, but complete profile information is not available.
+            <span data-ng-if="!api.user.profile.isCampusSolutionsStudent">
+              Please check <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a>
+              for the most current information.
+            </span>
           </div>
           <div data-ng-if="!transitionTerm.registered" class="cc-widget-profile-message-text">
             You are not officially registered for the <span data-ng-bind="transitionTerm.termName"></span> term.
@@ -36,14 +40,18 @@
         </div>
         <div data-ng-if="!transitionTerm">
           <div data-ng-if="api.user.profile.roles.registered" class="cc-widget-profile-message-text">
-            You are registered as a student, but complete profile information is not available. Please check
-            <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a>
-            for the most current information.
+            You are registered as a student, but complete profile information is not available.
+            <span data-ng-if="!api.user.profile.isCampusSolutionsStudent">
+              Please check <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a>
+              for the most current information.
+            </span>
           </div>
           <div data-ng-if="!api.user.profile.roles.registered" class="cc-widget-profile-message-text">
-            You are not registered as a student for the <span data-ng-bind="collegeAndLevel.termName"></span> term. Please
-            check <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a>
-            for information on other terms.
+            You are not registered as a student for the <span data-ng-bind="collegeAndLevel.termName"></span> term.
+            <span data-ng-if="!api.user.profile.isCampusSolutionsStudent">
+              Please check <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a>
+              for information on other terms.
+            </span>
           </div>
         </div>
         <div class="cc-academics-nocontent-container" data-ng-if="!isAcademicInfoAvailable">
@@ -87,46 +95,48 @@
       <div class="cc-widget-profile-content-fullname">
         <strong data-ng-bind="api.user.profile.fullName"></strong>
       </div>
-
-      <div class="cc-widget-profile-content-gpa" data-ng-if="gpaUnits.cumulativeGpa !== null && gpaUnits.cumulativeGpa > 0 && !studentInfo.isLawStudent">
-        <button class="cc-button-link" data-ng-click="academics.showGPA = true" data-ng-show="!academics.showGPA">Show GPA</button>
-        <div data-ng-show="academics.showGPA">
-          <span data-ng-bind="gpaUnits.cumulativeGpaFloat"></span> GPA
-          (<button class="cc-button-link" data-ng-click="academics.showGPA = false">Hide</button>)
-        </div>
-      </div>
-
-      <div data-ng-repeat="college in collegeAndLevel.colleges">
-        <div class="cc-text-light" data-ng-if="college.college" data-ng-bind="college.college"></div>
-        <div data-ng-bind="college.major"></div>
-      </div>
     </div>
 
-    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.standing || gpaUnits.totalUnits">
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.majors.length">
       <table>
-        <thead data-ng-if="collegeAndLevel.standing">
+        <tbody>
           <tr>
-            <th width="87px">General</th>
-            <th class="cc-table-subheader" scope="col">Standing</th>
-          </tr>
-        </thead>
-        <tbody data-ng-if="collegeAndLevel.standing">
-          <tr>
-            <td></td>
-            <td><strong data-ng-bind="collegeAndLevel.standing"></strong></td>
+            <th width="92px" data-ng-pluralize count="collegeAndLevel.majors.length" when="{'1': 'Major', 'other': 'Majors'}"></th>
+            <td>
+              <div data-ng-repeat="major in collegeAndLevel.majors">
+                <div class="cc-text-light" data-ng-if="major.college" data-ng-bind="major.college"></div>
+                <div><strong data-ng-bind="major.major"></strong></div>
+              </div>
+            </td>
           </tr>
         </tbody>
-        <thead data-ng-if="gpaUnits.totalUnits !== null">
+      </table>
+    </div>
+
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.minors.length">
+      <table>
+        <tbody>
           <tr>
-            <th width="87px" data-ng-if="!collegeAndLevel.standing">General</th>
-            <th data-ng-if="collegeAndLevel.standing"></th>
-            <th class="cc-table-subheader" scope="col">Units</th>
+            <th width="92px" data-ng-pluralize count="collegeAndLevel.minors.length" when="{'1': 'Minor', 'other': 'Minors'}"></th>
+            <td>
+              <div data-ng-repeat="minor in collegeAndLevel.minors">
+                <div class="cc-text-light" data-ng-if="minor.college" data-ng-bind="minor.college"></div>
+                <div><strong data-ng-bind="minor.minor"></strong></div>
+              </div>
+            </td>
           </tr>
-        </thead>
-        <tbody data-ng-if="gpaUnits.totalUnits !== null">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.careers.length">
+      <table>
+        <tbody>
           <tr>
-            <td></td>
-            <td><strong data-ng-bind="gpaUnits.totalUnits"></strong></td>
+            <th width="92px" data-ng-pluralize count="collegeAndLevel.careers.length" when="{'1': 'Academic Career', 'other': 'Academic Careers'}"></th>
+            <td>
+              <div data-ng-repeat="career in collegeAndLevel.careers"><strong data-ng-bind="career"></strong></div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -134,29 +144,21 @@
 
     <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.level">
       <table>
-        <thead>
-          <tr>
-            <th width="87px">Level</th>
-            <th class="cc-table-subheader" scope="col">
-              <span data-ng-if="isUndergraduate">Including AP</span>
-              <span data-ng-if="!isUndergraduate">Current</span>
-            </th>
-          </tr>
-        </thead>
         <tbody>
           <tr>
+            <th width="92px">Level</th>
+            <th class="cc-table-subheader" scope="col" data-ng-if="collegeAndLevel.nonApLevel">Including AP</th>
+            <td data-ng-if="!collegeAndLevel.nonApLevel"><strong data-ng-bind="collegeAndLevel.level"></strong></td>
+          </tr>
+          <tr data-ng-if="collegeAndLevel.nonApLevel">
             <td></td>
             <td><strong data-ng-bind="collegeAndLevel.level"></strong></td>
           </tr>
-        </tbody>
-        <thead data-ng-if="isUndergraduate">
-          <tr>
+          <tr data-ng-if="collegeAndLevel.nonApLevel">
             <th></th>
             <th class="cc-table-subheader" scope="col">Not Including AP</th>
           </tr>
-        </thead>
-        <tbody data-ng-if="isUndergraduate">
-          <tr>
+          <tr data-ng-if="collegeAndLevel.nonApLevel">
             <td></td>
             <td><strong data-ng-bind="collegeAndLevel.nonApLevel"></strong></td>
           </tr>
@@ -164,34 +166,33 @@
       </table>
     </div>
 
-    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="api.user.profile.uid || api.user.profile.sid">
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="gpaUnits.totalUnits !== null">
       <table>
-        <thead>
-          <tr>
-            <th width="87px">ID Number</th>
-            <th class="cc-table-subheader" scope="col">UID</th>
-          </tr>
-        </thead>
         <tbody>
           <tr>
-            <td></td>
-            <td><strong data-ng-bind="api.user.profile.uid"></strong></td>
-          </tr>
-        </tbody>
-        <thead data-ng-if="api.user.profile.sid">
-          <tr>
-            <th></th>
-            <th class="cc-table-subheader" scope="col">Student ID</th>
-          </tr>
-        </thead>
-        <tbody data-ng-if="api.user.profile.sid">
-          <tr>
-            <td></td>
-            <td><strong data-ng-bind="api.user.profile.sid"></strong></td>
+            <th width="92px">Earned Units</th>
+            <td><strong data-ng-bind="gpaUnits.totalUnits"></strong></td>
           </tr>
         </tbody>
       </table>
     </div>
+
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="gpaUnits.cumulativeGpa !== null && gpaUnits.cumulativeGpa > 0 && !studentInfo.isLawStudent">
+      <table>
+        <tbody>
+          <tr>
+            <th width="92px">GPA</th>
+            <td>
+              <button class="cc-button-link" data-ng-click="academics.showGPA = true" data-ng-show="!academics.showGPA">Show GPA</button>
+              <div data-ng-show="academics.showGPA">
+                <span data-ng-bind="gpaUnits.cumulativeGpaFloat"></span> GPA
+                (<button class="cc-button-link" data-ng-click="academics.showGPA = false">Hide</button>)
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
   </div>
 </div>
