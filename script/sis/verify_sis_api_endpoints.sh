@@ -140,6 +140,7 @@ if [[ ! -f "${yaml_filename}" ]] ; then
   exit 0
 fi
 
+eval $(parse_yaml ${PWD}/config/settings.yml 'yml_')
 eval $(parse_yaml ${yaml_filename} 'yml_')
 
 # --------------------
