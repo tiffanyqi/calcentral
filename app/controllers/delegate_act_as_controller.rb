@@ -1,7 +1,7 @@
 class DelegateActAsController < ActAsController
 
   def initialize
-    super(act_as_session_key: 'original_delegate_user_id')
+    super act_as_session_key: SessionKey.original_delegate_user_id
   end
 
   def act_as_authorization(uid_param)

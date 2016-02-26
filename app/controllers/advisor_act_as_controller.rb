@@ -4,7 +4,7 @@ class AdvisorActAsController < ActAsController
   skip_before_filter :check_reauthentication, :only => [:stop_advisor_act_as]
 
   def initialize
-    super(act_as_session_key: 'original_advisor_user_id')
+    super act_as_session_key: SessionKey.original_advisor_user_id
   end
 
   def act_as_authorization(uid_param)

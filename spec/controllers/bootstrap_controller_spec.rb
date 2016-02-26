@@ -23,7 +23,7 @@ describe BootstrapController do
     before do
       expect(Settings.features).to receive(:reauthentication).and_return(true)
       session['user_id'] = user_id
-      session['original_user_id'] = original_user_id
+      session[SessionKey.original_user_id] = original_user_id
     end
     context 'when viewing as' do
       let(:original_user_id) {random_id}

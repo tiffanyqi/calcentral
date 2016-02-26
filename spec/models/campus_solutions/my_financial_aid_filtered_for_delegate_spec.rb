@@ -19,7 +19,7 @@ describe CampusSolutions::MyFinancialAidFilteredForDelegate do
         end
       end
       context 'delegate session' do
-        let(:state) { { 'fake' => true, 'user_id' => random_id, 'original_delegate_user_id' => random_id } }
+        let(:state) { { 'fake' => true, 'user_id' => random_id, SessionKey.original_delegate_user_id => random_id } }
         let(:feed) { subject.get_feed }
         let(:json) { feed.to_json }
 

@@ -5,7 +5,7 @@ class ActAsController < ApplicationController
   skip_before_filter :check_reauthentication, :only => [:stop_act_as]
 
   def initialize(options = {})
-    @act_as_session_key = options[:act_as_session_key] || 'original_user_id'
+    @act_as_session_key = options[:act_as_session_key] || SessionKey.original_user_id
   end
 
   def start

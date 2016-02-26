@@ -41,14 +41,14 @@ describe CampusSolutions::FinancialAidDataController do
         }
         context 'advisor' do
           let(:filter_type) { CampusSolutions::MyFinancialAidFilteredForAdvisor }
-          let(:original_user_id) { 'original_advisor_user_id' }
+          let(:original_user_id) { SessionKey.original_advisor_user_id }
           it 'should filter the feed' do
             expect(subject['key']).to eq 'value'
           end
         end
         context 'delegate user' do
           let(:filter_type) { CampusSolutions::MyFinancialAidFilteredForDelegate }
-          let(:original_user_id) { 'original_delegate_user_id' }
+          let(:original_user_id) { SessionKey.original_delegate_user_id }
           it 'should filter the feed' do
             expect(subject['key']).to eq 'value'
           end

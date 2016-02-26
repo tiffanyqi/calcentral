@@ -75,7 +75,7 @@ describe User::Api do
     let(:api) {
       session = {
         'user_id' => uid,
-        'original_delegate_user_id' => original_delegate_user_id
+        SessionKey.original_delegate_user_id => original_delegate_user_id
       }
       User::Api.from_session(session).get_feed
     }

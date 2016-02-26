@@ -4,12 +4,8 @@ class UserSpecificModel
   attr_reader :authentication_state
 
   def self.from_session(session_state)
-    filtered_session = {
-      'original_user_id' => session_state['original_user_id'],
-      'original_advisor_user_id' => session_state['original_advisor_user_id'],
-      'original_delegate_user_id' => session_state['original_delegate_user_id'],
-      'lti_authenticated_only' => session_state['lti_authenticated_only']
-    }
+    view_as_related = Hash[SessionKey::VIEW_AS_TYPES.collect { |k| [k, session_state[k]] }]
+    filtered_session = {'lti_authenticated_only' => session_state['lti_authenticated_only'] }.merge view_as_related
     self.new(session_state['user_id'], filtered_session)
   end
 

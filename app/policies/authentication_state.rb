@@ -5,9 +5,9 @@ class AuthenticationState
 
   def initialize(session)
     @user_id = session['user_id']
-    @original_user_id = session['original_user_id']
-    @original_advisor_user_id = session['original_advisor_user_id']
-    @original_delegate_user_id = session['original_delegate_user_id']
+    @original_user_id = session[SessionKey.original_user_id]
+    @original_advisor_user_id = session[SessionKey.original_advisor_user_id]
+    @original_delegate_user_id = session[SessionKey.original_delegate_user_id]
     @canvas_masquerading_user_id = session['canvas_masquerading_user_id']
     @lti_authenticated_only = session['lti_authenticated_only']
   end
