@@ -28,19 +28,16 @@ module CampusSolutions
       logger.debug "Advisor #{advisor_uid} viewing user #{@uid} financial aid feed where aid_year = #{aid_year}"
       {
         filteredForAdvisor: true
-      }.merge(remove_family_information feed)
+      }.merge(remove_confidential_information feed)
     end
 
-    def remove_family_information(feed={})
+    def remove_confidential_information(feed={})
       return feed unless feed[:feed] && feed[:feed][:status] && (categories = feed[:feed][:status][:categories])
       categories.each do |category|
         if category[:itemGroups]
-          filtered_groups = []
           category[:itemGroups].each do |group|
-            exclude_group = group.any? { |item| has_family_information? item }
-            filtered_groups << group unless exclude_group
+            group.reject! { |item| has_confidential_information? item }
           end
-          category[:itemGroups] = filtered_groups
         end
       end
       feed
@@ -50,8 +47,8 @@ module CampusSolutions
       "#{@uid}-#{aid_year}"
     end
 
-    def has_family_information?(item)
-      [item[:title].to_s, item[:value].to_s].any? { |s| s =~ /family|efc|parent/i }
+    def has_confidential_information?(item)
+      !!(item[:title].to_s =~ /expected\sfamily\scontribution|berkeley\sparent\scontribution/i)
     end
   end
 end

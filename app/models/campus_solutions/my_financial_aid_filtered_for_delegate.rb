@@ -7,7 +7,7 @@ module CampusSolutions
       logger.debug "Delegate user #{delegate_uid} viewing user #{@uid} financial aid feed where aid_year = #{aid_year}"
       {
         filteredForDelegate: true
-      }.merge(remove_family_information feed)
+      }.merge(remove_confidential_information feed)
     end
 
   end

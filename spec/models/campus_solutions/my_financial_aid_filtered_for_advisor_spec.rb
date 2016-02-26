@@ -1,9 +1,9 @@
 describe CampusSolutions::MyFinancialAidFilteredForAdvisor do
 
   subject { CampusSolutions::MyFinancialAidFilteredForAdvisor.from_session(state) }
-  let(:state) { { 'fake' => true, 'user_id' => random_id } }
 
   context 'mock proxy' do
+    let(:state) { { 'fake' => true, 'user_id' => random_id } }
     context 'no aid year provided' do
       it 'should return empty' do
         expect(subject.get_feed).to be_empty
@@ -20,12 +20,23 @@ describe CampusSolutions::MyFinancialAidFilteredForAdvisor do
       end
       context 'advisor session' do
         let(:state) { { 'fake' => true, 'user_id' => random_id, 'original_advisor_user_id' => random_id } }
-        it 'should filter out \'Expected Family Contribution\' and similar' do
-          feed = subject.get_feed
+        let(:feed) { subject.get_feed }
+        let(:json) { feed.to_json }
+        it 'should indicate feed as filtered for advisor' do
           expect(feed[:filteredForAdvisor]).to be true
-          json = feed.to_json
-          expect(json).to include 'SHIP Health Insurance', 'Student Standing', 'Estimated Cost of Attendance'
-          expect(json).to_not include 'EFC', 'Family', 'Parent'
+        end
+        it 'includes expected items' do
+          expect(json).to include 'SHIP Health Insurance'
+          expect(json).to include 'Student Standing'
+          expect(json).to include 'Estimated Cost of Attendance'
+          expect(json).to include 'Dependency Status'
+          expect(json).to include 'Family Members in College'
+        end
+        it 'should filter out \'Expected Family Contribution\'' do
+          expect(json).to_not include 'Expected Family Contribution'
+        end
+        it 'should filter out \'Berkeley Parent Contribution\'' do
+          expect(json).to_not include 'Berkeley Parent Contribution'
         end
       end
     end
