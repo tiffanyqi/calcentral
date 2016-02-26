@@ -35,11 +35,8 @@ module CampusSolutions
       return feed unless feed[:feed] && feed[:feed][:status] && (categories = feed[:feed][:status][:categories])
       categories.each do |category|
         if category[:itemGroups]
-          category[:itemGroups].each_with_index do |group, group_index|
-            category[:itemGroups][group_index].each_with_index do |item, item_index|
-              category[:itemGroups][group_index][item_index] = nil if has_confidential_information? item
-            end
-            category[:itemGroups][group_index].compact!
+          category[:itemGroups].each do |group|
+            group.reject! { |item| has_confidential_information? item }
           end
         end
       end
