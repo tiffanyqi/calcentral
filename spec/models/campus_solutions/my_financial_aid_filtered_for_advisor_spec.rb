@@ -35,7 +35,7 @@ describe CampusSolutions::MyFinancialAidFilteredForAdvisor do
         it 'should filter out \'Expected Family Contribution\'' do
           expect(json).to_not include 'Expected Family Contribution'
         end
-        it 'should filter out \'Berkeley Family Contribution\'' do
+        it 'should filter out \'Berkeley Parent Contribution\'' do
           expect(json).to_not include 'Berkeley Parent Contribution'
         end
       end
