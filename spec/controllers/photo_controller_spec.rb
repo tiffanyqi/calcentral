@@ -34,8 +34,7 @@ describe PhotoController do
       it_should_behave_like 'a controller with a photo'
       context 'delegate view' do
         before do
-          allow_any_instance_of(AuthenticationState).to receive(:authenticated_as_delegate?).and_return true
-          allow_any_instance_of(AuthenticationState).to receive(:delegate_permissions).and_return({ privileges: { view_grades: true } })
+          session[SessionKey.original_delegate_user_id] = random_id
           allow(Settings.features).to receive(:cs_delegated_access).and_return true
         end
         it_should_behave_like 'a controller with no photo'

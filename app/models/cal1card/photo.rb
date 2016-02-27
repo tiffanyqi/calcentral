@@ -12,6 +12,10 @@ module Cal1card
       initialize_mocks if @fake
     end
 
+    def instance_key
+      Cache::KeyGenerator.per_view_as_type @uid, @options
+    end
+
     def get_feed_internal
       if Settings.features.cal1card
         get_photo
