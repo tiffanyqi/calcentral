@@ -31,6 +31,7 @@ class ActAsController < ApplicationController
     session['user_id'] = session[@act_as_session_key]
     session[@act_as_session_key] = nil
 
+    after_successful_stop session
     render :nothing => true, :status => 204
   end
 
@@ -46,6 +47,10 @@ class ActAsController < ApplicationController
     uid_to_store = params['uid']
     User::StoredUsers.delete_recent_uid(original_uid, uid_to_store)
     User::StoredUsers.store_recent_uid(original_uid, uid_to_store)
+  end
+
+  def after_successful_stop(session)
+    # Sub-class might want custom cache management.
   end
 
   def valid_params?(act_as_uid)

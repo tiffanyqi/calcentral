@@ -23,4 +23,8 @@ class DelegateActAsController < ActAsController
     # Do nothing
   end
 
+  def after_successful_stop(session)
+    CampusSolutions::DelegateStudentsExpiry.expire session['user_id']
+  end
+
 end
