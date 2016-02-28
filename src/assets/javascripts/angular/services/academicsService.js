@@ -1,6 +1,7 @@
 /* jshint camelcase: false */
 'use strict';
 
+var _ = require('lodash');
 var angular = require('angular');
 
 angular.module('calcentral.services').service('academicsService', function() {
@@ -153,14 +154,13 @@ angular.module('calcentral.services').service('academicsService', function() {
   };
 
   var isLSStudent = function(collegeAndLevel) {
-    if (!collegeAndLevel || !collegeAndLevel.colleges) {
-      return false;
-    }
-
-    for (var i = 0; i < collegeAndLevel.colleges.length; i++) {
-      if (collegeAndLevel.colleges[i].college === 'College of Letters & Science') {
-        return true;
-      }
+    var majors = _.get(collegeAndLevel, 'majors');
+    var minors = _.get(collegeAndLevel, 'minors');
+    var isLSCollege = function(career) {
+      return career.college === 'College of Letters & Science';
+    };
+    if ((majors && _.find(majors, isLSCollege)) || (minors && _.find(minors, isLSCollege))) {
+      return true;
     }
   };
 

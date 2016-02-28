@@ -11,16 +11,18 @@ describe 'MyAcademics::CollegeAndLevel' do
       expect(feed).not_to be_empty
     end
 
-    let(:colleges) { feed[:collegeAndLevel][:colleges] }
+    let(:majors) { feed[:collegeAndLevel][:majors] }
 
     it 'should get properly formatted data from fake Bearfacts' do
-      expect(colleges).to have(1).items
-      expect(colleges.first).to include(
+      expect(majors).to have(1).items
+      expect(majors.first).to include(
         college: 'College of Letters & Science',
         major: 'Statistics'
       )
       expect(feed[:collegeAndLevel]).to include(
-        standing: 'Undergraduate',
+        careers: [
+          'Undergraduate'
+        ],
         termName: 'Fall 2015'
       )
     end
@@ -28,12 +30,12 @@ describe 'MyAcademics::CollegeAndLevel' do
     context 'enrollment in multiple colleges' do
       let(:uid) { '300940' }
       it 'should return multiple colleges and majors' do
-        expect(colleges).to have(2).items
-        expect(colleges[0]).to include(
+        expect(majors).to have(2).items
+        expect(majors[0]).to include(
           college: 'College of Natural Resources',
           major: 'Conservation And Resource Studies'
         )
-        expect(colleges[1]).to include(
+        expect(majors[1]).to include(
           college: 'College of Environmental Design',
           major: 'Landscape Architecture'
         )
@@ -43,16 +45,16 @@ describe 'MyAcademics::CollegeAndLevel' do
     context 'a concurrent enrollment triple major' do
       let(:uid) { '212379' }
       it 'should return even more colleges and majors' do
-        expect(colleges).to have(3).items
-        expect(colleges[0]).to include(
+        expect(majors).to have(3).items
+        expect(majors[0]).to include(
           college: 'College of Chemistry',
           major: 'Chemistry'
         )
-        expect(colleges[1]).to include(
+        expect(majors[1]).to include(
           college: 'College of Letters & Science',
           major: 'Applied Mathematics'
         )
-        expect(colleges[2]).to include(
+        expect(majors[2]).to include(
           college: '',
           major: 'Physics'
         )
@@ -62,12 +64,12 @@ describe 'MyAcademics::CollegeAndLevel' do
     context 'a double law major' do
       let(:uid) { '212381' }
       it 'should return the law in all its aspects' do
-        expect(colleges).to have(2).items
-        expect(colleges[0]).to include(
+        expect(majors).to have(2).items
+        expect(majors[0]).to include(
           college: 'School of Law',
           major: 'Jurisprudence And Social Policy'
         )
-        expect(colleges[1]).to include(
+        expect(majors[1]).to include(
           college: '',
           major: 'Law'
         )
