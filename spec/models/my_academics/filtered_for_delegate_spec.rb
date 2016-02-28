@@ -4,7 +4,8 @@ describe MyAcademics::FilteredForDelegate do
       MyAcademics::CollegeAndLevel,
       MyAcademics::TransitionTerm,
       MyAcademics::GpaUnits,
-      MyAcademics::Semesters
+      MyAcademics::Semesters,
+      MyAcademics::Exams
     ]
   end
 
@@ -44,6 +45,7 @@ describe MyAcademics::FilteredForDelegate do
       expect(feed['collegeAndLevel']).to be_present
       expect(feed['transitionTerm']).to be_present
       expect(feed['semesters']).to be_present
+      expect(feed['examSchedule']).to be_present
     end
   end
 
