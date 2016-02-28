@@ -123,10 +123,7 @@ class ApplicationController < ActionController::Base
   private
 
   def get_active_view_as_session_type
-    SessionKey::VIEW_AS_TYPES.each do |key|
-      return key if session.has_key? key
-    end
-    nil
+    SessionKey::VIEW_AS_TYPES.find { |key| session.has_key? key }
   end
 
   def get_original_viewer_uid

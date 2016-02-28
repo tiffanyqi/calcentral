@@ -29,6 +29,10 @@ module User
       @delegate_students = get_delegate_students
     end
 
+    def instance_key
+      Cache::KeyGenerator.per_view_as_type @uid, @options
+    end
+
     def get_delegate_students
       return nil unless is_cs_delegated_access_feature_enabled
       delegate_uid = authentication_state.original_delegate_user_id || @uid
@@ -219,7 +223,7 @@ module User
         canViewGrades: can_view_academics && (!delegate_view_as_privileges || delegate_view_as_privileges[:viewGrades]),
         hasFinancialsTab: has_financials_tab?(roles, delegate_view_as_privileges),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
-        hasPhoto: User::Photo.has_photo?(@uid) && !authentication_state.original_delegate_user_id,
+        hasPhoto: !!User::Photo.fetch(@uid, @options),
         inEducationAbroadProgram: @oracle_attributes[:education_abroad],
         googleEmail: google_mail,
         canvasEmail: canvas_mail,

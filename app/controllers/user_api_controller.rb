@@ -21,11 +21,11 @@ class UserApiController < ApplicationController
     status = {}
     features = HashConverter.camelize Settings.features.marshal_dump
 
-    if session['user_id']
+    if (user_id = session['user_id'])
       # wrap User::Visit.record_session inside a cache lookup so that we have to write User::Visit records less often.
       directly_authenticated = current_user.directly_authenticated?
-      self.class.fetch_from_cache session['user_id'] do
-        User::Visit.record session['user_id'] if directly_authenticated
+      self.class.fetch_from_cache(Cache::KeyGenerator.per_view_as_type user_id, session) do
+        User::Visit.record user_id if directly_authenticated
         true
       end
       advisor_acting_as_uid = !directly_authenticated && current_user.original_advisor_user_id
@@ -70,8 +70,8 @@ class UserApiController < ApplicationController
   end
 
   def delete
-    if session['user_id'] && current_user.directly_authenticated?
-      User::Api.delete(session['user_id'])
+    if (user_id = session['user_id']) && current_user.directly_authenticated?
+      User::Api.delete user_id
       render :nothing => true, :status => 204
     else
       render :nothing => true, :status => 403
@@ -80,8 +80,8 @@ class UserApiController < ApplicationController
 
   def calendar_opt_in
     expire_current_user
-    if session['user_id'] && current_user.directly_authenticated?
-      Calendar::User.where(uid: session['user_id']).first_or_create
+    if (user_id = session['user_id']) && current_user.directly_authenticated?
+      Calendar::User.where(uid: user_id).first_or_create
       render :nothing => true, :status => 204
     else
       render :nothing => true, :status => 403
@@ -90,8 +90,8 @@ class UserApiController < ApplicationController
 
   def calendar_opt_out
     expire_current_user
-    if session['user_id'] && current_user.directly_authenticated?
-      Calendar::User.where(uid: session['user_id']).delete_all
+    if (user_id = session['user_id']) && current_user.directly_authenticated?
+      Calendar::User.where(uid: user_id).delete_all
       render :nothing => true, :status => 204
     else
       render :nothing => true, :status => 403

@@ -122,9 +122,8 @@ class SessionsController < ApplicationController
   def logout
     begin
       if (uid = session['user_id']) && get_original_viewer_uid
-        # Cached user data might have been filtered during view-as session so we flush to reset.
+        # TODO: Can we eliminate this cache-expiry in favor of smarter cache-key scheme? E.g., Cache::KeyGenerator
         Cache::UserCacheExpiry.notify uid
-        CampusSolutions::UserApiExpiry.expire uid
       end
       delete_reauth_cookie
       reset_session
