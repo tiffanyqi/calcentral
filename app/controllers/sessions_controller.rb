@@ -124,6 +124,7 @@ class SessionsController < ApplicationController
       if (uid = session['user_id']) && get_original_viewer_uid
         # TODO: Can we eliminate this cache-expiry in favor of smarter cache-key scheme? E.g., Cache::KeyGenerator
         Cache::UserCacheExpiry.notify uid
+        CampusSolutions::DelegateStudentsExpiry.expire uid
       end
       delete_reauth_cookie
       reset_session
