@@ -130,7 +130,7 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     }
 
     $scope.isLSStudent = academicsService.isLSStudent($scope.collegeAndLevel);
-    $scope.isUndergraduate = _.contains(_.get($scope.collegeAndLevel, 'careers'), 'Undergraduate');
+    $scope.isUndergraduate = _.includes(_.get($scope.collegeAndLevel, 'careers'), 'Undergraduate');
     $scope.isProfileCurrent = !$scope.transitionTerm || $scope.transitionTerm.isProfileCurrent;
     $scope.showProfileMessage = (!$scope.isProfileCurrent || !$scope.collegeAndLevel || _.isEmpty($scope.collegeAndLevel.careers));
 
