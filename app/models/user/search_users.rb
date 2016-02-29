@@ -9,7 +9,7 @@ module User
     def search_users
       self.class.fetch_from_cache "#{@id}" do
         if Settings.features.cs_profile
-          results = []
+          results = Set.new
           [CalnetCrosswalk::ByUid, CalnetCrosswalk::BySid, CalnetCrosswalk::ByCsId].each do |proxy_class|
             proxy = proxy_class.new(user_id: @id)
             sid = proxy.lookup_student_id
