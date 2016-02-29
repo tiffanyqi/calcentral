@@ -3,11 +3,11 @@
   data-ng-controller="BasicController"
   data-cc-spinner-directive="basicInformation.isLoading">
 
-  <div class="cc-page-widget-profile-note">
+  <div class="cc-page-widget-profile-note" data-ng-if="!api.user.profile.roles.concurrentEnrollmentStudent">
     <i class="fa fa-exclamation-triangle cc-icon cc-icon-gold" aria-hidden="true"></i>
     <strong>Note:</strong> Although active students will use CalCentral to view and update personal data in
     UC Berkeley's Student Information System (SIS), non-students should continue to rely on the
-    <a href="https://calnet.calnet.berkeley.edu/directory/update/">CalNet Directory</a>.
+    <a href="https://calnet.berkeley.edu/directory/update/">CalNet Directory</a>.
   </div>
 
   <!-- Name -->
