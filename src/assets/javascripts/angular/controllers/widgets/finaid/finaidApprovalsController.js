@@ -3,7 +3,7 @@
 var angular = require('angular');
 
 /**
- * Finaid COA (Cost of Attendance) controller
+ * Finaid Approvals controller
  */
 angular.module('calcentral.controllers').controller('FinaidApprovalsController', function($rootScope, $scope, finaidFactory) {
   $scope.approvalMessage = {};
@@ -29,6 +29,16 @@ angular.module('calcentral.controllers').controller('FinaidApprovalsController',
     });
   };
   $scope.sendResponseT4 = function(response) {
-    finaidFactory.postT4Response(response).then(sendEvent);
+    finaidFactory.postT4Response(response).then(function(data) {
+      if (response === 'N') {
+        // Primes the cache on aid_years without automatically refreshing the page.
+        finaidFactory.getSummary({
+          refreshCache: true
+        });
+        showDeclineMessage(data);
+      } else {
+        sendEvent();
+      }
+    });
   };
 });
