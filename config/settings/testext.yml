@@ -33,6 +33,8 @@ features:
   advising: true
   cs_academic_planner: true
   cs_academic_progress_report: true
+  cs_advising_gte_forms: true
+  cs_advising_semester_study_list: true
   cs_delegated_access: true
   cs_enrollment_card: true
   cs_fin_aid: true
