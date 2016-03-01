@@ -4,11 +4,12 @@
     margin-right: 0;
     width: 540px;
   }
-
   .cc-page-widget-profile-note {
     padding: 0 10px 10px;
   }
-
+  .cc-page-widget-profile-margin-top {
+    margin-top: 5px;
+  }
   .cc-page-widget-profile-delegate {
     .cc-page-widget-profile-delegate-slim-margin {
       margin-bottom: 8px;
@@ -98,9 +99,6 @@
           margin-bottom: 5px;
         }
       }
-    }
-    .cc-page-widget-profile-section-content-item-margin-top {
-      margin-top: 5px;
     }
     .cc-page-widget-profile-section-not-available {
       font-style: italic;
