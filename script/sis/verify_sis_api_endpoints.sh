@@ -144,9 +144,9 @@ eval $(parse_yaml ${PWD}/config/settings.yml 'yml_')
 eval $(parse_yaml ${yaml_filename} 'yml_')
 
 # --------------------
-UID_CROSSWALK=${UID_CROSSWALK:-1022796}
-SID=${SID:-11667051}
-CAMPUS_SOLUTIONS_ID=${CAMPUS_SOLUTIONS_ID:-24188949}
+UID_CROSSWALK=${UID_CROSSWALK:-1079058}
+SID=${SID:-25129630}
+CAMPUS_SOLUTIONS_ID=${CAMPUS_SOLUTIONS_ID:-25129630}
 
 CROSSWALK_BASE_URL="${yml_calnet_crosswalk_proxy_base_url//\'}"
 CROSSWALK_CREDENTIALS="${yml_calnet_crosswalk_proxy_username//\'}:${yml_calnet_crosswalk_proxy_password//\'}"
@@ -203,7 +203,7 @@ verify_sis_endpoints "Campus Solutions" CS_PROFILE "cs_profile" "${yml_features_
 
 CS_SIR=(
   "/UC_CC_CHECKLIST.v1/get/checklist?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_DEPOSIT_AMT.v1/deposit/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&ADM_APPL_NBR=00000087"
+  "/UC_DEPOSIT_AMT.v1/deposit/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&ADM_APPL_NBR=00000087"
   "/UC_OB_HIGHER_ONE_URL_GET.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 )
 verify_sis_endpoints "Campus Solutions" CS_SIR "cs_sir" "${yml_features_cs_sir}"
@@ -258,8 +258,8 @@ verify_sis_endpoints "Campus Solutions" CS_DELEGATED_ACCESS "cs_delegated_access
 
 CS_ENROLLMENT_CARD=(
   "/UC_SR_CURR_TERMS.v1/GetCurrentItems?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_SR_STDNT_CLASS_ENROLL.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
-  "/UC_SR_ACADEMIC_PLAN.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
+  "/UC_SR_STDNT_CLASS_ENROLL.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
+  "/UC_SR_ACADEMIC_PLANNER.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
   "/UC_SR_COLLEGE_SCHDLR_URL.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168&ACAD_CAREER=UGRD&INSTITUTION=UCB01"
 )
 verify_sis_endpoints "Campus Solutions" CS_ENROLLMENT_CARD "cs_enrollment_card" "${yml_features_cs_enrollment_card}"
