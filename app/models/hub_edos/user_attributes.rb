@@ -102,7 +102,7 @@ module HubEdos
     end
 
     def extract_roles(edo, result)
-      result.merge! roles_from_cs_affiliations(edo[:affiliations])
+      result[:roles] = roles_from_cs_affiliations(edo[:affiliations])
     end
 
     def extract_emails(edo, result)

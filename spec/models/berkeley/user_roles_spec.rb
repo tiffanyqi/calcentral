@@ -1,5 +1,12 @@
 describe Berkeley::UserRoles do
 
+  shared_examples_for 'a parser for roles' do |expected_roles|
+    it 'only sets expected roles' do
+      set_roles = subject.select {|key, val| val}.keys.sort
+      expect(set_roles).to eq expected_roles.sort
+    end
+  end
+
   describe '#roles_from_cs_affiliations' do
     subject { Berkeley::UserRoles.roles_from_cs_affiliations(affiliations) }
 
@@ -30,10 +37,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return undergraduate attributes' do
-        expect(subject[:roles][:student]).to be true
-        expect(subject[:ug_grad_flag]).to eq 'U'
-      end
+      it_behaves_like 'a parser for roles', [:student, :undergrad]
     end
 
     context 'graduate student' do
@@ -63,10 +67,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return graduate attributes' do
-        expect(subject[:roles][:student]).to be true
-        expect(subject[:ug_grad_flag]).to eq 'G'
-      end
+      it_behaves_like 'a parser for roles', [:student, :graduate]
     end
 
     context 'inactive student' do
@@ -96,11 +97,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return ex-student attributes' do
-        expect(subject[:roles][:exStudent]).to be true
-        expect(subject[:roles][:student]).to be_nil
-        expect(subject[:ug_grad_flag]).to be_nil
-      end
+      it_behaves_like 'a parser for roles', [:exStudent]
     end
 
     context 'former undergrad, current grad' do
@@ -141,11 +138,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return graduate attributes' do
-        expect(subject[:roles][:exStudent]).to be_nil
-        expect(subject[:roles][:student]).to be true
-        expect(subject[:ug_grad_flag]).to eq 'G'
-      end
+      it_behaves_like 'a parser for roles', [:student, :graduate]
     end
 
     context 'new and released admit' do
@@ -164,10 +157,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return applicant attributes' do
-        expect(subject[:roles][:applicant]).to be true
-        expect(subject[:roles][:student]).to be_nil
-      end
+      it_behaves_like 'a parser for roles', [:applicant]
     end
 
     context 'unreleased admit or not-yet-accepted applicant' do
@@ -186,10 +176,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return only unaccepted applicant status' do
-        expect(subject[:roles]).to be_blank
-        expect(subject[:applicant_in_process]).to be_truthy
-      end
+      it_behaves_like 'a parser for roles', []
     end
 
     context 'ex-student and unaccepted applicant' do
@@ -219,9 +206,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return only the ex-student role' do
-        expect(subject[:roles]).to eq({exStudent: true})
-      end
+      it_behaves_like 'a parser for roles', [:exStudent]
     end
 
     context 'retracted admit' do
@@ -251,10 +236,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return only unaccepted applicant role' do
-        expect(subject[:roles]).to be_blank
-        expect(subject[:applicant_in_process]).to be_truthy
-      end
+      it_behaves_like 'a parser for roles', []
     end
 
     context 'active instructor' do
@@ -273,10 +255,7 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return faculty attributes' do
-        expect(subject[:roles][:faculty]).to be true
-        expect(subject[:roles][:student]).to be_nil
-      end
+      it_behaves_like 'a parser for roles', [:faculty]
     end
 
     context 'advisor affiliation' do
@@ -298,17 +277,12 @@ describe Berkeley::UserRoles do
       context 'active status in date range' do
         let(:status_code) { 'ACT' }
         let(:status_description) { 'Active' }
-        it 'should return advisor role' do
-          expect(subject[:roles]).to have(1).item
-          expect(subject[:roles][:advisor]).to be true
-        end
+        it_behaves_like 'a parser for roles', [:advisor]
       end
       context 'inactive' do
         let(:status_code) { 'INA' }
         let(:status_description) { 'Inactive' }
-        it 'should not have advisor role' do
-          expect(subject[:roles]).to be_empty
-        end
+        it_behaves_like 'a parser for roles', []
       end
     end
 
@@ -328,18 +302,12 @@ describe Berkeley::UserRoles do
           }
         ]
       end
-      it 'should return no attributes' do
-        expect(subject[:roles]).to eq({})
-        expect(subject[:ug_grad_flag]).to be_nil
-      end
+      it_behaves_like 'a parser for roles', []
     end
 
     context 'no affiliations' do
       let(:affiliations) { [] }
-      it 'should return no attributes' do
-        expect(subject[:roles]).to eq({})
-        expect(subject[:ug_grad_flag]).to be_nil
-      end
+      it_behaves_like 'a parser for roles', []
     end
   end
 

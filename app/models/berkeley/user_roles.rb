@@ -17,38 +17,44 @@ module Berkeley
 
     def roles_from_campus_row(campus_row)
       roles = roles_from_affiliations(campus_row['affiliations'])
+      if roles[:student]
+        case campus_row['ug_grad_flag']
+          when 'U'
+            roles[:undergrad] = true
+          when 'G'
+            roles[:graduate] = true
+        end
+      end
       roles[:expiredAccount] = (campus_row['person_type'] == 'Z')
       roles
     end
 
     def roles_from_cs_affiliations(cs_affiliations)
       return {} unless cs_affiliations
-      result = {roles: {}}
+      result = {}
 
       # TODO We still need to cover staff, guests, concurrent-enrollment students and registration status.
       cs_affiliations.select { |a| a[:status][:code] == 'ACT' }.each do |active_affiliation|
         case active_affiliation[:type][:code]
           when 'ADMT_UX'
-            result[:roles][:applicant] = true
-          when 'APPLICANT'
-            result[:applicant_in_process] = true
+            result[:applicant] = true
           when 'GRADUATE'
-            result[:roles][:student] = true
-            result[:ug_grad_flag] = 'G'
+            result[:student] = true
+            result[:graduate] = 'G'
           when 'INSTRUCTOR'
-            result[:roles][:faculty] = true
+            result[:faculty] = true
           when 'ADVISOR'
-            result[:roles][:advisor] = true
+            result[:advisor] = true
           when 'STUDENT'
-            result[:roles][:student] = true
+            result[:student] = true
           when 'UNDERGRAD'
-            result[:roles][:student] = true
-            result[:ug_grad_flag] = 'U'
+            result[:student] = true
+            result[:undergrad] = 'U'
         end
       end
       cs_affiliations.select { |a| a[:status][:code] == 'INA' }.each do |inactive_affiliation|
-        if !result[:roles][:student] && %w(GRADUATE STUDENT UNDERGRAD).include?(inactive_affiliation[:type][:code])
-          result[:roles][:exStudent] = true
+        if !result[:student] && %w(GRADUATE STUDENT UNDERGRAD).include?(inactive_affiliation[:type][:code])
+          result[:exStudent] = true
         end
       end
       result

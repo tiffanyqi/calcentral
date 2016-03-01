@@ -53,12 +53,15 @@ module User
       cs_feed = HubEdos::Affiliations.new(user_id: @auth_uid).get
       if cs_feed[:feed] && cs_feed[:feed]['student']
         cs_feed = HashConverter.symbolize cs_feed[:feed]['student']
-        parsed_feed = roles_from_cs_affiliations cs_feed[:affiliations]
-        parsed_feed[:roles].blank? && parsed_feed[:applicant_in_process]
+        applicant_in_process?(cs_feed[:affiliations]) && roles_from_cs_affiliations(cs_feed[:affiliations]).blank?
       else
         # We don't know much about this person, but they're not a held applicant.
         false
       end
+    end
+
+    def applicant_in_process?(cs_affiliations)
+      cs_affiliations.index { |a| (a[:type][:code] == 'APPLICANT') && (a[:status][:code] == 'ACT') }
     end
 
   end
