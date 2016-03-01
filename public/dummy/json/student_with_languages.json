@@ -24,9 +24,9 @@
         {
           "code": "LAN",
           "name": "Armenian",
-          "native": false,
+          "native": true,
           "translate": true,
-          "teach": false,
+          "teach": true,
           "speakingProficiency": {
             "code": "2",
             "description": "Moderate"
@@ -65,7 +65,7 @@
           "name": "malformed data test",
           "native": "no!",
           "bogusNative": "the `native` property should be boolean",
-          "translate": "",
+          "translate": "true",
           "bogusTranslate": "the `translate` property should be boolean",
           "bogusTeach": "the `teach` property is missing",
           "speakingProficiency": {

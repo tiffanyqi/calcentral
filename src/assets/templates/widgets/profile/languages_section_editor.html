@@ -1,0 +1,116 @@
+<div class="cc-page-widget-profile-section-content-item-editing" data-ng-if="items.editorEnabled">
+  <form data-ng-submit="saveItem(currentObject.data)" name="cc_page_widget_languages_section">
+    <div>
+      <label for="cc-page-widget-profile-language-code"><strong>Language</strong> <span class="cc-text-light">(Required)</span></label>
+    </div>
+    <div class="cc-select">
+      <select id="cc-page-widget-profile-language-code" required aria-required="true" data-ng-if="languageCodes" data-ng-model="currentObject.data.code" data-ng-options="language.accomplishment as language.descr for language in languageCodes.content">
+        <option value="" disabled selected>Choose&hellip;</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="cc-page-widget-profile-language-proficiency-speaking">
+        <strong>Speaking Proficiency</strong>
+      </label>
+    </div>
+    <div class="cc-select">
+      <select id="cc-page-widget-profile-language-proficiency-speaking" data-ng-model="currentObject.data.speakingProficiency.code" data-ng-options="option.value as option.label for option in proficiencyLevels">
+        <option value="" disabled selected>Choose&hellip;</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="cc-page-widget-profile-language-proficiency-reading">
+        <strong>Reading Proficiency</strong>
+      </label>
+    </div>
+    <div class="cc-select">
+      <select id="cc-page-widget-profile-language-proficiency-reading" data-ng-model="currentObject.data.readingProficiency.code" data-ng-options="option.value as option.label for option in proficiencyLevels">
+        <option value="" disabled selected>Choose&hellip;</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="cc-page-widget-profile-language-proficiency-writing">
+        <strong>Writing Proficiency</strong>
+      </label>
+    </div>
+    <div class="cc-select">
+      <select id="cc-page-widget-profile-language-proficiency-writing" data-ng-model="currentObject.data.writingProficiency.code" data-ng-options="option.value as option.label for option in proficiencyLevels">
+        <option value="" disabled selected>Choose&hellip;</option>
+      </select>
+    </div>
+
+    <fieldset class="cc-page-widget-profile-fieldset">
+      <legend>
+        <strong>Is this your native language?</strong>
+      </legend>
+      <div>
+        <label>
+          <input type="radio" data-ng-model="currentObject.data.native" data-ng-value="languageLevels[0].value" />
+          <span data-ng-bind="languageLevels[0].label"></span>
+        </label>
+      </div>
+      <div>
+        <label>
+          <input type="radio" data-ng-model="currentObject.data.native" data-ng-value="languageLevels[1].value" />
+          <span data-ng-bind="languageLevels[1].label"></span>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="cc-page-widget-profile-fieldset">
+      <legend>
+        <strong>Are you able to translate this language into your native tongue?</strong>
+      </legend>
+      <div>
+        <label>
+          <input type="radio" data-ng-model="currentObject.data.translate" data-ng-value="languageLevels[0].value" />
+          <span data-ng-bind="languageLevels[0].label"></span>
+        </label>
+      </div>
+      <div>
+        <label>
+          <input type="radio" data-ng-model="currentObject.data.translate" data-ng-value="languageLevels[1].value" />
+          <span data-ng-bind="languageLevels[1].label"></span>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="cc-page-widget-profile-fieldset">
+      <legend>
+        <strong>Are you able to teach in this language?</strong>
+      </legend>
+      <div>
+        <label>
+          <input type="radio" data-ng-model="currentObject.data.teach" data-ng-value="languageLevels[0].value" />
+          <span data-ng-bind="languageLevels[0].label"></span>
+        </label>
+      </div>
+      <div>
+        <label>
+          <input type="radio" data-ng-model="currentObject.data.teach" data-ng-value="languageLevels[1].value" />
+          <span data-ng-bind="languageLevels[1].label"></span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="cc-page-widget-profile-section-error cc-text-red" data-ng-if="errorMessage">
+      <i class="cc-icon-red fa fa-exclamation-circle"></i>
+      <span data-ng-bind="errorMessage"></span>
+    </div>
+
+    <div>
+      <button class="cc-button cc-button-blue" type="submit" data-ng-disabled="cc_page_widget_languages_section.cc_page_widget_profile_language_code.$invalid || isSaving">
+        <span data-ng-if="!isSaving">Save</span>
+        <span data-ng-if="isSaving">Updating&hellip;</span>
+      </button>
+      <button class="cc-button" type="button" data-ng-click="cancelEdit()" data-ng-disabled="isSaving">Cancel</button>
+    </div>
+
+    <div class="cc-nowrap" data-ng-if="!currentObject.isAdding">
+      (<button class="cc-button-link" type="button" data-ng-click="deleteItem(currentObject.data)" data-ng-disabled="cc_page_widget_languages_section.cc_page_widget_profile_language_code.$invalid || isSaving">Delete language credential</span></button>)
+    </div>
+  </form>
+</div>

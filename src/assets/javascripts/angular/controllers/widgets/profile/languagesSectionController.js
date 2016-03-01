@@ -6,45 +6,238 @@ var angular = require('angular');
 /**
  * Language section controller
  */
-angular.module('calcentral.controllers').controller('LanguagesSectionController', function(profileFactory, $scope, $q) {
+angular.module('calcentral.controllers').controller('LanguagesSectionController', function(apiService, profileFactory, $scope, $q) {
+  angular.extend($scope, {
+    addingItem: false,
+    currentObject: {},
+    emptyObject: {},
+    errorMessage: '',
+    isLoading: true,
+    isSaving: false,
+    items: {
+      content: [],
+      editorEnabled: false
+    },
+    languageCodes: {
+      content: []
+    },
+    languageLevels: [
+      {
+        label: 'Yes',
+        postValue: 'Y',
+        value: true
+      },
+      {
+        label: 'No',
+        postValue: 'N',
+        value: false
+      }
+    ],
+    proficiencyLevels: [
+      {
+        label: 'High',
+        value: '3'
+      },
+      {
+        label: 'Moderate',
+        value: '2'
+      },
+      {
+        label: 'Low',
+        value: '1'
+      }
+    ]
+  });
+
   var levelMapping = {
     native: 'native',
     teach: 'teacher',
     translate: 'translator'
   };
 
-  var parseLevels = function(languages) {
+  var proficiencyKeys = ['speakingProficiency', 'readingProficiency', 'writingProficiency'];
+
+  var actionCompleted = function(data) {
+    apiService.profile.actionCompleted($scope, data, loadInformation);
+  };
+
+  var deleteCompleted = function(data) {
+    $scope.isDeleting = false;
+    actionCompleted(data);
+  };
+
+  $scope.closeEditor = function() {
+    apiService.profile.closeEditor($scope);
+  };
+
+  $scope.cancelEdit = function() {
+    $scope.isSaving = false;
+    $scope.closeEditor();
+  };
+
+  $scope.deleteItem = function(item) {
+    return apiService.profile.delete($scope, profileFactory.deleteLanguage, {
+      languageCode: item.code
+    }).then(deleteCompleted);
+  };
+
+  $scope.showAdd = function() {
+    apiService.profile.showAdd($scope, {});
+  };
+
+  $scope.showEdit = function(item) {
+    apiService.profile.showEdit($scope, item);
+  };
+
+  /**
+   * Function maps a language level (native, teach, translate) boolean value to
+   * either 'Y' or 'N', the only values accepted by the POST endpoint.
+   * @param {Boolean} Value indicating that student has this language level.
+   * @return {String} The value to be sent to the POST endpoint.
+   */
+  var normalizeLanguageLevel = function(hasLevel) {
+    var index = hasLevel ? 0 : 1;
+
+    return $scope.languageLevels[index].postValue;
+  };
+
+  /**
+   * Function guards against a proficiency object or its code field being null
+   * or undefined. It returns a code if present; otherwise a blank string as a
+   * safe default.
+   * @param {Object} Proficiency object containing code and description fields.
+   * @return {String} Proficiency's code value; otherwise, a blank string.
+   */
+  var normalizeProficiencyCode = function(proficiency) {
+    var hasValidProficiencyCode = false;
+
+    if (_.get(proficiency, 'code')) {
+      hasValidProficiencyCode = _.some($scope.proficiencyLevels, function(node) {
+        return node.value === proficiency.code;
+      });
+    }
+
+    return hasValidProficiencyCode ? proficiency.code : '';
+  };
+
+  var saveCompleted = function(data) {
+    $scope.isSaving = false;
+    actionCompleted(data);
+  };
+
+  $scope.saveItem = function(item) {
+    apiService.profile.save($scope, profileFactory.postLanguage, {
+      languageCode: item.code,
+      isNative: normalizeLanguageLevel(item.native),
+      isTranslateToNative: normalizeLanguageLevel(item.translate),
+      isTeachLanguage: normalizeLanguageLevel(item.teach),
+      speakProf: normalizeProficiencyCode(item.speakingProficiency),
+      readProf: normalizeProficiencyCode(item.readingProficiency),
+      teachLang: normalizeProficiencyCode(item.writingProficiency)
+    }).then(saveCompleted);
+  };
+
+  /**
+   * Function insures each student language contains a `levels` with key-values
+   * from `levelMapping`. It also checks any `proficiency` in the language and
+   * normalizes its `code` field.
+   * @param {Array} The student's languages field.
+   * @return {Array} The populated and normalized languages.
+   */
+  var parseLanguages = function(languages) {
     languages = _.map(languages, function(language) {
       if (!language.levels) {
-        language.levels = [];
+        language.levels = _.filter(levelMapping, function(value, level) {
+          if (_.isBoolean(language[level])) {
+            return value;
+          }
+        });
       }
-      _.each(levelMapping, function(value, key) {
-        if (language[key]) {
-          language.levels.push(value);
+
+      // Guard against unsafe or unsupported proficiency code. This mutates the
+      // the language.proficiency object in place, only if one exists.
+      _.each(proficiencyKeys, function(key) {
+        var proficiency = language[key];
+        if (_.get(proficiency, 'code')) {
+          proficiency.code = normalizeProficiencyCode(proficiency);
         }
       });
+
       return language;
     });
+
     return languages;
   };
 
   var parsePerson = function(data) {
     var person = data.data.feed.student;
-    var languages = parseLevels(person.languages);
+    var languages = parseLanguages(person.languages);
+
     angular.extend($scope, {
-      languages: {
+      items: {
         content: languages
       }
     });
   };
 
-  var getPerson = profileFactory.getPerson().then(parsePerson);
+  /**
+   * Function customizes the array of language codes, sorting it by `descr` or
+   * language name (such as "Yiddish") in ascending order, and moving the entry
+   * with `accomplishment` field set to `LOT` (representing `Other`) to the end
+   * of the array. The sorted array is meant for display in a select element.
+   * @param {Array} List of language code objects with `descr` and `accomplishment`
+   * properties.
+   * @return {Array} List of languages codes sorted by `descr` property.
+   */
+  var sortLanguageCodes = function(codes) {
+    var sortedCodes = codes.sort(function(a, b) {
+      // Guarantee ascending sort order by `descr` or label, while pushing the
+      // 'LOT' ('Other') entry (if found) to the next position (return 1), so
+      // that it is in last position after all comparisons complete.
+      return a.accomplishment === 'LOT' ? 1 : a.descr > b.descr;
+    });
 
-  var loadInformation = function() {
-    $q.all(getPerson).then(function() {
-      $scope.isLoading = false;
+    return sortedCodes;
+  };
+
+  var parseLanguageCodes = function(data) {
+    var accomplishments = _.get(data, 'data.feed.accomplishments');
+    var languageCodes = sortLanguageCodes(accomplishments);
+
+    angular.extend($scope, {
+      languageCodes: {
+        content: languageCodes
+      }
     });
   };
 
-  loadInformation();
+  var fetchLanguageCodes = function() {
+    return profileFactory.getLanguageCodes().then(parseLanguageCodes);
+  };
+
+  var getPerson = profileFactory.getPerson({
+    refreshCache: true
+  }).then(parsePerson);
+
+  var loadComplete = function() {
+    $scope.isLoading = false;
+  };
+
+  var loadInformation = function(options) {
+    $scope.isLoading = true;
+
+    if (_.get(options, 'fetchCodes') === true) {
+      // This branch is visited on start. Fetching language codes is a one-time
+      // operation, as these are used for populating the select element with
+      // language choices.
+      fetchLanguageCodes().then(getPerson).then(loadComplete);
+    } else {
+      // This branch is visited on updates.
+      $q.all(getPerson).then(loadComplete);
+    }
+  };
+
+  loadInformation({
+    fetchCodes: true
+  });
 });
