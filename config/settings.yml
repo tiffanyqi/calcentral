@@ -323,6 +323,8 @@ features:
   manage_site_mailing_lists: false
   cs_academic_planner: false
   cs_academic_progress_report: false
+  cs_advising_gte_forms: false
+  cs_advising_semester_study_list: false
   cs_enrollment_card: false
   cs_fin_aid: false
   cs_holds: false
