@@ -179,14 +179,12 @@ describe Rosters::Canvas do
           {
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'E',
-            'student_id' => enrolled_student_student_id,
-            'photo_bytes' => '8203.0'
+            'student_id' => enrolled_student_student_id
           },
           {
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
-            'student_id' => waitlisted_student_student_id,
-            'photo_bytes' => '7834.1'
+            'student_id' => waitlisted_student_student_id
           }
         ]
       )
@@ -195,14 +193,12 @@ describe Rosters::Canvas do
           {
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'W',
-            'student_id' => enrolled_student_student_id,
-            'photo_bytes' => '8203.0'
+            'student_id' => enrolled_student_student_id
           },
           {
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
-            'student_id' => waitlisted_student_student_id,
-            'photo_bytes' => '7834.1'
+            'student_id' => waitlisted_student_student_id
           }
         ]
       )
@@ -239,22 +235,20 @@ describe Rosters::Canvas do
           {
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'E',
-            'student_id' => enrolled_student_student_id,
-            'photo_bytes' => '8203.0'
+            'student_id' => enrolled_student_student_id
           },
           {
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
-            'student_id' => waitlisted_student_student_id,
-            'photo_bytes' => '7834.1'
+            'student_id' => waitlisted_student_student_id
           }
         ]
       )
       photo_data = rand(99999999)
-      allow(CampusOracle::Queries).to receive(:get_photo).with(enrolled_student_login_id).and_return(
+      allow_any_instance_of(Cal1card::Photo).to receive(:get_feed).and_return(
         {
-          'bytes' => 42,
-          'photo' => photo_data
+          length: 42,
+          photo: photo_data
         }
       )
       enrolled_photo = subject.photo_data_or_file(enrolled_student_login_id)
