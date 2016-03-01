@@ -54,13 +54,14 @@ describe CalnetLdap::UserAttributes do
       let(:ldap_result) do
         {
           berkeleyeduaffiliations: ['EMPLOYEE-TYPE-STAFF', 'STUDENT-STATUS-EXPIRED', 'STUDENT-TYPE-REGISTERED'],
+          berkeleyedustuexpdate: ['20140901145959Z'],
           uid: ['61889']
         }
       end
-      it 'knows they can\'t both be right but makes no presumptions' do
-        expect(feed[:roles]).not_to include :exStudent
-        expect(feed[:roles]).not_to include :registered
-        expect(feed[:roles]).not_to include :student
+      it 'chooses one' do
+        expect(feed[:roles][:exStudent]).to eq true
+        expect(feed[:roles][:registered]).to be_falsey
+        expect(feed[:roles][:student]).to be_falsey
         expect(feed[:roles][:staff]).to eq true
       end
     end

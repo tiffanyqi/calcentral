@@ -3,9 +3,9 @@ module Berkeley
     extend self
 
     def roles_from_affiliations(affiliations)
-      affiliations ||= ''
+      affiliations ||= []
       {
-        :student => affiliations.include?('STUDENT-TYPE-'),
+        :student => affiliations.index {|a| (a.start_with? 'STUDENT-TYPE-')}.present?,
         :registered => affiliations.include?('STUDENT-TYPE-REGISTERED'),
         :exStudent => affiliations.include?('STUDENT-STATUS-EXPIRED'),
         :faculty => affiliations.include?('EMPLOYEE-TYPE-ACADEMIC'),
@@ -15,8 +15,46 @@ module Berkeley
       }
     end
 
+    def roles_from_ldap_affiliations(ldap_record)
+      affiliations = ldap_record[:berkeleyeduaffiliations].to_a
+
+      # Conflicting combinations of the following affiliations can be resolved by the corresponding
+      # 'expdate' attribute. If the 'expdate' is in the past, then the expired '-STATUS-' affiliation
+      # wins; if the 'expdate' is in the future or unset, then the active '-TYPE-' affiliation wins.
+      {
+        'STUDENT' => 'stu',
+        'EMPLOYEE' => 'emp',
+        'AFFILIATE' => 'aff',
+        'GUEST' => 'aff'
+      }.each do |aff_substring, expdate_substring|
+        active_aff = affiliations.select {|aff| aff.start_with? "#{aff_substring}-TYPE-"}
+        expired_aff = affiliations.select {|aff| aff.start_with? "#{aff_substring}-STATUS-"}
+        if active_aff.present? && expired_aff.present?
+          exp_date = ldap_record["berkeleyedu#{expdate_substring}expdate".to_sym].first
+          if exp_date.blank? || DateTime.parse(exp_date) > DateTime.now
+            affiliations = affiliations - expired_aff
+          else
+            affiliations = affiliations -  active_aff
+          end
+        end
+      end
+
+      # TODO CONFIRM: The combination of 'STUDENT-TYPE-NOT REGISTERED' and 'STUDENT-TYPE-REGISTERED' should be treated as registered.
+      # (That's how Bear Facts seems to handle it, anyway.)
+
+      roles_from_affiliations affiliations
+    end
+
+    def roles_from_ldap_groups(ldap_record)
+      # Most roles can be associated with membership in one or more standard CalGroups.
+      # TODO CONFIRM: There is no CalGroup membership marker for the 'STUDENT-TYPE-NOT REGISTERED' affiliation.
+      # Active-but-not-registered students have exactly the same list of memberships as registered students.
+      {}
+    end
+
     def roles_from_campus_row(campus_row)
-      roles = roles_from_affiliations(campus_row['affiliations'])
+      affiliation_string = campus_row['affiliations'] || ''
+      roles = roles_from_affiliations(affiliation_string.split ',')
       if roles[:student]
         case campus_row['ug_grad_flag']
           when 'U'
