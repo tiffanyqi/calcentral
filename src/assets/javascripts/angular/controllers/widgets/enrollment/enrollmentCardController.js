@@ -33,7 +33,8 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     },
     {
       id: 'adjust',
-      title: 'Adjust'
+      title: 'Adjust',
+      show: true
     }
   ];
   $scope.enrollment = {
