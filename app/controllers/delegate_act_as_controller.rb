@@ -12,10 +12,10 @@ class DelegateActAsController < ActAsController
     if response[:feed] && (students = response[:feed][:students])
       student = students.detect { |s| uid_param == s[:uid] }
       authorized = student && [:financial, :viewEnrollments, :viewGrades].any? { |k| student[:privileges][k] }
-      raise NotAuthorizedError.new("User #{acting_user_id} is unauthorized to delegate-view-as student: #{student.as_json}") unless authorized
+      raise Pundit::NotAuthorizedError.new("User #{acting_user_id} is unauthorized to delegate-view-as student: #{student.as_json}") unless authorized
       logger.warn "User #{acting_user_id} is authorized to delegate-view-as #{uid_param} with privileges: #{student[:privileges]}"
     else
-      raise NotAuthorizedError.new "User #{acting_user_id} does not have delegate affiliation"
+      raise Pundit::NotAuthorizedError.new "User #{acting_user_id} does not have delegate affiliation"
     end
   end
 
