@@ -6,7 +6,7 @@ var angular = require('angular');
 /**
  * Status controller
  */
-angular.module('calcentral.controllers').controller('StatusController', function(activityFactory, apiService, badgesFactory, financesFactory, holdsFactory, profileFactory, $http, $scope, $q) {
+angular.module('calcentral.controllers').controller('StatusController', function(activityFactory, apiService, badgesFactory, financesFactory, holdsFactory, $http, $scope, $q) {
   // Keep track on whether the status has been loaded or not
   var hasLoaded = false;
 

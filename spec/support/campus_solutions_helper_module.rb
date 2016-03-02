@@ -35,6 +35,22 @@ module CampusSolutionsHelperModule
     end
   end
 
+  shared_examples 'a successful feed during view-as session' do
+    before {
+      allow(Settings.features).to receive(:reauthentication).and_return false
+    }
+    it 'should exclude certain student data from the feed' do
+      session['user_id'] = user_id
+      session[view_as_key] = random_id
+      get feed
+      json = JSON.parse response.body
+      expect(json['statusCode']).to eq 200
+      feed = json['feed'][feed_key]
+      expect(feed).to have(expected_elements.length).items
+      expect(feed).to include *expected_elements
+    end
+  end
+
   shared_examples 'a proxy that responds to user error gracefully' do
     it 'returns the right status code and helpful error message' do
       expect(subject[:statusCode]).to eq 400
