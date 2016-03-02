@@ -22,6 +22,12 @@ module CalCentralPages
   span(:email_one_subject, :xpath => '//button[@title="bMail"]/following-sibling::div//span[@data-ng-bind="item.title"]')
   span(:email_one_summary, :xpath => '//button[@title="bMail"]/following-sibling::div//span[@data-ng-bind="item.summary"]')
 
+  # Calendar Badge
+  button(:calendar_badge, :xpath => '//button[@title="bCal"]')
+
+  # Drive Badge
+  button(:drive_badge, :xpath => '//button[@title="bDrive"]')
+
   # Popover: Profile, Status, Log Out
   list_item(:status_loading, :xpath => '//li[@data-ng-show="statusLoading"]')
   button(:profile_icon, :xpath => '//button[@title="Settings"]')
@@ -58,6 +64,7 @@ module CalCentralPages
   button(:basic_auth_login_button, :xpath => '//button[contains(text(),"Login")]')
 
   button(:stop_viewing_as, :xpath => '//button[@data-ng-click="admin.stopActAs()"]')
+  button(:delegate_stop_viewing_as, :xpath => '//button[@data-ng-click="admin.stopDelegateActAs()"]')
 
   # 404
   h3(:not_found, :xpath => '//h3[text()="Cannot Find That Page"]')
@@ -172,6 +179,10 @@ module CalCentralPages
   def stop_viewing_as
     WebDriverUtils.wait_for_element_and_click stop_viewing_as_element
     stop_viewing_as_element.when_not_present WebDriverUtils.page_event_timeout
+  end
+
+  def delegate_stop_viewing
+    delegate_stop_viewing_as if delegate_stop_viewing_as?
   end
 
 end

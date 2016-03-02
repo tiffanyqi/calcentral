@@ -63,10 +63,6 @@ class UserUtils
     JSON.parse(File.read(WebDriverUtils.live_users))['users']
   end
 
-  def self.load_delegated_access_users
-    load_test_users.select { |user| user['delegatedAccess'] }
-  end
-
   def self.load_profile_test_data
     test_data_file = File.join(CalcentralConfig.local_dir, "profile.json")
     JSON.parse(File.read(test_data_file))['users']

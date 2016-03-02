@@ -10,6 +10,7 @@ module CalCentralPages
     link(:bcal_link, :xpath => '//a[contains(.,"bCal instructions")]')
 
     def load_page
+      logger.debug 'Loading profile delegate access page'
       navigate_to "#{WebDriverUtils.base_url}/profile/delegate"
     end
 

@@ -148,6 +148,7 @@ class WebDriverUtils
         false
       end
     rescue
+      logger.error "Expected page title '#{expected_page_title}', but got '#{driver.find_element(:xpath => '//title').text}' instead"
       false
     ensure
       if driver.window_handles.length > 1
@@ -158,6 +159,14 @@ class WebDriverUtils
         driver.switch_to.alert.accept rescue Selenium::WebDriver::Error::NoAlertPresentError
       end
       driver.switch_to.window driver.window_handles.first
+    end
+  end
+
+  def self.verify_block(&blk)
+    begin
+      return true if yield
+    rescue
+      false
     end
   end
 

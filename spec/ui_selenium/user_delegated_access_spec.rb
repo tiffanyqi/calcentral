@@ -7,95 +7,15 @@ describe 'Delegated access', :testui => true do
     begin
       @driver = WebDriverUtils.launch_browser
       timeout = WebDriverUtils.page_load_timeout
-      wait = Selenium::WebDriver::Wait.new timeout
+      wait = Selenium::WebDriver::Wait.new(:timeout => timeout)
 
       @splash_page = CalCentralPages::SplashPage.new @driver
-      @basic_info_page = CalCentralPages::MyProfileBasicInfoCard.new @driver
-      @delegate_access_page = CalCentralPages::MyProfileDelegateAccessCard.new @driver
-      @status_api = ApiMyStatusPage.new @driver
-
-      # ALL USER ROLES - verify access to 'Delegate Access'
-
-      test_users = UserUtils.load_delegated_access_users
-      test_users.each do |user|
-        uid = user['uid']
-        logger.info "Test UID is #{uid}"
-        user_roles = user['delegatedAccess']['roles']
-
-        begin
-          @splash_page.load_page
-          @splash_page.basic_auth uid
-          @status_api.get_json @driver
-
-          # Verify validity of test data to assist test maintenance
-          is_student = @status_api.is_student?
-          it ("test data thinks UID #{uid} is a student but the status API disagrees") { fail } if user_roles['student'] && !is_student
-
-          is_concurrent = @status_api.is_concurrent_enroll_student?
-          it ("test data thinks UID #{uid} is a concurrent enrollment student but the status API disagrees") { fail } if user_roles['concurrentEnrollment'] && !is_concurrent
-
-          is_ex_student = @status_api.is_ex_student?
-          it ("test data thinks UID #{uid} is an ex-student but the status API disagrees") { fail } if user_roles['exStudent'] && !is_ex_student
-
-          is_faculty = @status_api.is_faculty?
-          it ("test data thinks UID #{uid} is faculty but the status API disagrees") { fail } if user_roles['faculty'] && !is_faculty
-
-          is_staff = @status_api.is_staff?
-          it ("test data thinks UID #{uid} is staff but the status API disagrees") { fail } if user_roles['staff'] && !is_staff
-
-          is_advisor = @status_api.is_advisor?
-          it ("test data thinks UID #{uid} is an advisor but the status API disagrees") { fail } if user_roles['advisor'] && !is_advisor
-
-          is_delegate = @status_api.is_delegate?
-          it ("test data thinks UID #{uid} is a delegate but the status API disagrees") { fail } if user_roles['delegate'] && !is_delegate
-
-          @basic_info_page.load_page
-          @basic_info_page.sidebar_element.when_visible timeout
-          has_delegate_access = @basic_info_page.delegate_access_link?
-
-          if user_roles['student']
-
-            it "offers a 'Delegate Access' Profile menu option to UID #{uid}" do
-              expect(has_delegate_access).to be true
-            end
-
-            @basic_info_page.click_delegate_access @driver
-            @delegate_access_page.manage_delegates_msg_element.when_visible timeout
-
-            has_manage_delegates_link = @delegate_access_page.manage_delegates_link?
-            it "offers link to Manage Delegates for UID #{uid}" do
-              expect(has_manage_delegates_link).to be true
-            end
-            has_share_bcal_link = WebDriverUtils.verify_external_link(@driver, @delegate_access_page.bcal_link_element, 'Share your calendar with someone - Calendar Help')
-            it "offers a link to instructions for sharing bCal to UID #{uid}" do
-              expect(has_share_bcal_link).to be true
-            end
-
-          else
-
-            it "offers no Profile menu Delegate Access option to UID #{uid}" do
-              expect(has_delegate_access).to be false
-            end
-
-            @delegate_access_page.load_page
-            @delegate_access_page.wait_until(timeout) { @delegate_access_page.title == 'Error | CalCentral' }
-
-            hits_delegate_404 = @delegate_access_page.not_found?
-            it "prevents UID #{uid} from hitting the Delegate Access page directly" do
-              expect(hits_delegate_404).to be true
-            end
-
-          end
-        rescue => e
-          logger.error e.message + "\n" + e.backtrace.join("\n")
-        end
-      end
-
-      # DELEGATES - verify the available CalCentral UI when delegates are viewing-as
-
       @dashboard_page = CalCentralPages::MyDashboardPage.new @driver
       @campus_page = CalCentralPages::MyCampusPage.new @driver
       @toolbox_page = CalCentralPages::MyToolboxPage.new @driver
+      @cs_delegate_students_api = ApiCSDelegateAccessStudents.new @driver
+      @cal_net_page = CalNetAuthPage.new @driver
+      @status_api = ApiMyStatusPage.new @driver
 
       # Academics UI
       @academic_profile_card = CalCentralPages::MyAcademicsProfileCard.new @driver
@@ -109,6 +29,7 @@ describe 'Delegated access', :testui => true do
       @classes_card = CalCentralPages::MyAcademicsClassesCard.new @driver
       @teaching_card = CalCentralPages::MyAcademicsTeachingCard.new @driver
       @class_page = CalCentralPages::MyAcademicsClassPage.new @driver
+      @booklist_page = CalCentralPages::MyAcademicsBookListPage.new @driver
       @academics_api = ApiMyAcademicsPageSemesters.new @driver
 
       # Finances UI
@@ -121,464 +42,492 @@ describe 'Delegated access', :testui => true do
       @cs_fin_aid_years_api = ApiCSAidYearsPage.new @driver
       @cs_fin_aid_data_api = ApiCSFinAidDataPage.new @driver
 
-      test_delegates = test_users.select { |user| user['delegatedAccess']['roles']['delegate'] }
+      # Profile UI
+      @profile_basic = CalCentralPages::MyProfileBasicInfoCard.new @driver
+      @profile_contact = CalCentralPages::MyProfileContactInfoCard.new @driver
+      @profile_demographic = CalCentralPages::MyProfileDemographicCard.new @driver
+      @profile_delegate = CalCentralPages::MyProfileDelegateAccessCard.new @driver
+      @profile_disclosure = CalCentralPages::MyProfileInfoDisclosureCard.new @driver
+      @profile_title_iv = CalCentralPages::MyProfileTitleIVCard.new @driver
+      @profile_bconnected = CalCentralPages::MyProfileBconnectedCard.new @driver
+
+      test_output = UserUtils.initialize_output_csv self
+      CSV.open(test_output, 'wb') do |heading|
+        heading << ['UID', 'Student UID', 'Student', 'Faculty', 'Staff', 'Enrollment', 'Grades', 'Financial', 'Phone']
+      end
+
+      test_delegates = UserUtils.load_test_users.select { |user| user['delegatedAccess'] }
       test_delegates.each do |delegate|
 
         begin
           uid = delegate['uid']
           logger.info("Delegate UID is #{uid}")
-          delegate_students = delegate['delegatedAccess']['students']
-
+          @splash_page.load_page
           @splash_page.basic_auth uid
+          @cs_delegate_students_api.get_json @driver
+
+          students = @cs_delegate_students_api.students
+          logger.debug "There are #{students.length} student accounts associated with delegate UID #{uid}"
+
+          # DELEGATED ACCESS UI ON TOOLBOX PAGE
+
           @toolbox_page.load_page
 
-          # TODO - Verify welcome message and expandable instructions
-          # TODO - Verify that the students listed on the Toolbox are exactly the expected students
-          # TODO - Verify Academic dates and deadlines
-          # TODO - Verify quick links
+          shows_delegate_welcome = WebDriverUtils.verify_block do
+            @toolbox_page.delegate_msg_heading_element.when_visible timeout
+            @toolbox_page.delegate_msg_element.when_visible timeout
+          end
+          it ("shows delegate UID #{uid} the delegate welcome message") { expect(shows_delegate_welcome).to be true }
 
-          if delegate_students.any?
-            logger.debug "There are #{delegate_students.length} student accounts associated with the delegate"
+          shows_less = @toolbox_page.delegate_msg_expanded_element.visible?
+          it ("shows delegate UID #{uid} a collapsed view of delegate instructions") { expect(shows_less).to be false }
 
-            delegate_students.each do |student|
-              student_uid = student['uid']
-              student_privileges = student['privileges']
+          @toolbox_page.show_more
+          shows_more = @toolbox_page.delegate_msg_expanded_element.visible?
+          it ("shows delegate UID #{uid} an expanded view of delegate instructions") { expect(shows_more).to be true }
+
+          ui_students = @toolbox_page.all_delegator_names
+          api_students = @cs_delegate_students_api.student_names
+          it ("shows delegate UID #{uid} the list of linked students") { expect(ui_students).to eql(api_students) }
+
+          subscribe_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.subscribe_to_calendar_element, 'UC Berkeley Calendar - Office Of The Registrar')
+          it ("shows delegate UID #{uid} a link to 'Subscribe to the Academic Calendar'") { expect(subscribe_calendar_link).to be true }
+
+          grad_div_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.grad_div_deadlines_element, 'Degree Deadlines | Berkeley Graduate Division')
+          it ("shows delegate UID #{uid} a link to 'Graduate Division Degree Deadlines'") { expect(grad_div_calendar_link).to be true }
+
+          calparents_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.cal_parents_element, 'UC Berkeley Cal Parents')
+          it ("shows delegate UID #{uid} a link to 'CalParents'") { expect(calparents_link).to be true }
+
+          important_dates_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.important_dates_element, 'Cal Parents - Important Dates for Parents')
+          it ("shows delegate UID #{uid} a link to 'Important Dates for Parents'") { expect(important_dates_link).to be true }
+
+          visiting_campus_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.visiting_campus_element, 'Cal Parents - Visiting the Campus')
+          it ("shows delegate UID #{uid} a link to 'Visiting the Campus'") { expect(visiting_campus_link).to be true }
+
+          jobs_and_careers_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.jobs_and_careers_element, 'UC Berkeley - Cal Parents')
+          it ("shows delegate UID #{uid} a link to 'Jobs & Careers'") { expect(jobs_and_careers_link).to be true }
+
+          housing_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.housing_element, 'Cal Parents - Housing')
+          it ("shows delegate UID #{uid} a link to 'Housing'") { expect(housing_link).to be true }
+
+          financial_info_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.financial_info_element, 'Cal Parents - Financial Information')
+          it ("shows delegate UID #{uid} a link to 'Financial Information'") { expect(financial_info_link).to be true }
+
+          academics_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academics_element, 'UC Berkeley - Cal Parents')
+          it ("shows delegate UID #{uid} a link to 'Academics'") { expect(academics_link).to be true }
+
+          academic_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academic_calendar_element, 'Student Calendar - Office Of The Registrar')
+          it ("shows delegate UID #{uid} a link to 'Academic Calendar'") { expect(academic_calendar_link).to be true }
+
+          newscenter_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.news_center_element, 'Berkeley News | News from the University of California, Berkeley')
+          it ("shows delegate UID #{uid} a link to 'UC Berkeley NewsCenter'") { expect(newscenter_link).to be true }
+
+          berkeley_news_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.berkeley_news_element, 'UC Berkeley - In the News')
+          it ("shows delegate UID #{uid} a link to 'Berkeley in the News'") { expect(berkeley_news_link).to be true }
+
+          daily_cal_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.daily_cal_element, 'The Daily Californian | Berkeley\'s News')
+          it ("shows delegate UID #{uid} a link to 'The Daily Californian'") { expect(daily_cal_link).to be true }
+
+          # DELEGATE VIEW-AS EXPERIENCE
+
+          if students.any?
+
+            students.each do |student|
+              student_uid = student['uid'].to_i
+              student_name = student['fullName']
+              privileges = student['privileges']
+              logger.debug "Student UID is #{student_uid} with privileges #{privileges}"
+
+              is_student = nil
+              is_faculty = nil
+              is_staff = nil
 
               begin
-                logger.info "Delegate UID #{uid} is viewing as student UID #{student_uid}"
-                @toolbox_page.view_as_user student_uid
-                @toolbox_page.stop_viewing_as_element.when_visible timeout
 
-                current_url = @driver.current_url
-                if student_privileges['enrollment'] || student_privileges['grades']
-                  it "lands delegate UID #{uid} on the Academics page for UID #{student_uid}" do
-                    expect(current_url).to eql("#{WebDriverUtils.base_url}/academics")
-                  end
+                if privileges['phone'] && !privileges['viewEnrollments'] && !privileges['viewGrades'] && !privileges['financial']
 
-                  @academics_api.get_json @driver
-                  @academic_profile_card.load_page
-                  @academic_profile_card.profile_card_element.when_visible timeout
+                  # TODO - what user see for phone-only?
 
-                  # Academic Profile
-                  shows_profile_name = @academic_profile_card.name?
-                  it "shows delegate UID #{uid} the academic profile name for UID #{student_uid}" do
-                    expect(shows_profile_name).to be true
-                  end
-                  shows_standing = @academic_profile_card.standing?
-                  unless @academics_api.has_no_standing?
-                    it "shows delegate UID #{uid} the academic standing for UID #{student_uid}" do
-                      expect(shows_standing).to be true
+                else
+
+                  @toolbox_page.load_page
+                  logger.info "Delegate UID #{uid} is viewing as student UID #{student_uid}"
+                  @toolbox_page.delegate_view_as student_name
+
+                  current_url = @driver.current_url
+                  if privileges['viewEnrollments'] || privileges['viewGrades']
+                    it "lands delegate UID #{uid} on the Academics page for UID #{student_uid}" do
+                      expect(current_url).to eql("#{WebDriverUtils.base_url}/academics")
                     end
-                  end
-                  shows_gpa = @academic_profile_card.gpa?
-                  unless @academics_api.gpa == '0.0' || !student_privileges['grades']
-                    it "shows delegate UID #{uid} the academic GPA for UID #{student_uid}" do
-                      expect(shows_gpa).to be true
+
+                    @status_api.get_json @driver
+                    is_student = @status_api.is_student?
+                    is_faculty = @status_api.is_faculty?
+                    is_staff = @status_api.is_staff?
+
+                    CSV.open(test_output, 'a+') do |row|
+                      row << [uid, student_uid, is_student, is_faculty, is_staff, privileges['viewEnrollments'], privileges['viewGrades'],
+                              privileges['financial'], privileges['phone']]
                     end
-                  end
 
-                  # Status and Holds
-                  shows_reg_status = @status_card.status_table?
-                  it "shows delegate UID #{uid} the registration status for UID #{student_uid}" do
-                    expect(shows_reg_status).to be true
-                  end
-                  shows_active_blocks = @status_card.active_blocks_table?
-                  it "shows delegate UID #{uid} the active blocks for UID #{student_uid}" do
-                    expect(shows_active_blocks).to be true
-                  end
+                    @academics_api.get_json @driver
+                    @academic_profile_card.load_page
+                    @academic_profile_card.profile_card_element.when_visible timeout
 
-                  # Final Exams
-                  if @academics_api.has_exam_schedules
+                    # Profile - name
+                    shows_profile_name = @academic_profile_card.name?
+                    it ("shows delegate UID #{uid} the academic profile name for UID #{student_uid}") { expect(shows_profile_name).to be true }
+
+                    # Profile - career
+                    unless @academics_api.has_no_standing?
+                      shows_career = @academic_profile_card.career?
+                      it ("shows delegate UID #{uid} the academic career for UID #{student_uid}") { expect(shows_career).to be true }
+                    end
+
+                    # Profile - GPA
+                    shows_gpa = @academic_profile_card.gpa?
+                    if @academics_api.gpa == '0.0' || !privileges['viewGrades']
+                      it ("shows delegate UID #{uid} no GPA for UID #{student_uid}") { expect(shows_gpa).to be false }
+                    else
+                      it ("shows delegate UID #{uid} the GPA for UID #{student_uid}") { expect(shows_gpa).to be true }
+                    end
+
+                    # Reg Status
+                    shows_reg_status = @status_card.status_table?
+                    it ("shows delegate UID #{uid} no registration status for UID #{student_uid}") { expect(shows_reg_status).to be false }
+
+                    # Active Blocks
+                    shows_active_blocks = @status_card.active_blocks_table?
+                    it ("shows delegate UID #{uid} no active blocks for UID #{student_uid}") { expect(shows_active_blocks).to be false }
+
+                    # Final Exams
                     shows_exams = @final_exams_card.all_exam_courses.any?
-                    it "shows delegate UID #{uid} the final exams for UID #{student_uid}" do
-                      expect(shows_exams).to be true
+                    if @academics_api.has_exam_schedules
+                      it ("shows delegate UID #{uid} the final exams for UID #{student_uid}") { expect(shows_exams).to be true }
                     end
-                  end
 
-                  # L&S Advising
-                  if @academics_api.colleges.include? 'College of Letters & Science'
+                    # L&S Advising
                     shows_advising = @advising_card.make_appt_link?
-                    it "shows delegate UID #{uid} the L and S advising card for UID #{student_uid}" do
-                      expect(shows_advising).to be true
-                    end
-                  end
+                    it ("shows delegate UID #{uid} no L and S advising card for UID #{student_uid}") { expect(shows_advising).to be false }
 
-                  # University Requirements
-                  shows_uni_reqts = @uni_reqts_card.reqts_table?
-                  if @academics_api.standing == 'Undergraduate'
-                    it "shows delegate UID #{uid} the university requirements for UID #{student_uid}" do
-                      expect(shows_uni_reqts).to be true
-                    end
-                  end
+                    # University Requirements
+                    shows_uni_reqts = @uni_reqts_card.reqts_table?
+                    it ("shows delegate UID #{uid} no university requirements for UID #{student_uid}") { expect(shows_uni_reqts).to be false }
 
-                  # My Academics student semester cards
+                    # My Academics student semester cards
 
-                  student_semesters = @academics_api.all_student_semesters
-                  if student_semesters.any?
+                    student_semesters = @academics_api.all_student_semesters
+                    if student_semesters.any?
 
-                    api_semesters = @academics_api.all_student_semesters
-                    api_semesters_count = api_semesters.length
-                    api_semesters_count += 1 if @academics_api.addl_credits
-                    ui_semesters_count = @semester_card.semester_card_elements.length
+                      api_semesters = @academics_api.all_student_semesters
+                      api_semesters_count = api_semesters.length
+                      api_semesters_count += 1 if @academics_api.addl_credits
 
-                    it "shows delegate UID #{uid} all the semester cards for UID #{student_uid}" do
-                      expect(ui_semesters_count).to eql(api_semesters_count)
-                    end
+                      @semester_card.show_more if @semester_card.show_more_element.visible?
+                      ui_semesters_count = @semester_card.semester_card_elements.length
 
-                    @academics_api.all_student_semesters.each do |semester|
-                      semester_name = @academics_api.semester_name semester
-                      semester_courses = @academics_api.semester_card_courses(semester, @academics_api.semester_courses(semester))
+                      it ("shows delegate UID #{uid} all the semester cards for UID #{student_uid}") { expect(ui_semesters_count).to eql(api_semesters_count) }
 
-                      ui_grades = @semester_card.grades(@driver, semester_name)
-                      api_grades = @academics_api.semester_grades(api_semesters, semester_courses, semester)
+                      api_semesters.each do |semester|
+                        @semester_card.load_page
+                        @semester_card.page_heading_element.when_visible timeout
+                        @semester_card.show_more if @semester_card.show_more_element.visible?
 
-                      if student_privileges['grades']
-                        it "shows delegate UID #{uid} the #{semester_name} grades on My Academics for UID #{student_uid}" do
-                          expect(ui_grades).to eql(api_grades)
-                        end
-                      else
-                        it "shows delegate UID #{uid} no #{semester_name} grades on My Academics for UID #{student_uid}" do
-                          expect(ui_grades.any?).to be false
-                        end
-                      end
+                        semester_name = @academics_api.semester_name semester
+                        semester_courses = @academics_api.semester_courses(semester)
 
-                      # Student semester pages
+                        if @academics_api.past_semesters(api_semesters).include? semester
 
-                      if @academics_api.has_enrollment_data? semester
-                        @semester_card.click_student_semester_link semester
-                        ui_course_codes = @semester_card.all_enrolled_course_codes
-                        it "shows delegate UID #{uid} the #{semester_name} enrollment on the semester page for UID #{student_uid}" do
-                          expect(ui_course_codes.any?).to be true
-                        end
+                          ui_grades = @semester_card.grades(@driver, semester_name)
+                          api_grades = @academics_api.semester_grades(api_semesters, semester_courses, semester).reject { |grade| grade.empty? }
 
-                        ui_course_grades = @final_grades_card.grade_elements
-                        shows_gpa_calc = @gpa_calc_card.cum_gpa?
-                        if student_privileges['grades']
-                          if @academics_api.past_semesters(student_semesters).include?(semester)
-                            it "shows delegate UID #{uid} the #{semester_name} final grades on the semester page for UID #{student_uid}" do
-                              expect(ui_course_grades.any?).to be true
+                          if privileges['viewGrades']
+                            it "shows delegate UID #{uid} the #{semester_name} grades on My Academics for UID #{student_uid}" do
+                              expect(ui_grades.any?).to be true
+                              expect(ui_grades).to eql(api_grades)
                             end
                           else
-                            it "shows delegate UID #{uid} the #{semester_name} GPA calculator on the semester page for UID #{student_uid}" do
-                              expect(shows_gpa_calc).to be true
+                            it "shows delegate UID #{uid} no #{semester_name} grades on My Academics for UID #{student_uid}" do
+                              expect(ui_grades.any?).to be false
+                              expect(ui_grades).to eql(api_grades)
                             end
                           end
-                        else
-                          it "shows delegate UID #{uid} no #{semester_name} final grades on the semester page for UID #{student_uid}" do
-                            expect(ui_course_grades.any?).to be false
-                          end
-                          it "shows delegate UID #{uid} no #{semester_name} GPA calculator on the semester page for UID #{student_uid}" do
-                            expect(shows_gpa_calc).to be false
-                          end
                         end
+
+                        # Student semester pages
+
+                        semester_slug = semester_name.downcase.gsub(' ', '-')
+                        blocks_semester_page = WebDriverUtils.verify_block do
+                          @semester_card.load_semester_page semester_slug
+                          @semester_card.not_found_element.when_present timeout
+                        end
+                        it ("prevents UID #{uid} from viewing the #{semester_name} semester page for UID #{student_uid}") { expect(blocks_semester_page).to be true }
+
+                        blocks_booklist = WebDriverUtils.verify_block do
+                          @booklist_page.load_page semester_slug
+                          @booklist_page.not_found_element.when_present timeout
+                        end
+                        it ("prevents UID #{uid} from viewing the #{semester_name} book list page for UID #{student_uid}") { expect(blocks_booklist).to be true }
 
                         # Student class pages
 
                         semester_courses.each do |course|
-                          api_course_code = @academics_api.course_code course
-                          api_course_title = @academics_api.course_title course
 
-                          # Course with multiple primary sections
-                          if @academics_api.multiple_primaries? course
-                            @academics_api.course_primary_sections(course).each do |prim_section|
-                              class_page_url = @academics_api.section_url prim_section
-                              @semester_card.click_class_link_by_url class_page_url
-                              @class_page.class_info_heading_element.when_visible timeout
-                              ui_course_title = @class_page.course_title
-                              it "shows delegate UID #{uid} class info on the #{semester_name} #{api_course_code} class page for UID #{student_uid}" do
-                                expect(ui_course_title).to eql(api_course_title)
-                              end
-
-                              # Webcast
-                              shows_course_captures = @class_page.course_capture_heading?
-                              it "shows delegate UID #{uid} a course capture card on the #{semester_name} #{api_course_code} class page for UID #{student_uid}" do
-                                expect(shows_course_captures).to be true
-                              end
-
-                              # Textbooks
-                              shows_textbooks = @class_page.textbooks_heading?
-                              it "shows delegate UID #{uid} a textbooks card on the #{semester_name} #{api_course_code} class page for UID #{student_uid}" do
-                                expect(shows_textbooks).to be true
-                              end
-
-                              @class_page.back
-                            end
-
-                          # Course with a single primary section
-                          else
-                            class_page_url = @academics_api.course_url course
-                            @semester_card.click_class_link_by_url class_page_url
-                            @class_page.class_info_heading_element.when_visible timeout
-                            ui_course_title = @class_page.course_title
-                            it "shows delegate UID #{uid} class info on the #{semester_name} #{api_course_code} class page for UID #{student_uid}" do
-                              expect(ui_course_title).to eql(api_course_title)
-                            end
-
-                            # Webcast
-                            shows_course_captures = @class_page.course_capture_heading?
-                            it "shows delegate UID #{uid} a course capture card on the #{semester_name} #{api_course_code} class page for UID #{student_uid}" do
-                              expect(shows_course_captures).to be true
-                            end
-
-                            # Textbooks
-                            shows_textbooks = @class_page.textbooks_heading?
-                            it "shows delegate UID #{uid} a textbooks card on the #{semester_name} #{api_course_code} class page for UID #{student_uid}" do
-                              expect(shows_textbooks).to be true
-                            end
-
-                            @class_page.back
+                          class_page_url = "/academics/semester/#{semester_slug}/class/#{@academics_api.course_slug course}"
+                          blocks_class_page = WebDriverUtils.verify_block do
+                            @semester_card.load_class_page class_page_url
+                            @semester_card.not_found_element.when_present timeout
                           end
+                          it ("prevents UID #{uid} from viewing the #{class_page_url} class page for UID #{student_uid}") { expect(blocks_class_page).to be true }
+
                         end
                       end
-
-                      @semester_card.back
                     end
+
+                    # My Academics teaching semester cards
+
+                    teaching_semesters = @academics_api.all_teaching_semesters
+                    it ("shows delegate UID #{uid} no teaching data for UID #{student_uid}") { expect(teaching_semesters).to be nil }
+
+                    shows_teaching_card = @teaching_card.course_code_elements.any?
+                    it ("shows delegate UID #{uid} no teaching card for UID #{student_uid}") { expect(shows_teaching_card).to be false }
+
+                    @academic_profile_card.click_my_finances_link if privileges['finances']
+
+                  elsif privileges['financial']
+
+                    it ("lands delegate UID #{uid} on the Finances page") { expect(current_url).to eql("#{WebDriverUtils.base_url}/finances") }
+
                   end
 
-                  # My Academics teaching semester cards
+                  if privileges['financial']
 
-                  teaching_semesters = @academics_api.all_teaching_semesters
-                  if teaching_semesters.any?
-                    if student_semesters.any?
+                    it ("lands delegate UID #{uid} with 'finances-only' privileges on My Finances") { expect(current_url).to eql("#{WebDriverUtils.base_url}/finances") }
 
-                      # No (teaching) Classes Card should be shown on the My Academics page
-                      shows_teaching_classes =@classes_card.all_semester_course_codes.any?
-                      it "shows delegate UID #{uid} no teaching classes on the My Academics page for UID #{student_uid}" do
-                        expect(shows_teaching_classes).to be false
-                      end
+                    @my_fin_aid_api.get_json @driver
+                    @cs_fin_aid_years_api.get_json @driver
 
-                      # No Teaching Card should be shown on the My Academics page
-                      shows_teaching_card = @teaching_card.teaching_course_code_elements.any?
-                      it "shows delegate UID #{uid} no teaching card on the My Academics page for UID #{student_uid}" do
-                        expect(shows_teaching_card).to be false
-                      end
-
-                      # Attempt to hit teaching semester and teaching class pages directly
-
-
-                      first_semester_slug = @academics_api.semester_slug teaching_semesters[0]
-                      @driver.get "#{WebDriverUtils.base_url}/academics/semester/#{first_semester_slug}"
-                      wait.until { @driver.title == 'Error | CalCentral' }
-
-                      class_page = "#{WebDriverUtils.base_url}/#{@academics_api.course_url @academics_api.semester_courses(teaching_semesters[0])}"
-                      @driver.get class_page
-                      wait.until { @driver.title == 'Error | CalCentral' }
-
+                    # Billing Summary
+                    sees_billing_summary = WebDriverUtils.verify_block do
+                      @finances_page.load_page
+                      @finances_page.account_balance_element_element.when_visible timeout
                     end
-                  end
+                    it ("shows delegate UID #{uid} the billing summary for UID #{student_uid}") { expect(sees_billing_summary).to be true }
 
-                  @academic_profile_card.click_my_finances_link if student_privileges['finances']
+                    sees_payment_button = @finances_page.make_payment_link?
+                    it ("shows delegate UID #{uid} the 'Make a Payment' button for UID #{student_uid}") { expect(sees_payment_button).to be true }
 
-                elsif student_privileges['finances']
-
-                  it "lands delegate UID #{uid} on the Finances page" do
-                    expect(current_url).to eql("#{WebDriverUtils.base_url}/finances")
-                  end
-
-                end
-
-                if student_privileges['finances']
-
-                  it "lands delegate UID #{uid} with 'finances-only' privileges on My Finances" do
-                    expect(current_url).to eql("#{WebDriverUtils.base_url}/finances")
-                  end
-
-                  # Billing Summary
-                  @finances_page.billing_summary_spinner_element.when_not_visible timeout
-                  sees_billing_summary = @finances_page.account_balance_element?
-                  it "shows delegate UID #{uid} the billing summary for UID #{student_uid}" do
-                    expect(sees_billing_summary).to be true
-                  end
-                  sees_payment_button = @finances_page.make_payment_link?
-                  it "shows delegate UID #{uid} the 'Make a Payment' button for UID #{student_uid}" do
-                    expect(sees_payment_button).to be true
-                  end
-
-                  # Cal 1 Card
-                  @finances_page.cal_1_card_content_element.when_visible timeout
-                  if @cal_1_card_api.has_debit_account?
+                    # Cal 1 Card
+                    @finances_page.cal_1_card_content_element.when_visible timeout
                     sees_cal_1_card = @finances_page.debit_account_header?
-                    it "shows delegate UID #{uid} the Cal 1 Card card for UID #{student_uid}" do
-                      expect(sees_cal_1_card).to be true
+                    it ("shows delegate UID #{uid} the Cal 1 Card card for UID #{student_uid}") { expect(sees_cal_1_card).to be true }
+
+                    # FinAid Messages (legacy)
+                    @finances_page.fin_messages_heading_element.when_visible timeout
+                    if @my_fin_aid_api.all_activity.any?
+                      shows_finaid_msgs = @finances_page.fin_messages_list?
+                      it ("shows delegate UID #{uid} the MyFinAid messages card for UID #{student_uid}") { expect(shows_finaid_msgs).to be true }
                     end
-                  end
 
-                  # FinAid Messages (legacy)
-                  @finances_page.fin_messages_heading_element.when_visible timeout
-                  if @my_fin_aid_api.all_activity.any?
-                    shows_finaid_msgs = @finances_page.fin_messages_list?
-                    it "shows delegate UID #{uid} the MyFinAid messages card for UID #{student_uid}" do
-                      expect(shows_finaid_msgs).to be true
+                    # Financial Resources links
+                    @finances_page.fin_resources_list_element.when_visible timeout
+                    shows_fin_resources = @finances_page.fin_resources_list?
+                    it ("shows delegate UID #{uid} Financial Resources link for UID #{student_uid}") { expect(shows_fin_resources).to be true }
+
+                    # Financial Aid (CS)
+                    unless @cs_fin_aid_years_api.feed.nil?
+                      if @cs_fin_aid_years_api.fin_aid_years.any?
+                        @finances_page.finaid_content_element.when_visible timeout
+                        if @cs_fin_aid_years_api.t_and_c_approval @cs_fin_aid_years_api.fin_aid_years.last
+                          # TODO - Finances - FinAid - SIS - sees all if "finances" but no CS links
+                          it "shows delegate UID #{uid} Financial Aid info for UID #{student_uid}"
+                        end
+                      end
                     end
-                  end
 
-                  # Financial Resources links
-                  @finances_page.fin_resources_list_element.when_visible timeout
-                  shows_fin_resources = @finances_page.fin_resources_list?
-                  it "shows delegate UID #{uid} Financial Resources link for UID #{student_uid}" do
-                    expect(shows_fin_resources).to be true
-                  end
+                    # Billing - Detail
 
-                  # Financial Aid (CS)
-                  if @cs_fin_aid_years_api.fin_aid_years.any?
-                    @finances_page.finaid_content_element.when_visible timeout
-                    if @cs_fin_aid_years_api.t_and_c_approval @cs_fin_aid_years_api.fin_aid_years.last
-                      # TODO - Finances - FinAid - SIS - sees all if "finances" but no CS links
-                      it "shows delegate UID #{uid} Financial Aid info for UID #{student_uid}"
-
+                    shows_details_summary = WebDriverUtils.verify_block do
+                      @finances_details_page.load_page
+                      @finances_details_page.account_balance_element_element.when_visible timeout
                     end
+                    it ("shows delegate UID #{uid} the billing summary on the Details page for UID #{student_uid}") { expect(shows_details_summary).to be true }
+
+                    shows_transactions = @finances_details_page.transaction_table?
+                    it ("shows delegate UID #{uid} the list of transactions on the Details page for UID #{student_uid}") { expect(shows_transactions).to be true }
+
+                  else
+
+                    # My Finances - hidden
+
+                    shows_finances_link = @finances_page.my_finances_link?
+                    it ("shows delegate UID #{uid} no My Finances link for UID #{student_uid}") { expect(shows_finances_link).to be false }
+
+                    blocks_finances = WebDriverUtils.verify_block do
+                      @finances_page.load_page
+                      @finances_page.not_found_element.when_present timeout
+                    end
+                    it ("prevents delegate UID #{uid} from hitting the Finances page for UID #{student_uid} directly") { expect(blocks_finances).to be true }
+
                   end
 
-                  # Billing - Detail
-                  @finances_details_page.load_page
-                  @finances_details_page.billing_summary_spinner_element.when_not_visible timeout
+                  # My Dashboard - always hidden
 
-                  sees_details_summary = @finances_details_page.account_balance_element?
-                  it "shows delegate UID #{uid} the billing summary on the Details page for UID #{student_uid}" do
-                    expect(sees_details_summary).to be true
+                  shows_dashboard_link = @finances_page.my_dashboard_link?
+                  it ("shows delegate UID #{uid} no My Dashboard link for UID #{student_uid}") { expect(shows_dashboard_link).to be false }
+
+                  blocks_dashboard = WebDriverUtils.verify_block do
+                    @dashboard_page.load_page
+                    @dashboard_page.not_found_element.when_present timeout
                   end
-                  sees_transactions = @finances_details_page.transaction_table?
-                  it "shows delegate UID #{uid} the list of transactions on the Details page for UID #{student_uid}" do
-                    expect(sees_transactions).to be true
+                  it ("prevents delegate UID #{uid} from hitting the Dashboard for UID #{student_uid} directly") { expect(blocks_dashboard).to be true }
+
+                  # My Campus
+
+                  sees_campus_links = WebDriverUtils.verify_block do
+                    @campus_page.load_page
+                    @campus_page.links_list_element.when_visible timeout
                   end
+                  it ("shows delegate UID #{uid} My Campus links for UID #{student_uid}") { expect(sees_campus_links).to be true }
+
+                  # bConnected badges
+
+                  shows_bmail = @campus_page.email_badge?
+                  it ("shows delegate UID #{uid} no bConnected email for UID #{student_uid}") { expect(shows_bmail).to be false }
+
+                  shows_bcal = @campus_page.calendar_badge?
+                  it ("shows delegate UID #{uid} no bConnected invites for UID #{student_uid}") { expect(shows_bcal).to be false }
+
+                  shows_bdrive = @campus_page.drive_badge?
+                  it ("shows delegate UID #{uid} no bConnected documents for UID #{student_uid}") { expect(shows_bdrive).to be false }
+
+                  # Profile
+
+                  shows_profile_popover = @campus_page.profile_icon?
+                  it ("shows delegate UID #{uid} the Profile popover for UID #{student_uid}") { expect(shows_profile_popover).to be true }
+
+                  shows_profile_link = @campus_page.profile_link?
+                  it ("shows delegate UID #{uid} no Profile link for UID #{student_uid}") { expect(shows_profile_link).to be false }
+
+                  blocks_basic_info = WebDriverUtils.verify_block do
+                    @profile_basic.load_page
+                    @profile_basic.not_found_element.when_present timeout
+                  end
+                  it ("prevents delegate UID #{uid} from hitting the Profile basic info page for UID #{student_uid}") { expect(blocks_basic_info).to be true }
+
+                  blocks_contact_info = WebDriverUtils.verify_block do
+                    @profile_contact.load_page
+                    @profile_contact.not_found_element.when_present timeout
+                  end
+                  it ("prevents delegate UID #{uid} from hitting the Profile contact info page for UID #{student_uid}") { expect(blocks_contact_info).to be true }
+
+
+                  blocks_demographics = WebDriverUtils.verify_block do
+                    @profile_demographic.load_page
+                    @profile_demographic.not_found_element.when_present timeout
+                  end
+                  it ("prevents delegate UID #{uid} from hitting the Profile demographic info page for UID #{student_uid}") { expect(blocks_demographics).to be true }
+
+                  blocks_delegate_access = WebDriverUtils.verify_block do
+                    @profile_delegate.load_page
+                    @profile_delegate.not_found_element.when_present timeout
+                  end
+                  it ("prevents delegate UID #{uid} from hitting the Profile delegate access page for UID #{student_uid}") { expect(blocks_delegate_access).to be true }
+
+                  blocks_disclosure = WebDriverUtils.verify_block do
+                    @profile_disclosure.load_page
+                    @profile_disclosure.not_found_element.when_present timeout
+                  end
+                  it ("prevents delegate UID #{uid} from hitting the Profile info disclosure page for UID #{student_uid}") { expect(blocks_disclosure).to be true }
+
+                  blocks_title_iv = WebDriverUtils.verify_block do
+                    @profile_title_iv.load_page
+                    @profile_title_iv.not_found_element.when_present timeout
+                  end
+                  it ("prevents delegate UID #{uid} from hitting the Profile Title IV page for UID #{student_uid}") { expect(blocks_title_iv).to be true }
+
+                  blocks_bconnected = WebDriverUtils.verify_block do
+                    @profile_bconnected.load_page
+                    @profile_bconnected.not_found_element.when_present timeout
+                  end
+                  it ("prevents delegate UID #{uid} from hitting the Profile bConnected page for UID #{student_uid}") { expect(blocks_bconnected).to be true }
+
+                  # bCourses - site creation
+
+                  blocks_site_creation = WebDriverUtils.verify_block do
+                    @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/site_creation"
+                    wait.until { @driver.find_element(:xpath => '//h1[text()="Access Denied"]') }
+                  end
+                  it ("prevents UID #{uid} from reaching Canvas site creation for UID #{student_uid}") { expect(blocks_site_creation).to be true }
+
+                  # bCourses - course site creation
+
+                  blocks_create_course_site = WebDriverUtils.verify_block do
+                    @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/create_course_site"
+                    wait.until { @driver.find_element(:xpath => '//h1[text()="Unexpected Error"]') }
+                  end
+                  it ("prevents UID #{uid} from reaching Canvas create a course site for UID #{student_uid}") { expect(blocks_create_course_site).to be true }
+
+                  # bCourses - project site creation
+
+                  blocks_create_project_site = WebDriverUtils.verify_block do
+                    @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/create_project_site"
+                    wait.until { @driver.find_element(:xpath => '//h1[text()="Access Denied"]') }
+                  end
+                  it ("prevents UID #{uid} from reaching Canvas create a project site for UID #{student_uid}") { expect(blocks_create_project_site).to be true }
+
+                  # bCourses - user provisioning
+
+                  blocks_user_provision = WebDriverUtils.verify_block do
+                    @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/user_provision"
+                    wait.until { @driver.find_element(:xpath => '//h1[text()="Access Denied"]') }
+                  end
+                  it ("prevents UID #{uid} from reaching Canvas user provisioning for UID #{student_uid}") { expect(blocks_user_provision).to be true }
+
+                  # bCourses - add user to site
+
+                  # TODO - Canvas - find user to add
+
+                  # bCourses - view course captures
+
+                  # TODO - Canvas - webcasts
+
+                  # bCourses - manage official sections
+
+                  # TODO - Canvas - official sections
+
+                  # bCourses - view roster photos
+
+                  # TODO - Canvas - roster photos
+
+                  # bCourses - export E-Grades
+
+                  # TODO - Canvas - export E-Grades
+
+                  # OEC
+
+                  blocks_oec = WebDriverUtils.verify_block do
+                    @driver.get "#{WebDriverUtils.base_url}/oec"
+                    wait.until { @driver.find_element(:xpath => '//h1[text()="Access Denied"]') }
+                  end
+                  it ("prevents UID #{uid} from reaching OEC for UID #{student_uid}") { expect(blocks_oec).to be true }
+
+                  # CCAdmin
+
+                  blocks_ccadmin = WebDriverUtils.verify_block do
+                    @driver.get "#{WebDriverUtils.base_url}/ccadmin"
+                    wait.until { @cal_net_page.username? }
+                  end
+                  it ("prevents UID #{uid} from reaching CCAdmin for UID #{student_uid}") { expect(blocks_ccadmin).to be true }
 
                 end
-
-                # My Dashboard
-
-                has_dashboard = @finances_page.my_dashboard_link?
-                it "shows delegate UID #{uid} no My Dashboard link for UID #{student_uid}" do
-                  expect(has_dashboard).to be false
-                end
-
-                @dashboard_page.load_page
-                @dashboard_page.wait_until(timeout) { @dashboard_page.title == 'Error | CalCentral' }
-
-                hits_dashboard_404 = @dashboard_page.not_found?
-                it "prevents delegate UID #{uid} from the hitting the Dashboard for UID #{student_uid} directly" do
-                  expect(hits_dashboard_404).to be true
-                end
-
-                # My Campus
-
-                @campus_page.load_page
-                @campus_page.academic_heading_element.when_visible?
-
-                sees_campus_links = @campus_page.links_list?
-                it "shows delegate UID #{uid} My Campus links for UID #{student_uid}" do
-                  expect(sees_campus_links).to be true
-                end
-
-                # bConnected badges
-
-                @campus_page.click_email_badge
-                shows_bconnected = @campus_page.email_not_connected_heading_element.visible?
-                it "shows delegate UID #{uid} no bConnected email for UID #{student_uid}" do
-                  expect(shows_bconnected).to be false
-                end
-
-                # Profile
-
-                shows_profile_popover = @campus_page.profile_icon?
-                it "shows delegate UID #{uid} no Profile popover for UID #{student_uid}" do
-                  expect(shows_profile_popover).to be false
-                end
-
-                shows_profile_link = @campus_page.profile_link?
-                it "shows delegate UID #{uid} no Profile link for UID #{student_uid}" do
-                  expect(shows_profile_link).to be false
-                end
-
-                # Miscellaneous tools
-
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/site_creation"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_site_creation = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas site creation page for UID #{student_uid}" do
-                  expect(shows_site_creation).to be false
-                end
-
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/create_course_site"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_create_course_site = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas create a course site page for UID #{student_uid}" do
-                  expect(shows_create_course_site).to be false
-                end
-
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/create_project_site"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_create_project_site = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas create a project site page for UID #{student_uid}" do
-                  expect(shows_create_project_site).to be false
-                end
-
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/user_provision"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_user_provision = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas user provisioning page for UID #{student_uid}" do
-                  expect(shows_user_provision).to be false
-                end
-
-                # TODO - Canvas - find user to add
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/course_add_user"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_course_add_user = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas find a user to add page for UID #{student_uid}" do
-                  expect(shows_course_add_user).to be false
-                end
-
-                # TODO - Canvas - webcasts
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/course_mediacasts"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_mediacasts = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas course captures page for UID #{student_uid}" do
-                  expect(shows_mediacasts).to be false
-                end
-
-                # TODO - Canvas - official sections
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/course_manage_official_sections"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_official_sections = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas official sections page for UID #{student_uid}" do
-                  expect(shows_official_sections).to be false
-                end
-
-                # TODO - Canvas - roster photos
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/rosters"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_roster_photos = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas roster photos page for UID #{student_uid}" do
-                  expect(shows_roster_photos).to be false
-                end
-
-                # TODO - Canvas - export E-Grades
-                @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/course_grade_export"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_e_grades = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the Canvas E-Grades export page for UID #{student_uid}" do
-                  expect(shows_e_grades).to be false
-                end
-
-                @driver.get "#{WebDriverUtils.base_url}/oec"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_oec = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the OEC page for UID #{student_uid}" do
-                  expect(shows_oec).to be false
-                end
-
-                @driver.get "#{WebDriverUtils.base_url}/ccadmin"
-                wait.until { @driver.title == 'Error | CalCentral' }
-                shows_ccadmin = @campus_page.not_found?
-                it "prevents UID #{uid} from reaching the CCAdmin page for UID #{student_uid}" do
-                  expect(shows_ccadmin).to be false
-                end
-
               rescue => e
                 logger.error e.message + "\n" + e.backtrace.join("\n")
               end
             end
           else
-            # Verify Toolbox view if you have no students
+            # TODO Verify Toolbox view if you have no students
           end
         rescue => e
           logger.error e.message + "\n" + e.backtrace.join("\n")

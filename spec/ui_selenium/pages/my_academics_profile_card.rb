@@ -11,7 +11,7 @@ module CalCentralPages
     span(:gpa, :xpath => '//span[@data-ng-bind="gpaUnits.cumulativeGpaFloat"]')
     elements(:college, :div, :xpath => '//div[@data-ng-bind="college.college"]')
     elements(:major, :div, :xpath => '//div[@data-ng-bind="college.major"]')
-    td(:standing, :xpath => '//strong[@data-ng-bind="collegeAndLevel.standing"]')
+    td(:career, :xpath => '//strong[@data-ng-bind="career"]')
     td(:units, :xpath => '//strong[@data-ng-bind="gpaUnits.totalUnits"]')
     span(:level_label, :xpath => '//th[text()="Level"]/following-sibling::th/span')
     td(:level, :xpath => '//strong[@data-ng-bind="collegeAndLevel.level"]')

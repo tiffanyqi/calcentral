@@ -21,6 +21,7 @@ if ENV["UI_TEST"]
   require_relative '../ui_selenium/pages/my_dashboard_page'
   require_relative '../ui_selenium/pages/my_academics_page'
   require_relative '../ui_selenium/pages/my_academics_class_page'
+  require_relative '../ui_selenium/pages/my_academics_book_list_page'
   require_relative '../ui_selenium/pages/my_campus_page'
   require_relative '../ui_selenium/pages/my_finances_pages'
   require_relative '../ui_selenium/pages/my_finances_landing_page'

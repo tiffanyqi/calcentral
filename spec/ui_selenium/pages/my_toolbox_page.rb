@@ -66,19 +66,46 @@ module CalCentralPages
 
     # DELEGATED ACCESS
 
-    # TODO div(:delegate_msg_heading, :xpath => '//h3[text()="You are a Delegate"]')
-    # TODO div(:delegate_instructions, :xpath => '//div[contains(.,"")]')
-    # TODO button(:show_more, :xpath => '//button[contains(.,"Show More")]')
-    # TODO button(:show_less, :xpath => '//button[contains(.,"Show Less")]')
-    # TODO elements(:delegate_student, :button, :xpath => '//button[]')
-    # TODO elements(:academic_date, ?, ?)
-    # TODO link(:subscribe_to_calendar, :xpath => '//a[contains(.,"Subscribe to the Academic Calendar")]')
-    # TODO link(:grad_div_deadlines, :xpath => '//a[contains(.,"Graduate Division Degree Deadlines")]')
-    # TODO link(:cal_parents, :xpath => '//a[contains(.,"CalParents")]')
-    # TODO link(:academic_calendar, :xpath => '//a[contains(.,"Academic Calendar")]')
-    # TODO link(:news_center, :xpath => '//a[contains(.,"UC Berkeley NewsCenter")]')
-    # TODO link(:berkeley_news, :xpath => '//a[contains(.,"Berkeley in the News")]')
-    # TODO link(:daily_cal, :xpath => '//a[contains(.,"The Daily Californian")]')
+    div(:delegate_msg_heading, :xpath => '//h3[text()="You are a Delegate"]')
+    paragraph(:delegate_msg, :xpath => '//p[contains(.,"A student (your Delegator) has delegated privileges to you.")]')
+    button(:show_more, :xpath => '//button[contains(.,"Show more")]')
+    button(:show_less, :xpath => '//button[contains(.,"Show less")]')
+    paragraph(:delegate_msg_expanded, :xpath => '//p[contains(.,"To view information for a student")]')
+    elements(:delegate_student, :button, :xpath => '//span[@data-ng-bind="student.fullName"]/parent::button[@data-ng-if="student.delegateAccess && student.uid"]')
+    elements(:delegate_student_static, :div, :xpath => '//div[@data-ng-if="!student.delegateAccess || !student.uid"]')
+    link(:subscribe_to_calendar, :xpath => '//a[contains(.,"Subscribe to the Academic Calendar")]')
+    link(:grad_div_deadlines, :xpath => '//a[contains(.,"Graduate Division Degree Deadlines")]')
+    link(:cal_parents, :xpath => '//a[contains(.,"CalParents")]')
+    link(:important_dates, :xpath => '//a[contains(.,"Important Dates for Parents")]')
+    link(:visiting_campus, :xpath => '//a[contains(.,"Vising the Campus")]')
+    link(:jobs_and_careers, :xpath => '//a[contains(.,"Jobs & Careers")]')
+    link(:housing, :xpath => '//a[contains(.,"Housing")]')
+    link(:financial_info, :xpath => '//a[contains(.,"Financial Information")]')
+    link(:academics, :xpath => '//a[contains(@href,"http://calparents.berkeley.edu/academics/")]')
+    link(:academic_calendar, :xpath => '//a[contains(.,"Academic Calendar")]')
+    link(:news_center, :xpath => '//a[contains(.,"UC Berkeley NewsCenter")]')
+    link(:berkeley_news, :xpath => '//a[contains(.,"Berkeley in the News")]')
+    link(:daily_cal, :xpath => '//a[contains(.,"The Daily Californian")]')
+
+    def all_delegator_names
+      wait_until(WebDriverUtils.page_event_timeout) { delegate_student_elements.any? }
+      names = []
+      delegate_student_elements.each { |student| names << student.text }
+      delegate_student_static_elements.each { |student| names << student.text }
+      names.sort!
+    end
+
+    def delegator_link(name)
+      wait_until(WebDriverUtils.page_event_timeout) { delegate_student_elements.any? }
+      delegate_student_elements.find { |element| element.text.include? name }
+    end
+
+    def delegate_view_as(name)
+      # End any pre-existing view-as session before starting new one
+      delegate_stop_viewing
+      WebDriverUtils.wait_for_element_and_click delegator_link(name)
+      delegate_stop_viewing_as_element.when_visible WebDriverUtils.page_load_timeout
+    end
 
     def show_more
       WebDriverUtils.wait_for_element_and_click show_more_element

@@ -52,7 +52,7 @@ module CalCentralPages
       link(:cal_student_central_link, :xpath => '//div[@data-ng-controller="FinancesLinksController"]//a[contains(text(),"Cal Student Central")]')
 
       # FINANCIAL AID MESSAGES CARD
-      h2(:fin_messages_heading, :xpath => '//h2[text()="Financial Messages"]')
+      h2(:fin_messages_heading, :xpath => '//h2[text()="Financial Messages 2015-16"]')
       div(:no_messages, :xpath => '//span[contains(text(),"You have no notifications at this time.")]')
       unordered_list(:fin_messages_list, :xpath => '//ul[@class="cc-widget-activities-list"]')
       elements(:finaid_message, :list_item, :xpath => '//ul[@class="cc-widget-activities-list"]/li')

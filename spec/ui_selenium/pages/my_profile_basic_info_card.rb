@@ -19,6 +19,7 @@ module CalCentralPages
     div(:uid, :xpath => '//div[@data-ng-bind="api.user.profile.uid"]')
 
     def load_page
+      logger.debug 'Loading profile basic info page'
       navigate_to "#{WebDriverUtils.base_url}/profile/basic"
     end
 
