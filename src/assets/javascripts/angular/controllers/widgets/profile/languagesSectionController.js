@@ -8,7 +8,6 @@ var angular = require('angular');
  */
 angular.module('calcentral.controllers').controller('LanguagesSectionController', function(apiService, profileFactory, $scope) {
   angular.extend($scope, {
-    addingItem: false,
     currentObject: {},
     emptyObject: {},
     errorMessage: '',
@@ -82,7 +81,7 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
   };
 
   $scope.showAdd = function() {
-    apiService.profile.showAdd($scope, {});
+    apiService.profile.showAdd($scope, $scope.emptyObject);
   };
 
   $scope.showEdit = function(item) {
@@ -170,8 +169,8 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
   var parsePerson = function(data) {
     var languages = parseLanguages(_.get(data, 'data.feed.student.languages'));
 
-    languages = _.sortBy(languages, function(o) {
-      return o.name;
+    languages = _.sortBy(languages, function(language) {
+      return language.name;
     });
 
     angular.extend($scope, {
