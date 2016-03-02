@@ -168,7 +168,7 @@ module User
 
     def has_financials_tab?(roles, view_as_privileges)
       return false if view_as_privileges && !view_as_privileges[:financial]
-      roles[:student] || roles[:exStudent]
+      roles[:student] || roles[:exStudent] || roles[:applicant]
     end
 
     def has_toolbox_tab?(policy, roles)
