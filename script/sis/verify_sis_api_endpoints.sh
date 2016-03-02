@@ -182,6 +182,7 @@ verify_sis_endpoints "Crosswalk" CROSSWALK_GENERAL
 
 CS_GENERAL=(
   "/UC_AA_ADVISING_RESOURCES.v1/UC_ADVISING_RESOURCES?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_CC_COMM_DB_URL.v1/dashboard/url/"
 )
 verify_sis_endpoints "Campus Solutions" CS_GENERAL
 
@@ -207,11 +208,6 @@ CS_SIR=(
   "/UC_OB_HIGHER_ONE_URL_GET.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 )
 verify_sis_endpoints "Campus Solutions" CS_SIR "cs_sir" "${yml_features_cs_sir}"
-
-CS_ARCHIVE_LINK=(
-  "/UC_CC_COMM_DB_URL.v1/dashboard/url/"
-)
-verify_sis_endpoints "Campus Solutions" CS_ARCHIVE_LINK "show_notifications_archive_link" "${yml_features_show_notifications_archive_link}"
 
 CS_TRANSITIVE_DEPENDENCIES=(
 	"/UcEmailAddressesRGet.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
