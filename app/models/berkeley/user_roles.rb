@@ -3,9 +3,9 @@ module Berkeley
     extend self
 
     def roles_from_affiliations(affiliations)
-      affiliations ||= ''
+      affiliations ||= []
       {
-        :student => affiliations.include?('STUDENT-TYPE-'),
+        :student => affiliations.index {|a| (a.start_with? 'STUDENT-TYPE-')}.present?,
         :registered => affiliations.include?('STUDENT-TYPE-REGISTERED'),
         :exStudent => affiliations.include?('STUDENT-STATUS-EXPIRED'),
         :faculty => affiliations.include?('EMPLOYEE-TYPE-ACADEMIC'),
@@ -15,40 +15,104 @@ module Berkeley
       }
     end
 
+    def roles_from_ldap_affiliations(ldap_record)
+      affiliations = ldap_record[:berkeleyeduaffiliations].to_a
+
+      # Conflicting combinations of the following affiliations can be resolved by the corresponding
+      # 'expdate' attribute. If the 'expdate' is in the past, then the expired '-STATUS-' affiliation
+      # wins; if the 'expdate' is in the future or unset, then the active '-TYPE-' affiliation wins.
+      {
+        'STUDENT' => 'stu',
+        'EMPLOYEE' => 'emp',
+        'AFFILIATE' => 'aff',
+        'GUEST' => 'aff'
+      }.each do |aff_substring, expdate_substring|
+        active_aff = affiliations.select {|aff| aff.start_with? "#{aff_substring}-TYPE-"}
+        expired_aff = affiliations.select {|aff| aff.start_with? "#{aff_substring}-STATUS-"}
+        if active_aff.present? && expired_aff.present?
+          exp_date = ldap_record["berkeleyedu#{expdate_substring}expdate".to_sym].first
+          if exp_date.blank? || DateTime.parse(exp_date) > DateTime.now
+            affiliations = affiliations - expired_aff
+          else
+            affiliations = affiliations -  active_aff
+          end
+        end
+      end
+
+      # TODO CONFIRM: The combination of 'STUDENT-TYPE-NOT REGISTERED' and 'STUDENT-TYPE-REGISTERED' should be treated as registered.
+      # (That's how Bear Facts seems to handle it, anyway.)
+
+      roles_from_affiliations affiliations
+    end
+
+    def roles_from_ldap_groups(ldap_record)
+      # TODO Fill in more of the map.
+      # These roles can be associated with membership in one or more standard CalGroups.
+      group_to_role = {
+        'cn=edu:berkeley:official:students:all,ou=campus groups,dc=berkeley,dc=edu' => :student,
+        'cn=edu:berkeley:official:students:graduate,ou=campus groups,dc=berkeley,dc=edu' => :graduate,
+        'cn=edu:berkeley:official:students:undergrad,ou=campus groups,dc=berkeley,dc=edu' => :undergrad
+      }
+
+      # TODO CONFIRM: There is no CalGroup membership marker for 'STUDENT-TYPE-NOT REGISTERED'.
+      # Active-but-not-registered students have exactly the same list of memberships as registered students.
+
+      # TODO CONFIRM: There is no unambiguous CalGroup marker for 'STUDENT-STATUS-EXPIRED'.
+      # There are LDAP-grace-period groups but nothing past that.
+
+      # TODO What is the difference between 'edu:berkeley:official:affiliates:concurrent' and 'edu:berkeley:official:students:concurrent'?
+
+      roles = {}
+      groups = ldap_record[:berkeleyeduismemberof] || []
+      group_to_role.each do |group, role|
+        if groups.include? group
+          roles[role] = true
+        end
+      end
+      roles
+    end
+
     def roles_from_campus_row(campus_row)
-      roles = roles_from_affiliations(campus_row['affiliations'])
+      affiliation_string = campus_row['affiliations'] || ''
+      roles = roles_from_affiliations(affiliation_string.split ',')
+      if roles[:student]
+        case campus_row['ug_grad_flag']
+          when 'U'
+            roles[:undergrad] = true
+          when 'G'
+            roles[:graduate] = true
+        end
+      end
       roles[:expiredAccount] = (campus_row['person_type'] == 'Z')
       roles
     end
 
     def roles_from_cs_affiliations(cs_affiliations)
       return {} unless cs_affiliations
-      result = {roles: {}}
+      result = {}
 
       # TODO We still need to cover staff, guests, concurrent-enrollment students and registration status.
       cs_affiliations.select { |a| a[:status][:code] == 'ACT' }.each do |active_affiliation|
         case active_affiliation[:type][:code]
           when 'ADMT_UX'
-            result[:roles][:applicant] = true
-          when 'APPLICANT'
-            result[:applicant_in_process] = true
+            result[:applicant] = true
           when 'GRADUATE'
-            result[:roles][:student] = true
-            result[:ug_grad_flag] = 'G'
+            result[:student] = true
+            result[:graduate] = 'G'
           when 'INSTRUCTOR'
-            result[:roles][:faculty] = true
+            result[:faculty] = true
           when 'ADVISOR'
-            result[:roles][:advisor] = true
+            result[:advisor] = true
           when 'STUDENT'
-            result[:roles][:student] = true
+            result[:student] = true
           when 'UNDERGRAD'
-            result[:roles][:student] = true
-            result[:ug_grad_flag] = 'U'
+            result[:student] = true
+            result[:undergrad] = 'U'
         end
       end
       cs_affiliations.select { |a| a[:status][:code] == 'INA' }.each do |inactive_affiliation|
-        if !result[:roles][:student] && %w(GRADUATE STUDENT UNDERGRAD).include?(inactive_affiliation[:type][:code])
-          result[:roles][:exStudent] = true
+        if !result[:student] && %w(GRADUATE STUDENT UNDERGRAD).include?(inactive_affiliation[:type][:code])
+          result[:exStudent] = true
         end
       end
       result

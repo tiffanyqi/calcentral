@@ -15,10 +15,9 @@ module CalnetLdap
 
     def get_feed_internal
       if (result = CalnetLdap::Client.new.search_by_uid @uid)
-        if result[:berkeleyeduaffiliations].present?
-          roles = Berkeley::UserRoles.roles_from_affiliations(result[:berkeleyeduaffiliations].join ',')
-          filter_student_status_conflicts roles
-        end
+        affiliation_roles = Berkeley::UserRoles.roles_from_ldap_affiliations(result)
+        group_roles = Berkeley::UserRoles.roles_from_ldap_groups(result)
+        roles = group_roles.merge affiliation_roles
         {
           email_address: result[:mail].try(:first),
           first_name: result[:givenname].try(:first),
@@ -31,12 +30,6 @@ module CalnetLdap
         }
       else
         {}
-      end
-    end
-
-    def filter_student_status_conflicts(roles)
-      if roles[:exStudent] && roles[:student]
-        [:exStudent, :registered, :student].each { |key| roles.delete key }
       end
     end
   end

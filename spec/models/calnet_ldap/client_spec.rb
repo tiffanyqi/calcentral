@@ -26,6 +26,8 @@ describe CalnetLdap::Client do
     expect(results[0][:cn]).to be_an_instance_of Net::BER::BerIdentifiedArray
     expect(results[0][:sn]).to be_an_instance_of Net::BER::BerIdentifiedArray
     expect(results[0][:mail]).to be_an_instance_of Net::BER::BerIdentifiedArray
+    expect(results[0][:berkeleyeduaffiliations]).to be_an_instance_of Net::BER::BerIdentifiedArray
+    expect(results[0][:berkeleyeduismemberof]).to be_an_instance_of Net::BER::BerIdentifiedArray
     expect(results[0][:berkeleyedutestidflag].count).to eq 1
     expect(results[0][:givenname].count).to eq 1
     expect(results[0][:displayname].count).to eq 1

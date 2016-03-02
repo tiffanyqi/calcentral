@@ -6,12 +6,8 @@ describe CampusOracle::UserAttributes do
 
     shared_examples_for 'a parser for roles' do |expected_roles|
       it 'only sets expected roles' do
-        expected_roles.each do |role|
-          expect(subject[:roles][role]).to be_truthy
-        end
-        subject[:roles].each do |role, value|
-          expect(value).to be_falsey unless expected_roles.include?(role)
-        end
+        set_roles = subject[:roles].select {|key, val| val}.keys.sort
+        expect(set_roles).to eq expected_roles.sort
       end
     end
 
@@ -56,7 +52,7 @@ describe CampusOracle::UserAttributes do
       describe 'roles' do
         context 'student' do
           let(:uid) {300846}
-          it_behaves_like 'a parser for roles', [:student, :registered]
+          it_behaves_like 'a parser for roles', [:student, :registered, :undergrad]
         end
         context 'staff member and ex-student' do
           let(:uid) {238382}
@@ -76,7 +72,7 @@ describe CampusOracle::UserAttributes do
         end
         context 'user with expired CalNet account' do
           let(:uid) {6188989}
-          it_behaves_like 'a parser for roles', [:student, :registered, :expiredAccount]
+          it_behaves_like 'a parser for roles', [:student, :registered, :expiredAccount, :graduate]
         end
       end
     end

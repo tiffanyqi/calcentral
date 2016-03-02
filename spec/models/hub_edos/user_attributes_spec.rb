@@ -43,12 +43,11 @@ describe HubEdos::UserAttributes do
   it 'delegates role parsing' do
     expect_any_instance_of(Berkeley::UserRoles).to receive(:roles_from_cs_affiliations).and_return(
       {
-        roles: {chancellor: true},
-        ug_grad_flag: 'G'
+        chancellor: true,
+        graduate: true
       }
     )
-    expect(subject[:roles]).to eq({chancellor: true})
-    expect(subject[:ug_grad_flag]).to eq 'G'
+    expect(subject[:roles]).to eq({chancellor: true, graduate: true})
   end
 
   describe '#has_role' do
