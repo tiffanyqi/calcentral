@@ -46,7 +46,7 @@ describe CalnetLdap::UserAttributes do
         }
       end
       it 'returns empty roles hash' do
-        expect(feed[:roles]).to be_blank
+        expect(feed[:roles].select {|role, val| val}).to be_blank
       end
     end
 

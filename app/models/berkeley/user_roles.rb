@@ -46,10 +46,30 @@ module Berkeley
     end
 
     def roles_from_ldap_groups(ldap_record)
-      # Most roles can be associated with membership in one or more standard CalGroups.
-      # TODO CONFIRM: There is no CalGroup membership marker for the 'STUDENT-TYPE-NOT REGISTERED' affiliation.
+      # TODO Fill in more of the map.
+      # These roles can be associated with membership in one or more standard CalGroups.
+      group_to_role = {
+        'cn=edu:berkeley:official:students:all,ou=campus groups,dc=berkeley,dc=edu' => :student,
+        'cn=edu:berkeley:official:students:graduate,ou=campus groups,dc=berkeley,dc=edu' => :graduate,
+        'cn=edu:berkeley:official:students:undergrad,ou=campus groups,dc=berkeley,dc=edu' => :undergrad
+      }
+
+      # TODO CONFIRM: There is no CalGroup membership marker for 'STUDENT-TYPE-NOT REGISTERED'.
       # Active-but-not-registered students have exactly the same list of memberships as registered students.
-      {}
+
+      # TODO CONFIRM: There is no unambiguous CalGroup marker for 'STUDENT-STATUS-EXPIRED'.
+      # There are LDAP-grace-period groups but nothing past that.
+
+      # TODO What is the difference between 'edu:berkeley:official:affiliates:concurrent' and 'edu:berkeley:official:students:concurrent'?
+
+      roles = {}
+      groups = ldap_record[:berkeleyeduismemberof] || []
+      group_to_role.each do |group, role|
+        if groups.include? group
+          roles[role] = true
+        end
+      end
+      roles
     end
 
     def roles_from_campus_row(campus_row)

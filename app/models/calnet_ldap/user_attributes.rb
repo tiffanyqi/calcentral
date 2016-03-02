@@ -15,9 +15,9 @@ module CalnetLdap
 
     def get_feed_internal
       if (result = CalnetLdap::Client.new.search_by_uid @uid)
-        if result[:berkeleyeduaffiliations].present?
-          roles = Berkeley::UserRoles.roles_from_ldap_affiliations(result)
-        end
+        affiliation_roles = Berkeley::UserRoles.roles_from_ldap_affiliations(result)
+        group_roles = Berkeley::UserRoles.roles_from_ldap_groups(result)
+        roles = group_roles.merge affiliation_roles
         {
           email_address: result[:mail].try(:first),
           first_name: result[:givenname].try(:first),

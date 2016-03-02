@@ -358,7 +358,7 @@ describe Berkeley::UserRoles do
       let(:student_exp_dates) { [DateTime.now.advance(hours: 1).utc.strftime('%Y%m%d%H%M%SZ')] }
       it_behaves_like 'a parser for roles', [:student, :registered]
     end
-    context 'returned ex-student with unspecfied expiration' do
+    context 'returned ex-student with unspecified expiration' do
       let(:affiliations) { ['STUDENT-STATUS-EXPIRED', 'STUDENT-TYPE-REGISTERED'] }
       it_behaves_like 'a parser for roles', [:student, :registered]
     end
@@ -385,6 +385,30 @@ describe Berkeley::UserRoles do
   end
 
   describe '#roles_from_ldap_groups' do
+    let(:ldap_record) do
+      {
+        berkeleyeduismemberof: groups
+      }
+    end
+    subject { Berkeley::UserRoles.roles_from_ldap_groups(ldap_record) }
+    context 'current undergrad' do
+      let(:groups) do
+        [
+          'cn=edu:berkeley:official:students:all,ou=campus groups,dc=berkeley,dc=edu',
+          'cn=edu:berkeley:official:students:undergrad,ou=campus groups,dc=berkeley,dc=edu'
+        ]
+      end
+      it_behaves_like 'a parser for roles', [:student, :undergrad]
+    end
+    context 'current graduate student' do
+      let(:groups) do
+        [
+          'cn=edu:berkeley:official:students:all,ou=campus groups,dc=berkeley,dc=edu',
+          'cn=edu:berkeley:official:students:graduate,ou=campus groups,dc=berkeley,dc=edu'
+        ]
+      end
+      it_behaves_like 'a parser for roles', [:student, :graduate]
+    end
 
   end
 
