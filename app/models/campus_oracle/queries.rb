@@ -188,11 +188,8 @@ module CampusOracle
       use_pooled_connection {
         sql = <<-SQL
       select roster.student_ldap_uid ldap_uid, roster.enroll_status, trim(roster.pnp_flag) as pnp_flag,
-        trim(person.first_name) as first_name, trim(person.last_name) as last_name, person.student_email_address, person.student_id, person.affiliations,
-        ph.bytes photo_bytes
+        trim(person.first_name) as first_name, trim(person.last_name) as last_name, person.student_email_address, person.student_id, person.affiliations
       from calcentral_class_roster_vw roster, calcentral_student_info_vw person
-      left join  calcentral_student_photo_vw ph
-        on ph.student_ldap_uid = person.student_ldap_uid
       where roster.term_yr = #{term_yr.to_i}
         and roster.term_cd = #{connection.quote(term_cd)}
         and roster.course_cntl_num = #{ccn.to_i}
@@ -366,19 +363,6 @@ module CampusOracle
         order by bci.instructor_func
         SQL
         result = connection.select_all(sql)
-      }
-      stringify_ints! result
-    end
-
-    def self.get_photo(ldap_uid)
-      result = {}
-      use_pooled_connection {
-        sql = <<-SQL
-        select ph.bytes, ph.photo
-        from calcentral_student_photo_vw ph
-        where ph.student_ldap_uid=#{ldap_uid.to_i}
-        SQL
-        result = connection.select_one(sql)
       }
       stringify_ints! result
     end

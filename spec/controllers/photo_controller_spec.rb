@@ -5,7 +5,7 @@ describe PhotoController do
   context 'when a user is authenticated' do
     before do
       session['user_id'] = random_id
-      allow(CampusOracle::Queries).to receive(:get_photo).and_return(test_photo_object)
+      allow_any_instance_of(Cal1card::Photo).to receive(:get_feed).and_return(test_photo_object)
     end
 
     shared_examples 'a controller with no photo' do
@@ -25,12 +25,12 @@ describe PhotoController do
     end
 
     context 'when user has no photo' do
-      let(:test_photo_object) { nil }
+      let(:test_photo_object) { {} }
       it_should_behave_like 'a controller with no photo'
     end
 
     context 'when user has photo' do
-      let(:test_photo_object) { {'photo' => 'photo_binary_content'} }
+      let(:test_photo_object) { {photo: 'photo_binary_content'} }
       it_should_behave_like 'a controller with a photo'
       context 'delegate view' do
         before do

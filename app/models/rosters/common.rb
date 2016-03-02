@@ -46,18 +46,14 @@ module Rosters
     end
 
     def photo_data_or_file(student_id)
-      roster = get_feed
-      return nil if roster.nil?
-      match = roster[:students].index { |stu| stu[:id].to_s == student_id.to_s }
-      if (match)
-        student = roster[:students][match]
-        if student[:enroll_status] == 'E'
-          if (photo_row = CampusOracle::Queries.get_photo(student[:login_id]))
-            return {
-              size: photo_row['bytes'],
-              data: photo_row['photo']
-            }
-          end
+      return nil unless roster = get_feed
+      if (student = roster[:students].find { |stu| stu[:id].to_s == student_id.to_s }) && student[:enroll_status] == 'E'
+        photo_feed = Cal1card::Photo.new(student[:login_id]).get_feed
+        if photo_feed[:photo]
+          {
+            size: photo_feed[:length],
+            data: photo_feed[:photo]
+          }
         end
       end
     end

@@ -79,6 +79,10 @@ describe User::Api do
       }
       User::Api.from_session(session).get_feed
     }
+    before do
+      allow(Cal1card::Photo).to receive(:new).and_call_original
+      allow(Cal1card::Photo).to receive(:new).with(uid).and_return double(get_feed: {})
+    end
     context 'has no students' do
       context 'never nominated as delegate' do
         let(:response) { nil }

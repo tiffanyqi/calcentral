@@ -58,8 +58,7 @@ module Rosters
                 last_name: enr['last_name'],
                 email: enr['student_email_address'],
                 enroll_status: enr['enroll_status'],
-                section_ccns: [section[:ccn]],
-                photo_bytes: enr['photo_bytes']
+                section_ccns: [section[:ccn]]
               }
             end
           end
@@ -79,7 +78,7 @@ module Rosters
         campus_student[:section_ccns].each do |section_ccn|
           campus_student[:sections].push(sections_index[section_ccn])
         end
-        if campus_student[:enroll_status] == 'E' && campus_student[:photo_bytes]
+        if campus_student[:enroll_status] == 'E'
           campus_student[:photo] = "/campus/#{@campus_course_id}/photo/#{id}"
         end
         feed[:students] << campus_student

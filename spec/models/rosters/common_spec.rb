@@ -25,7 +25,6 @@ describe Rosters::Common do
             {:ccn => section_id_one, :name => 'COMPSCI 9G SLF 001'}
           ],
           :photo => '/canvas/1/photo/9016',
-          :photo_bytes => '8203.0',
           :profile_url => 'http://example.com/courses/733/users/9016',
         },
         {
@@ -41,7 +40,6 @@ describe Rosters::Common do
             {:ccn => section_id_two, :name => 'COMPSCI 9G SLF 002'}
           ],
           :photo => '/canvas/1/photo/9017',
-          :photo_bytes => '9203.1',
           :profile_url => 'http://example.com/courses/733/users/9017',
         },
         {
@@ -56,7 +54,6 @@ describe Rosters::Common do
             {:ccn => section_id_three, :name => 'COMPSCI 9G SLF 003'}
           ],
           :photo => '/canvas/1/photo/9018',
-          :photo_bytes => '7802.0',
           :profile_url => 'http://example.com/courses/733/users/9018',
         },
       ]
