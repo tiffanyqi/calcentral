@@ -352,6 +352,11 @@ describe User::Api do
       let(:edo_attributes) { {roles: { student: true } } }
       it { should be true }
     end
+    context 'applicant' do
+      let(:ldap_attributes) { {roles: { :student => false, :exStudent => false, :faculty => false, :staff => false }} }
+      let(:edo_attributes) { {roles: { applicant: true } } }
+      it { should be true }
+    end
     context 'staff' do
       let(:ldap_attributes) { {roles: { :student => false, :exStudent => false, :faculty => false, :staff => true }} }
       let(:edo_attributes) { {roles: {}} }
