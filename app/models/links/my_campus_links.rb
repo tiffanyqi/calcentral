@@ -74,16 +74,9 @@ module Links
 
     # Given a link, provide the client side with a list of the user roles who would be interested in it.
     def get_roles_for_link(link)
-      roles = {"student" => false, "staff" => false, "faculty" => false, "exStudent" => false}
+      roles = {'student' => false, 'applicant' => false, 'staff' => false, 'faculty' => false, 'exStudent' => false}
       link.user_roles.each do |linkrole|
-        # We haven't yet curated a list of links specifically for ex-students. The portal instead shows
-        # ex-students all of the links targeted at current students.
-        if linkrole.slug == "student"
-          roles["student"] = true
-          roles["exStudent"] = true
-        end
-        roles["staff"] = true if linkrole.slug == "staff"
-        roles["faculty"] = true if linkrole.slug == "faculty"
+        roles[linkrole.slug] = true
       end
       roles
     end

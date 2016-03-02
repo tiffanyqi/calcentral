@@ -16,6 +16,7 @@ module Links
 
     def self.load_links!(filename)
       student = Links::UserRole.find_or_create_by(name: 'Student') {|ur| ur.slug = 'student'}
+      applicant = Links::UserRole.find_or_create_by(name: 'Applicant') {|ur| ur.slug = 'applicant'}
       staff = Links::UserRole.find_or_create_by(name: 'Staff') {|ur| ur.slug = 'staff'}
       faculty = Links::UserRole.find_or_create_by(name: 'Faculty') {|ur| ur.slug = 'faculty'}
 
@@ -55,6 +56,9 @@ module Links
           if link_node["roles"]
             if link_node["roles"]["student"]
               roles << student.id
+            end
+            if link_node["roles"]["applicant"]
+              roles << applicant.id
             end
             if link_node["roles"]["faculty"]
               roles << faculty.id
