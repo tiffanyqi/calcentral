@@ -279,11 +279,11 @@ body {
         margin-right: 6px;
         width: 25px;
       }
-      .cc-popover-gear-round-profile-has-photo {
-        background: url('/api/my/photo') center center/cover no-repeat;
+      .cc-popover-gear-round-profile-bear-photo {
+        background: url('../images/svg/bear-profile.svg') center center / cover no-repeat;
       }
-      .cc-popover-gear-round-profile-no-photo {
-        background: $cc-color-lighter-medium-grey;
+      .cc-popover-gear-round-profile-has-photo {
+        background: url('/api/my/photo') center center / cover no-repeat;
       }
       .cc-popover-gear-first-name {
         font-size: 12px;
