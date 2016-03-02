@@ -7,6 +7,12 @@
   .cc-page-widget-profile-note {
     padding: 0 10px 10px;
   }
+  .cc-page-widget-profile-margin-top {
+    margin-top: 5px;
+  }
+  .cc-page-widget-profile-margin-bottom {
+    margin-bottom: 5px;
+  }
   .cc-page-widget-profile-sections {
     .cc-page-widget-profile-section-info {
       border-top: 0;
@@ -95,9 +101,6 @@
           margin-bottom: 5px;
         }
       }
-    }
-    .cc-page-widget-profile-section-content-item-margin-top {
-      margin-top: 5px;
     }
     .cc-page-widget-profile-section-not-available {
       font-style: italic;
