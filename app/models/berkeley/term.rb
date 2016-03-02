@@ -1,6 +1,6 @@
 module Berkeley
   class Term
-    include ActiveAttr::Model, ClassLogger
+    include ActiveAttrModel, ClassLogger
     extend Cache::Cacheable
 
     attr_reader :code

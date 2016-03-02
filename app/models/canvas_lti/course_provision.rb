@@ -1,6 +1,6 @@
 module CanvasLti
   class CourseProvision
-    include ActiveAttr::Model, Berkeley::CourseCodes, ClassLogger
+    include ActiveAttrModel, Berkeley::CourseCodes, ClassLogger
     extend Cache::Cacheable
 
     # Admins cannot rely on CalCentral "Act As" in production because the instructor may not yet have logged into Calcentral.

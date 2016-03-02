@@ -1,5 +1,5 @@
 class UserSpecificModel
-  include ActiveAttr::Model
+  include ActiveAttrModel
   include ClassLogger
   attr_reader :authentication_state
 
