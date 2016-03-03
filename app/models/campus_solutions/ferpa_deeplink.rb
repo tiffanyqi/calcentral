@@ -1,6 +1,9 @@
 module CampusSolutions
-  class FerpaDeeplink < Proxy
+  class FerpaDeeplink < GlobalCachedProxy
 
+    # A working CS EmplID is needed to obtain the magic URL, but the successfully-obtained URL is the same for
+    # every user.
+    # TODO Ask the API team to drop the EmplID requirement.
     include CampusSolutionsIdRequired
 
     def initialize(options = {})

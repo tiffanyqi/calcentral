@@ -1,5 +1,5 @@
 module CampusSolutions
-  class AddressLabel < CachedProxy
+  class AddressLabel < GlobalCachedProxy
 
     include ProfileFeatureFlagged
 
