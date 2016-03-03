@@ -6,7 +6,7 @@ var angular = require('angular');
 /**
  * Language section controller
  */
-angular.module('calcentral.controllers').controller('LanguagesSectionController', function(apiService, profileFactory, $scope, $q) {
+angular.module('calcentral.controllers').controller('LanguagesSectionController', function(apiService, profileFactory, $scope) {
   angular.extend($scope, {
     addingItem: false,
     currentObject: {},
@@ -148,9 +148,7 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
     languages = _.map(languages, function(language) {
       if (!language.levels) {
         language.levels = _.filter(levelMapping, function(value, level) {
-          if (_.isBoolean(language[level])) {
-            return value;
-          }
+          return language[level] && value;
         });
       }
 
@@ -170,8 +168,11 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
   };
 
   var parsePerson = function(data) {
-    var person = data.data.feed.student;
-    var languages = parseLanguages(person.languages);
+    var languages = parseLanguages(_.get(data, 'data.feed.student.languages'));
+
+    languages = _.sortBy(languages, function(o) {
+      return o.name;
+    });
 
     angular.extend($scope, {
       items: {
@@ -212,32 +213,26 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
   };
 
   var fetchLanguageCodes = function() {
-    return profileFactory.getLanguageCodes().then(parseLanguageCodes);
+    return profileFactory.getLanguageCodes();
   };
 
-  var getPerson = profileFactory.getPerson({
-    refreshCache: true
-  }).then(parsePerson);
-
-  var loadComplete = function() {
-    $scope.isLoading = false;
+  var getPerson = function() {
+    return profileFactory.getPerson({
+      refreshCache: true
+    });
   };
 
-  var loadInformation = function(options) {
+  var loadInformation = function() {
     $scope.isLoading = true;
 
-    if (_.get(options, 'fetchCodes') === true) {
-      // This branch is visited on start. Fetching language codes is a one-time
-      // operation, as these are used for populating the select element with
-      // language choices.
-      fetchLanguageCodes().then(getPerson).then(loadComplete);
-    } else {
-      // This branch is visited on updates.
-      $q.all(getPerson).then(loadComplete);
-    }
+    fetchLanguageCodes()
+    .then(parseLanguageCodes)
+    .then(getPerson)
+    .then(parsePerson)
+    .then(function() {
+      $scope.isLoading = false;
+    });
   };
 
-  loadInformation({
-    fetchCodes: true
-  });
+  loadInformation();
 });
