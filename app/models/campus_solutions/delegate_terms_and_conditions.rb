@@ -1,5 +1,5 @@
 module CampusSolutions
-  class DelegateTermsAndConditions < CachedProxy
+  class DelegateTermsAndConditions < GlobalCachedProxy
 
     include DelegatedAccessFeatureFlagged
 

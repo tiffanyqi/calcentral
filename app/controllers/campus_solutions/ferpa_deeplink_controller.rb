@@ -2,7 +2,7 @@ module CampusSolutions
   class FerpaDeeplinkController < CampusSolutionsController
 
     def get
-      render json: CampusSolutions::MyFerpaDeeplink.from_session(session).get_feed_as_json
+      json_passthrough CampusSolutions::FerpaDeeplink, user_id: session['user_id']
     end
 
   end

@@ -1,5 +1,5 @@
 module CampusSolutions
-  class LanguageCode < CachedProxy
+  class LanguageCode < GlobalCachedProxy
 
     include ProfileFeatureFlagged
 
