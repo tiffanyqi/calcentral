@@ -11,48 +11,57 @@
       Multi-year academic planner is unavailable at this time.
     </div>
 
-    <div data-ng-if="enrollment.academicPlan.updateLink && !enrollmentTerm.academicPlan.classes.length">
-      Build your multi-year
-      <a data-cc-campus-solutions-link-directive="enrollment.academicPlan.updateLink.url"
-        data-cc-campus-solutions-link-directive-enabled="{{enrollment.academicPlan.updateLink.isCsLink}}"
-        data-cc-campus-solutions-link-directive-text="backToText"
-        data-cc-campus-solutions-link-directive-cache="'enrollment'"
-        data-cc-outbound-enabled="{{!enrollment.academicPlan.updateLink.isCsLink}}">
-        academic plan
-      </a>
-    </div>
+    <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks">
+      <div data-ng-if="enrollment.academicPlan.updateLink && !enrollmentTerm.academicPlan.classes.length">
+        Build your multi-year
+        <a data-cc-campus-solutions-link-directive="enrollment.academicPlan.updateLink.url"
+          data-cc-campus-solutions-link-directive-enabled="{{enrollment.academicPlan.updateLink.isCsLink}}"
+          data-cc-campus-solutions-link-directive-text="backToText"
+          data-cc-campus-solutions-link-directive-cache="'enrollment'"
+          data-cc-outbound-enabled="{{!enrollment.academicPlan.updateLink.isCsLink}}">
+          academic plan
+        </a>
+      </div>
 
-    <div data-ng-if="enrollment.academicPlan.updateLink && enrollmentTerm.academicPlan.classes.length">
-      <div class="cc-flex cc-flex-space-between">
-        <strong>Current Academic Plan for <span data-ng-bind="enrollmentTerm.termDescr"></span></strong>
+      <div data-ng-if="enrollment.academicPlan.updateLink && enrollmentTerm.academicPlan.classes.length">
+        <div class="cc-flex cc-flex-space-between">
+          <div>
+            <strong>Current Academic Plan for <span data-ng-bind="enrollmentTerm.termDescr"></span></strong>
+          </div>
 
-        <div>
-          <a data-cc-campus-solutions-link-directive="enrollment.academicPlan.updateLink.url"
-            data-cc-campus-solutions-link-directive-enabled="{{enrollment.academicPlan.updateLink.isCsLink}}"
-            data-cc-campus-solutions-link-directive-text="backToText"
-            data-cc-campus-solutions-link-directive-cache="'enrollment'"
-            data-cc-outbound-enabled="{{!enrollment.academicPlan.updateLink.isCsLink}}">
-            Update
-          </a>
+          <div>
+            <a data-cc-campus-solutions-link-directive="enrollment.academicPlan.updateLink.url"
+              data-cc-campus-solutions-link-directive-enabled="{{enrollment.academicPlan.updateLink.isCsLink}}"
+              data-cc-campus-solutions-link-directive-text="backToText"
+              data-cc-campus-solutions-link-directive-cache="'enrollment'"
+              data-cc-outbound-enabled="{{!enrollment.academicPlan.updateLink.isCsLink}}">
+              Update
+            </a>
+          </div>
+        </div>
+
+        <div class="cc-table cc-enrollment-card-margin-top">
+          <table>
+            <thead>
+              <th scope="col">Class</th>
+              <th scope="col">Title</th>
+              <th scope="col" class="cc-table-right">Units</th>
+            </thead>
+            <tbody>
+              <tr data-ng-repeat="class in enrollmentTerm.academicPlan.classes">
+                <td data-ng-bind="class.subjectCatalog"></td>
+                <td data-ng-bind="class.title"></td>
+                <td data-ng-bind="class.units" class="cc-table-right"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
+    </div>
 
-      <div class="cc-table cc-enrollment-card-margin-top">
-        <table>
-          <thead>
-            <th scope="col">Class</th>
-            <th scope="col">Title</th>
-            <th scope="col" class="cc-table-right">Units</th>
-          </thead>
-          <tbody>
-            <tr data-ng-repeat="class in enrollmentTerm.academicPlan.classes">
-              <td data-ng-bind="class.subjectCatalog"></td>
-              <td data-ng-bind="class.title"></td>
-              <td data-ng-bind="class.units" class="cc-table-right"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div
+      data-ng-if="!api.user.profile.actAsOptions.canSeeCSLinks"
+      data-ng-include="'widgets/enrollment/enrollment_hide_links.html'">
     </div>
   </div>
 </div>

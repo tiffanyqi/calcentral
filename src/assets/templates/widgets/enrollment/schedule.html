@@ -6,7 +6,7 @@
 ></div>
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
-  <div data-ng-if="enrollmentTerm.isClassScheduleAvailable">
+  <div data-ng-if="enrollmentTerm.isClassScheduleAvailable && api.user.profile.actAsOptions.canSeeCSLinks">
     <a
       data-cc-outbound-enabled="true"
       data-ng-href="/college_scheduler/{{enrollmentTerm.acadCareer}}/{{enrollmentTerm.term}}">
@@ -14,6 +14,12 @@
     </a>
     based on your scheduling needs.
   </div>
+
+  <div
+    data-ng-if="!api.user.profile.actAsOptions.canSeeCSLinks"
+    data-ng-include="'widgets/enrollment/enrollment_hide_links.html'">
+  </div>
+
   <div data-ng-if="!enrollmentTerm.isClassScheduleAvailable">
     Schedule of classes will be available soon. Please try again later.
   </div>
