@@ -125,21 +125,35 @@ describe Oec::PublishTask do
     context 'data with suffixed course IDs' do
       before do
         merged_course_confirmations_csv.concat(
-          '2015-B-34821_GSI,2015-B-34821_GSI,LGBT C146A LEC 001 REP SEXUALITY/LIT,,,LGBT,C146A,LEC,001,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,23,Y,LGBT,G,,01-26-2015,05-11-2015')
+          "2015-B-#{ccn}_GSI,2015-B-#{ccn}_GSI,LGBT C146A LEC 001 REP SEXUALITY/LIT,,,LGBT,C146A,LEC,001,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,23,Y,LGBT,G,,01-26-2015,05-11-2015")
         expect(Oec::Queries).to receive(:enrollments_for_cntl_nums)
-                                  .with(term_code, ['34821'])
-                                  .and_return student_ids.map { |id| {'course_id' => '2015-B-34821', 'ldap_uid' => id} }
+          .with(term_code, [ccn])
+          .and_return student_ids.map { |id| {'course_id' => "2015-B-#{ccn}", 'ldap_uid' => id} }
+        expect(Oec::Queries).to receive(:students_for_cntl_nums)
+          .with(term_code, array_including(ccn))
+          .and_return student_data_rows
       end
-
       let(:student_ids) { %w(1000 2000 3000) }
 
-      it 'should match appropriate data to suffixed CCN' do
-        task.run
-        expect(courses.find { |course| course['COURSE_ID'] == '2015-B-34821_GSI'}).to be_present
-        student_ids.each do |id|
-          expect(course_students.find { |course_student| course_student['COURSE_ID'] == '2015-B-34821_GSI' && course_student['LDAP_UID'] == id }).to be_present
+      shared_examples 'a smart suffix matcher' do
+        it 'should match appropriate data to suffixed CCN' do
+          task.run
+          expect(courses.find { |course| course['COURSE_ID'] == "2015-B-#{ccn}_GSI"}).to be_present
+          student_ids.each do |id|
+            pp course_students
+            expect(course_students.find { |course_student| course_student['COURSE_ID'] == "2015-B-#{ccn}_GSI" && course_student['LDAP_UID'] == id }).to be_present
+          end
+          expect(course_instructors.find { |course_instructor| course_instructor['COURSE_ID'] == "2015-B-#{ccn}_GSI" && course_instructor['LDAP_UID'] == '562283'}).to be_present
         end
-        expect(course_instructors.find { |course_instructor| course_instructor['COURSE_ID'] == '2015-B-34821_GSI' && course_instructor['LDAP_UID'] == '562283'}).to be_present
+      end
+
+      context 'data with suffixed course ID matching an ID without suffix' do
+        let(:ccn) { '34821' }
+        it_should_behave_like 'a smart suffix matcher'
+      end
+      context 'data with suffixed course ID matching no ID without suffix' do
+        let(:ccn) { '50000' }
+        it_should_behave_like 'a smart suffix matcher'
       end
     end
   end
