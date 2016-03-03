@@ -27,6 +27,12 @@ module MyAcademics
       }
     end
 
+    def parse_hub_academic_status(response)
+      feed = response.delete :feed
+      status = feed && feed['student'] && (feed['student']['academicStatuses'].try :first)
+      status if status.present?
+    end
+
     def course_info(campus_course)
       campus_course.slice(:role, :sections, :slug).merge({
         title: campus_course[:name],

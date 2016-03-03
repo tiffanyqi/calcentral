@@ -7,6 +7,7 @@ describe User::Api do
       person_name: preferred_name,
       student_id: '1234567890',
       campus_solutions_id: 'CC12345678',
+      is_legacy_user: false,
       official_bmail_address: 'foo@foo.com',
       roles: {
         student: true,
@@ -185,6 +186,7 @@ describe User::Api do
       {
         person_name: preferred_name,
         campus_solutions_id: '12345678', # 8-digit ID means legacy
+        is_legacy_user: true,
         roles: {
           student: true,
           exStudent: false,

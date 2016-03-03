@@ -1,6 +1,6 @@
 {
   "apiResponse": {
-    "correlationId": "b785f826-5405-432e-850c-2b6a487ab0a5",
+    "correlationId": "40fafffb-765f-47f1-96dd-7465e3536a9a",
     "response": {
       "any": {
         "students": [
@@ -125,98 +125,7 @@
                 "termsInAttendance": 4
               }
             ],
-            "addresses": [
-              {
-                "type": {
-                  "code": "HOME",
-                  "description": "Home"
-                },
-                "address1": "2121 BANCROFT WAY  #550",
-                "address2": "",
-                "address3": "",
-                "address4": "",
-                "num1": "",
-                "num2": "",
-                "addrField1": "",
-                "addrField2": "",
-                "addrField3": "",
-                "houseType": "",
-                "city": "BERKELEY",
-                "county": "",
-                "stateCode": "CA",
-                "postalCode": "454554",
-                "countryCode": "USA",
-                "formattedAddress": "2121 BANCROFT WAY  #550\nBERKELEY, CA 454554",
-                "disclose": false,
-                "uiControl": {
-                  "code": "U",
-                  "description": "Edit - No Delete"
-                },
-                "fromDate": "2015-10-07"
-              },
-              {
-                "type": {
-                  "code": "LOCL",
-                  "description": "Local"
-                },
-                "address1": "1001 Hearst",
-                "address2": "",
-                "address3": "",
-                "address4": "",
-                "num1": "",
-                "num2": "",
-                "addrField1": "",
-                "addrField2": "",
-                "addrField3": "",
-                "houseType": "",
-                "city": "Berkeley",
-                "county": "",
-                "stateCode": "CA",
-                "postalCode": "0",
-                "countryCode": "USA",
-                "formattedAddress": "1001 Hearst\nBerkeley, CA",
-                "disclose": false,
-                "uiControl": {
-                  "code": "F",
-                  "description": "Full Edit"
-                },
-                "fromDate": "2015-10-12"
-              }
-            ],
-            "affiliations": [
-              {
-                "detail": "",
-                "fromDate": "2015-12-14",
-                "status": {
-                  "code": "ACT",
-                  "description": "Active"
-                },
-                "type": {
-                  "code": "STUDENT",
-                  "description": ""
-                }
-              },
-              {
-                "detail": "Active",
-                "fromDate": "2015-12-14",
-                "status": {
-                  "code": "ACT",
-                  "description": "Active"
-                },
-                "type": {
-                  "code": "UNDERGRAD",
-                  "description": "Undergraduate Student"
-                }
-              }
-            ],
             "awardHonors": [],
-            "birth": {
-              "date": "1975-02-05",
-              "description": "United States",
-              "locality": "YOSEMITE,CA",
-              "stateCode": "",
-              "countryCode": "USA"
-            },
             "confidential": false,
             "degrees": [
               {
@@ -246,53 +155,6 @@
                 "statusDate": "2015-12-12"
               }
             ],
-            "emails": [
-              {
-                "type": {
-                  "code": "CAMP",
-                  "description": "Campus"
-                },
-                "emailAddress": "oski@berkeley.edu",
-                "primary": true,
-                "disclose": false,
-                "uiControl": {
-                  "code": "D",
-                  "description": "Display Only"
-                }
-              }
-            ],
-            "emergencyContacts": [],
-            "ethnicities": [
-              {
-                "group": {
-                  "code": "2",
-                  "description": "Black/African American"
-                },
-                "hispanicLatino": false,
-                "detail": {
-                  "code": "BLACK",
-                  "description": "African American/Black"
-                }
-              }
-            ],
-            "gender": {
-              "discloseGenderIdentity": false,
-              "discloseGenderOfRecord": false,
-              "discloseSexAtBirth": false,
-              "fromDate": "2015-01-05",
-              "genderIdentity": {
-                "code": "",
-                "description": ""
-              },
-              "genderOfRecord": {
-                "code": "M",
-                "description": "Male"
-              },
-              "sexAtBirth": {
-                "code": "",
-                "description": ""
-              }
-            },
             "holds": [],
             "identifiers": [
               {
@@ -317,7 +179,6 @@
                 "type": "DB2"
               }
             ],
-            "languages": [],
             "names": [
               {
                 "disclose": false,
@@ -357,51 +218,7 @@
                   "description": "Display Only"
                 }
               }
-            ],
-            "phones": [
-              {
-                "countryCode": "",
-                "disclose": false,
-                "extension": "123",
-                "number": "415/123-4567",
-                "primary": false,
-                "type": {
-                  "code": "CELL",
-                  "description": "Mobile"
-                },
-                "uiControl": {
-                  "code": "D",
-                  "description": "Display Only"
-                }
-              },
-              {
-                "countryCode": "",
-                "disclose": false,
-                "extension": "114",
-                "number": "510/642-9505",
-                "primary": true,
-                "type": {
-                  "code": "HOME",
-                  "description": "Home/Permanent"
-                },
-                "uiControl": {
-                  "code": "U",
-                  "description": "Edit - No Delete"
-                }
-              }
-            ],
-            "urls": [],
-            "usaCountry": {
-              "citizenshipStatus": {
-                "code": "1",
-                "description": "Native"
-              },
-              "militaryStatus": {
-                "code": "",
-                "description": "",
-                "fromDate": "1902-02-01"
-              }
-            }
+            ]
           }
         ]
       }

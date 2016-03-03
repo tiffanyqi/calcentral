@@ -62,8 +62,9 @@ module HubEdos
 
     def set_ids(result)
       result[:ldap_uid] = @uid
+      result[:campus_solutions_id] = campus_solutions_id
+      result[:is_legacy_user] = legacy_user?
       result[:student_id] = lookup_student_id_from_crosswalk
-      result[:campus_solutions_id] = lookup_campus_solutions_id
       result[:delegate_user_id] = lookup_delegate_user_id
     end
 
