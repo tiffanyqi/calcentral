@@ -99,7 +99,7 @@ module Oec
         end
       end
 
-      Oec::Queries.students_for_cntl_nums(@term_code, ccns).each do |student_row|
+      Oec::Queries.students_for_cntl_nums(@term_code, ccns + suffixed_ccns.keys).each do |student_row|
         validate_and_add(students, Oec::Worksheet.capitalize_keys(student_row), %w(LDAP_UID))
       end
 
