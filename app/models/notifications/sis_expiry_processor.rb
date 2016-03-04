@@ -32,7 +32,7 @@ module Notifications
 
     #TODO Mapping of event topics to expiry modules is incomplete.
     EXPIRY_BY_TOPIC = {
-      'sis:staff:advisor' => nil,
+      'sis:staff:advisor' => CampusSolutions::AdvisingResources,
       'sis:student:affiliation' => CampusSolutions::UserApiExpiry,
       'sis:student:checklist' => CampusSolutions::ChecklistDataExpiry,
       'sis:student:delegate' => CampusSolutions::DelegateStudentsExpiry,
@@ -41,7 +41,7 @@ module Notifications
       'sis:student:ferpa' => nil,
       'sis:student:finaid' => CampusSolutions::FinancialAidExpiry,
       'sis:student:financials' => nil,
-      'sis:student:messages' => nil
+      'sis:student:messages' => MyActivities::Merged
     }
   end
 end

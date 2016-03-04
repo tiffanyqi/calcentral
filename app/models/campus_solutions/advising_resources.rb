@@ -2,6 +2,7 @@ module CampusSolutions
   class AdvisingResources < CachedProxy
 
     include CampusSolutionsIdRequired
+    include Cache::RelatedCacheKeyTracker
 
     def initialize(options = {})
       @student = {
