@@ -71,7 +71,9 @@ module CanvasCsv
       all_active_sis_user_uids = CampusOracle::Queries.get_all_active_people_uids.to_set
       all_current_canvas_uids = []
       CSV.foreach(get_canvas_user_report_file, headers: :first_row) do |canvas_user|
-        all_current_canvas_uids << canvas_user['login_id']
+        if (existing_ldap_uid = MaintainUsers.parse_login_id(canvas_user['login_id'])[:ldap_uid])
+          all_current_canvas_uids << existing_ldap_uid.to_s
+        end
       end
       all_active_sis_user_uids.subtract(all_current_canvas_uids).to_a
     end
