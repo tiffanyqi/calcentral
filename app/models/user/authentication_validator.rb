@@ -51,8 +51,8 @@ module User
         calnet_attributes['affiliations'].present? &&
         calnet_attributes['affiliations'] != 'STUDENT-TYPE-NOT-REGISTERED'
       cs_feed = HubEdos::Affiliations.new(user_id: @auth_uid).get
-      if cs_feed[:feed] && cs_feed[:feed]['student']
-        cs_feed = HashConverter.symbolize cs_feed[:feed]['student']
+      if cs_feed[:feed] && (student = cs_feed[:feed]['student']) && student['affiliations']
+        cs_feed = HashConverter.symbolize student
         applicant_in_process?(cs_feed[:affiliations]) && roles_from_cs_affiliations(cs_feed[:affiliations]).blank?
       else
         # We don't know much about this person, but they're not a held applicant.
