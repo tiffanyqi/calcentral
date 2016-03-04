@@ -11,10 +11,6 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   var backToText = 'Class Enrollment';
   var sections = [
     {
-      id: 'meet_advisor',
-      title: 'Meet Advisor'
-    },
-    {
       id: 'plan',
       title: 'Plan'
     },

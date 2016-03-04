@@ -1,0 +1,34 @@
+<div data-cc-spinner-directive="enrollment.holds.isLoading">
+  <div data-ng-if="enrollment.holds.hasHolds" class="cc-flex">
+    <div>
+      <i class="fa fa-exclamation-circle cc-icon-red cc-enrollment-card-icon"></i>
+    </div>
+    <div>
+      You have a hold that may affect your ability to enroll in classes.
+      Consult with an advisor.
+    </div>
+  </div>
+  <div data-ng-if="!enrollment.holds.hasHolds" class="cc-enrollment-card-advisors-consult">
+    Consult with an advisor if you have any questions.
+  </div>
+</div>
+
+<ul class="cc-enrollment-card-advisors-list" data-ng-if="enrollmentTerm.advisors.length && api.user.profile.features.csAdvisingShowAdvisors">
+  <li data-ng-repeat="advisor in enrollmentTerm.advisors">
+    <div>
+      <a
+        data-ng-href="https://calnet.berkeley.edu/directory/details.pl?uid={{advisor.id}}"
+        data-ng-bind="advisor.name"
+      ></a>
+    </div>
+    <div>
+      <span data-ng-bind="advisor.program" class="cc-text-light cc-text-small"></span>
+    </div>
+    <div>
+      <a
+        data-ng-href="mailto:{{advisor.emailAddress}}"
+        data-ng-bind="advisor.emailAddress"
+      ></a>
+    </div>
+  </li>
+</ul>
