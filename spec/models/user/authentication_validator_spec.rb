@@ -1,32 +1,49 @@
-require 'spec_helper'
-
 describe User::AuthenticationValidator do
   let(:auth_uid) { random_id }
   let(:feature_flag) { true }
   before do
-    allow(Settings.features).to receive(:authentication_validator).and_return(feature_flag)
+    allow(Settings.features).to receive(:authentication_validator).and_return feature_flag
   end
 
   describe '#held_applicant?' do
     let(:nil_calnet_row) do
-      { 'affiliations' => ''}
+      { 'affiliations' => '' }
+    end
+    let(:calnet_affiliation_staff) do
+      { 'affiliations' => 'EMPLOYEE-TYPE-STAFF,STUDENT-STATUS-EXPIRED' }
+    end
+    let(:nil_cs_affiliations) do
+      {
+        statusCode: 200,
+        feed: {
+          'student' =>
+            {
+              'affiliations' => nil
+            }
+        }
+      }
     end
     let(:held_cs_affiliations) do
-      {:statusCode=>200,
-        :feed=>
-          {'student'=>
+      {
+        statusCode: 200,
+        feed: {
+          'student'=>
             {'affiliations'=>
               [{'type'=>{'code'=>'APPLICANT', 'description'=>'Applicant'},
                 'status'=> {
                   'code'=>'ACT',
                   'description'=>'Active'},
-                'fromDate'=>'2016-01-06'}]}},
-        :studentNotFound=>nil}
+                'fromDate'=>'2016-01-06'}]
+            }
+        },
+        studentNotFound: nil
+      }
     end
     let(:released_cs_affiliations) do
-      {:statusCode=>200,
-        :feed=>
-          {'student'=>
+      {
+        statusCode: 200,
+        feed: {
+          'student'=>
             {'affiliations'=>
               [{'type'=>
                 {'code'=>'ADMT_UX',
@@ -39,71 +56,79 @@ describe User::AuthenticationValidator do
                   'status'=> {
                     'code'=>'ACT',
                     'description'=>'Active'},
-                  'fromDate'=>'2016-01-06'}]}},
-        :studentNotFound=>nil}
+                  'fromDate'=>'2016-01-06'}]}
+        },
+        studentNotFound: nil
+      }
     end
     before do
-      allow(CampusOracle::Queries).to receive(:get_basic_people_attributes).with([auth_uid]).and_return([calnet_row])
-      allow(HubEdos::Affiliations).to receive(:new).with(user_id: auth_uid).and_return(double(get: cs_affiliations))
+      allow(CampusOracle::Queries).to receive(:get_basic_people_attributes).with([auth_uid]).and_return [calnet_row]
+      allow(HubEdos::Affiliations).to receive(:new).with(user_id: auth_uid).and_return double(get: cs_affiliations)
     end
     subject { User::AuthenticationValidator.new(auth_uid).held_applicant? }
-    context 'CalNet affiliations but no CS affiliations' do
+    context 'Nil affiliations from Hub' do
       let(:calnet_row) do
-        { 'affiliations' => 'EMPLOYEE-TYPE-STAFF,STUDENT-STATUS-EXPIRED'}
+        { 'affiliations' => 'STUDENT-TYPE-NOT-REGISTERED' }
       end
+      let(:cs_affiliations) { nil_cs_affiliations }
+      it {should be false}
+    end
+    context 'CalNet affiliations but no CS affiliations' do
+      let(:calnet_row) { calnet_affiliation_staff }
       let(:cs_affiliations) { held_cs_affiliations }
-      it {should be_falsey}
+      it {should be false}
     end
     context 'CalNet affiliations and only pending-admit CS affiliation' do
-      let(:calnet_row) do
-        { 'affiliations' => 'EMPLOYEE-TYPE-STAFF,STUDENT-STATUS-EXPIRED'}
-      end
+      let(:calnet_row) { calnet_affiliation_staff }
       let(:cs_affiliations) { nil }
-      it {should be_falsey}
+      it {should be false}
     end
     context 'No CalNet affiliations and only pending-admit CS affiliation' do
       let(:calnet_row) { nil_calnet_row }
       let(:cs_affiliations) { held_cs_affiliations }
-      it {should be_truthy}
+      it {should be true}
     end
     context 'Only not-registered CalNet affiliation and only pending-admit CS affiliation' do
       let(:calnet_row) do
-        { 'affiliations' => 'STUDENT-TYPE-NOT-REGISTERED'}
+        { 'affiliations' => 'STUDENT-TYPE-NOT-REGISTERED' }
       end
       let(:cs_affiliations) { held_cs_affiliations }
-      it {should be_truthy}
+      it {should be true}
     end
     context 'No CalNet affiliations and released-admit CS affiliation' do
       let(:calnet_row) { nil_calnet_row }
       let(:cs_affiliations) { released_cs_affiliations }
-      it {should be_falsey}
+      it {should be false}
     end
     context 'No CalNet affiliations and multiple CS affiliations' do
       let(:calnet_row) { nil_calnet_row }
       let(:cs_affiliations) do
-        {:statusCode=>200,
-          :feed=>
-            {"student"=>
-              {"affiliations"=>
-                [{"type"=>{"code"=>"STUDENT", "description"=>""},
+        {
+          statusCode: 200,
+          feed:
+            {'student'=>
+              {'affiliations'=>
+                [{'type'=>{'code'=>'STUDENT', 'description'=>''},
                   'status'=> {
                     'code'=>'ACT',
                     'description'=>'Active'},
-                  "fromDate"=>"2015-12-14"},
-                  {"type"=>{"code"=>"UNDERGRAD", "description"=>"Undergraduate Student"},
+                  'fromDate'=>'2015-12-14'},
+                  {'type'=>{'code'=>'UNDERGRAD', 'description'=>'Undergraduate Student'},
                     'status'=> {
                       'code'=>'INA',
                       'description'=>'Inactive'},
-                    "fromDate"=>"2015-12-14"}]}},
-          :studentNotFound=>nil}
+                    'fromDate'=>'2015-12-14'}]}},
+          studentNotFound: nil
+        }
       end
       it {should be_falsey}
     end
     context 'Reverted released-admit' do
       let(:calnet_row) { nil_calnet_row }
       let(:cs_affiliations) do
-        {:statusCode=>200,
-          :feed=>
+        {
+          statusCode: 200,
+          feed:
             {'student'=>
               {'affiliations'=>
                 [{'type'=>
@@ -118,9 +143,10 @@ describe User::AuthenticationValidator do
                       'code'=>'ACT',
                       'description'=>'Active'},
                     'fromDate'=>'2016-01-06'}]}},
-          :studentNotFound=>nil}
+          studentNotFound: nil
+        }
       end
-      it {should be_truthy}
+      it {should be true}
     end
   end
 
@@ -193,5 +219,4 @@ describe User::AuthenticationValidator do
       end
     end
   end
-
 end
