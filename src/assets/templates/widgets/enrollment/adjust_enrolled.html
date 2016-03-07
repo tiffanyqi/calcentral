@@ -30,6 +30,13 @@
     <div
       data-cc-campus-solutions-link-item-directive
       data-link="enrollmentTerm.links.gradeBase"
+      data-text="Edit"
+      data-cache="enrollment"
+      data-ng-if="!enrollmentTerm.isGradeBaseAvailable && !enrollmentTerm.isClassScheduleAvailable"
+    ></div>
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.gradeBase"
       data-text="Change Grade Base"
       data-cache="enrollment"
       data-ng-if="enrollmentTerm.isGradeBaseAvailable"
