@@ -9,15 +9,12 @@ module CalCentralPages
     button(:show_gpa, :xpath => '//button[text()="Show GPA"]')
     button(:hide_gpa, :xpath => '//button[text()="Hide"]')
     span(:gpa, :xpath => '//span[@data-ng-bind="gpaUnits.cumulativeGpaFloat"]')
-    elements(:college, :div, :xpath => '//div[@data-ng-bind="college.college"]')
-    elements(:major, :div, :xpath => '//div[@data-ng-bind="college.major"]')
-    td(:standing, :xpath => '//strong[@data-ng-bind="collegeAndLevel.standing"]')
-    td(:units, :xpath => '//strong[@data-ng-bind="gpaUnits.totalUnits"]')
-    span(:level_label, :xpath => '//th[text()="Level"]/following-sibling::th/span')
-    td(:level, :xpath => '//strong[@data-ng-bind="collegeAndLevel.level"]')
-    td(:level_non_ap, :xpath => '//strong[@data-ng-bind="collegeAndLevel.nonApLevel"]')
-    td(:uid , :xpath => '//strong[@data-ng-bind="api.user.profile.uid"]')
-    td(:sid , :xpath => '//strong[@data-ng-bind="api.user.profile.sid"]')
+    elements(:college, :div, :xpath => '//div[@data-ng-bind="major.college"]')
+    elements(:major, :div, :xpath => '//strong[@data-ng-bind="major.major"]')
+    elements(:career, :td, :xpath => '//div[@data-ng-repeat="career in collegeAndLevel.careers"]/strong')
+    td(:units, :xpath => '//td/strong[@data-ng-bind="gpaUnits.totalUnits"]')
+    td(:level, :xpath => '//td/strong[@data-ng-bind="collegeAndLevel.level"]')
+    td(:level_non_ap, :xpath => '//td/strong[@data-ng-bind="collegeAndLevel.nonApLevel"]')
     div(:non_reg_student_msg, :xpath => '//div[contains(text(), "You are not currently registered as a student.")]')
     div(:ex_student_msg, :xpath => '//div[contains(text(),"You are not currently considered an active student.")]')
     div(:reg_no_standing_msg, :xpath => '//div[contains(text(),"You are registered as a student, but complete profile information is not available.")]')
@@ -28,14 +25,20 @@ module CalCentralPages
 
     def all_colleges
       colleges = []
-      college_elements.each { |college| colleges.push(college.text) }
+      college_elements.each { |college| colleges << college.text }
       colleges
     end
 
     def all_majors
       majors = []
-      major_elements.each { |major| majors.push(major.text) }
+      major_elements.each { |major| majors << major.text }
       majors
+    end
+
+    def all_careers
+      careers = []
+      career_elements.each { |career| careers << career.text }
+      careers
     end
 
   end
