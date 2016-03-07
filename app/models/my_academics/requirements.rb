@@ -2,8 +2,10 @@
 module MyAcademics
   class Requirements
     include AcademicsModule
+    include User::Student
 
     def merge(data)
+      return unless legacy_user?
       feed = Bearfacts::Profile.new({:user_id => @uid}).get[:feed]
       return if feed.nil?
 

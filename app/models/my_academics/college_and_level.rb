@@ -8,10 +8,12 @@ module MyAcademics
 
     def merge(data)
       data[:collegeAndLevel] = self.class.fetch_from_cache @uid do
-        if !Settings.features.cs_academic_profile || legacy_user?
+        if legacy_user?
           bearfacts_college_and_level
-        else
+        elsif Settings.features.cs_academic_profile
           hub_college_and_level
+        else
+          {empty: true}
         end
       end
     end

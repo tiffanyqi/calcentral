@@ -83,3 +83,9 @@ shared_examples 'a student data proxy' do
     end
   end
 end
+
+shared_examples 'a proxy for legacy users only' do
+  before { allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return '1234567890' }
+  subject { described_class.new(user_id: '61889').get }
+  it { should be_empty }
+end

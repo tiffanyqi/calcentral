@@ -23,14 +23,7 @@ module Bearfacts
     end
 
     def get
-      request(request_path, request_params)
-    end
-
-    def mock_request
-      super.merge(uri_matching: "#{@settings.base_url}#{request_path}")
-    end
-
-    def request(path, params)
+      return {} unless legacy_user?
       raw_response = self.class.smart_fetch_from_cache({id: instance_key, user_message_on_exception: 'Remote server unreachable'}) do
         request_internal(request_path, request_params)
       end
@@ -41,6 +34,10 @@ module Bearfacts
       else
         {feed: FeedWrapper.new(raw_response[:body])}
       end
+    end
+
+    def mock_request
+      super.merge(uri_matching: "#{@settings.base_url}#{request_path}")
     end
 
     def request_internal(path, params)
