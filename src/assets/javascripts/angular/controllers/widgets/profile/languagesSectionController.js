@@ -56,38 +56,6 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
 
   var proficiencyKeys = ['speakingProficiency', 'readingProficiency', 'writingProficiency'];
 
-  var actionCompleted = function(data) {
-    apiService.profile.actionCompleted($scope, data, loadInformation);
-  };
-
-  var deleteCompleted = function(data) {
-    $scope.isDeleting = false;
-    actionCompleted(data);
-  };
-
-  $scope.closeEditor = function() {
-    apiService.profile.closeEditor($scope);
-  };
-
-  $scope.cancelEdit = function() {
-    $scope.isSaving = false;
-    $scope.closeEditor();
-  };
-
-  $scope.deleteItem = function(item) {
-    return apiService.profile.delete($scope, profileFactory.deleteLanguage, {
-      languageCode: item.code
-    }).then(deleteCompleted);
-  };
-
-  $scope.showAdd = function() {
-    apiService.profile.showAdd($scope, $scope.emptyObject);
-  };
-
-  $scope.showEdit = function(item) {
-    apiService.profile.showEdit($scope, item);
-  };
-
   /**
    * Function maps a language level (native, teach, translate) boolean value to
    * either 'Y' or 'N', the only values accepted by the POST endpoint.
@@ -117,23 +85,6 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
     }
 
     return hasValidProficiencyCode ? proficiency.code : '';
-  };
-
-  var saveCompleted = function(data) {
-    $scope.isSaving = false;
-    actionCompleted(data);
-  };
-
-  $scope.saveItem = function(item) {
-    apiService.profile.save($scope, profileFactory.postLanguage, {
-      languageCode: item.code,
-      isNative: normalizeLanguageLevel(item.native),
-      isTranslateToNative: normalizeLanguageLevel(item.translate),
-      isTeachLanguage: normalizeLanguageLevel(item.teach),
-      speakProf: normalizeProficiencyCode(item.speakingProficiency),
-      readProf: normalizeProficiencyCode(item.readingProficiency),
-      teachLang: normalizeProficiencyCode(item.writingProficiency)
-    }).then(saveCompleted);
   };
 
   /**
@@ -231,6 +182,55 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
     .then(function() {
       $scope.isLoading = false;
     });
+  };
+
+  var actionCompleted = function(data) {
+    apiService.profile.actionCompleted($scope, data, loadInformation);
+  };
+
+  var deleteCompleted = function(data) {
+    $scope.isDeleting = false;
+    actionCompleted(data);
+  };
+
+  $scope.closeEditor = function() {
+    apiService.profile.closeEditor($scope);
+  };
+
+  $scope.cancelEdit = function() {
+    $scope.isSaving = false;
+    $scope.closeEditor();
+  };
+
+  $scope.deleteItem = function(item) {
+    return apiService.profile.delete($scope, profileFactory.deleteLanguage, {
+      languageCode: item.code
+    }).then(deleteCompleted);
+  };
+
+  $scope.showAdd = function() {
+    apiService.profile.showAdd($scope, $scope.emptyObject);
+  };
+
+  $scope.showEdit = function(item) {
+    apiService.profile.showEdit($scope, item);
+  };
+
+  var saveCompleted = function(data) {
+    $scope.isSaving = false;
+    actionCompleted(data);
+  };
+
+  $scope.saveItem = function(item) {
+    apiService.profile.save($scope, profileFactory.postLanguage, {
+      languageCode: item.code,
+      isNative: normalizeLanguageLevel(item.native),
+      isTranslateToNative: normalizeLanguageLevel(item.translate),
+      isTeachLanguage: normalizeLanguageLevel(item.teach),
+      speakProf: normalizeProficiencyCode(item.speakingProficiency),
+      readProf: normalizeProficiencyCode(item.readingProficiency),
+      teachLang: normalizeProficiencyCode(item.writingProficiency)
+    }).then(saveCompleted);
   };
 
   loadInformation();
