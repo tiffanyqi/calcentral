@@ -73,6 +73,7 @@ angular.module('calcentral.services').factory('profileMenuService', function(api
           name: 'Title IV Release',
           featureFlag: 'csFinAid',
           roles: {
+            applicant: true,
             student: true
           }
         }
