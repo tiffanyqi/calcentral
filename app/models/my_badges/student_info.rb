@@ -42,10 +42,15 @@ module MyBadges
       end
     end
 
-    # True if user's first college is the School of Law.
+    # True if user has a Law 'career' according to Campus Solutions, or if the first college is the School of Law.
     def law_student?
-      if (college_feed = MyAcademics::CollegeAndLevel.new(@uid).merge({})) && college_feed[:majors].present?
-        college_feed[:majors].first[:college] == Berkeley::Departments.get('CLLAW')
+      if (college_feed = MyAcademics::CollegeAndLevel.new(@uid).merge({}))
+        if college_feed[:careers].present? && college_feed[:careers].include?('Law')
+          true
+        else
+          college_feed[:majors].present? &&
+            college_feed[:majors].first[:college] == Berkeley::Departments.get('CLLAW')
+        end
       else
         false
       end

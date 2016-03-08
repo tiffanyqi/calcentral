@@ -76,7 +76,7 @@ describe 'MyBadges::StudentInfo' do
     end
   end
 
-  context 'for Law student users' do
+  context 'for legacy Law student users' do
     before { Bearfacts::Proxy.any_instance.stub(:lookup_student_id).and_return(99999997) }
     let! (:law_proxy) { Bearfacts::Profile.new({user_id: '212381', fake: true}) }
     before do
@@ -90,8 +90,7 @@ describe 'MyBadges::StudentInfo' do
     subject { MyBadges::StudentInfo.new('212381').get }
 
     it 'should set isLawStudent to true' do
-      subject[:isLawStudent].should be_present
-      subject[:isLawStudent].should be_truthy
+      expect(subject[:isLawStudent]).to eq true
     end
   end
 
@@ -148,4 +147,56 @@ describe 'MyBadges::StudentInfo' do
     end
 
   end
+
+  context 'for non-legacy CS students' do
+    subject { MyBadges::StudentInfo.new(random_uid).get }
+    before do
+      CalnetCrosswalk::ByUid.any_instance.stub(:lookup_campus_solutions_id).and_return(9876543210)
+      HubEdos::AcademicStatus.stub(:new).with({user_id: random_uid}).and_return(double(get: academic_status_feed))
+    end
+    context 'Law student' do
+      let(:academic_status_feed) do
+        {
+          :statusCode => 200,
+          :feed => {
+            'student' => {
+              'academicStatuses' => [{
+                'studentCareer' => {
+                  'academicCareer' => {
+                    'code' => 'LAW',
+                    'description' => 'Law'
+                  },
+                  'fromDate' => '2013-08-14'},
+                'studentPlans' => []
+              }]
+            }
+          }
+        }
+      end
+      it 'sets isLawStudent' do
+        expect(subject[:isLawStudent]).to eq true
+      end
+    end
+    context 'Lawless student' do
+      let(:academic_status_feed) do
+        {
+          :statusCode=>200,
+          :feed=>
+            {'student'=>
+              {'academicStatuses'=>
+                [{'studentCareer'=>
+                  {'academicCareer'=>{'code'=>'UGRD', 'description'=>'Undergraduate'},
+                    'fromDate'=>'2015-08-19'},
+                  'studentPlans' => []
+                }]
+              }
+            }
+        }
+      end
+      it 'does not set isLawStudent' do
+        expect(subject[:isLawStudent]).to eq false
+      end
+    end
+  end
+
 end
