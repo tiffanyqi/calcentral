@@ -31,5 +31,9 @@ describe CampusSolutions::EnrollmentTerm do
         datestring: '4/18'
       )
     end
+
+    it 'forces year to the end of the term description' do
+      expect(subject[:feed][:enrollmentTerm][:termDescr]).to eq 'Spring 2016'
+    end
   end
 end
