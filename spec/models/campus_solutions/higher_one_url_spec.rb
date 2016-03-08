@@ -36,7 +36,7 @@ describe CampusSolutions::HigherOneUrl do
       it_should_behave_like 'a proxy that gets data'
 
       it 'should construct proper URL' do
-        expect(proxy.url).to end_with '/UC_OB_HIGHER_ONE_URL_GET.v1/get?DELEGATE_UID=9000006545'
+        expect(proxy.url).to end_with '/UC_OB_HIGHER_ONE_URL_GET.v1/get?DELEGATE_UID=12350'
       end
     end
   end
