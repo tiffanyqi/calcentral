@@ -41,7 +41,8 @@ module Notifications
       'sis:student:ferpa' => nil,
       'sis:student:finaid' => CampusSolutions::FinancialAidExpiry,
       'sis:student:financials' => nil,
-      'sis:student:messages' => MyActivities::Merged
+      'sis:student:messages' => MyActivities::Merged,
+      'sis:student:serviceindicator' => CampusSolutions::MyHolds
     }
   end
 end
