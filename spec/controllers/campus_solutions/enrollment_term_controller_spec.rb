@@ -17,7 +17,7 @@ describe CampusSolutions::EnrollmentTermController do
         session['user_id'] = user_id
         get feed, {term_id: '2162', format: 'json'}
         json = JSON.parse response.body
-        expect(json['feed']['enrollmentTerm']['termDescr']).to eq '2016 Spring'
+        expect(json['feed']['enrollmentTerm']['termDescr']).to eq 'Spring 2016'
       end
     end
   end
