@@ -8,10 +8,12 @@ module MyAcademics
 
     def merge(data)
       data[:gpaUnits] = self.class.fetch_from_cache @uid do
-        if !Settings.features.cs_academic_profile || legacy_user?
+        if legacy_user?
           oracle_gpa_units
-        else
+        elsif Settings.features.cs_academic_profile
           hub_gpa_units
+        else
+          {empty: true}
         end
       end
     end

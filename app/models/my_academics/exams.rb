@@ -1,11 +1,12 @@
-# TODO collapse this class into Bearfacts::Exams
 module MyAcademics
   class Exams
     include AcademicsModule
     include ClassLogger
     include DatedFeed
+    include User::Student
 
     def merge(data = {})
+      return unless legacy_user?
       proxy = Bearfacts::Exams.new({:user_id => @uid})
       feed = proxy.get[:feed]
       return unless feed.present? && matches_current_year_term?(feed)
