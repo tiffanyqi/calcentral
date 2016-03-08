@@ -41,6 +41,7 @@ module MyAcademics
         response[:termName] = parse_hub_term_name status
       else
         response[:empty] = true
+        response[:termName] = Berkeley::Terms.fetch.current.to_english
       end
       response
     end

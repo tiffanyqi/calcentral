@@ -22,7 +22,11 @@ module User
 
     def legacy_user?
       # Legacy IDs migrated to Campus Solutions have fewer than ten digits.
-      campus_solutions_id.blank? || campus_solutions_id.to_s.length < 10
+      if campus_solutions_id.present?
+        campus_solutions_id.to_s.length < 10
+      elsif (student_id = lookup_student_id)
+        student_id.to_s.length < 10
+      end
     end
 
     private
