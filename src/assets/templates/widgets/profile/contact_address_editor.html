@@ -32,15 +32,16 @@
 
       <div data-cc-spinner-directive="currentObject.stateFieldLoading">
         <div data-ng-repeat="field in currentObject.fields" data-ng-if="field.field !== 'country'">
-          <div>
+          <div data-ng-if="field.field !== 'state'">
             <label data-ng-attr-for="cc-page-widget-profile-field-{{$index}}">
               <span data-ng-bind="field.label"></span>
             </label>
-          </div>
-          <div data-ng-if="field.field !== 'state' || !states.length">
             <input type="text" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-model="currentObject.data[field.field]" data-ng-attr-maxlength="{{field.length}}" />
           </div>
           <div data-ng-if="field.field === 'state' && states.length">
+            <label data-ng-attr-for="cc-page-widget-profile-field-{{$index}}">
+              <span data-ng-bind="field.label"></span>
+            </label>
             <div class="cc-select">
               <select data-ng-options="state.state as state.descr for state in states" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-model="currentObject.data[field.field]">
                 <option value="" data-ng-bind-template="-- Choose {{field.label}} --"></option>
