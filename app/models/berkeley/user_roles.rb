@@ -98,7 +98,7 @@ module Berkeley
             result[:applicant] = true
           when 'GRADUATE'
             result[:student] = true
-            result[:graduate] = 'G'
+            result[:graduate] = true
           when 'INSTRUCTOR'
             result[:faculty] = true
           when 'ADVISOR'
@@ -107,7 +107,9 @@ module Berkeley
             result[:student] = true
           when 'UNDERGRAD'
             result[:student] = true
-            result[:undergrad] = 'U'
+            result[:undergrad] = true
+          when 'LAW'
+            result[:law] = true
         end
       end
       cs_affiliations.select { |a| a[:status][:code] == 'INA' }.each do |inactive_affiliation|

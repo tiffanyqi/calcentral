@@ -141,6 +141,36 @@ describe Berkeley::UserRoles do
       it_behaves_like 'a parser for roles', [:student, :graduate]
     end
 
+    context 'Law student' do
+      let(:affiliations) do
+        [
+          {
+            :type => {
+              :code => 'LAW',
+              :description => 'Law School Student'
+            },
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
+            :fromDate => '2014-05-15'
+          },
+          {
+            :type => {
+              :code => 'STUDENT',
+              :description => ''
+            },
+            :status => {
+              :code =>'ACT',
+              :description => 'Active'
+            },
+            :fromDate => '2014-05-15'
+          }
+        ]
+      end
+      it_behaves_like 'a parser for roles', [:student, :law]
+    end
+
     context 'new and released admit' do
       let(:affiliations) do
         [
