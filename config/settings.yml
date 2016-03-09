@@ -415,15 +415,18 @@ campus_solutions_proxy:
   logout_url: 'https://bcs-web-dev-03.is.berkeley.edu:8443/psp/logout/EMPLOYEE/HRMS/?cmd=logout'
   username: secret
   password: secret
+  http_timeout_seconds: 30
 
 hub_edos_proxy:
   fake: true
   base_url: 'https://sis-integration.berkeley.edu/apis/sis/v1/students'
   username: secret
   password: secret
+  http_timeout_seconds: 30
 
 calnet_crosswalk_proxy:
   fake: true
   base_url: 'https://registry-d1.calnet.1918.berkeley.edu:8453/registry-service/api/v1/identifiers'
   username: secret
   password: secret
+  http_timeout_seconds: 30

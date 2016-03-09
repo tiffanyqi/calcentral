@@ -11,4 +11,15 @@ class BaseProxy
     @uid = options[:user_id]
   end
 
+  def get_response(url, options={})
+    if @settings
+      if @settings.respond_to?(:http_timeout_seconds) && (http_timeout = @settings.http_timeout_seconds.to_i) > 0
+        # A proxy class can have custom timeout setting.
+        logger.warn "HTTP calls by this proxy instance will timeout after #{http_timeout} seconds"
+        options[:timeout] = http_timeout
+      end
+    end
+    super(url, options)
+  end
+
 end
