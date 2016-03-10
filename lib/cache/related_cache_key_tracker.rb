@@ -3,16 +3,18 @@ module Cache
 
     # This hook is used for mixins with BaseProxy subclasses.
     def get
+      result = super
       self.class.save_related_cache_key(@uid, self.class.cache_key(instance_key))
-      super
+      result
     end
 
     # This hook is used for mixins with Cache::CachedFeed.
     def get_feed(force_cache_write=false)
+      feed = super force_cache_write
       extended_instance_keys.each do |key|
         self.class.save_related_cache_key(@uid, self.class.cache_key(key))
       end
-      super force_cache_write
+      feed
     end
 
     def self.included base
