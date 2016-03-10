@@ -6,7 +6,7 @@ class WebDriverUtils
     # Sometimes browser does not launch successfully, so try twice
     tries ||= 2
     logger.info('Launching browser')
-    case Settings.ui_selenium.webDriver
+    case Settings.ui_selenium.web_driver
       when 'firefox'
         driver = Selenium::WebDriver.for :firefox
         driver.manage.window.maximize
@@ -33,11 +33,11 @@ class WebDriverUtils
   end
 
   def self.base_url
-    Settings.ui_selenium.baseUrl
+    Settings.ui_selenium.base_url
   end
 
   def self.cal_net_url
-    Settings.ui_selenium.calNetUrl
+    Settings.ui_selenium.cal_net_url
   end
 
   def self.canvas_base_url
@@ -49,11 +49,11 @@ class WebDriverUtils
   end
 
   def self.google_auth_url
-    Settings.ui_selenium.googleAuthUrl
+    Settings.ui_selenium.google_auth_url
   end
 
   def self.page_load_timeout
-    Settings.ui_selenium.pageLoadTimeout
+    Settings.ui_selenium.page_load_timeout
   end
 
   def self.campus_solutions_timeout
@@ -61,27 +61,27 @@ class WebDriverUtils
   end
 
   def self.academics_timeout
-    Settings.ui_selenium.academicsTimeout
+    Settings.ui_selenium.academics_timeout
   end
 
   def self.google_task_timeout
-    Settings.ui_selenium.googleTaskTimeout
+    Settings.ui_selenium.google_task_timeout
   end
 
   def self.page_event_timeout
-    Settings.ui_selenium.pageEventTimeout
+    Settings.ui_selenium.page_event_timeout
   end
 
   def self.canvas_update_timeout
-    Settings.ui_selenium.canvasUpdateTimeout
+    Settings.ui_selenium.canvas_update_timeout
   end
 
   def self.mail_live_update_timeout
-    Settings.cache.expiration.marshal_dump["MyBadges::GoogleMail".to_sym] + Settings.ui_selenium.liveUpdateTimeoutDelta
+    Settings.cache.expiration.marshal_dump["MyBadges::GoogleMail".to_sym] + Settings.ui_selenium.live_update_timeout_delta
   end
 
   def self.tasks_live_update_timeout
-    Settings.cache.expiration.marshal_dump["MyTasks::GoogleTasks".to_sym] + Settings.ui_selenium.liveUpdateTimeoutDelta
+    Settings.cache.expiration.marshal_dump["MyTasks::GoogleTasks".to_sym] + Settings.ui_selenium.live_update_timeout_delta
   end
 
   def self.live_users
@@ -111,14 +111,14 @@ class WebDriverUtils
   end
 
   def self.wait_for_page_and_click(element)
-    element.when_present timeout=page_load_timeout
-    element.when_visible timeout=page_event_timeout
+    element.when_present page_load_timeout
+    element.when_visible page_event_timeout
     element.click
   end
 
   def self.wait_for_element_and_click(element)
     element.when_present timeout=page_event_timeout
-    element.when_visible page_event_timeout
+    element.when_visible timeout
     element.click
   end
 
@@ -130,7 +130,7 @@ class WebDriverUtils
 
   def self.wait_for_element_and_select(element, option)
     element.when_visible(timeout=page_event_timeout)
-    wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.page_event_timeout)
+    wait = Selenium::WebDriver::Wait.new(:timeout => timeout)
     wait.until { element.include? option }
     element.select option
   end
