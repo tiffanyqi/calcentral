@@ -27,10 +27,7 @@ angular.module('calcentral.services').factory('sirLookupService', function() {
       picture: 'cc-widget-sir-picture-haasgrad'
     },
     LAW: {
-      name: 'Sujit Choudhry',
-      title: 'Dean of Law School',
-      background: 'cc-widget-sir-background-lawjd',
-      picture: 'cc-widget-sir-picture-lawjd'
+      background: 'cc-widget-sir-background-lawjd'
     },
     UGRD: {
       name: 'Amy W. Jarich',
