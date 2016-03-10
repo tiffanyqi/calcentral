@@ -27,7 +27,8 @@ module Cache
       end
 
       def expire(uid=nil)
-        super uid
+        # The list of related cache keys should contain ALL germane cache keys for this combination of
+        # user and class, and so a call to the superclasss's expire method is unnecessary.
         related_keys = related_cache_keys uid
         logger.debug "Will now expire these associated keys for uid #{uid}: #{related_keys.inspect}"
         related_keys.keys.each do |related_key|

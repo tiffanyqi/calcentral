@@ -4,6 +4,8 @@ module User
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
+    # Needed to expire cache entries specific to Viewing-As users alongside original user's cache.
+    include Cache::RelatedCacheKeyTracker
     include CampusSolutions::ProfileFeatureFlagged
     include CampusSolutions::DelegatedAccessFeatureFlagged
     include ClassLogger
@@ -156,17 +158,14 @@ module User
 
     def is_sis_profile_visible?
       is_cs_profile_feature_enabled &&
-        !authentication_state.original_delegate_user_id &&
         (is_campus_solutions_student? || is_profile_visible_for_legacy_users)
     end
 
-    def has_academics_tab?(roles, has_instructor_history, has_student_history, view_as_privileges)
-      return false if view_as_privileges && !view_as_privileges[:viewEnrollments] && !view_as_privileges[:viewGrades]
+    def has_academics_tab?(roles, has_instructor_history, has_student_history)
       roles[:student] || roles[:faculty] || has_instructor_history || has_student_history
     end
 
-    def has_financials_tab?(roles, view_as_privileges)
-      return false if view_as_privileges && !view_as_privileges[:financial]
+    def has_financials_tab?(roles)
       !!(roles[:student] || roles[:exStudent] || roles[:applicant])
     end
 
@@ -176,16 +175,37 @@ module User
     end
 
     def get_delegate_view_as_privileges
-      # The following is not nil when delegate is in view-as session
-      delegate_user_id = authentication_state.original_delegate_user_id
-      return nil unless is_cs_delegated_access_feature_enabled && delegate_user_id
+      return nil unless is_cs_delegated_access_feature_enabled && authentication_state.authenticated_as_delegate?
       if @delegate_students
         campus_solutions_id = CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_campus_solutions_id
         student = @delegate_students.detect { |s| campus_solutions_id == s[:campusSolutionsId] }
-        student && student[:privileges]
+        (student && student[:privileges]) || {}
       else
-        nil
+        # Returning nil might inadvertantly trigger non-delegate logic.
+        {}
       end
+    end
+
+    def filter_user_api_for_delegator(feed)
+      view_as_privileges = get_delegate_view_as_privileges
+      feed[:delegateViewAsPrivileges] = view_as_privileges
+      # Delegate users get a pared-down UX.
+      feed[:hasDashboardTab] = false
+      feed[:showSisProfileUI] = false
+      # Delegate users do not have access to preferred name and similar sensitive data.
+      feed[:firstName] = feed[:givenFirstName]
+      feed[:fullName] = feed[:givenFullName]
+      feed[:preferredName] = feed[:givenFullName]
+      feed.delete :firstLoginAt
+      # Extraordinary privileges are set to false.
+      feed[:isDelegateUser] = false
+      feed[:isViewer] = false
+      feed[:isSuperuser] = false
+      # Filter based on delegation rights chosen by the student.
+      feed[:canViewGrades] = false unless view_as_privileges[:viewGrades]
+      feed[:hasFinancialsTab] = false unless view_as_privileges[:financial]
+      feed[:hasAcademicsTab] = false unless view_as_privileges[:viewEnrollments] || view_as_privileges[:viewGrades]
+      feed
     end
 
     def get_feed_internal
@@ -199,9 +219,8 @@ module User
       is_calendar_opted_in = Calendar::User.where(:uid => @uid).first.present?
       has_student_history = CampusOracle::UserCourses::HasStudentHistory.new(user_id: @uid).has_student_history?
       has_instructor_history = CampusOracle::UserCourses::HasInstructorHistory.new(user_id: @uid).has_instructor_history?
-      delegate_view_as_privileges = get_delegate_view_as_privileges
       roles = @roles
-      can_view_academics = has_academics_tab?(roles, has_instructor_history, has_student_history, delegate_view_as_privileges)
+      can_view_academics = has_academics_tab?(roles, has_instructor_history, has_student_history)
       feed = {
         isSuperuser: current_user_policy.can_administrate?,
         isViewer: current_user_policy.can_view_as?,
@@ -217,10 +236,10 @@ module User
         hasGoogleAccessToken: GoogleApps::Proxy.access_granted?(@uid),
         hasStudentHistory: has_student_history,
         hasInstructorHistory: has_instructor_history,
-        hasDashboardTab: !authentication_state.original_delegate_user_id,
+        hasDashboardTab: true,
         hasAcademicsTab: can_view_academics,
-        canViewGrades: can_view_academics && (!delegate_view_as_privileges || delegate_view_as_privileges[:viewGrades]),
-        hasFinancialsTab: has_financials_tab?(roles, delegate_view_as_privileges),
+        canViewGrades: can_view_academics,
+        hasFinancialsTab: has_financials_tab?(roles),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
         hasPhoto: !!User::Photo.fetch(@uid, @options),
         inEducationAbroadProgram: @oracle_attributes[:education_abroad],
@@ -237,7 +256,7 @@ module User
         isDelegateUser: is_delegate_user?,
         showSisProfileUI: is_sis_profile_visible?
       }
-      feed[:delegateViewAsPrivileges] = delegate_view_as_privileges if delegate_view_as_privileges
+      filter_user_api_for_delegator(feed) if authentication_state.authenticated_as_delegate?
       feed
     end
 
