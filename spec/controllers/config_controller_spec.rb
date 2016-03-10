@@ -37,9 +37,13 @@ describe ConfigController do
       end
     end
     context 'user can administrate' do
-      before {
-        expect(AuthenticationState).to receive(:new).and_return double(policy: double(can_administrate?: true), original_user_id: nil, original_advisor_user_id: nil)
-      }
+      before do
+        expect(AuthenticationState).to receive(:new).and_return double(
+          policy: double(can_administrate?: true),
+          classic_viewing_as?: false,
+          authenticated_as_advisor?: false
+        )
+      end
       it 'should contain sensitive data' do
         proxies = subject['proxies']
         expect(proxies).to_not be_nil

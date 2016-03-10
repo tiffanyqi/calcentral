@@ -48,20 +48,7 @@ class UserApiController < ApplicationController
         :youtubeSplashId => Settings.youtube_splash_id
       })
     end
-    filter_user_api_for_delegator status if delegate_acting_as_uid
     render :json => status.to_json
-  end
-
-  def filter_user_api_for_delegator(feed)
-    # Delegate users do not have access to preferred name and similar sensitive data.
-    feed[:firstName] = feed[:givenFirstName]
-    feed[:fullName] = feed[:givenFullName]
-    feed[:preferredName] = feed[:givenFullName]
-    feed.delete :firstLoginAt
-    # Extraordinary privileges are set to false.
-    feed[:isDelegateUser] = false
-    feed[:isViewer] = false
-    feed[:isSuperuser] = false
   end
 
   def record_first_login
