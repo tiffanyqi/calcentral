@@ -5,9 +5,7 @@ TorqueBox.configure do
   end
 
   # process incoming JMS messages from activeMQ
-  service JmsWorker do
-    singleton false
-  end
+  service JmsWorker
 
   # warm up active users caches once a day
   job HotPlate do
