@@ -367,23 +367,23 @@ class_calendar:
   departments: [ 'BIOLOGY', 'CHEM' ]
 
 ui_selenium:
-  baseUrl: https://calcentral-dev.berkeley.edu
-  calNetUrl: https://auth-test.berkeley.edu
+  base_url: https://calcentral-dev.berkeley.edu
+  cal_net_url: https://auth-test.berkeley.edu
   canvas_base_url: https://ucberkeley.beta.instructure.com
   canvas_qa_sub_account: secret
-  googleAuthUrl: /api/google/request_authorization?force_domain=false
+  google_auth_url: /api/google/request_authorization?force_domain=false
   layer: development
 
   # Alternative browsers for Selenium tests: chrome, safari, ie
-  webDriver: firefox
+  web_driver: firefox
 
-  googleTaskTimeout: 12
-  pageEventTimeout: 3
-  pageLoadTimeout: 12
+  google_task_timeout: 12
+  page_event_timeout: 10
+  page_load_timeout: 20
   campus_solutions_timeout: 6
-  liveUpdateTimeoutDelta: 180
-  academicsTimeout: 20
-  canvasUpdateTimeout: 60
+  live_update_timeout_delta: 180
+  academics_timeout: 20
+  canvas_update_timeout: 60
   test_user_password: secret
   oski_username: secret
   oski_password: secret
