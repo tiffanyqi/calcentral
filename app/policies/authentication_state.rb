@@ -12,6 +12,10 @@ class AuthenticationState
     @lti_authenticated_only = session['lti_authenticated_only']
   end
 
+  def classic_viewing_as?
+    @original_user_id.present? && (@original_user_id != @user_id)
+  end
+
   def authenticated_as_delegate?
     @original_delegate_user_id.present?
   end

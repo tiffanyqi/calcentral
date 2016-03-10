@@ -133,7 +133,7 @@ class ApplicationController < ActionController::Base
 
   def session_state_requires_reauthentication?
     Settings.features.reauthentication &&
-      (current_user.original_user_id || current_user.original_advisor_user_id) &&
+      (current_user.classic_viewing_as? || current_user.authenticated_as_advisor?) &&
       !cookies[:reauthenticated]
   end
 

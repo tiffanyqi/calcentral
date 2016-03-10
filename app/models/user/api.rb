@@ -156,7 +156,7 @@ module User
 
     def is_sis_profile_visible?
       is_cs_profile_feature_enabled &&
-        !authentication_state.original_delegate_user_id &&
+        !authentication_state.authenticated_as_delegate? &&
         (is_campus_solutions_student? || is_profile_visible_for_legacy_users)
     end
 
@@ -176,9 +176,7 @@ module User
     end
 
     def get_delegate_view_as_privileges
-      # The following is not nil when delegate is in view-as session
-      delegate_user_id = authentication_state.original_delegate_user_id
-      return nil unless is_cs_delegated_access_feature_enabled && delegate_user_id
+      return nil unless is_cs_delegated_access_feature_enabled && authentication_state.authenticated_as_delegate?
       if @delegate_students
         campus_solutions_id = CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_campus_solutions_id
         student = @delegate_students.detect { |s| campus_solutions_id == s[:campusSolutionsId] }
@@ -217,7 +215,7 @@ module User
         hasGoogleAccessToken: GoogleApps::Proxy.access_granted?(@uid),
         hasStudentHistory: has_student_history,
         hasInstructorHistory: has_instructor_history,
-        hasDashboardTab: !authentication_state.original_delegate_user_id,
+        hasDashboardTab: !authentication_state.authenticated_as_delegate?,
         hasAcademicsTab: can_view_academics,
         canViewGrades: can_view_academics && (!delegate_view_as_privileges || delegate_view_as_privileges[:viewGrades]),
         hasFinancialsTab: has_financials_tab?(roles, delegate_view_as_privileges),
