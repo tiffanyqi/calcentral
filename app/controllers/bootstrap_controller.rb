@@ -45,8 +45,12 @@ class BootstrapController < ApplicationController
     # a Fluid activity that may have changed some data.
     flag = params['ucUpdateCache']
     case flag
+      when 'finaid'
+        CampusSolutions::FinancialAidExpiry.expire current_user.user_id
       when 'profile'
         CampusSolutions::PersonDataExpiry.expire current_user.user_id
+      when 'enrollment'
+        CampusSolutions::EnrollmentTermExpiry.expire current_user.user_id
       else
         # no-op
     end
