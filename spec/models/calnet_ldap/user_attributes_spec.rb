@@ -38,6 +38,25 @@ describe CalnetLdap::UserAttributes do
       expect(feed[:student_id]).to eq '11667051'
     end
 
+    context 'customized Directory names' do
+      let(:ldap_result) do
+        {
+          givenname: ['Hermann', 'H Ford'],
+          uid: ['61889'],
+          displayname: ['Daniel Chaucer'],
+          sn: ['Hueffer'],
+          berkeleyEduFirstName: ['Ford Madox'],
+          berkeleyEduLastName: ['Ford']
+        }
+      end
+      it 'prioritizes the customized names' do
+        expect(feed[:first_name]).to eq 'Ford Madox'
+        expect(feed[:last_name]).to eq 'Ford'
+        expect(feed[:ldap_uid]).to eq '61889'
+        expect(feed[:person_name]).to eq 'Daniel Chaucer'
+      end
+    end
+
     context 'no affiliation data in LDAP' do
       let(:ldap_result) do
         {
