@@ -166,7 +166,7 @@
       </table>
     </div>
 
-    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="gpaUnits.totalUnits !== null">
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="gpaUnits.totalUnits > 0">
       <table>
         <tbody>
           <tr>
@@ -177,7 +177,7 @@
       </table>
     </div>
 
-    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="gpaUnits.cumulativeGpa !== null && gpaUnits.cumulativeGpa > 0 && !studentInfo.isLawStudent">
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="gpaUnits.cumulativeGpa > 0 && !studentInfo.isLawStudent">
       <table>
         <tbody>
           <tr>
