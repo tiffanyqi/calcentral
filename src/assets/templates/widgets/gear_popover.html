@@ -4,7 +4,9 @@
   data-ng-class="{true:'cc-header-icon-selected'}[api.popover.status('cc-popover-menu')]"
   title="Settings">
     <div class="cc-flex cc-flex-align-center">
-      <span data-ng-if="api.user.profile.hasPhoto" class="cc-popover-gear-round-profile cc-popover-gear-round-profile-has-photo"></span>
+      <span data-ng-if="api.user.profile.hasPhoto" class="cc-popover-gear-round-profile cc-popover-gear-round-profile-has-photo">
+        <img class="cc-visuallyhidden" data-ng-src="/api/my/photo"/>
+      </span>
       <span data-ng-if="!api.user.profile.hasPhoto" class="cc-popover-gear-round-profile cc-popover-gear-round-profile-bear-photo"></span>
       <span data-ng-bind="api.user.profile.firstName" class="cc-popover-gear-first-name" data-ng-class="{'cc-popover-gear-has-alerts': hasAlerts && !api.user.profile.delegateActingAsUid && !api.user.profile.advisorActingAsUid}"></span>
       <span data-ng-if="!api.user.profile.delegateActingAsUid && !api.user.profile.advisorActingAsUid">
