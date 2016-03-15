@@ -6,7 +6,7 @@ var _ = require('lodash');
 /**
  * Financial Aid controller
  */
-angular.module('calcentral.controllers').controller('FinaidController', function(apiService, finaidFactory, finaidService, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('FinaidController', function(apiService, finaidFactory, finaidService, tasksFactory, $routeParams, $scope) {
   apiService.util.setTitle('Financial Aid and Scholarships');
 
   $scope.isMainFinaid = true;
@@ -64,9 +64,12 @@ angular.module('calcentral.controllers').controller('FinaidController', function
   getFinaidSummary();
 
   /**
-   * We need to update the finaid summary when the approvals have changed
+   * We need to update the finaid summary & checklists when the approvals have changed
    */
   $scope.$on('calcentral.custom.api.finaid.approvals', function() {
+    tasksFactory.getFinaidTasks({
+      refreshCache: true
+    });
     getFinaidSummary({
       refreshCache: true
     });
