@@ -91,20 +91,13 @@ angular.module('calcentral.controllers').controller('ProfileAddressController', 
     }));
   };
 
-  /**
-   * Remove the current error message
-   */
-  var removeErrorMessage = function() {
-    $scope.errorMessage = '';
-  };
-
   var countryWatch = function(countryCode) {
     if (!countryCode) {
       return;
     }
     if (!initialEdit.load) {
       removePreviousAddressData();
-      removeErrorMessage();
+      apiService.profile.removeErrorMessage($scope);
     }
     $scope.currentObject.stateFieldLoading = true;
     initialEdit.load = false;
@@ -179,25 +172,11 @@ angular.module('calcentral.controllers').controller('ProfileAddressController', 
     actionCompleted(data);
   };
 
-  /**
-   * We need to map the address fields for the current country and the ones (depending on country) that the user has entered
-   */
-  var matchFields = function(fields, item) {
-    var fieldIds = _.map(fields, 'field');
-    var returnObject = {};
-    _.forEach(item, function(value, key) {
-      if (_.includes(fieldIds, key)) {
-        returnObject[key] = value || '';
-      }
-    });
-    return returnObject;
-  };
-
   $scope.save = function(item) {
     var merge = _.merge({
       addressType: item.type.code,
       country: item.country
-    }, matchFields($scope.currentObject.fields, item));
+    }, apiService.profile.matchFields($scope.currentObject.fields, item));
 
     apiService.profile
       .save($scope, profileFactory.postAddress, merge)

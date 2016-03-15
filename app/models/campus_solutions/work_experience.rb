@@ -12,24 +12,19 @@ module CampusSolutions
     def self.field_mappings
       @field_mappings ||= FieldMapping.to_hash(
         [
-          FieldMapping.required(:sequenceNbr, :SEQUENCE_NBR),
-          FieldMapping.required(:extOrganizationId, :EXT_ORGNIZATION_ID),
-          FieldMapping.required(:isRetired, :IS_RETIRED),
-          FieldMapping.required(:workExpAddrType, :WORK_EXP_ADDR_TYPE),
+          FieldMapping.required(:sequenceNbr, :SEQ_NO),
+          FieldMapping.required(:employmentDescr, :EMPLOYMENT_DESCR),
           FieldMapping.required(:country, :COUNTRY),
-          FieldMapping.required(:addressType, :ADDRESS_TYPE),
           FieldMapping.required(:city, :CITY),
           FieldMapping.required(:state, :STATE),
-          FieldMapping.required(:phoneType, :PHONE_TYPE),
           FieldMapping.required(:phone, :PHONE),
           FieldMapping.required(:startDt, :START_DT),
           FieldMapping.required(:endDt, :END_DT),
-          FieldMapping.required(:retirementDt, :RETIREMENT_DT),
           FieldMapping.required(:titleLong, :TITLE_LONG),
           FieldMapping.required(:employFrac, :EMPLOY_FRAC),
           FieldMapping.required(:hoursPerWeek, :HOURS_PER_WEEK),
           FieldMapping.required(:endingPayRate, :ENDING_PAY_RATE),
-          FieldMapping.required(:currencyCd, :CURRENCY_CD),
+          FieldMapping.required(:currencyType, :CURRENCY_CD),
           FieldMapping.required(:payFrequency, :PAY_FREQUENCY)
 
         ]
