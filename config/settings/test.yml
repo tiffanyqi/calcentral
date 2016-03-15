@@ -37,31 +37,6 @@ oauth2:
 myfinaid_proxy:
   fake: true
 
-features:
-  bearfacts: true
-  financials: true
-  telebears: true
-  textbooks: true
-  videos: true
-  cal1card: true
-  audio: true
-  advising: true
-  cs_academic_planner: true
-  cs_academic_progress_report: true
-  cs_advising_show_advisors: true
-  cs_advising_gte_forms: true
-  cs_advising_semester_study_list: true
-  cs_delegated_access: true
-  cs_enrollment_card: true
-  cs_fin_aid: true
-  cs_holds: true
-  cs_logout: true
-  cs_profile_emergency_contacts: true
-  cs_profile_languages: true
-  cs_profile_work_experience: true
-  webcast_sign_up_on_calcentral: true
-  class_enrollment_summer_2016: true
-
 cache:
   store: "memory"
   log_level: <%= Logger::DEBUG %>
@@ -82,3 +57,28 @@ cache:
 
 advising_proxy:
   fake: true
+
+features:
+  advising: true
+  audio: true
+  bearfacts: true
+  cal1card: true
+  class_enrollment_summer_2016: true
+  cs_academic_planner: true
+  cs_academic_progress_report: true
+  cs_advising_gte_forms: true
+  cs_advising_semester_study_list: true
+  cs_advising_show_advisors: true
+  cs_delegated_access: true
+  cs_enrollment_card: true
+  cs_fin_aid: true
+  cs_holds: true
+  cs_logout: true
+  cs_profile_emergency_contacts: true
+  cs_profile_languages: true
+  cs_profile_work_experience: true
+  financials: true
+  telebears: true
+  textbooks: true
+  videos: true
+  webcast_sign_up_on_calcentral: true
