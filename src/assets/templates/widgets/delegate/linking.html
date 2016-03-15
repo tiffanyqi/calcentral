@@ -19,7 +19,7 @@
         </label>
       </div>
       <div>
-        <input type="text" id="cc-delegate-linking-key" data-ng-model="delegate.currentObject.data.securityKey" required aria-required="true" />
+        <input type="text" id="cc-delegate-linking-key" maxlength="20" data-ng-model="delegate.currentObject.data.securityKey" data-ng-pattern="/^[\S]+$/" data-ng-trim="false" required aria-required="true" />
       </div>
       <div>
         <label for="cc-delegate-linking-email">
@@ -27,7 +27,7 @@
         </label>
       </div>
       <div>
-        <input type="text" id="cc-delegate-linking-email" data-ng-model="delegate.currentObject.data.proxyEmailAddress" required aria-required="true" />
+        <input type="text" id="cc-delegate-linking-email" maxlength="254" data-ng-model="delegate.currentObject.data.proxyEmailAddress" data-ng-pattern="/^[\S]+$/" data-ng-trim="false" required aria-required="true" />
       </div>
       <div>
         <input type="checkbox" id="cc-delegate-linking-terms" data-ng-model="delegate.currentObject.data.agreeToTerms" required aria-required="true">
@@ -38,7 +38,7 @@
       <div>
         <button class="cc-button cc-button-blue" type="submit" data-ng-disabled="cc_delegate_linking_form.$invalid || delegate.isSaving">
           <span data-ng-if="!delegate.isSaving">Link</span>
-          <span data-ng-if="delegate.isSaving">Linking...</span>
+          <span data-ng-if="delegate.isSaving">Linking&hellip;</span>
         </button>
       </div>
       <hr class="cc-hr-spacing-5" />
