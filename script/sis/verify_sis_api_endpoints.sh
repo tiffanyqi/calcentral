@@ -22,8 +22,8 @@ parse_yaml() {
 
 report_success() {
   local api_path="${1}"
-  local http_code="${2}"
-  echo "  [INFO] ${api_path} --> ${http_code}"
+  local response_metadata="${2}"
+  echo "  [INFO] ${api_path} --> ${response_metadata}"
 }
 
 report_error() {
@@ -43,9 +43,11 @@ report_error() {
 validate_api_response() {
   # Report error per HTTP Response code
   local api_path="${1}"
-  local http_code="${2}"
+  local response_metadata="${2}"
+  local http_code=$(cut -f1 -d" " <<< ${response_metadata})
   local url="${3}"
   local path_to_file="${4}"
+
   if [[ ("${http_code}" -lt "200") || ("${http_code}" -ge "400") ]] ; then
     report_error $@
   elif [[ ! -f "${path_to_file}" ]] ; then
@@ -55,7 +57,7 @@ validate_api_response() {
     if [ "${error_count}" -ne "0" ]; then
       report_error $@
     else
-      report_success $@
+      report_success "${api_path}" "${response_metadata}"
     fi
   fi
 }
@@ -70,31 +72,33 @@ verify_sis_endpoints() {
   echo; echo "${sis_system} > feature flag ${feature_flag_name} = ${feature_flag_value}"
   echo
   if [ "${feature_flag_value}" == "true" ] ; then
+    curl_write_out='\n\t%{http_code} HTTP status\n\tTotal time (seconds): %{time_total}\n\tContent-type: %{content_type}\n'
     for path in ${endpoints[@]}; do
       case "${sis_system}" in
         ("Campus Solutions")
           mkdir -p "${LOG_DIRECTORY}/campus_solutions"
           log_file="${LOG_DIRECTORY}/campus_solutions/${path//\//_}.log"
           url="${CS_BASE_URL}${path}"
-          http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" -u "${CS_CREDENTIALS}" "${url}")
-          validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
+          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" -u "${CS_CREDENTIALS}" "${url}")
           ;;
         ("Crosswalk")
           mkdir -p "${LOG_DIRECTORY}/calnet_crosswalk"
           log_file="${LOG_DIRECTORY}/calnet_crosswalk/${path//\//_}.log"
           url="${CROSSWALK_BASE_URL}${path}"
-          http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" --digest -u "${CROSSWALK_CREDENTIALS}" "${url}")
-          validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
+          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" --digest -u "${CROSSWALK_CREDENTIALS}" "${url}")
           ;;
         ("Hub")
           mkdir -p "${LOG_DIRECTORY}/hub_edos"
           log_file="${LOG_DIRECTORY}/hub_edos/${path//\//_}.log"
           url="${HUB_BASE_URL}${path}"
-          http_code=$(curl -k -w "%{http_code}\n" -so "${log_file}" -H "Accept:application/json" -u "${HUB_CREDENTIALS}" --header "app_id: ${HUB_APP_ID}" --header "app_key: ${HUB_APP_KEY}" "${url}")
-          validate_api_response "${path}" "${http_code}" "${url}" "${log_file}"
+          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" -H "Accept:application/json" -u "${HUB_CREDENTIALS}" --header "app_id: ${HUB_APP_ID}" --header "app_key: ${HUB_APP_KEY}" "${url}")
           ;;
-        (*) echo; echo "[ERROR] Unknown SIS system: ${sis_system}"; echo ;;
+        (*)
+          echo; echo "[ERROR] Unknown SIS system: ${sis_system}"; echo
+          continue
+          ;;
       esac
+      validate_api_response "${path}" "${response_metadata}" "${url}" "${log_file}"
     done
   fi
   echo
