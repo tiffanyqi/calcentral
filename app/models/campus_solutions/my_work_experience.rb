@@ -7,7 +7,7 @@ module CampusSolutions
     def update(params = {})
       params[:startDt] = cs_date_formatter params[:startDt]
       params[:endDt] = cs_date_formatter params[:endDt]
-      if !params[:startDt] or !params[:endDt]
+      if !params[:startDt] || !params[:endDt]
         return err_msg
       end
       passthrough(CampusSolutions::WorkExperience, params)
@@ -19,15 +19,15 @@ module CampusSolutions
 
     def cs_date_formatter(date)
       begin
-        return date if date.blank?
-        return Date.strptime(date, '%m/%d/%Y').strftime('%F')
+        return '' if date.blank?
+        Date.strptime(date, '%m/%d/%Y').strftime('%F')
       rescue ArgumentError
-        return false
+        logger.error "Could not parse date string #{date}"
+        false
       end
     end
 
     def err_msg
-      logger.error "Error reported in back-end validation."
       {
         statusCode: 400,
         errored: true,
