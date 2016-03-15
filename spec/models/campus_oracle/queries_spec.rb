@@ -261,13 +261,6 @@ describe CampusOracle::Queries do
     end
   end
 
-  it 'should find a grad student that used to be an undergrad', if: CampusOracle::Queries.test_data? do
-    expect(CampusOracle::Queries.is_previous_ugrad?('212388')).to be true
-    expect(CampusOracle::Queries.is_previous_ugrad?('212389')).to be true   # grad student expired, previous ugrad
-    expect(CampusOracle::Queries.is_previous_ugrad?('212390')).to be false  # grad student, but not previous ugrad
-    expect(CampusOracle::Queries.is_previous_ugrad?('300939')).to be true   # ugrad only
-  end
-
   it 'should find a user with an expired LDAP account', if: CampusOracle::Queries.test_data? do
     expect(CampusOracle::Queries.get_person_attributes('6188989', current_term.year, current_term.code)['person_type']).to eq 'Z'
     expect(CampusOracle::Queries.get_basic_people_attributes(['6188989']).first['person_type']).to eq 'Z'
