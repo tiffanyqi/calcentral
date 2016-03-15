@@ -14,27 +14,44 @@ describe CampusSolutions::MyWorkExperience do
         end
       end
 
-      context 'attempting to transform an incorrectly formatted date' do
-        let(:date) {'08-31-2012'}
-        subject { proxy.cs_date_formatter date }
-        it 'should return the original date format' do
-          expect(subject).to eq '08-31-2012'
-        end
-      end
-
       context 'attempting to transform an empty string' do
         let(:date) {''}
-        subject { proxy.cs_date_formatter date }
+        subject {proxy.cs_date_formatter date}
         it 'should return an empty string' do
           expect(subject).to eq ''
         end
       end
 
-      context 'attempting to transform an invalid string' do
-        let(:date) {'ABCDEFGHIJKLMNOP'}
+      context 'attempting to transform an incorrectly formatted date' do
+        let(:date) {'08-09-2014'}
         subject { proxy.cs_date_formatter date }
-        it 'should return the original string' do
-          expect(subject).to eq 'ABCDEFGHIJKLMNOP'
+        it 'should return 400 response' do
+          expect(subject).to eq false
+        end
+      end
+
+      context 'attempting to post an incorrectly formatted date' do
+        let(:params) { {
+          sequenceNbr: '',
+          employmentDescr: 'Petting Zoo',
+          country: 'USA',
+          city: 'ventura',
+          state: 'CA',
+          phone: '1234',
+          startDt: '11.12.2012',
+          endDt: '12.11.2013',
+          titleLong: 'Test Title',
+          employFrac: '10',
+          hoursPerWeek: '4',
+          endingPayRate: '10000',
+          currencyType: 'USD',
+          payFrequency: 'M'
+        } }
+        subject { proxy.update params }
+        it 'should return a 400 response' do
+          expect(subject[:statusCode]).to eq 400
+          expect(subject[:errored]).to eq true
+          expect(subject[:feed][:errmsgtext]).to eq 'Invalid date format.'
         end
       end
 

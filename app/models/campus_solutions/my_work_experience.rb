@@ -1,11 +1,15 @@
 module CampusSolutions
   class MyWorkExperience < UserSpecificModel
 
+    include ClassLogger
     include WorkExperienceUpdatingModel
 
     def update(params = {})
       params[:startDt] = cs_date_formatter params[:startDt]
       params[:endDt] = cs_date_formatter params[:endDt]
+      if !params[:startDt] or !params[:endDt]
+        return err_msg
+      end
       passthrough(CampusSolutions::WorkExperience, params)
     end
 
@@ -13,14 +17,24 @@ module CampusSolutions
       passthrough(CampusSolutions::WorkExperienceDelete, params)
     end
 
-    # Formats input date to Campus Solutions acceptable ISO 8601 (YYYY-MM-DD)
-    # Front-end date validator ensures date will be in '%m/%d/%Y' format
     def cs_date_formatter(date)
       begin
+        return date if date.blank?
         return Date.strptime(date, '%m/%d/%Y').strftime('%F')
       rescue ArgumentError
-        return date
+        return false
       end
+    end
+
+    def err_msg
+      logger.error "Error reported in back-end validation."
+      {
+        statusCode: 400,
+        errored: true,
+        feed: {
+          errmsgtext: "Invalid date format."
+        }
+      }
     end
 
   end

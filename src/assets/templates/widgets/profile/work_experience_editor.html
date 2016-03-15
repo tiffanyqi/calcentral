@@ -124,7 +124,7 @@
       </div>
 
       <div class="cc-page-widget-profile-margin-top">
-        <button class="cc-button cc-button-blue" type="submit" data-ng-disabled="isSaving || currentObject.stateFieldLoading">
+        <button class="cc-button cc-button-blue" type="submit" data-ng-disabled="cc_page_widget_profile_work_experience.$invalid || isSaving || currentObject.stateFieldLoading">
           <span data-ng-if="!isSaving">Save</span>
           <span data-ng-if="isSaving">Updating&hellip;</span>
         </button>
