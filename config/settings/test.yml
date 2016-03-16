@@ -1,31 +1,42 @@
-# The test environment should require minimal configuration, and is the one targeted by travis.
+# The test environment should require minimal configuration, and is the one targeted by Travis.
 # Avoid creating too many dependencies (if any) on a test.local.yml
+application:
+  layer: 'test'
+
 logger:
   level: <%= ENV['LOGGER_LEVEL'] || DEBUG %>
   stdout: <%= ENV['LOGGER_STDOUT'] || 'only' %>
-application:
-  layer: "test"
+
 canvas_proxy:
   fake: true
   app_provider_host: 'https://cc-dev.example.com'
+
 ldap:
   fake: 'true'
   host: 'nds-test.berkeley.edu'
+
 google_proxy:
   fake: true
+
 financials_proxy:
   fake: true
+
 textbooks_proxy:
   fake: true
+
 terms:
   # Keyed to H2 test data
   fake_now: 2013-10-11 04:20:00
+
 cal_link_proxy:
   fake: true
+
 cal1card_proxy:
   fake: true
+
 calmail_proxy:
   fake: true
+
 calnet_crosswalk_proxy:
   fake: true
 

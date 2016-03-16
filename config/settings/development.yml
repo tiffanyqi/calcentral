@@ -1,6 +1,11 @@
 application:
   layer: "development"
 
+logger:
+  level: <%= ENV['LOGGER_LEVEL'] || DEBUG %>
+  stdout: <%= ENV['LOGGER_STDOUT'] || true %>
+  slow_query_threshold_in_ms: 2000
+
 bearfacts_proxy:
   fake: true
 
@@ -18,6 +23,7 @@ canvas_proxy:
   fake: true
 
 cas_server: 'https://auth-test.berkeley.edu/cas'
+
 cas_logout_url: 'https://auth-test.berkeley.edu/cas/logout'
 
 financials_proxy:
@@ -28,11 +34,6 @@ textbooks_proxy:
 
 google_proxy:
   fake: true
-
-logger:
-  level: <%= ENV['LOGGER_LEVEL'] || DEBUG %>
-  stdout: <%= ENV['LOGGER_STDOUT'] || true %>
-  slow_query_threshold_in_ms: 2000
 
 myfinaid_proxy:
   fake: true

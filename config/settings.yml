@@ -1,10 +1,3 @@
-logger:
-  level: <%= ENV['LOGGER_LEVEL'] || WARN %>
-  stdout: <%= ENV['LOGGER_STDOUT'] %>
-  slow_query_threshold_in_ms: 700
-  slow_request_threshold_in_ms: 30000
-  proxy_threshold_in_ms: 8000
-
 application:
   # Set to true if testing production env without Apache/Nginx
   serve_static_assets: false
@@ -21,7 +14,15 @@ application:
   # Lifespan of session cookie
   session_expiration: <%= 4.hours %>
 
+logger:
+  level: <%= ENV['LOGGER_LEVEL'] || WARN %>
+  stdout: <%= ENV['LOGGER_STDOUT'] %>
+  slow_query_threshold_in_ms: 700
+  slow_request_threshold_in_ms: 30000
+  proxy_threshold_in_ms: 8000
+
 cas_server: 'https://auth.berkeley.edu/cas'
+
 cas_logout_url: 'https://auth.berkeley.edu/cas/logout'
 
 # Database settings
@@ -42,6 +43,7 @@ campusdb:
   pool: 95
   fake: false
   fake_user_id: "300939"
+
 terms:
   # Limit how far back our academic history goes.
   oldest: spring-2010
@@ -49,6 +51,7 @@ terms:
   # Can also be used to force selection of a "current term" different
   # from the default.
   fake_now:
+
 test_sqlite:
   pool: 3
 
@@ -95,11 +98,13 @@ canvas_proxy:
   test_cas_url: 'https://auth-test.berkeley.edu/cas'
   # If reports are provided through Google Drive, this is the UID that creates them.
   reporter_uid:
+
 ldap:
   host: 'nds.berkeley.edu'
   port: 636
   application_bind: 'uid=someApp,ou=applications,dc=berkeley,dc=edu'
   application_password: 'someMumboJumbo'
+
 google_proxy:
   client_id: 1
   client_secret: 'bogusClientSecret'
@@ -388,6 +393,16 @@ hub_edos_proxy:
   username: secret
   password: secret
   http_timeout_seconds: 30
+
+edo_oracle:
+  fake: true
+  adapter: jdbc
+  driver: oracle.jdbc.OracleDriver
+  url:
+  username: calcentral_bcs
+  password:
+  pool: 200
+  timeout: 5000
 
 calnet_crosswalk_proxy:
   fake: true
