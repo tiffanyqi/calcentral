@@ -72,6 +72,7 @@ features:
   cs_advising_gte_forms: true
   cs_advising_semester_study_list: true
   cs_advising_show_advisors: true
+  cs_billing: true
   cs_delegated_access: true
   cs_enrollment_card: true
   cs_fin_aid: true

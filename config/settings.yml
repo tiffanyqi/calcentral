@@ -426,6 +426,7 @@ features:
   cs_advising_gte_forms: false
   cs_advising_semester_study_list: false
   cs_advising_show_advisors: false
+  cs_billing: false
   cs_delegated_access: false
   cs_enrollment_card: false
   cs_fin_aid: false
@@ -445,4 +446,3 @@ features:
   textbooks: false
   videos: false
   webcast_sign_up_on_calcentral: false
-
