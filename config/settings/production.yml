@@ -1,11 +1,14 @@
-logger:
-  level: <%= ENV['LOGGER_LEVEL'] || WARN %>
-secret_token: some 128 char random hex string
 application:
   # Set if running behind Apache/Nginx + https
   protocol: "https://"
   layer: "production"
   fake_proxies_enabled: false
+
+secret_token: some 128 char random hex string
+
+logger:
+  level: <%= ENV['LOGGER_LEVEL'] || WARN %>
+
 campusdb:
   adapter: jdbc
   driver: oracle.jdbc.OracleDriver
@@ -14,6 +17,7 @@ campusdb:
   password: <yer_password>
   pool: 95
   timeout: 5000
+
 canvas_proxy:
   export_directory: '/home/app_calcentral/calcentral/tmp/canvas'
   # Set to "true" when Canvas allows it.
