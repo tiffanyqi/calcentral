@@ -1,3 +1,4 @@
+# encoding: utf-8
 describe CalnetLdap::UserAttributes do
 
   let(:feed) { described_class.new(user_id: uid).get_feed_internal }
@@ -54,6 +55,24 @@ describe CalnetLdap::UserAttributes do
         expect(feed[:last_name]).to eq 'Ford'
         expect(feed[:ldap_uid]).to eq '61889'
         expect(feed[:person_name]).to eq 'Daniel Chaucer'
+      end
+    end
+
+    context 'UTF-8 characters with generic encoding specified' do
+      let(:ldap_result) do
+        {
+          givenname: ["Fernando Ant\xC3\xB3nio".force_encoding('ASCII-8BIT')],
+          uid: ['61889'],
+          displayname: ["\xC3\x81lvaro de Campos".force_encoding('ASCII-8BIT')],
+          sn: ["Pess\xC3\xB4a".force_encoding('ASCII-8BIT')],
+          berkeleyEduFirstName: ["Bar\xC3\xA3o".force_encoding('ASCII-8BIT')],
+          berkeleyEduLastName: ['de Teive']
+        }
+      end
+
+      it 'recognizes encoding and does not blow up on JSON conversion' do
+        expect(feed[:first_name].to_json).to eq '"Barão"'
+        expect(feed[:person_name].to_json).to eq '"Álvaro de Campos"'
       end
     end
 
