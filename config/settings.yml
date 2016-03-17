@@ -314,7 +314,7 @@ hot_plate:
 background_jobs_check:
   time_between_pings: <%= 5.minutes %>
 
-youtube_splash_id: 'EQ-a7xrfVag'
+youtube_splash_id: 'Yc3z0TIl_Fc'
 
 oec:
   administrator_uid: ''
