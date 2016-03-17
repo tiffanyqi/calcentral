@@ -39,13 +39,13 @@
       data-link="enrollmentTerm.links.gradeBase"
       data-text="Change Grade Base"
       data-cache="enrollment"
-      data-ng-if="enrollmentTerm.isGradeBaseAvailable"
+      data-ng-if="enrollmentTerm.isGradeBaseAvailable && !enrollment.isLawStudent"
     ></div>
     <div
       data-cc-campus-solutions-link-item-directive
       data-link="enrollmentTerm.links.withdrawFromSemester"
       data-text="Withdraw"
-      data-ng-if="enrollmentTerm.enrollmentPeriod[0]"
+      data-ng-if="enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent"
       data-cache="enrollment"
     ></div>
   </div>

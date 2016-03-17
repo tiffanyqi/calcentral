@@ -1,13 +1,13 @@
 <div
   data-cc-enrollment-card-header-directive
   data-count="$index + 1"
-  data-date="{{enrollmentTerm.enrollmentPeriod[0] ? (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'h:mm a') : ''}}"
-  data-date-important="{{enrollmentTerm.enrollmentPeriod[0] ? (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'EEE MMM d'): ''}}"
+  data-date="{{enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent ? (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'h:mm a') : ''}}"
+  data-date-important="{{enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent ? (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'EEE MMM d'): ''}}"
   data-title="section.title"
 ></div>
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
-  <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks">
+  <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks && !enrollment.isLawStudent">
     <div data-ng-if="enrollmentTerm.isClassScheduleAvailable">
       <span
         data-cc-campus-solutions-link-item-directive
