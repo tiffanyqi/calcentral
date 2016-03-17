@@ -15,7 +15,7 @@
           <div data-ng-include="'widgets/finaid_summary_semester.html'"></div>
           <div data-cc-spinner-directive="finaidSummaryInfo.isLoadingData">
             <div data-ng-include="'widgets/finaid_summary_netcost.html'"></div>
-            <hr data-ng-if="!finaidSummaryData.netCost && finaidSummaryData.fundingOffered" aria-hidden="true" />
+            <hr data-ng-if="!finaidSummaryData.netCost" aria-hidden="true" />
             <div data-ng-include="'widgets/finaid_summary_fundingoffered.html'"></div>
           </div>
         </div>
