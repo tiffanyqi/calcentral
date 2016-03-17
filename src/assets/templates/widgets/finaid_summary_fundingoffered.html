@@ -1,23 +1,14 @@
-<div data-ng-if="finaidSummaryData.fundingOffered" class="cc-widget-finaid-summary-funding-offered">
+<div class="cc-widget-finaid-summary-funding-offered">
   <div
-    class="cc-widget-list-hover cc-widget-list-hover-notriangle"
-    data-ng-class="{'cc-widget-list-hover-opened':(showFundingOfferedDetails)}"
-    data-cc-accessible-focus-directive
-    data-ng-click="showFundingOfferedDetails = !showFundingOfferedDetails"
-  >
-    <div
-      class="cc-text-bold"
-      data-cc-finaid-summary-item-directive
-      data-item="finaidSummaryData.fundingOffered.total"
-    ></div>
-    <div data-ng-if="showFundingOfferedDetails">
-      <div data-ng-repeat="category in finaidSummaryData.fundingOffered.categories" class="cc-widget-finaid-summary-funding-offered-category">
-        <div data-cc-finaid-summary-item-directive data-item="category.total" data-fade-total="true"></div>
-        <hr class="cc-hr-spacing-5" aria-hidden="true" />
-        <div data-ng-repeat="item in category.items" class="cc-text-small cc-widget-finaid-summary-indent">
-          <div data-cc-finaid-summary-item-directive data-item="item"></div>
-        </div>
-      </div>
+    class="cc-text-bold"
+    data-cc-finaid-summary-item-directive
+    data-item="finaidSummaryData.fundingOffered.total"
+  ></div>
+  <div data-ng-repeat="category in finaidSummaryData.fundingOffered.categories" class="cc-widget-finaid-summary-funding-offered-category">
+    <div data-cc-finaid-summary-item-directive data-item="category.total" data-fade-total="true"></div>
+    <hr class="cc-hr-spacing-5" aria-hidden="true" />
+    <div data-ng-repeat="item in category.items" class="cc-text-small cc-widget-finaid-summary-indent">
+      <div data-cc-finaid-summary-item-directive data-item="item"></div>
     </div>
   </div>
 </div>
