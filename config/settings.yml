@@ -424,7 +424,6 @@ features:
   cs_academic_profile: true
   cs_academic_progress_report: false
   cs_advising_gte_forms: false
-  cs_advising_semester_study_list: false
   cs_advising_show_advisors: false
   cs_billing: false
   cs_delegated_access: false
