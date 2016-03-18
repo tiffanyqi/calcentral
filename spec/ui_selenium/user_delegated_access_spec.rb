@@ -19,11 +19,8 @@ describe 'Delegated access', :testui => true do
       @cs_delegate_students_api = ApiCSDelegateAccessStudents.new @driver
       @status_api = ApiMyStatusPage.new @driver
       @academics_api = ApiMyAcademicsPageSemesters.new @driver
-      @financials_api = ApiMyFinancialsPage.new @driver
-      @cal_1_card_api = ApiMyCal1CardPage.new @driver
       @my_fin_aid_api = ApiMyFinAidPage.new @driver
       @cs_fin_aid_years_api = ApiCSAidYearsPage.new @driver
-      @cs_fin_aid_data_api = ApiCSFinAidDataPage.new @driver
 
       # Academics UI
       @academic_profile_card = CalCentralPages::MyAcademicsProfileCard.new @driver
@@ -65,10 +62,11 @@ describe 'Delegated access', :testui => true do
           uid = delegate['uid']
           logger.info "Delegate UID is #{uid}"
           @splash_page.load_page
+          # End view-as session left over from previous loop
           @splash_page.delegate_stop_viewing
           @splash_page.basic_auth uid
-          @cs_delegate_students_api.get_json @driver
 
+          @cs_delegate_students_api.get_json @driver
           students = @cs_delegate_students_api.students
 
           if students.nil?
@@ -83,7 +81,7 @@ describe 'Delegated access', :testui => true do
 
           else
 
-            logger.debug "There are #{students.length} student accounts associated with delegate UID #{uid}"
+            logger.info "There are #{students.length} student accounts associated with delegate UID #{uid}"
 
             # DELEGATED ACCESS UI ON TOOLBOX PAGE
 
@@ -95,10 +93,9 @@ describe 'Delegated access', :testui => true do
             end
             it ("shows delegate UID #{uid} the delegate welcome message") { expect(shows_delegate_welcome).to be true }
 
-            toolbox_students = @toolbox_page.all_delegator_names
-
             # Check page links for one of the test delegates
-            if delegate == test_delegates.first
+
+              if delegate == test_delegates.first
 
               shows_less = @toolbox_page.delegate_msg_expanded_element.visible?
               it ("shows delegate UID #{uid} a collapsed view of delegate instructions") { expect(shows_less).to be false }
@@ -155,7 +152,7 @@ describe 'Delegated access', :testui => true do
             # DELEGATE VIEW-AS EXPERIENCE
 
             students.each do |student|
-              student_uid = student['uid'].to_i
+              student_uid = student['uid']
               student_name = student['fullName']
               privileges = student['privileges']
 
@@ -173,6 +170,8 @@ describe 'Delegated access', :testui => true do
                 @splash_page.basic_auth student_uid
                 @academics_api.get_json @driver
                 @status_api.get_json @driver
+                @my_fin_aid_api.get_json @driver
+                @cs_fin_aid_years_api.get_json @driver
 
                 is_student = @status_api.is_student?
                 is_faculty = @status_api.is_faculty?
@@ -201,8 +200,6 @@ describe 'Delegated access', :testui => true do
                   end
 
                 else
-
-                  # Log in as delegate to compare the filtered UI to the feed
 
                   @toolbox_page.delegate_view_as student_name
 
@@ -291,7 +288,6 @@ describe 'Delegated access', :testui => true do
                           else
                             it "shows delegate UID #{uid} no #{semester_name} grades on My Academics for UID #{student_uid}" do
                               expect(ui_grades.any?).to be false
-                              expect(ui_grades).not_to eql(api_grades)
                             end
                           end
                         end
@@ -363,9 +359,6 @@ describe 'Delegated access', :testui => true do
 
                   if privileges['financial']
 
-                    @my_fin_aid_api.get_json @driver
-                    @cs_fin_aid_years_api.get_json @driver
-
                     # Billing Summary
                     sees_billing_summary = WebDriverUtils.verify_block do
                       @finances_page.load_page
@@ -389,9 +382,8 @@ describe 'Delegated access', :testui => true do
                     end
 
                     # Financial Resources links
-                    @finances_page.fin_resources_list_element.when_visible timeout
-                    shows_fin_resources = @finances_page.fin_resources_list?
-                    it ("shows delegate UID #{uid} Financial Resources link for UID #{student_uid}") { expect(shows_fin_resources).to be true }
+                    shows_fin_resources = @finances_page.fin_resources_list_element.when_visible timeout
+                    it ("shows delegate UID #{uid} Financial Resources link for UID #{student_uid}") { expect(shows_fin_resources).to be_truthy }
 
                     # Financial Aid (CS)
                     @finances_page.finaid_content_element.when_visible timeout
@@ -530,6 +522,14 @@ describe 'Delegated access', :testui => true do
                     @profile_bconnected.not_found_element.when_present timeout
                   end
                   it ("prevents delegate UID #{uid} from hitting the Profile bConnected page for UID #{student_uid}") { expect(blocks_bconnected).to be true }
+
+                  # Toolbox - always hidden
+
+                  blocks_student_toolbox = WebDriverUtils.verify_block do
+                    @toolbox_page.load_page
+                    @toolbox_page.not_found_element.when_present timeout
+                  end
+                  it ("prevents delegate UID #{uid} from hitting the student's Toolbox page for UID #{student_uid}") { expect(blocks_student_toolbox).to be true }
 
                   # Delegate Welcome
 

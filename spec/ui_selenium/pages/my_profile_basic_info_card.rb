@@ -20,7 +20,7 @@ module CalCentralPages
 
     def load_page
       logger.debug 'Loading profile basic info page'
-      navigate_to "#{WebDriverUtils.base_url}/profile/basic"
+      navigate_to "#{WebDriverUtils.base_url}/profile"
     end
 
     def click_add_pref_name_button

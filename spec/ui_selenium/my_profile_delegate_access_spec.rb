@@ -33,10 +33,10 @@ describe 'Delegated access', :testui => true do
 
             it ("offers a 'Delegate Access' Profile menu option to UID #{uid}") { expect(has_delegate_access).to be true }
 
-            @basic_info_page.click_delegate_access @driver
-            @delegate_access_page.manage_delegates_msg_element.when_visible timeout
-
-            has_manage_delegates_link = @delegate_access_page.manage_delegates_link?
+            has_manage_delegates_link = WebDriverUtils.verify_block do
+              @basic_info_page.click_delegate_access @driver
+              @delegate_access_page.manage_delegates_link_element.when_visible timeout
+            end
             it ("offers link to Manage Delegates for UID #{uid}") { expect(has_manage_delegates_link).to be true }
 
             has_share_bcal_link = WebDriverUtils.verify_external_link(@driver, @delegate_access_page.bcal_link_element, 'Share your calendar with someone - Calendar Help')
@@ -44,13 +44,13 @@ describe 'Delegated access', :testui => true do
 
           else
 
-            it ("offers no Profile menu Delegate Access option to UID #{uid}") { (has_delegate_access).to be false }
+            it ("offers no Profile menu Delegate Access option to UID #{uid}") { expect(has_delegate_access).to be false }
 
-            @delegate_access_page.load_page
-            @delegate_access_page.wait_until(timeout) { @delegate_access_page.title == 'Error | CalCentral' }
-
-            hits_delegate_404 = @delegate_access_page.not_found?
-            it ("prevents UID #{uid} from hitting the Delegate Access page directly") { expect(hits_delegate_404).to be true }
+            hits_delegate_404 = WebDriverUtils.verify_block do
+              @delegate_access_page.load_page
+              @delegate_access_page.not_found_element.when_visible timeout
+            end
+            it ("prevents UID #{uid} from hitting the Delegate Access page directly") { expect(hits_delegate_404).to be true}
 
           end
         rescue => e
