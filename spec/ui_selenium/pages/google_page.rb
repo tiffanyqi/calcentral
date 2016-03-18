@@ -79,6 +79,7 @@ class GooglePage
     logger.info('Logging into Google')
     remove_account_link if remove_account_link_element.visible?
     WebDriverUtils.wait_for_element_and_type(username_input_element, gmail_user)
+    next_button if next_button?
     WebDriverUtils.wait_for_element_and_type(password_input_element, gmail_pass)
     uncheck_stay_signed_in if stay_signed_in?
     sign_in_button

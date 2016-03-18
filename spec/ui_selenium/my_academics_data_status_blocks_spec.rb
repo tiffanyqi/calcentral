@@ -48,11 +48,11 @@ describe 'My Academics Status and Blocks', :testui => true do
             has_block_alert = my_academics_page.block_status_alert?
             popover_block_count = my_academics_page.block_status_alert_number if has_block_alert
 
-            # Check actual reg and block status
-            api_reg_status = status_api_page.is_registered?
-            has_active_block = academics_api_page.active_blocks.any? unless academics_api_page.active_blocks.nil?
-
             if is_student
+
+              # Check actual reg and block status
+              api_reg_status = status_api_page.is_registered?
+              has_active_block = academics_api_page.active_blocks.any? unless academics_api_page.active_blocks.nil?
 
               it "is available via a person icon in the header for UID #{uid}" do
                 expect(has_status_heading).to be true
