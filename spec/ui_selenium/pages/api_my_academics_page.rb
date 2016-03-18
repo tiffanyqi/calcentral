@@ -9,7 +9,7 @@ class ApiMyAcademicsPage
     logger.info('Parsing JSON from /api/my/academics')
     navigate_to "#{WebDriverUtils.base_url}/api/my/academics"
     wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.academics_timeout)
-    wait.until { driver.find_element(:xpath => '//pre') }
+    wait.until { driver.find_element(:xpath => '//pre[contains(.,"MyAcademics::Merged")]') }
     body = driver.find_element(:xpath, '//pre').text
     @parsed = JSON.parse(body)
   end

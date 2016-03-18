@@ -141,15 +141,15 @@ class WebDriverUtils
       if driver.window_handles.length > 1
         driver.switch_to.window driver.window_handles.last
         wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.page_load_timeout)
-        wait.until { driver.find_element(:xpath => "//title[contains(.,'#{expected_page_title}')]") }
+        wait.until { driver.title.include?("#{expected_page_title}") }
         true
       else
         logger.error('Link did not open in a new window')
         false
       end
     rescue
-      logger.error "Expected page title '#{expected_page_title}', but got '#{driver.find_element(:xpath => '//title').text}' instead"
-      false
+      logger.error "Expected page title '#{expected_page_title}', but got '#{driver.title}' instead"
+      return false
     ensure
       if driver.window_handles.length > 1
         # Handle any alert that might appear when opening the new window

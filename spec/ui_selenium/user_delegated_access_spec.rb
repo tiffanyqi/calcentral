@@ -7,15 +7,23 @@ describe 'Delegated access', :testui => true do
     begin
       @driver = WebDriverUtils.launch_browser
       timeout = WebDriverUtils.page_load_timeout
-      wait = Selenium::WebDriver::Wait.new(:timeout => timeout)
+      wait = Selenium::WebDriver::Wait.new :timeout => timeout
 
       @splash_page = CalCentralPages::SplashPage.new @driver
+      @cal_net_page = CalNetAuthPage.new @driver
       @dashboard_page = CalCentralPages::MyDashboardPage.new @driver
       @campus_page = CalCentralPages::MyCampusPage.new @driver
       @toolbox_page = CalCentralPages::MyToolboxPage.new @driver
+      @delegate_welcome = CalCentralPages::DelegateWelcomeCard.new @driver
+
       @cs_delegate_students_api = ApiCSDelegateAccessStudents.new @driver
-      @cal_net_page = CalNetAuthPage.new @driver
       @status_api = ApiMyStatusPage.new @driver
+      @academics_api = ApiMyAcademicsPageSemesters.new @driver
+      @financials_api = ApiMyFinancialsPage.new @driver
+      @cal_1_card_api = ApiMyCal1CardPage.new @driver
+      @my_fin_aid_api = ApiMyFinAidPage.new @driver
+      @cs_fin_aid_years_api = ApiCSAidYearsPage.new @driver
+      @cs_fin_aid_data_api = ApiCSFinAidDataPage.new @driver
 
       # Academics UI
       @academic_profile_card = CalCentralPages::MyAcademicsProfileCard.new @driver
@@ -30,17 +38,11 @@ describe 'Delegated access', :testui => true do
       @teaching_card = CalCentralPages::MyAcademicsTeachingCard.new @driver
       @class_page = CalCentralPages::MyAcademicsClassPage.new @driver
       @booklist_page = CalCentralPages::MyAcademicsBookListPage.new @driver
-      @academics_api = ApiMyAcademicsPageSemesters.new @driver
 
       # Finances UI
       @finances_page = CalCentralPages::MyFinancesPages::MyFinancesLandingPage.new @driver
       @finances_details_page = CalCentralPages::MyFinancesPages::MyFinancesDetailsPage.new @driver
       @finances_fin_aid_page = CalCentralPages::MyFinancesPages::MyFinancesFinancialAidPage.new @driver
-      @financials_api = ApiMyFinancialsPage.new @driver
-      @cal_1_card_api = ApiMyCal1CardPage.new @driver
-      @my_fin_aid_api = ApiMyFinAidPage.new @driver
-      @cs_fin_aid_years_api = ApiCSAidYearsPage.new @driver
-      @cs_fin_aid_data_api = ApiCSFinAidDataPage.new @driver
 
       # Profile UI
       @profile_basic = CalCentralPages::MyProfileBasicInfoCard.new @driver
@@ -61,83 +63,101 @@ describe 'Delegated access', :testui => true do
 
         begin
           uid = delegate['uid']
-          logger.info("Delegate UID is #{uid}")
+          logger.info "Delegate UID is #{uid}"
           @splash_page.load_page
+          @splash_page.delegate_stop_viewing
           @splash_page.basic_auth uid
           @cs_delegate_students_api.get_json @driver
 
           students = @cs_delegate_students_api.students
-          logger.debug "There are #{students.length} student accounts associated with delegate UID #{uid}"
 
-          # DELEGATED ACCESS UI ON TOOLBOX PAGE
+          if students.nil?
 
-          @toolbox_page.load_page
+            logger.warn "Delegate UID #{uid} has no students"
 
-          shows_delegate_welcome = WebDriverUtils.verify_block do
-            @toolbox_page.delegate_msg_heading_element.when_visible timeout
-            @toolbox_page.delegate_msg_element.when_visible timeout
-          end
-          it ("shows delegate UID #{uid} the delegate welcome message") { expect(shows_delegate_welcome).to be true }
+            blocks_toolbox = WebDriverUtils.verify_block do
+              @toolbox_page.load_page
+              @toolbox_page.not_found_element.when_present timeout
+            end
+            it ("prevents UID #{uid} from reaching the Toolbox") { expect(blocks_toolbox).to be true }
 
-          shows_less = @toolbox_page.delegate_msg_expanded_element.visible?
-          it ("shows delegate UID #{uid} a collapsed view of delegate instructions") { expect(shows_less).to be false }
+          else
 
-          @toolbox_page.show_more
-          shows_more = @toolbox_page.delegate_msg_expanded_element.visible?
-          it ("shows delegate UID #{uid} an expanded view of delegate instructions") { expect(shows_more).to be true }
+            logger.debug "There are #{students.length} student accounts associated with delegate UID #{uid}"
 
-          ui_students = @toolbox_page.all_delegator_names
-          api_students = @cs_delegate_students_api.student_names
-          it ("shows delegate UID #{uid} the list of linked students") { expect(ui_students).to eql(api_students) }
+            # DELEGATED ACCESS UI ON TOOLBOX PAGE
 
-          subscribe_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.subscribe_to_calendar_element, 'UC Berkeley Calendar - Office Of The Registrar')
-          it ("shows delegate UID #{uid} a link to 'Subscribe to the Academic Calendar'") { expect(subscribe_calendar_link).to be true }
+            @toolbox_page.load_page
 
-          grad_div_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.grad_div_deadlines_element, 'Degree Deadlines | Berkeley Graduate Division')
-          it ("shows delegate UID #{uid} a link to 'Graduate Division Degree Deadlines'") { expect(grad_div_calendar_link).to be true }
+            shows_delegate_welcome = WebDriverUtils.verify_block do
+              @toolbox_page.delegate_msg_heading_element.when_visible timeout
+              @toolbox_page.delegate_msg_element.when_visible timeout
+            end
+            it ("shows delegate UID #{uid} the delegate welcome message") { expect(shows_delegate_welcome).to be true }
 
-          calparents_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.cal_parents_element, 'UC Berkeley Cal Parents')
-          it ("shows delegate UID #{uid} a link to 'CalParents'") { expect(calparents_link).to be true }
+            toolbox_students = @toolbox_page.all_delegator_names
 
-          important_dates_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.important_dates_element, 'Cal Parents - Important Dates for Parents')
-          it ("shows delegate UID #{uid} a link to 'Important Dates for Parents'") { expect(important_dates_link).to be true }
+            # Check page links for one of the test delegates
+            if delegate == test_delegates.first
 
-          visiting_campus_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.visiting_campus_element, 'Cal Parents - Visiting the Campus')
-          it ("shows delegate UID #{uid} a link to 'Visiting the Campus'") { expect(visiting_campus_link).to be true }
+              shows_less = @toolbox_page.delegate_msg_expanded_element.visible?
+              it ("shows delegate UID #{uid} a collapsed view of delegate instructions") { expect(shows_less).to be false }
 
-          jobs_and_careers_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.jobs_and_careers_element, 'UC Berkeley - Cal Parents')
-          it ("shows delegate UID #{uid} a link to 'Jobs & Careers'") { expect(jobs_and_careers_link).to be true }
+              @toolbox_page.show_more
+              shows_more = @toolbox_page.delegate_msg_expanded_element.visible?
+              it ("shows delegate UID #{uid} an expanded view of delegate instructions") { expect(shows_more).to be true }
 
-          housing_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.housing_element, 'Cal Parents - Housing')
-          it ("shows delegate UID #{uid} a link to 'Housing'") { expect(housing_link).to be true }
+              ui_students = @toolbox_page.all_delegator_names
+              api_students = @cs_delegate_students_api.student_names
+              it ("shows delegate UID #{uid} the list of linked students") { expect(ui_students).to eql(api_students) }
 
-          financial_info_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.financial_info_element, 'Cal Parents - Financial Information')
-          it ("shows delegate UID #{uid} a link to 'Financial Information'") { expect(financial_info_link).to be true }
+              subscribe_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.subscribe_to_calendar_element, 'UC Berkeley Academic Calendar - Office Of The Registrar')
+              it ("shows delegate UID #{uid} a link to 'Subscribe to the Academic Calendar'") { expect(subscribe_calendar_link).to be true }
 
-          academics_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academics_element, 'UC Berkeley - Cal Parents')
-          it ("shows delegate UID #{uid} a link to 'Academics'") { expect(academics_link).to be true }
+              grad_div_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.grad_div_deadlines_element, 'Degree Deadlines | Berkeley Graduate Division')
+              it ("shows delegate UID #{uid} a link to 'Graduate Division Degree Deadlines'") { expect(grad_div_calendar_link).to be true }
 
-          academic_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academic_calendar_element, 'Student Calendar - Office Of The Registrar')
-          it ("shows delegate UID #{uid} a link to 'Academic Calendar'") { expect(academic_calendar_link).to be true }
+              calparents_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.cal_parents_element, 'UC Berkeley Cal Parents')
+              it ("shows delegate UID #{uid} a link to 'CalParents'") { expect(calparents_link).to be true }
 
-          newscenter_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.news_center_element, 'Berkeley News | News from the University of California, Berkeley')
-          it ("shows delegate UID #{uid} a link to 'UC Berkeley NewsCenter'") { expect(newscenter_link).to be true }
+              important_dates_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.important_dates_element, 'Cal Parents - Important Dates for Parents')
+              it ("shows delegate UID #{uid} a link to 'Important Dates for Parents'") { expect(important_dates_link).to be true }
 
-          berkeley_news_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.berkeley_news_element, 'UC Berkeley - In the News')
-          it ("shows delegate UID #{uid} a link to 'Berkeley in the News'") { expect(berkeley_news_link).to be true }
+              visiting_campus_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.visiting_campus_element, 'Cal Parents -Visiting the Campus')
+              it ("shows delegate UID #{uid} a link to 'Visiting the Campus'") { expect(visiting_campus_link).to be true }
 
-          daily_cal_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.daily_cal_element, 'The Daily Californian | Berkeley\'s News')
-          it ("shows delegate UID #{uid} a link to 'The Daily Californian'") { expect(daily_cal_link).to be true }
+              jobs_and_careers_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.jobs_and_careers_element, 'UC Berkeley - Cal Parents')
+              it ("shows delegate UID #{uid} a link to 'Jobs & Careers'") { expect(jobs_and_careers_link).to be true }
 
-          # DELEGATE VIEW-AS EXPERIENCE
+              housing_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.housing_element, 'Cal Parents - Housing')
+              it ("shows delegate UID #{uid} a link to 'Housing'") { expect(housing_link).to be true }
 
-          if students.any?
+              financial_info_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.financial_info_element, 'Cal Parents - Financial Information')
+              it ("shows delegate UID #{uid} a link to 'Financial Information'") { expect(financial_info_link).to be true }
+
+              academics_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academics_element, 'UC Berkeley - Cal Parents')
+              it ("shows delegate UID #{uid} a link to 'Academics'") { expect(academics_link).to be true }
+
+              academic_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academic_calendar_element, 'UC Berkeley Academic Calendar - Office Of The Registrar')
+              it ("shows delegate UID #{uid} a link to 'Academic Calendar'") { expect(academic_calendar_link).to be true }
+
+              newscenter_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.news_center_element, 'Berkeley News | News from the University of California, Berkeley')
+              it ("shows delegate UID #{uid} a link to 'UC Berkeley NewsCenter'") { expect(newscenter_link).to be true }
+
+              berkeley_news_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.berkeley_news_element, 'UC Berkeley - In the News')
+              it ("shows delegate UID #{uid} a link to 'Berkeley in the News'") { expect(berkeley_news_link).to be true }
+
+              daily_cal_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.daily_cal_element, 'The Daily Californian | Berkeley\'s News')
+              it ("shows delegate UID #{uid} a link to 'The Daily Californian'") { expect(daily_cal_link).to be true }
+
+            end
+
+            # DELEGATE VIEW-AS EXPERIENCE
 
             students.each do |student|
               student_uid = student['uid'].to_i
               student_name = student['fullName']
               privileges = student['privileges']
-              logger.debug "Student UID is #{student_uid} with privileges #{privileges}"
 
               is_student = nil
               is_faculty = nil
@@ -145,14 +165,45 @@ describe 'Delegated access', :testui => true do
 
               begin
 
-                if privileges['phone'] && !privileges['viewEnrollments'] && !privileges['viewGrades'] && !privileges['financial']
+                # Log in as student to obtain unfiltered data
 
-                  # TODO - what user see for phone-only?
+                @splash_page.load_page
+                @splash_page.delegate_stop_viewing
+
+                @splash_page.basic_auth student_uid
+                @academics_api.get_json @driver
+                @status_api.get_json @driver
+
+                is_student = @status_api.is_student?
+                is_faculty = @status_api.is_faculty?
+                is_staff = @status_api.is_staff?
+
+                CSV.open(test_output, 'a+') do |row|
+                  row << [uid, student_uid, is_student, is_faculty, is_staff, privileges['viewEnrollments'], privileges['viewGrades'],
+                          privileges['financial'], privileges['phone']]
+                end
+
+                # Log in as delegate to check filtered data
+
+                @splash_page.load_page
+                @splash_page.basic_auth uid
+                @toolbox_page.load_page
+                logger.info "Delegate UID #{uid} is viewing as student UID #{student_uid} with privileges #{privileges}"
+
+                if !privileges['phone'] && !privileges['viewEnrollments'] && !privileges['viewGrades'] && !privileges['financial']
+
+                  view_as_button = @toolbox_page.delegator_link student_name
+                  it ("shows delegate UID #{uid} no view-as button for UID #{student_uid}") { expect(view_as_button).to be nil }
+
+                  if students.length == 1
+                    shows_no_students_msg = @toolbox_page.no_students_msg?
+                    it ("shows delegate UID #{uid} a 'you have no students' message for UID #{student_uid}") { expect(shows_no_students_msg).to be true }
+                  end
 
                 else
 
-                  @toolbox_page.load_page
-                  logger.info "Delegate UID #{uid} is viewing as student UID #{student_uid}"
+                  # Log in as delegate to compare the filtered UI to the feed
+
                   @toolbox_page.delegate_view_as student_name
 
                   current_url = @driver.current_url
@@ -161,17 +212,6 @@ describe 'Delegated access', :testui => true do
                       expect(current_url).to eql("#{WebDriverUtils.base_url}/academics")
                     end
 
-                    @status_api.get_json @driver
-                    is_student = @status_api.is_student?
-                    is_faculty = @status_api.is_faculty?
-                    is_staff = @status_api.is_staff?
-
-                    CSV.open(test_output, 'a+') do |row|
-                      row << [uid, student_uid, is_student, is_faculty, is_staff, privileges['viewEnrollments'], privileges['viewGrades'],
-                              privileges['financial'], privileges['phone']]
-                    end
-
-                    @academics_api.get_json @driver
                     @academic_profile_card.load_page
                     @academic_profile_card.profile_card_element.when_visible timeout
 
@@ -239,6 +279,7 @@ describe 'Delegated access', :testui => true do
 
                         if @academics_api.past_semesters(api_semesters).include? semester
 
+                          # Grades
                           ui_grades = @semester_card.grades(@driver, semester_name)
                           api_grades = @academics_api.semester_grades(api_semesters, semester_courses, semester).reject { |grade| grade.empty? }
 
@@ -250,60 +291,77 @@ describe 'Delegated access', :testui => true do
                           else
                             it "shows delegate UID #{uid} no #{semester_name} grades on My Academics for UID #{student_uid}" do
                               expect(ui_grades.any?).to be false
-                              expect(ui_grades).to eql(api_grades)
+                              expect(ui_grades).not_to eql(api_grades)
                             end
                           end
                         end
 
                         # Student semester pages
 
-                        semester_slug = semester_name.downcase.gsub(' ', '-')
-                        blocks_semester_page = WebDriverUtils.verify_block do
-                          @semester_card.load_semester_page semester_slug
-                          @semester_card.not_found_element.when_present timeout
-                        end
-                        it ("prevents UID #{uid} from viewing the #{semester_name} semester page for UID #{student_uid}") { expect(blocks_semester_page).to be true }
+                        if @academics_api.has_enrollment_data? semester
 
-                        blocks_booklist = WebDriverUtils.verify_block do
-                          @booklist_page.load_page semester_slug
-                          @booklist_page.not_found_element.when_present timeout
-                        end
-                        it ("prevents UID #{uid} from viewing the #{semester_name} book list page for UID #{student_uid}") { expect(blocks_booklist).to be true }
+                          semester_slug = @academics_api.semester_slug semester
 
-                        # Student class pages
-
-                        semester_courses.each do |course|
-
-                          class_page_url = "/academics/semester/#{semester_slug}/class/#{@academics_api.course_slug course}"
-                          blocks_class_page = WebDriverUtils.verify_block do
-                            @semester_card.load_class_page class_page_url
+                          blocks_semester_page = WebDriverUtils.verify_block do
+                            @semester_card.load_semester_page semester_slug
                             @semester_card.not_found_element.when_present timeout
                           end
-                          it ("prevents UID #{uid} from viewing the #{class_page_url} class page for UID #{student_uid}") { expect(blocks_class_page).to be true }
+                          it ("prevents UID #{uid} from viewing the #{semester_name} semester page for UID #{student_uid}") { expect(blocks_semester_page).to be true }
 
+                          blocks_booklist = WebDriverUtils.verify_block do
+                            @booklist_page.load_page semester_slug
+                            @booklist_page.not_found_element.when_present timeout
+                          end
+                          it ("prevents UID #{uid} from viewing the #{semester_name} book list page for UID #{student_uid}") { expect(blocks_booklist).to be true }
+
+                          # Student class pages
+
+                          semester_courses.each do |course|
+
+                            class_page_url = @academics_api.course_url course
+                            blocks_class_page = WebDriverUtils.verify_block do
+                              @semester_card.load_class_page class_page_url
+                              @semester_card.not_found_element.when_present timeout
+                            end
+                            it ("prevents UID #{uid} from viewing the #{class_page_url} class page for UID #{student_uid}") { expect(blocks_class_page).to be true }
+
+                          end
                         end
                       end
                     end
 
                     # My Academics teaching semester cards
 
-                    teaching_semesters = @academics_api.all_teaching_semesters
-                    it ("shows delegate UID #{uid} no teaching data for UID #{student_uid}") { expect(teaching_semesters).to be nil }
-
                     shows_teaching_card = @teaching_card.course_code_elements.any?
                     it ("shows delegate UID #{uid} no teaching card for UID #{student_uid}") { expect(shows_teaching_card).to be false }
+
+                    teaching_semesters = @academics_api.all_teaching_semesters
+
+                    unless teaching_semesters.nil?
+
+                      teaching_semesters.each do |teaching_semester|
+
+                        semester_name = @academics_api.semester_name teaching_semester
+                        semester_slug = @academics_api.semester_slug teaching_semester
+
+                        blocks_semester_page = WebDriverUtils.verify_block do
+                          @classes_card.load_semester_page semester_slug
+                          @classes_card.not_found_element.when_present timeout
+                        end
+                        it ("prevents UID #{uid} from viewing the #{semester_name} teaching page for UID #{student_uid}") { expect(blocks_semester_page).to be true }
+
+                      end
+                    end
 
                     @academic_profile_card.click_my_finances_link if privileges['finances']
 
                   elsif privileges['financial']
 
-                    it ("lands delegate UID #{uid} on the Finances page") { expect(current_url).to eql("#{WebDriverUtils.base_url}/finances") }
+                    it ("lands delegate UID #{uid} with 'finances-only' privileges on the Finances page") { expect(current_url).to eql("#{WebDriverUtils.base_url}/finances") }
 
                   end
 
                   if privileges['financial']
-
-                    it ("lands delegate UID #{uid} with 'finances-only' privileges on My Finances") { expect(current_url).to eql("#{WebDriverUtils.base_url}/finances") }
 
                     @my_fin_aid_api.get_json @driver
                     @cs_fin_aid_years_api.get_json @driver
@@ -336,14 +394,34 @@ describe 'Delegated access', :testui => true do
                     it ("shows delegate UID #{uid} Financial Resources link for UID #{student_uid}") { expect(shows_fin_resources).to be true }
 
                     # Financial Aid (CS)
-                    unless @cs_fin_aid_years_api.feed.nil?
-                      if @cs_fin_aid_years_api.fin_aid_years.any?
-                        @finances_page.finaid_content_element.when_visible timeout
-                        if @cs_fin_aid_years_api.t_and_c_approval @cs_fin_aid_years_api.fin_aid_years.last
-                          # TODO - Finances - FinAid - SIS - sees all if "finances" but no CS links
-                          it "shows delegate UID #{uid} Financial Aid info for UID #{student_uid}"
+                    @finances_page.finaid_content_element.when_visible timeout
+                    if @cs_fin_aid_years_api.fin_aid_years.any?
+
+                      api_aid_years = @cs_fin_aid_years_api.fin_aid_years
+                      (api_aid_years.length == 1) ?
+                          shows_aid_years = @finances_page.finaid_single_year? :
+                          shows_aid_years = @finances_page.finaid_multi_year_select?
+                      it ("shows delegate UID #{uid} Financial Aid aid years for UID #{student_uid}") { expect(shows_aid_years).to be true }
+
+                      api_aid_years.each do |year|
+
+                        if @cs_fin_aid_years_api.t_and_c_approval year
+                          @finances_fin_aid_page.load_fin_aid_profile year
+                          @finances_fin_aid_page.show_profile
+
+                          shows_efc = @finances_fin_aid_page.efc?
+                          it ("shows delegate UID #{uid} no expected family contribution for UID #{student_uid}") { expect(shows_efc).to be false }
+
+                          shows_berkeley_parent_contrib = @finances_fin_aid_page.berkeley_parent_contrib?
+                          it ("shows delegate UID #{uid} no Berkeley Parent Contribution for UID #{student_uid}") { expect(shows_berkeley_parent_contrib).to be false }
+
                         end
                       end
+                    else
+
+                      shows_no_aid_msg = @finances_page.no_finaid_message?
+                      it ("shows delegate UID #{uid} a 'no FinAid' message for UID #{student_uid}") { expect(shows_no_aid_msg).to be true }
+
                     end
 
                     # Billing - Detail
@@ -354,6 +432,7 @@ describe 'Delegated access', :testui => true do
                     end
                     it ("shows delegate UID #{uid} the billing summary on the Details page for UID #{student_uid}") { expect(shows_details_summary).to be true }
 
+                    WebDriverUtils.wait_for_element_and_select(@finances_details_page.activity_filter_select_element, 'All Transactions')
                     shows_transactions = @finances_details_page.transaction_table?
                     it ("shows delegate UID #{uid} the list of transactions on the Details page for UID #{student_uid}") { expect(shows_transactions).to be true }
 
@@ -383,7 +462,7 @@ describe 'Delegated access', :testui => true do
                   end
                   it ("prevents delegate UID #{uid} from hitting the Dashboard for UID #{student_uid} directly") { expect(blocks_dashboard).to be true }
 
-                  # My Campus
+                  # My Campus - always visible
 
                   sees_campus_links = WebDriverUtils.verify_block do
                     @campus_page.load_page
@@ -391,7 +470,7 @@ describe 'Delegated access', :testui => true do
                   end
                   it ("shows delegate UID #{uid} My Campus links for UID #{student_uid}") { expect(sees_campus_links).to be true }
 
-                  # bConnected badges
+                  # bConnected badges - always hidden
 
                   shows_bmail = @campus_page.email_badge?
                   it ("shows delegate UID #{uid} no bConnected email for UID #{student_uid}") { expect(shows_bmail).to be false }
@@ -402,7 +481,7 @@ describe 'Delegated access', :testui => true do
                   shows_bdrive = @campus_page.drive_badge?
                   it ("shows delegate UID #{uid} no bConnected documents for UID #{student_uid}") { expect(shows_bdrive).to be false }
 
-                  # Profile
+                  # Profile - always hidden
 
                   shows_profile_popover = @campus_page.profile_icon?
                   it ("shows delegate UID #{uid} the Profile popover for UID #{student_uid}") { expect(shows_profile_popover).to be true }
@@ -421,7 +500,6 @@ describe 'Delegated access', :testui => true do
                     @profile_contact.not_found_element.when_present timeout
                   end
                   it ("prevents delegate UID #{uid} from hitting the Profile contact info page for UID #{student_uid}") { expect(blocks_contact_info).to be true }
-
 
                   blocks_demographics = WebDriverUtils.verify_block do
                     @profile_demographic.load_page
@@ -453,57 +531,13 @@ describe 'Delegated access', :testui => true do
                   end
                   it ("prevents delegate UID #{uid} from hitting the Profile bConnected page for UID #{student_uid}") { expect(blocks_bconnected).to be true }
 
-                  # bCourses - site creation
+                  # Delegate Welcome
 
-                  blocks_site_creation = WebDriverUtils.verify_block do
-                    @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/site_creation"
-                    wait.until { @driver.find_element(:xpath => '//h1[text()="Access Denied"]') }
+                  blocks_delegate = WebDriverUtils.verify_block do
+                    @delegate_welcome.load_page
+                    @delegate_welcome.not_found_element.when_present timeout
                   end
-                  it ("prevents UID #{uid} from reaching Canvas site creation for UID #{student_uid}") { expect(blocks_site_creation).to be true }
-
-                  # bCourses - course site creation
-
-                  blocks_create_course_site = WebDriverUtils.verify_block do
-                    @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/create_course_site"
-                    wait.until { @driver.find_element(:xpath => '//h1[text()="Unexpected Error"]') }
-                  end
-                  it ("prevents UID #{uid} from reaching Canvas create a course site for UID #{student_uid}") { expect(blocks_create_course_site).to be true }
-
-                  # bCourses - project site creation
-
-                  blocks_create_project_site = WebDriverUtils.verify_block do
-                    @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/create_project_site"
-                    wait.until { @driver.find_element(:xpath => '//h1[text()="Access Denied"]') }
-                  end
-                  it ("prevents UID #{uid} from reaching Canvas create a project site for UID #{student_uid}") { expect(blocks_create_project_site).to be true }
-
-                  # bCourses - user provisioning
-
-                  blocks_user_provision = WebDriverUtils.verify_block do
-                    @driver.get "#{WebDriverUtils.base_url}/canvas/embedded/user_provision"
-                    wait.until { @driver.find_element(:xpath => '//h1[text()="Access Denied"]') }
-                  end
-                  it ("prevents UID #{uid} from reaching Canvas user provisioning for UID #{student_uid}") { expect(blocks_user_provision).to be true }
-
-                  # bCourses - add user to site
-
-                  # TODO - Canvas - find user to add
-
-                  # bCourses - view course captures
-
-                  # TODO - Canvas - webcasts
-
-                  # bCourses - manage official sections
-
-                  # TODO - Canvas - official sections
-
-                  # bCourses - view roster photos
-
-                  # TODO - Canvas - roster photos
-
-                  # bCourses - export E-Grades
-
-                  # TODO - Canvas - export E-Grades
+                  it ("prevents delegate UID #{uid} from hitting the delegate welcome page for UID #{student_uid}") { expect(blocks_delegate).to be true }
 
                   # OEC
 
@@ -521,13 +555,13 @@ describe 'Delegated access', :testui => true do
                   end
                   it ("prevents UID #{uid} from reaching CCAdmin for UID #{student_uid}") { expect(blocks_ccadmin).to be true }
 
+                  # TODO: Canvas
+
                 end
               rescue => e
                 logger.error e.message + "\n" + e.backtrace.join("\n")
               end
             end
-          else
-            # TODO Verify Toolbox view if you have no students
           end
         rescue => e
           logger.error e.message + "\n" + e.backtrace.join("\n")

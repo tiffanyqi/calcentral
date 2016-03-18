@@ -34,6 +34,10 @@ if ENV["UI_TEST"]
   require_relative '../ui_selenium/pages/google_page'
   require_relative '../ui_selenium/pages/canvas_page'
 
+  Dir[Rails.root.join('spec', 'ui_selenium', 'pages', "bcourses**.rb")].each do |f|
+    require f
+  end
+
   Dir[Rails.root.join('spec', 'ui_selenium', 'pages', "**card.rb")].each do |f|
     require f
   end

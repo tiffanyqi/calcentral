@@ -68,6 +68,8 @@ module CalCentralPages
 
   # 404
   h3(:not_found, :xpath => '//h3[text()="Cannot Find That Page"]')
+  h1(:access_denied, :xpath => '//h1[text()="Access Denied"]')
+  h1(:unexpected_error, :xpath => '//h1[text()="Unexpected Error"]')
 
   def click_my_dashboard_link
     logger.info('Clicking My Dashboard link')
@@ -182,7 +184,11 @@ module CalCentralPages
   end
 
   def delegate_stop_viewing
-    delegate_stop_viewing_as if delegate_stop_viewing_as?
+    if delegate_stop_viewing_as?
+      logger.debug 'Stopping delegate view-as'
+      delegate_stop_viewing_as
+      sleep 1
+    end
   end
 
 end

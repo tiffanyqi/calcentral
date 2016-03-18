@@ -24,7 +24,7 @@ module CalCentralPages
     end
 
     def load_class_page(class_page_url)
-      logger.info("Loading class page at '#{class_page_url}'")
+      logger.debug("Loading class page at '#{class_page_url}'")
       navigate_to "#{WebDriverUtils.base_url}#{class_page_url}"
     end
 
