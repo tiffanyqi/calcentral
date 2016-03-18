@@ -107,19 +107,19 @@ module CalCentralPages
     button(:completed_show_more_button, :xpath => '//div[@data-cc-show-more-limit="completedLimit"]/button')
 
     def overdue_task_note_element(task_index)
-      span_element(:xpath => "//li[@data-ng-repeat='task in overdueTasks | limitTo: overdueLimit'][#{task_index + 1}]//div[@data-cc-compile-directive='task.notes | linky']/span")
+      span_element(:xpath => "//li[@data-ng-repeat='task in overdueTasks | limitTo: overdueLimit'][#{task_index + 1}]//div[@data-cc-compile-directive='task.notes | linky']")
     end
 
     def today_task_note_element(task_index)
-      span_element(:xpath => "//li[@data-ng-repeat='task in dueTodayTasks | limitTo: dueTodayLimit'][#{task_index + 1}]//div[@data-cc-compile-directive='task.notes | linky']/span")
+      span_element(:xpath => "//li[@data-ng-repeat='task in dueTodayTasks | limitTo: dueTodayLimit'][#{task_index + 1}]//div[@data-cc-compile-directive='task.notes | linky']")
     end
 
     def future_task_note_element(task_index)
-      span_element(:xpath => "//li[@data-ng-repeat='task in futureTasks | limitTo: futureLimit'][#{task_index + 1}]//div[@data-cc-compile-directive='task.notes | linky']/span")
+      span_element(:xpath => "//li[@data-ng-repeat='task in futureTasks | limitTo: futureLimit'][#{task_index + 1}]//div[@data-cc-compile-directive='task.notes | linky']")
     end
 
     def unsched_task_note_element(task_index)
-      span_element(:xpath => "//li[@data-ng-repeat='task in unscheduledTasks | limitTo:unscheduledLimit'][#{task_index + 1}]//div[@data-cc-compile-directive='task.notes | linky']/span")
+      span_element(:xpath => "//li[@data-ng-repeat='task in unscheduledTasks | limitTo:unscheduledLimit'][#{task_index + 1}]//div[@data-cc-compile-directive='task.notes | linky']")
     end
 
     # ADD NEW TASK
@@ -306,39 +306,45 @@ module CalCentralPages
 
     def delete_all_tasks
       logger.info('Deleting all existing tasks')
-      load_page
-      WebDriverUtils.wait_for_page_and_click scheduled_tasks_tab_element
-      while overdue_task_toggle_elements.any? do
-        task_count = overdue_task_count.to_i
-        WebDriverUtils.wait_for_element_and_click overdue_task_toggle_elements[0]
-        WebDriverUtils.wait_for_element_and_click overdue_task_delete_button_elements[0]
-        wait_until(WebDriverUtils.google_task_timeout) { overdue_task_count.to_i == (task_count - 1) }
-      end
-      while today_task_toggle_elements.any? do
-        task_count = today_task_count.to_i
-        WebDriverUtils.wait_for_element_and_click today_task_toggle_elements[0]
-        WebDriverUtils.wait_for_element_and_click today_task_delete_button_elements[0]
-        wait_until(WebDriverUtils.google_task_timeout) { today_task_count.to_i == (task_count - 1) }
-      end
-      while future_task_toggle_elements.any? do
-        task_count = future_task_count.to_i
-        WebDriverUtils.wait_for_element_and_click future_task_toggle_elements[0]
-        WebDriverUtils.wait_for_element_and_click future_task_delete_button_elements[0]
-        wait_until(WebDriverUtils.google_task_timeout) { future_task_count.to_i == (task_count - 1) }
-      end
-      WebDriverUtils.wait_for_page_and_click unsched_tasks_tab_element
-      while unsched_task_toggle_elements.any? do
-        task_count = unsched_task_count.to_i
-        WebDriverUtils.wait_for_element_and_click unsched_task_toggle_elements[0]
-        WebDriverUtils.wait_for_element_and_click unsched_task_delete_button_elements[0]
-        wait_until(WebDriverUtils.google_task_timeout) { unsched_task_count.to_i == (task_count - 1) }
-      end
-      WebDriverUtils.wait_for_element_and_click completed_tasks_tab_element
-      while completed_task_toggle_elements.any? do
-        task_count = completed_task_count.to_i
-        WebDriverUtils.wait_for_element_and_click completed_task_toggle_elements[0]
-        WebDriverUtils.wait_for_element_and_click completed_task_delete_button_elements[0]
-        wait_until(WebDriverUtils.google_task_timeout) { completed_task_count.to_i == (task_count - 1) }
+      tries = 2
+      begin
+        load_page
+        WebDriverUtils.wait_for_page_and_click scheduled_tasks_tab_element
+        while overdue_task_toggle_elements.any? do
+          task_count = overdue_task_count.to_i
+          WebDriverUtils.wait_for_element_and_click overdue_task_toggle_elements[0]
+          WebDriverUtils.wait_for_element_and_click overdue_task_delete_button_elements[0]
+          wait_until(WebDriverUtils.google_task_timeout) { overdue_task_count.to_i == (task_count - 1) }
+        end
+        while today_task_toggle_elements.any? do
+          task_count = today_task_count.to_i
+          WebDriverUtils.wait_for_element_and_click today_task_toggle_elements[0]
+          WebDriverUtils.wait_for_element_and_click today_task_delete_button_elements[0]
+          wait_until(WebDriverUtils.google_task_timeout) { today_task_count.to_i == (task_count - 1) }
+        end
+        while future_task_toggle_elements.any? do
+          task_count = future_task_count.to_i
+          WebDriverUtils.wait_for_element_and_click future_task_toggle_elements[0]
+          WebDriverUtils.wait_for_element_and_click future_task_delete_button_elements[0]
+          wait_until(WebDriverUtils.google_task_timeout) { future_task_count.to_i == (task_count - 1) }
+        end
+        WebDriverUtils.wait_for_page_and_click unsched_tasks_tab_element
+        while unsched_task_toggle_elements.any? do
+          task_count = unsched_task_count.to_i
+          WebDriverUtils.wait_for_element_and_click unsched_task_toggle_elements[0]
+          WebDriverUtils.wait_for_element_and_click unsched_task_delete_button_elements[0]
+          wait_until(WebDriverUtils.google_task_timeout) { unsched_task_count.to_i == (task_count - 1) }
+        end
+        WebDriverUtils.wait_for_element_and_click completed_tasks_tab_element
+        while completed_task_toggle_elements.any? do
+          task_count = completed_task_count.to_i
+          WebDriverUtils.wait_for_element_and_click completed_task_toggle_elements[0]
+          WebDriverUtils.wait_for_element_and_click completed_task_delete_button_elements[0]
+          wait_until(WebDriverUtils.google_task_timeout) { completed_task_count.to_i == (task_count - 1) }
+        end
+      rescue
+        # Retry since Google responses can sometimes hang when too many deletions occur too rapidly, causing test timeout
+        retry unless (tries -= 1).zero?
       end
     end
 

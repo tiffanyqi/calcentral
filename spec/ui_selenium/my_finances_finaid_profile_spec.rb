@@ -117,7 +117,7 @@ describe 'My Finances Financial Aid Profile card', :testui => true do
                   it ("displays the right housing associated with each semester for UID #{uid}") { expect(ui_housing).to eql(api_housing) }
 
                   has_update_family_link = @fin_aid_page.family_members_update_link?
-                  it ("offers a family members in college 'update' link for UID #{uid}") { expect(has_update_family_link).to be true }
+                  it ("offers no family members in college 'update' link for UID #{uid}") { expect(has_update_family_link).to be false }
 
                   has_update_housing_link = @fin_aid_page.housing_update_link?
                   it ("offers housing 'update' link for UID #{uid}") { expect(has_update_housing_link).to be true }

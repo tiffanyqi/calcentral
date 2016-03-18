@@ -55,7 +55,7 @@ module CalCentralPages
 
     link(:finaid_t_and_c_link, :text => 'Complete Terms and Conditions')
     link(:finaid_title_iv_link, :text => 'Complete Title IV')
-    link(:finaid_details_link, :xpath => '//h2[text()="Financial Aid and Scholarships"]/following-sibling::a')
+    link(:finaid_details_link, :xpath => '//h2[contains(.,"Financial Aid and Scholarships")]/following-sibling::a')
     link(:awards_link, :xpath => '//div[@data-ng-controller="FinaidSummaryController"]//a[contains(.,"View Awards")]')
     link(:shopping_sheet_link, :xpath => '//a[contains(.,"Shopping Sheet")]')
 
