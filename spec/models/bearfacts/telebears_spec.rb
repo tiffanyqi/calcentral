@@ -5,6 +5,7 @@ describe Bearfacts::Telebears do
     let!(:proxy_class) { Bearfacts::Telebears }
     let!(:feed_key) { 'telebearsAppointment' }
   end
+  it_should_behave_like 'a proxy for legacy users only'
 
   it 'should support Current Term as well as Future Term' do
     default_feed = fake_oski.get

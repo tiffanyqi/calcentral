@@ -7,7 +7,7 @@ describe GoogleApps::DriveManager do
       @drive = GoogleApps::DriveManager.new Settings.oec.google.uid, settings
       now = DateTime.now.strftime('%m/%d/%Y at %I:%M%p')
       title = "#{described_class} tested on #{now}"
-      csv_file = 'fixtures/oec_legacy/courses.csv'
+      csv_file = 'fixtures/oec/courses.csv'
       text_file = 'fixtures/jms_recordings/ist_jms.txt'
       @folder = @drive.create_folder title
       @csv_filename = "CSV file, #{now}"

@@ -166,33 +166,13 @@ module CampusOracle
       end
     end
 
-    # This method is currently used only for support and research, not by deployed code.
-    def self.get_student_term_info(person_id)
-      result = nil
-      use_pooled_connection {
-        sql = <<-SQL
-      select pi.student_id, reg.ldap_uid, reg.fee_resid_cd, reg.educ_level, reg.reg_status_cd, reg.elig_reg_status_cd, reg.admin_cancel_flag,
-        reg.admit_special_pgm_grp, reg.reg_special_pgm_cd, reg.cat_cd, reg.acad_blk_flag, reg.admin_blk_flag, reg.fin_blk_flag,
-        reg.tot_enroll_unit, reg.new_trfr_flag, reg.term_yr, reg.term_cd, reg.role_cd
-      from calcentral_person_info_vw pi, calcentral_student_term_vw reg where
-        reg.ldap_uid = #{person_id.to_i} and reg.ldap_uid = pi.ldap_uid
-      order by reg.term_yr desc, reg.term_cd desc
-        SQL
-        result = connection.select_all(sql)
-      }
-      stringify_ints! result
-    end
-
     def self.get_enrolled_students(ccn, term_yr, term_cd)
       result = []
       use_pooled_connection {
         sql = <<-SQL
       select roster.student_ldap_uid ldap_uid, roster.enroll_status, trim(roster.pnp_flag) as pnp_flag,
-        trim(person.first_name) as first_name, trim(person.last_name) as last_name, person.student_email_address, person.student_id, person.affiliations,
-        ph.bytes photo_bytes
+        trim(person.first_name) as first_name, trim(person.last_name) as last_name, person.student_email_address, person.student_id, person.affiliations
       from calcentral_class_roster_vw roster, calcentral_student_info_vw person
-      left join  calcentral_student_photo_vw ph
-        on ph.student_ldap_uid = person.student_ldap_uid
       where roster.term_yr = #{term_yr.to_i}
         and roster.term_cd = #{connection.quote(term_cd)}
         and roster.course_cntl_num = #{ccn.to_i}
@@ -370,19 +350,6 @@ module CampusOracle
       stringify_ints! result
     end
 
-    def self.get_photo(ldap_uid)
-      result = {}
-      use_pooled_connection {
-        sql = <<-SQL
-        select ph.bytes, ph.photo
-        from calcentral_student_photo_vw ph
-        where ph.student_ldap_uid=#{ldap_uid.to_i}
-        SQL
-        result = connection.select_one(sql)
-      }
-      stringify_ints! result
-    end
-
     def self.get_student_info(ldap_uid)
       result = {}
       use_pooled_connection {
@@ -395,20 +362,6 @@ module CampusOracle
         result = connection.select_one(sql)
       }
       stringify_ints! result
-    end
-
-    def self.is_previous_ugrad?(ldap_uid)
-      result = {}
-      use_pooled_connection {
-        sql = <<-SQL
-        select ts.student_ldap_uid from calcentral_transcript_vw ts
-        where ts.line_type = 'U'
-          and ts.student_ldap_uid = #{ldap_uid.to_i}
-          and rownum < 2
-        SQL
-        result = connection.select_one(sql)
-      }
-      result.present?
     end
 
     def self.database_alive?

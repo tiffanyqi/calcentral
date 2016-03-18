@@ -1,5 +1,5 @@
 module CampusSolutions
-  class CurrencyCode < CachedProxy
+  class CurrencyCode < GlobalCachedProxy
 
     include ProfileFeatureFlagged
 

@@ -25,10 +25,10 @@ module Cal1card
     end
 
     def get_converted_xml
-      url = "#{@settings.base_url}?uid=#{@uid}"
       logger.info "Internal_get: Fake = #{@fake}; Making request to #{url} on behalf of user #{@uid}; cache expiration #{self.class.expires_in}"
       response = get_response(
         url,
+        query: {uid: @uid},
         basic_auth: {username: @settings.username, password: @settings.password}
       )
       feed = response.parsed_response
@@ -40,10 +40,20 @@ module Cal1card
       })
     end
 
+    def url
+      "#{@settings.base_url}/csc.asp"
+    end
+
+    def mock_request
+      super.merge({
+        uri_matching: url,
+        query: {uid: @uid}
+      })
+    end
+
     def mock_xml
       read_file('fixtures', 'xml', 'cal1card_feed.xml')
     end
-
   end
 end
 

@@ -7,26 +7,29 @@
       <ul>
         <li class="cc-flex cc-flex-align-center cc-toolbox-widget-delegate-student" data-ng-repeat="student in students">
           <div class="cc-toolbox-widget-delegate-student-profile">
-
-            <!-- TODO: Replace the `profilePhotoApi` setting method in the DelegateStudents controller with back-end property setting on the student object returned in the feed. -->
-            <div data-ng-if="student.profilePhotoApi">
-              <img class="cc-toolbox-widget-delegate-student-profile-img" border="1" height="96" width="72" data-cc-image-loaded-directive="profilePictureLoading" data-ng-attr-alt="{{student.fullName}}'s Profile Picture" data-ng-src="{{student.profilePhotoApi}}">
-            </div>
-            <div data-ng-if="!student.profilePhotoApi" class="cc-toolbox-widget-delegate-student-profile-img-not-available"></div>
+            <button class="cc-button-link" data-ng-click="delegateStudents.actAs(student.uid)" data-ng-if="student.delegateAccess && student.uid">
+              <div data-ng-include="'widgets/delegate_student_img.html'"></div>
+            </button>
+            <div data-ng-if="!student.delegateAccess || !student.uid" data-ng-include="'widgets/delegate_student_img.html'"></div>
           </div>
           <div class="cc-widget-padding">
-            <button class="cc-button-link" data-ng-click="delegateStudents.actAs(student.uid)" data-ng-if="student.delegateAccess">
+            <button class="cc-button-link" data-ng-click="delegateStudents.actAs(student.uid)" data-ng-if="student.delegateAccess && student.uid">
               <span class="cc-text-big" data-ng-bind="student.fullName"></span>
             </button>
-            <div data-ng-if="!student.delegateAccess">
+            <div data-ng-if="!student.delegateAccess || !student.uid">
               <strong class="cc-text-big" data-ng-bind="student.fullName"></strong>
-              <div>
-                <div class="cc-text-small" data-ng-if="student.privileges.phone">
+              <div data-ng-if="student.uid">
+                <p class="cc-text-small" data-ng-if="student.privileges.phone">
                   By Phone and In-Person Only
-                </div>
-                <div class="cc-text-small" data-ng-if="!student.privileges.phone">
+                </p>
+                <p class="cc-text-small" data-ng-if="!student.privileges.phone">
                   No Privileges
-                </div>
+                </p>
+              </div>
+              <div data-ng-if="!student.uid">
+                <p class="cc-text-small">
+                  Account Issue
+                </p>
               </div>
             </div>
           </div>
@@ -46,12 +49,19 @@
           </strong>
           The indicated student(s) have not granted you any privileges.
         </p>
-        <div>
+        <p data-ng-if="showAccountIssueMessage">
+          <strong>
+            Account Issue:
+          </strong>
+          There is a technical issue with the account for the indicated student(s). It will be resolved as soon as possible. If you have questions, please contact <a href="https://www.ets.berkeley.edu/calcentral-support">CalCentral Support</a>.
+        </p>
+        <p>
           <strong>
             Adding other students:
           </strong>
-          If you are a delegate for other students, to add them here please start with the email message you received for each student.
-        </div>
+          Are you a delegate for other students but don't see them listed above? To add them, please follow the
+          instructions in the email you received for each of them.
+        </p>
       </div>
     </div>
     <div data-ng-if="!students.length">

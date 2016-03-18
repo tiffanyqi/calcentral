@@ -1,0 +1,88 @@
+{
+  "feed": {
+    "student": {
+      "languages": [
+        {
+          "code": "LEN",
+          "name": "English",
+          "native": true,
+          "translate": false,
+          "teach": false,
+          "speakingProficiency": {
+            "code": "3",
+            "description": "High"
+          },
+          "readingProficiency": {
+            "code": "2",
+            "description": "Moderate"
+          },
+          "writingProficiency": {
+            "code": "1",
+            "description": "Low"
+          }
+        },
+        {
+          "code": "LAN",
+          "name": "Armenian",
+          "native": true,
+          "translate": true,
+          "teach": true,
+          "speakingProficiency": {
+            "code": "2",
+            "description": "Moderate"
+          },
+          "readingProficiency": {
+            "code": "2",
+            "description": "Moderate"
+          },
+          "writingProficiency": {
+            "code": "2",
+            "description": "Moderate"
+          }
+        },
+        {
+          "code": "LCH",
+          "name": "Chinese",
+          "native": false,
+          "translate": false,
+          "teach": false,
+          "speakingProficiency": {
+            "code": "1",
+            "description": "Low"
+          },
+          "readingProficiency": {
+            "code": "1",
+            "description": "Low"
+          },
+          "writingProficiency": {
+            "code": "1",
+            "description": "Low"
+          }
+        },
+        {
+          "code": "!@#:)",
+          "bogusCode": "the `code` property should be 3 uppercase alpha characters, starting with L",
+          "name": "malformed data test",
+          "native": "no!",
+          "bogusNative": "the `native` property should be boolean",
+          "translate": "true",
+          "bogusTranslate": "the `translate` property should be boolean",
+          "bogusTeach": "the `teach` property is missing",
+          "speakingProficiency": {
+            "description": "this is not a valid description",
+            "bogusDescription": "`description` should be 'High', 'Moderate', or 'Low'",
+            "bogusCode": "missing `code`"
+          },
+          "readingProficiency": {
+            "code": "4",
+            "bogusCode": "code should be 1-3",
+            "bogusDescription": "missing `description`"
+          },
+          "writingProficiency": {
+            "bogusProperty": "both `code` and `description` properties are missing"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,40 +1,36 @@
 describe Notifications::JmsMessageHandler do
+  let(:reg_status_processor) { double('Notifications::RegStatusEventProcessor', process: true) }
+  let(:final_grades_processor) { double('Notifications::FinalGradesEventProcessor', process: true) }
+  let(:sis_expiry_processor) { double('Notification::SisExpiryProcessor', process: true) }
+  let(:handler) { Notifications::JmsMessageHandler.new [reg_status_processor, final_grades_processor, sis_expiry_processor] }
 
-  before do
-    @reg_status_processor = double("Notifications::RegStatusEventProcessor")
-    @reg_status_processor.stub(:process) { true }
-    @final_grades_processor = double("Notifications::FinalGradesEventProcessor")
-    @final_grades_processor.stub(:process) { true }
-
-    @handler = Notifications::JmsMessageHandler.new [@reg_status_processor, @final_grades_processor]
-    @messages = []
-    File.open("#{Rails.root}/fixtures/jms_recordings/ist_jms.txt", 'r').each("\n\n") do |msg_yaml|
-      msg = YAML::load(msg_yaml)
-      @messages.push msg
+  shared_examples 'a handler doing nothing' do
+    it 'should pass nothing on to processors' do
+      expect(reg_status_processor).not_to receive :process
+      expect(final_grades_processor).not_to receive :process
+      expect(sis_expiry_processor).not_to receive :process
+      handler.handle message
     end
   end
 
-  it "should do nothing with an empty message" do
-    @handler.handle({})
+  context 'empty message' do
+    let(:message) { {} }
+    it_should_behave_like 'a handler doing nothing'
+  end
+  context 'malformed JSON' do
+    let(:message) { {text: 'pure lunacy'} }
+    it_should_behave_like 'a handler doing nothing'
   end
 
-  it "should process a fake test jms message" do
-    @reg_status_processor.should_receive(:process)
-    @final_grades_processor.should_receive(:process)
-    @handler.handle @messages[0]
-  end
-
-  it "should handle malformed JSON gracefully" do
-    suppress_rails_logging {
-      @handler.handle({:text => "pure lunacy"})
-    }
-  end
-
-  it "should pass the proper timestamp to the processors" do
-    @reg_status_processor.should_receive(:process).exactly(4).times
-    @final_grades_processor.should_receive(:process).exactly(4).times
-    @messages.each do |msg|
-      @handler.handle msg
+  context 'parseable messages' do
+    let(:messages) do
+      File.read("#{Rails.root}/fixtures/jms_recordings/ist_jms.txt").split("\n\n").map { |yml| YAML::load yml }
+    end
+    it 'should pass a series of messages to all processors' do
+      expect(reg_status_processor).to receive(:process).exactly(5).times
+      expect(final_grades_processor).to receive(:process).exactly(5).times
+      expect(sis_expiry_processor).to receive(:process).exactly(5).times
+      messages.each { |msg| handler.handle msg }
     end
   end
 end

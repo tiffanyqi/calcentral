@@ -1,18 +1,23 @@
 application:
-  layer: "testext"
+  layer: 'testext'
+
 logger:
   level: <%= ENV['LOGGER_LEVEL'] || DEBUG %>
   stdout: <%= ENV['LOGGER_STDOUT'] || 'only' %>
+
 ldap:
   host: 'nds-test.berkeley.edu'
+
 terms:
   fake_now: 2013-10-11 04:20:00
+
 postgres:
   database: <%= ENV['DB_ENV_POSTGRESQL_DB'] || 'calcentral_test' %>
   username: <%= ENV['DB_ENV_POSTGRESQL_USER'] || 'calcentral_test' %>
   password: <%= ENV['DB_ENV_POSTGRESQL_PASS'] || 'secret' %>
   host: <%= ENV['DB_PORT_5432_TCP_ADDR'] || 'localhost' %>
   port: <%= ENV['DB_PORT_5432_TCP_PORT'] || '5432' %>
+
 campusdb:
   adapter: jdbc
   driver: oracle.jdbc.OracleDriver
@@ -21,24 +26,6 @@ campusdb:
   password: <yer_password>
   pool: 5
   timeout: 5000
-
-features:
-  bearfacts: true
-  financials: true
-  telebears: true
-  textbooks: true
-  videos: true
-  cal1card: true
-  audio: true
-  advising: true
-  cs_delegated_access: true
-  cs_enrollment_card: true
-  cs_fin_aid: true
-  cs_holds: true
-  cs_profile_emergency_contacts: true
-  cs_profile_work_experience: true
-  webcast_sign_up_on_calcentral: true
-  show_notifications_archive_link: true
 
 cache:
   store: "memory"
@@ -60,3 +47,28 @@ cache:
 
 calnet_crosswalk_proxy:
   fake: true
+
+features:
+  advising: true
+  audio: true
+  bearfacts: true
+  cal1card: true
+  class_enrollment_summer_2016: true
+  cs_academic_planner: true
+  cs_academic_progress_report: true
+  cs_advising_gte_forms: true
+  cs_advising_show_advisors: true
+  cs_billing: true
+  cs_delegated_access: true
+  cs_enrollment_card: true
+  cs_fin_aid: true
+  cs_holds: true
+  cs_logout: true
+  cs_profile_emergency_contacts: true
+  cs_profile_languages: true
+  cs_profile_work_experience: true
+  financials: true
+  telebears: true
+  textbooks: true
+  videos: true
+  webcast_sign_up_on_calcentral: true

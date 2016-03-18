@@ -4,6 +4,7 @@ describe Bearfacts::Regblocks do
     let!(:proxy_class) { Bearfacts::Regblocks }
     let!(:feed_key) { nil }
   end
+  it_should_behave_like 'a proxy for legacy users only'
 
   context 'getting oskis regblocks from fake data set' do
     subject { Bearfacts::Regblocks.new({user_id: '61889', fake: true}).get }

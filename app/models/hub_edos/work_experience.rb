@@ -6,7 +6,7 @@ module HubEdos
     end
 
     def json_filename
-      'work_experience.json'
+      'hub_work_experience.json'
     end
 
     def build_feed(response)

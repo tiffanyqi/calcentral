@@ -1,5 +1,5 @@
 module CampusSolutions
-  class DashboardUrl < CachedProxy
+  class DashboardUrl < GlobalCachedProxy
 
     def initialize(options = {})
       super options
@@ -20,10 +20,6 @@ module CampusSolutions
 
     def url
       "#{@settings.base_url}/UC_CC_COMM_DB_URL.v1/dashboard/url/"
-    end
-
-    def is_feature_enabled
-      Settings.features.show_notifications_archive_link
     end
 
   end

@@ -10,7 +10,7 @@ describe UserSpecificModel do
     context 'standard view-as mode' do
       let(:session_extras) {
         {
-          'original_user_id' => random_id
+          SessionKey.original_user_id => random_id
         }
       }
       it 'should identify user as not directly_authenticated' do
@@ -20,7 +20,7 @@ describe UserSpecificModel do
     context 'delegate view-as mode' do
       let(:session_extras) {
         {
-          'original_delegate_user_id' => random_id
+          SessionKey.original_delegate_user_id => random_id
         }
       }
       it 'should identify delegated-access session' do
@@ -28,7 +28,7 @@ describe UserSpecificModel do
       end
     end
     context 'advisor view-as mode' do
-      let(:session_extras) { { 'original_advisor_user_id' => random_id } }
+      let(:session_extras) { { SessionKey.original_advisor_user_id => random_id } }
       it 'should identify user as having delegate_permissions' do
         expect(subject.directly_authenticated?).to be false
       end

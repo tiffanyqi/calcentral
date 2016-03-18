@@ -3,6 +3,8 @@ module HubEdos
 
     def initialize(options = {})
       super(options)
+      @include_fields = options[:include_fields] || %w(ethnicities languages usaCountry foreignCountries birth gender)
+      @instance_key = Cache::KeyGenerator.per_view_as_type @uid, options
     end
 
     def url
@@ -10,11 +12,15 @@ module HubEdos
     end
 
     def json_filename
-      'demographics.json'
+      'hub_demographics.json'
     end
 
     def include_fields
-      %w(ethnicities languages usaCountry foreignCountries birth gender)
+      @include_fields
+    end
+
+    def instance_key
+      @instance_key
     end
 
   end

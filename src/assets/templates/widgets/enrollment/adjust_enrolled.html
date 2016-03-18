@@ -1,0 +1,89 @@
+<div class="cc-flex cc-flex-space-between cc-flex-space-between-horizontal-5">
+  <div>
+    <strong>Enrolled Classes</strong>
+  </div>
+  <div
+    data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
+    class="cc-flex cc-flex-wrap cc-enrollment-card-enrolled-links"
+  >
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.addEnrolledClasses"
+      data-text="Add"
+      data-cache="enrollment"
+      data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
+    ></div>
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.dropEnrolledClasses"
+      data-text="Drop"
+      data-cache="enrollment"
+      data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
+    ></div>
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.swapEnrolledClasses"
+      data-text="Swap"
+      data-cache="enrollment"
+      data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
+    ></div>
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.gradeBase"
+      data-text="Edit"
+      data-cache="enrollment"
+      data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
+    ></div>
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.gradeBase"
+      data-text="Change Grade Base"
+      data-cache="enrollment"
+      data-ng-if="enrollmentTerm.isGradeBaseAvailable && !enrollment.isLawStudent"
+    ></div>
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="enrollmentTerm.links.withdrawFromSemester"
+      data-text="Withdraw"
+      data-ng-if="enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent"
+      data-cache="enrollment"
+    ></div>
+  </div>
+</div>
+
+<div data-ng-if="!enrollmentTerm.enrolledClasses.length">
+  You are currently not enrolled in any classes for
+  <span data-ng-bind="enrollmentTerm.termDescr"></span>.
+</div>
+
+<div data-ng-if="enrollmentTerm.enrolledClasses.length">
+  <div class="cc-table">
+    <table>
+      <thead>
+        <th scope="col" width="100px">Class</th>
+        <th scope="col" width="30px" class="cc-table-right-spacing">
+          <span class="cc-visuallyhidden">Component</span>
+        </th>
+        <th scope="col">When</th>
+        <th scope="col" class="cc-table-right">Units</th>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="class in enrollmentTerm.enrolledClasses">
+          <td data-ng-bind="class.subjectCatalog"></td>
+          <td data-ng-attr-title="{{class.ssrComponentDescr}}" class="cc-table-right-spacing">
+            <span class="cc-visuallyhidden" data-ng-bind-template="{{class.ssrComponentDescr}} -"></span>
+            <span data-ng-bind="class.ssrComponent"></span>
+          </td>
+          <td data-ng-bind="class.when"></td>
+          <td data-ng-bind="class.units | number:1" class="cc-table-right"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cc-flex cc-flex-justify-end">
+    <div>
+      Total Units:
+      <strong data-ng-bind="enrollmentTerm.enrolledClassesTotalUnits | number:1"></strong>
+    </div>
+  </div>
+</div>

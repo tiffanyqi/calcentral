@@ -7,6 +7,9 @@
 .cc-flex-align-center {
   align-items: center;
 }
+.cc-flex-justify-end {
+  justify-content: flex-end;
+}
 .cc-flex-space-between {
   justify-content: space-between;
 }
@@ -17,4 +20,7 @@
   &:not(:last-child) {
     margin-right: 5px;
   }
+}
+.cc-flex-wrap {
+  flex-wrap: wrap;
 }

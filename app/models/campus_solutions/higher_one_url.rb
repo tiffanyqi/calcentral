@@ -6,6 +6,7 @@ module CampusSolutions
 
     def initialize(options = {})
       super(options)
+      @delegate_uid = options[:delegate_uid]
       initialize_mocks if @fake
     end
 
@@ -19,7 +20,8 @@ module CampusSolutions
     end
 
     def url
-      "#{@settings.base_url}/UC_OB_HIGHER_ONE_URL_GET.v1/get?EMPLID=#{@campus_solutions_id}"
+      query_args = @delegate_uid ? "DELEGATE_UID=#{@delegate_uid}" : "EMPLID=#{@campus_solutions_id}"
+      "#{@settings.base_url}/UC_OB_HIGHER_ONE_URL_GET.v1/get?#{query_args}"
     end
 
   end

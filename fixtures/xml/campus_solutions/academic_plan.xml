@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
-<UC_SR_ACADEMIC_PLAN>
+<UC_SR_ACADEMIC_PLANNER>
   <STUDENT_ID>24437121</STUDENT_ID>
-  <UPDATE_ACADEMIC_PLAN>
+  <UPDATE_ACADEMIC_PLANNER>
     <NAME>Update</NAME>
     <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_PLNR_FL.SCI_PLNR_FL.GBL?ucInstitution=UCB01</URL>
     <IS_CS_LINK type="boolean">true</IS_CS_LINK>
-  </UPDATE_ACADEMIC_PLAN>
-  <ACADEMICPLAN type="array">
-    <TERM>2168</TERM>
-    <TERM_DESCR>2016 Fall</TERM_DESCR>
-    <CLASSES type="array">
-      <CLASS>
-        <ID>124039</ID>
-        <SUBJECT_CATALOG>PSYCH    C115B</SUBJECT_CATALOG>
-        <TITLE/>
-        <UNITS>4</UNITS>
-      </CLASS>
-    </CLASSES>
-  </ACADEMICPLAN>
-</UC_SR_ACADEMIC_PLAN>
+  </UPDATE_ACADEMIC_PLANNER>
+  <ACADEMICPLANNER type="array">
+    <ACADEMIC_PLAN>
+      <TERM>2168</TERM>
+      <TERM_DESCR>2016 Fall</TERM_DESCR>
+      <CLASSES type="array">
+        <CLASS>
+          <ID>124039</ID>
+          <SUBJECT_CATALOG>PSYCHC115B</SUBJECT_CATALOG>
+          <TITLE></TITLE>
+          <UNITS type="float">4.0</UNITS>
+        </CLASS>
+      </CLASSES>
+      <TOTAL_UNITS type="float">4.0</TOTAL_UNITS>
+    </ACADEMIC_PLAN>
+  </ACADEMICPLANNER>
+</UC_SR_ACADEMIC_PLANNER>

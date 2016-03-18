@@ -4,7 +4,8 @@ describe MyAcademics::FilteredForDelegate do
       MyAcademics::CollegeAndLevel,
       MyAcademics::TransitionTerm,
       MyAcademics::GpaUnits,
-      MyAcademics::Semesters
+      MyAcademics::Semesters,
+      MyAcademics::Exams
     ]
   end
 
@@ -34,7 +35,7 @@ describe MyAcademics::FilteredForDelegate do
       }
     }
     proxy = double lookup_campus_solutions_id: campus_solutions_id
-    expect(CalnetCrosswalk::ByUid).to receive(:new).with(user_id: uid).once.and_return proxy
+    expect(CalnetCrosswalk::ByUid).to receive(:new).with(user_id: uid).at_least(:once).and_return proxy
     expect(CampusSolutions::DelegateStudents).to receive(:new).once.and_return double get: response
   end
   let(:feed) { JSON.parse described_class.new(uid).get_feed_as_json }
@@ -44,6 +45,7 @@ describe MyAcademics::FilteredForDelegate do
       expect(feed['collegeAndLevel']).to be_present
       expect(feed['transitionTerm']).to be_present
       expect(feed['semesters']).to be_present
+      expect(feed['examSchedule']).to be_present
     end
   end
 

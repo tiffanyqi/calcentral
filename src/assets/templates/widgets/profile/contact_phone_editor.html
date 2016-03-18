@@ -41,7 +41,7 @@
       <div>
         <button class="cc-button cc-button-blue" type="submit" data-ng-disabled="cc_page_widget_profile_phone.$invalid || isSaving">
           <span data-ng-if="!isSaving">Save</span>
-          <span data-ng-if="isSaving">Updating...</span>
+          <span data-ng-if="isSaving">Updating&hellip;</span>
         </button>
         <button class="cc-button" data-ng-click="closeEditor()" data-ng-disabled="isSaving">Cancel</button>
       </div>
@@ -51,6 +51,6 @@
     </form>
   </div>
   <div data-ng-if="isDeleting">
-    <i class="fa fa-spinner fa-spin"></i> Deleting...
+    <i class="fa fa-spinner fa-spin"></i> Deleting&hellip;
   </div>
 </div>

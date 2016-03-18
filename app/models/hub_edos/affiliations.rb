@@ -10,7 +10,7 @@ module HubEdos
     end
 
     def json_filename
-      'affiliations.json'
+      'hub_affiliations.json'
     end
 
     def include_fields

@@ -4,6 +4,8 @@ module User
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
+    # Needed to expire cache entries specific to Viewing-As users alongside original user's cache.
+    include Cache::RelatedCacheKeyTracker
     include CampusSolutions::ProfileFeatureFlagged
     include CampusSolutions::DelegatedAccessFeatureFlagged
     include ClassLogger
@@ -12,10 +14,12 @@ module User
       use_pooled_connection {
         @calcentral_user_data ||= User::Data.where(:uid => @uid).first
       }
+      @ldap_attributes ||= CalnetLdap::UserAttributes.new(user_id: @uid).get_feed
       @oracle_attributes ||= CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       if is_cs_profile_feature_enabled
         @edo_attributes ||= HubEdos::UserAttributes.new(user_id: @uid).get
       end
+      @roles = get_campus_roles
       @default_name ||= get_campus_attribute('person_name', :string)
       @first_login_at ||= @calcentral_user_data ? @calcentral_user_data.first_login_at : nil
       @first_name ||= get_campus_attribute('first_name', :string) || ''
@@ -27,22 +31,29 @@ module User
       @delegate_students = get_delegate_students
     end
 
+    def instance_key
+      Cache::KeyGenerator.per_view_as_type @uid, @options
+    end
+
     def get_delegate_students
       return nil unless is_cs_delegated_access_feature_enabled
-      response = CampusSolutions::DelegateStudents.new(user_id: @uid).get
+      delegate_uid = authentication_state.original_delegate_user_id || @uid
+      response = CampusSolutions::DelegateStudents.new(user_id: delegate_uid).get
       response && response[:feed] && response[:feed][:students]
     end
 
-    # split brain until SIS GoLive5 makes registration data available
+    # Split brain three ways until some subset of the brain proves more trustworthy.
     def get_campus_attribute(field, format)
-      if is_sis_profile_visible? && @edo_attributes[:noStudentId].blank? && (edo_attribute = @edo_attributes[field.to_sym])
+      if is_sis_profile_visible? &&
+        (@roles[:student] || @roles[:applicant]) &&
+        @edo_attributes[:noStudentId].blank? && (edo_attribute = @edo_attributes[field.to_sym])
         begin
           validated_edo_attribute = validate_attribute(edo_attribute, format)
         rescue
           logger.error "EDO attribute #{field} failed validation for UID #{@uid}: expected a #{format}, got #{edo_attribute}"
         end
       end
-      validated_edo_attribute || @oracle_attributes[field]
+      validated_edo_attribute || @ldap_attributes[field.to_sym] || @oracle_attributes[field]
     end
 
     def validate_attribute(value, format)
@@ -59,15 +70,17 @@ module User
     WHITELISTED_EDO_ROLES = [:student, :applicant, :advisor]
 
     def get_campus_roles
+      ldap_roles = (@ldap_attributes && @ldap_attributes[:roles]) || {}
       oracle_roles = (@oracle_attributes && @oracle_attributes[:roles]) || {}
-      edo_roles = (@edo_attributes && @edo_attributes[:roles]) || {}
-      if is_sis_profile_visible? && edo_roles.respond_to?(:slice)
+      campus_roles = oracle_roles.merge ldap_roles
+      if is_sis_profile_visible?
+        edo_roles = (@edo_attributes && @edo_attributes[:roles]) || {}
         edo_roles_to_merge = edo_roles.slice *WHITELISTED_EDO_ROLES
-        # While we're in the split-brain stage, Oracle views remain our most trusted source on ex-student status.
-        edo_roles_to_merge.delete(:student) if oracle_roles[:exStudent]
-        oracle_roles.merge edo_roles_to_merge
+        # While we're in the split-brain stage, LDAP and Oracle are more trusted on ex-student status.
+        edo_roles_to_merge.delete(:student) if campus_roles[:exStudent]
+        campus_roles.merge edo_roles_to_merge
       else
-        oracle_roles
+        campus_roles
       end
     end
 
@@ -136,8 +149,7 @@ module User
     end
 
     def is_campus_solutions_student?
-      # no, really, BCS users are identified by having 10-digit IDs.
-      @edo_attributes.present? && @edo_attributes[:campus_solutions_id].present? && @edo_attributes[:campus_solutions_id].to_s.length >= 10
+      @edo_attributes.present? && (@edo_attributes[:is_legacy_user] == false)
     end
 
     def is_delegate_user?
@@ -146,18 +158,15 @@ module User
 
     def is_sis_profile_visible?
       is_cs_profile_feature_enabled &&
-        !authentication_state.original_delegate_user_id &&
         (is_campus_solutions_student? || is_profile_visible_for_legacy_users)
     end
 
-    def has_academics_tab?(roles, has_instructor_history, has_student_history, view_as_privileges)
-      return false if view_as_privileges && !view_as_privileges[:viewEnrollments] && !view_as_privileges[:viewGrades]
+    def has_academics_tab?(roles, has_instructor_history, has_student_history)
       roles[:student] || roles[:faculty] || has_instructor_history || has_student_history
     end
 
-    def has_financials_tab?(roles, view_as_privileges)
-      return false if view_as_privileges && !view_as_privileges[:financial]
-      roles[:student] || roles[:exStudent]
+    def has_financials_tab?(roles)
+      !!(roles[:student] || roles[:exStudent] || roles[:applicant])
     end
 
     def has_toolbox_tab?(policy, roles)
@@ -166,21 +175,43 @@ module User
     end
 
     def get_delegate_view_as_privileges
-      # The following is not nil when delegate is in view-as session
-      delegate_user_id = authentication_state.original_delegate_user_id
-      return nil unless is_cs_delegated_access_feature_enabled && delegate_user_id
+      return nil unless is_cs_delegated_access_feature_enabled && authentication_state.authenticated_as_delegate?
       if @delegate_students
         campus_solutions_id = CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_campus_solutions_id
         student = @delegate_students.detect { |s| campus_solutions_id == s[:campusSolutionsId] }
-        student && student[:privileges]
+        (student && student[:privileges]) || {}
       else
-        nil
+        # Returning nil might inadvertantly trigger non-delegate logic.
+        {}
       end
+    end
+
+    def filter_user_api_for_delegator(feed)
+      view_as_privileges = get_delegate_view_as_privileges
+      feed[:delegateViewAsPrivileges] = view_as_privileges
+      # Delegate users get a pared-down UX.
+      feed[:hasDashboardTab] = false
+      feed[:showSisProfileUI] = false
+      # Delegate users do not have access to preferred name and similar sensitive data.
+      feed[:firstName] = feed[:givenFirstName]
+      feed[:fullName] = feed[:givenFullName]
+      feed[:preferredName] = feed[:givenFullName]
+      feed.delete :firstLoginAt
+      # Extraordinary privileges are set to false.
+      feed[:isDelegateUser] = false
+      feed[:isViewer] = false
+      feed[:isSuperuser] = false
+      # Filter based on delegation rights chosen by the student.
+      feed[:canViewGrades] = false unless view_as_privileges[:viewGrades]
+      feed[:hasFinancialsTab] = false unless view_as_privileges[:financial]
+      feed[:hasAcademicsTab] = false unless view_as_privileges[:viewEnrollments] || view_as_privileges[:viewGrades]
+      feed
     end
 
     def get_feed_internal
       google_mail = User::Oauth2Data.get_google_email @uid
       canvas_mail = User::Oauth2Data.get_canvas_email @uid
+      primary_email_address = get_campus_attribute('email_address', :string)
       official_bmail_address = get_campus_attribute('official_bmail_address', :string)
       current_user_policy = authentication_state.policy
       is_google_reminder_dismissed = User::Oauth2Data.is_google_reminder_dismissed(@uid)
@@ -188,8 +219,8 @@ module User
       is_calendar_opted_in = Calendar::User.where(:uid => @uid).first.present?
       has_student_history = CampusOracle::UserCourses::HasStudentHistory.new(user_id: @uid).has_student_history?
       has_instructor_history = CampusOracle::UserCourses::HasInstructorHistory.new(user_id: @uid).has_instructor_history?
-      delegate_view_as_privileges = get_delegate_view_as_privileges
-      roles = get_campus_roles
+      roles = @roles
+      can_view_academics = has_academics_tab?(roles, has_instructor_history, has_student_history)
       feed = {
         isSuperuser: current_user_policy.can_administrate?,
         isViewer: current_user_policy.can_view_as?,
@@ -205,15 +236,17 @@ module User
         hasGoogleAccessToken: GoogleApps::Proxy.access_granted?(@uid),
         hasStudentHistory: has_student_history,
         hasInstructorHistory: has_instructor_history,
-        hasDashboardTab: !authentication_state.original_advisor_user_id && !authentication_state.original_delegate_user_id,
-        hasAcademicsTab: has_academics_tab?(roles, has_instructor_history, has_student_history, delegate_view_as_privileges),
-        hasFinancialsTab: has_financials_tab?(roles, delegate_view_as_privileges),
+        hasDashboardTab: true,
+        hasAcademicsTab: can_view_academics,
+        canViewGrades: can_view_academics,
+        hasFinancialsTab: has_financials_tab?(roles),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
-        hasPhoto: User::Photo.has_photo?(@uid),
+        hasPhoto: !!User::Photo.fetch(@uid, @options),
         inEducationAbroadProgram: @oracle_attributes[:education_abroad],
         googleEmail: google_mail,
         canvasEmail: canvas_mail,
         officialBmailAddress: official_bmail_address,
+        primaryEmailAddress: primary_email_address,
         preferredName: self.preferred_name,
         roles: roles,
         uid: @uid,
@@ -223,7 +256,7 @@ module User
         isDelegateUser: is_delegate_user?,
         showSisProfileUI: is_sis_profile_visible?
       }
-      feed[:delegateViewAsPrivileges] = delegate_view_as_privileges if delegate_view_as_privileges
+      filter_user_api_for_delegator(feed) if authentication_state.authenticated_as_delegate?
       feed
     end
 

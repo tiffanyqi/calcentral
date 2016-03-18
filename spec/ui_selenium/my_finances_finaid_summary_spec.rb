@@ -72,7 +72,7 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                     it ("tells UID #{uid} to accept the terms and conditions") { expect(has_t_and_c_msg).to be true }
 
                     @finances_page.click_t_and_c_link @fin_aid_page
-                    sees_t_and_c = @fin_aid_page.t_and_c.include? 'I agree to the following'
+                    sees_t_and_c = @fin_aid_page.t_and_c_body.include? 'I agree to the following'
                     it ("shows the Terms and Conditions to UID #{uid}") { expect(sees_t_and_c).to be true }
 
                     # Decline T&C
@@ -92,14 +92,14 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                     end
 
                     @fin_aid_page.wait_for_fin_aid_semesters
-                    package_visible = @fin_aid_page.net_cost_section_element.visible?
+                    package_visible = @fin_aid_page.net_cost_section_element.when_visible WebDriverUtils.page_load_timeout
 
                     it "allows UID #{uid} to accept the terms and conditions" do
-                      expect(package_visible).to be true
+                      expect(package_visible).to be_truthy
                     end
 
                     it "allows UID #{uid} to authorize Title IV after accepting the terms and conditions" do
-                      expect(package_visible).to be true
+                      expect(package_visible).to be_truthy
                     end
 
                   elsif @api_aid_years.title_iv_approval.nil?

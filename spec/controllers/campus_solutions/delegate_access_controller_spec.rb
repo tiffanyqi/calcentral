@@ -1,5 +1,4 @@
 describe CampusSolutions::DelegateAccessController do
-
   let(:user_id) { '12346' }
 
   context 'user not authenticated' do
@@ -13,16 +12,15 @@ describe CampusSolutions::DelegateAccessController do
       expect(response.status).to eq 401
     end
   end
-
   context 'authenticated user' do
     before do
       session['user_id'] = user_id
       allow(User::Auth).to receive(:where).and_return [User::Auth.new(uid: user_id, is_superuser: false, active: true)]
     end
-
     context 'post' do
       before do
         expect(CampusSolutions::DelegateStudentsExpiry).to receive(:expire).once.with user_id
+        expect(User::Api).to receive(:expire).once.with user_id
       end
       it 'should link a claimed student' do
         post :post, {
@@ -35,10 +33,10 @@ describe CampusSolutions::DelegateAccessController do
         expect(json['feed']['status']).to be_present
       end
     end
-
     context 'get' do
       before do
         expect(CampusSolutions::DelegateStudentsExpiry).to receive(:expire).never
+        expect(User::Api).to receive(:expire).never
       end
       it 'should get students list' do
         get :get_students
@@ -58,7 +56,7 @@ describe CampusSolutions::DelegateAccessController do
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
         expect(json['statusCode']).to eq 200
-        expect(json['feed']['daAgreeToTerms']['termsAndConditions']).to include 'Excepteur sint occaecat'
+        expect(json['feed']['termsAndConditions']).to include 'Excepteur sint occaecat'
       end
 
       it 'should get Campus Solutions URL for managing delegates' do
@@ -70,5 +68,4 @@ describe CampusSolutions::DelegateAccessController do
       end
     end
   end
-
 end

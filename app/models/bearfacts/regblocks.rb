@@ -3,7 +3,8 @@ module Bearfacts
     include DatedFeed
 
     def get
-      response = request(request_path, request_params)
+      return {} unless legacy_user?
+      response = super
       feed = response.delete :feed
       return response if feed.blank?
 

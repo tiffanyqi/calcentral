@@ -7,13 +7,11 @@ describe CanvasCsv::AddNewUsers do
       'canvas_user_id,user_id,login_id,first_name,last_name,full_name,email,status',
       '123,22729403,946123,John,Smith,john.smith@berkeley.edu,active',
       '124,UID:946124,946124,Jane,Smith,Jane Smith,janesmith@gmail.com,active',
-      '125,22729405,946125,Charmaine,D\'Silva,Charmaine D\'Silva,charmainedsilva@berkeley.edu,active',
+      '125,UID:946125,inactive-946125,Charmaine,Golden,Charmaine Golden,charmainedgolden@berkeley.edu,active',
       '126,22729407,946126,Brian,Warner,Brian Warner,bwarner@example.com,active'
      ].join("\n")
   end
 
-  # Email addresss changes for Charmaine D'Silva
-  # SIS User ID changes for Jane Smith
   let(:sis_active_uids) { %w(946122 946123 946124 946125 946126 946127).to_set }
   let(:sis_active_people) do
     [
@@ -98,7 +96,7 @@ describe CanvasCsv::AddNewUsers do
       expect(csv_array[0]).to eq %w(canvas_user_id user_id login_id first_name last_name full_name email status)
       expect(csv_array[1][2]).to eq '946123'
       expect(csv_array[2][2]).to eq '946124'
-      expect(csv_array[3][2]).to eq '946125'
+      expect(csv_array[3][2]).to eq 'inactive-946125'
     end
 
     it 'returns existing file path if user report already obtained' do
@@ -117,7 +115,7 @@ describe CanvasCsv::AddNewUsers do
   describe '#load_new_active_users' do
     it 'loads new active users into array' do
       expect(CampusOracle::Queries).to receive(:get_basic_people_attributes).with(['946122','946127']).and_return(sis_active_people)
-      result = subject.load_new_active_users
+      subject.load_new_active_users
       loaded_users = subject.instance_eval { @new_active_sis_users }
       expect(loaded_users).to be_an_instance_of Array
       expect(loaded_users.count).to eq 2
@@ -134,7 +132,7 @@ describe CanvasCsv::AddNewUsers do
     it 'loads empty array when no new active users' do
       allow(subject).to receive(:new_active_user_uids).and_return([])
       expect(CampusOracle::Queries).to_not receive(:get_basic_people_attributes)
-      result = subject.load_new_active_users
+      subject.load_new_active_users
       loaded_users = subject.instance_eval { @new_active_sis_users }
       expect(loaded_users).to eq []
     end

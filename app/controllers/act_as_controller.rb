@@ -5,7 +5,7 @@ class ActAsController < ApplicationController
   skip_before_filter :check_reauthentication, :only => [:stop_act_as]
 
   def initialize(options = {})
-    @act_as_session_key = options[:act_as_session_key] || 'original_user_id'
+    @act_as_session_key = options[:act_as_session_key] || SessionKey.original_user_id
   end
 
   def start
@@ -23,14 +23,15 @@ class ActAsController < ApplicationController
   end
 
   def stop
-    return redirect_to root_path unless session['user_id'] && session[@act_as_session_key]
-
-    # TODO: We might have to be aggressive with cache invalidation.
-    Cache::UserCacheExpiry.notify session['user_id']
-    logger.warn "Stop: #{session[@act_as_session_key]} act as #{session['user_id']}"
+    exiting_uid = session['user_id']
+    return redirect_to root_path unless exiting_uid && session[@act_as_session_key]
+    # TODO: Can we eliminate the need for this cache-expiry via smarter cache-key scheme? E.g., Cache::KeyGenerator
+    Cache::UserCacheExpiry.notify exiting_uid
+    logger.warn "Stop: #{session[@act_as_session_key]} act as #{exiting_uid}"
     session['user_id'] = session[@act_as_session_key]
     session[@act_as_session_key] = nil
 
+    after_successful_stop session
     render :nothing => true, :status => 204
   end
 
@@ -46,6 +47,10 @@ class ActAsController < ApplicationController
     uid_to_store = params['uid']
     User::StoredUsers.delete_recent_uid(original_uid, uid_to_store)
     User::StoredUsers.store_recent_uid(original_uid, uid_to_store)
+  end
+
+  def after_successful_stop(session)
+    # Sub-class might want custom cache management.
   end
 
   def valid_params?(act_as_uid)

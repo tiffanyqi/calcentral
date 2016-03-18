@@ -11,21 +11,21 @@ describe AuthenticationState do
     context 'when viewing as' do
       let(:fake_session) {{
         'user_id' => random_id,
-        'original_user_id' => random_id
+        SessionKey.original_user_id => random_id
       }}
       it {should be false}
     end
     context 'when delegate viewing as' do
       let(:fake_session) {{
         'user_id' => random_id,
-        'original_delegate_user_id' => random_id
+        SessionKey.original_delegate_user_id => random_id
       }}
       it {should be false}
     end
     context 'when advisor viewing as' do
       let(:fake_session) {{
         'user_id' => random_id,
-        'original_advisor_user_id' => random_id
+        SessionKey.original_advisor_user_id => random_id
       }}
       it {should be false}
     end
@@ -54,9 +54,9 @@ describe AuthenticationState do
     context 'when viewing as' do
       let(:fake_session) {{
         'user_id' => random_id,
-        'original_user_id' => random_id
+        SessionKey.original_user_id => random_id
       }}
-      it {should eq fake_session['original_user_id']}
+      it {should eq fake_session[SessionKey.original_user_id]}
     end
     context 'when only authenticated from an external app' do
       let(:fake_session) {{
@@ -91,7 +91,7 @@ describe AuthenticationState do
     context 'when viewing as' do
       let(:fake_session) {{
         'user_id' => random_id,
-        'original_user_id' => random_id
+        SessionKey.original_user_id => random_id
       }}
       it {should be true}
     end
@@ -123,7 +123,7 @@ describe AuthenticationState do
       let(:user_id) { random_id }
       let(:fake_session) {{
         'user_id' => user_id,
-        'original_advisor_user_id' => random_id
+        SessionKey.original_advisor_user_id => random_id
       }}
       it 'should get student of advisor user' do
         expect(subject).to be_authenticated_as_advisor

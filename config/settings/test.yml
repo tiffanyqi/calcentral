@@ -1,30 +1,42 @@
-# The test environment should require minimal configuration, and is the one targeted by travis.
+# The test environment should require minimal configuration, and is the one targeted by Travis.
 # Avoid creating too many dependencies (if any) on a test.local.yml
+application:
+  layer: 'test'
+
 logger:
   level: <%= ENV['LOGGER_LEVEL'] || DEBUG %>
   stdout: <%= ENV['LOGGER_STDOUT'] || 'only' %>
-application:
-  layer: "test"
+
 canvas_proxy:
   fake: true
   app_provider_host: 'https://cc-dev.example.com'
+
 ldap:
+  fake: 'true'
   host: 'nds-test.berkeley.edu'
+
 google_proxy:
   fake: true
+
 financials_proxy:
   fake: true
+
 textbooks_proxy:
   fake: true
+
 terms:
   # Keyed to H2 test data
   fake_now: 2013-10-11 04:20:00
+
 cal_link_proxy:
   fake: true
+
 cal1card_proxy:
   fake: true
+
 calmail_proxy:
   fake: true
+
 calnet_crosswalk_proxy:
   fake: true
 
@@ -35,24 +47,6 @@ oauth2:
 
 myfinaid_proxy:
   fake: true
-
-features:
-  bearfacts: true
-  financials: true
-  telebears: true
-  textbooks: true
-  videos: true
-  cal1card: true
-  audio: true
-  advising: true
-  cs_delegated_access: true
-  cs_enrollment_card: true
-  cs_fin_aid: true
-  cs_holds: true
-  cs_profile_emergency_contacts: true
-  cs_profile_work_experience: true
-  webcast_sign_up_on_calcentral: true
-  show_notifications_archive_link: true
 
 cache:
   store: "memory"
@@ -74,3 +68,28 @@ cache:
 
 advising_proxy:
   fake: true
+
+features:
+  advising: true
+  audio: true
+  bearfacts: true
+  cal1card: true
+  class_enrollment_summer_2016: true
+  cs_academic_planner: true
+  cs_academic_progress_report: true
+  cs_advising_gte_forms: true
+  cs_advising_show_advisors: true
+  cs_billing: true
+  cs_delegated_access: true
+  cs_enrollment_card: true
+  cs_fin_aid: true
+  cs_holds: true
+  cs_logout: true
+  cs_profile_emergency_contacts: true
+  cs_profile_languages: true
+  cs_profile_work_experience: true
+  financials: true
+  telebears: true
+  textbooks: true
+  videos: true
+  webcast_sign_up_on_calcentral: true

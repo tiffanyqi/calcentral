@@ -11,7 +11,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
       testable_users = []
 
       CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'User Type', 'Term Transition', 'Standing', 'Schools', 'Majors', 'Level', 'Units']
+        user_info_csv << ['UID', 'User Type', 'Term Transition', 'Colleges', 'Majors', 'Careers', 'Units', 'Level', 'Level No AP']
       end
 
       test_users.each do |user|
@@ -20,7 +20,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
           logger.info("UID is #{uid}")
           user_type = nil
           term_transition = false
-          api_standing = nil
+          api_careers = []
           api_colleges = []
           api_majors = []
           api_level = nil
@@ -39,19 +39,15 @@ describe 'My Academics profile and university requirements cards', :testui => tr
             profile_card.load_page
 
             if (status_api_page.has_academics_tab? && status_api_page.is_student?) || status_api_page.has_student_history?
-              profile_card.profile_card_element.when_visible(timeout=WebDriverUtils.academics_timeout)
+              profile_card.profile_card_element.when_visible WebDriverUtils.academics_timeout
 
-              # NAME AND IDS
-              logger.warn "Expecting UID #{uid}, and UID displayed is #{profile_card.uid}"
+              testable_users << uid unless academics_api_page.transition_term?
+
+              # NAME
               api_full_name = status_api_page.full_name
-              api_sid = status_api_page.sid
               my_academics_full_name = profile_card.name
-              my_academics_sid = profile_card.sid
               it "show the full name of UID #{uid}" do
                 expect(my_academics_full_name).to eql(api_full_name)
-              end
-              it "show the SID for UID #{uid}" do
-                expect(my_academics_sid).to eql(api_sid)
               end
 
               # GPA
@@ -68,7 +64,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 end
 
                 profile_card.show_gpa
-                gpa_revealed = profile_card.gpa_element.when_visible(timeout=WebDriverUtils.page_event_timeout)
+                gpa_revealed = profile_card.gpa_element.when_visible WebDriverUtils.page_event_timeout
                 my_academics_gpa = profile_card.gpa
                 it "show the GPA for UID #{uid} when a user clicks 'Show'" do
                   expect(gpa_revealed).to be_truthy
@@ -76,7 +72,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 end
 
                 profile_card.hide_gpa
-                gpa_hidden = profile_card.gpa_element.when_not_visible(timeout)
+                gpa_hidden = profile_card.gpa_element.when_not_visible WebDriverUtils.page_event_timeout
                 it "hide the GPA for UID #{uid} when a user clicks 'Hide'" do
                   expect(gpa_hidden).to be_truthy
                 end
@@ -100,11 +96,11 @@ describe 'My Academics profile and university requirements cards', :testui => tr
               unless academics_api_page.has_no_standing?
                 api_colleges = academics_api_page.colleges
                 api_majors = academics_api_page.majors
-                api_standing = academics_api_page.standing
+                api_careers = academics_api_page.careers
                 api_level = academics_api_page.level
                 my_academics_colleges = profile_card.all_colleges
                 my_academics_majors = profile_card.all_majors
-                my_academics_standing = profile_card.standing
+                my_academics_careers = profile_card.all_careers
                 my_academics_level = profile_card.level
                 it "show the colleges for UID #{uid}" do
                   expect(my_academics_colleges).to eql(api_colleges)
@@ -112,37 +108,38 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 it "show the majors for UID #{uid}" do
                   expect(my_academics_majors).to eql(api_majors)
                 end
-                it "show the standing for UID #{uid}" do
-                  expect(my_academics_standing).to eql(api_standing)
+                it "show the careers for UID #{uid}" do
+                  expect(my_academics_careers).to eql(api_careers)
                 end
 
                 # LEVEL - AP and NON-AP
-                my_academics_level_label = profile_card.level_label
                 it "show the level for UID #{uid}" do
                   expect(my_academics_level).to eql(api_level)
                 end
-                if academics_api_page.standing == 'Undergraduate'
-                  it "show the 'Including AP' level label for undergrad UID #{uid}" do
-                    expect(my_academics_level_label).to eql('Including AP')
-                  end
-                  api_level_no_ap = academics_api_page.non_ap_level
-                  my_academics_level_no_ap = profile_card.level_non_ap
-                  it "show the level without AP credit for undergrad UID #{uid}" do
-                    expect(my_academics_level_no_ap).to eql(api_level_no_ap)
-                  end
-                else
-                  it "show the 'Current' level label for grad UID #{uid}" do
-                    expect(my_academics_level_label).to eql('Current')
-                  end
+                api_level_no_ap = academics_api_page.non_ap_level
+                if api_level_no_ap.nil?
                   has_level_no_ap = profile_card.level_non_ap?
                   it "show no level without AP credit for grad UID #{uid}" do
                     expect(has_level_no_ap).to be false
+                  end
+                else
+                  my_academics_level_no_ap = profile_card.level_non_ap
+                  it "show the level without AP credit for undergrad UID #{uid}" do
+                    expect(my_academics_level_no_ap).to eql(api_level_no_ap)
                   end
                 end
               end
 
               # UNDERGRAD REQUIREMENTS
-              if academics_api_page.standing == 'Undergraduate'
+
+              if academics_api_page.has_no_standing? || (!academics_api_page.careers.include? 'Undergraduate')
+
+                has_reqts_card = reqts_card.reqts_table?
+                it "show no 'University Requirements' UI for UID #{uid}" do
+                  expect(has_reqts_card).to be false
+                end
+
+              else
 
                 if academics_api_page.writing_reqt_met?
                   my_academics_writing_met = reqts_card.writing_reqt_met?
@@ -207,12 +204,6 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                     expect(cultures_unmet_link_works).to be true
                   end
                 end
-
-              else
-                has_reqts_card = reqts_card.reqts_table?
-                it "show no 'University Requirements' UI for UID #{uid}" do
-                  expect(has_reqts_card).to be false
-                end
               end
 
               # STUDENT STATUS MESSAGING VARIATIONS
@@ -275,7 +266,6 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                   api_term_transition = "Academic status as of #{academics_api_page.term_name}"
                   if status_api_page.is_student?
                     user_type = 'existing student'
-                    testable_users.push(uid)
                     my_academics_term_transition = profile_card.term_transition_heading
                     it "show the term transition heading to UID #{uid}" do
                       expect(my_academics_term_transition).to eql(api_term_transition)
@@ -294,7 +284,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
               user_type = 'no data'
               no_data_msg = profile_card.no_data_heading?
               it "show a 'Data not available' message to UID #{uid}" do
-                 expect(no_data_msg).to be true
+                expect(no_data_msg).to be true
               end
 
             else
@@ -308,13 +298,14 @@ describe 'My Academics profile and university requirements cards', :testui => tr
             logger.error e.message + "\n" + e.backtrace.join("\n")
           ensure
             CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, user_type, term_transition, api_standing, api_colleges * '; ', api_majors * '; ', api_level, api_units]
+              user_info_csv << [uid, user_type, term_transition, api_colleges * '; ', api_majors * '; ',
+                                api_careers * '; ', api_units, api_level, api_level_no_ap]
             end
           end
         end
       end
 
-      it 'have academic profile data for at least one of the test UIDs' do
+      it 'shows academic profile for a current term for at least one of the test UIDs' do
         expect(testable_users.any?).to be true
       end
 

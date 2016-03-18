@@ -155,7 +155,6 @@ Calcentral::Application.routes.draw do
   get '/api/campus_solutions/currency_code' => 'campus_solutions/currency_code#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/language_code' => 'campus_solutions/language_code#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/translate' => 'campus_solutions/translate#get', :via => :get, :defaults => { :format => 'json' }
-  get '/api/campus_solutions/list_of_values' => 'campus_solutions/list_of_values#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/aid_years' => 'campus_solutions/aid_years#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/financial_aid_data' => 'campus_solutions/financial_aid_data#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/financial_aid_funding_sources' => 'campus_solutions/financial_aid_funding_sources#get', :via => :get, :defaults => { :format => 'json' }
@@ -167,6 +166,9 @@ Calcentral::Application.routes.draw do
   get '/api/campus_solutions/enrollment_term' => 'campus_solutions/enrollment_term#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/enrollment_terms' => 'campus_solutions/enrollment_terms#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/academic_plan' => 'campus_solutions/academic_plan#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/campus_solutions/advising_resources' => 'campus_solutions/advising_resources#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/campus_solutions/ferpa_deeplink' => 'campus_solutions/ferpa_deeplink#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/campus_solutions/billing' => 'campus_solutions/billing#get', :via => :get, :defaults => { :format => 'json' }
   post '/api/campus_solutions/address' => 'campus_solutions/address#post', :via => :post, :defaults => { :format => 'json' }
   post '/api/campus_solutions/delegate_access' => 'campus_solutions/delegate_access#post', :via => :post, :defaults => { :format => 'json' }
   post '/api/campus_solutions/email' => 'campus_solutions/email#post', :via => :post, :defaults => { :format => 'json' }
@@ -182,10 +184,11 @@ Calcentral::Application.routes.draw do
   delete '/api/campus_solutions/address/:type' => 'campus_solutions/address#delete', :via => :delete, :defaults => { :format => 'json' }
   delete '/api/campus_solutions/email/:type' => 'campus_solutions/email#delete', :via => :delete, :defaults => { :format => 'json' }
   delete '/api/campus_solutions/emergency_contact/:contactName' => 'campus_solutions/emergency_contact#delete', :via => :post, :defaults => { :format => 'json' }
-  delete '/api/campus_solutions/language/:jpmCatItemId' => 'campus_solutions/language#delete', :via => :delete, :defaults => { :format => 'json' }
+  delete '/api/campus_solutions/language/:languageCode' => 'campus_solutions/language#delete', :via => :delete, :defaults => { :format => 'json' }
   delete '/api/campus_solutions/person_name/:type' => 'campus_solutions/person_name#delete', :via => :delete, :defaults => { :format => 'json' }
   delete '/api/campus_solutions/phone/:type' => 'campus_solutions/phone#delete', :via => :delete, :defaults => { :format => 'json' }
   delete '/api/campus_solutions/ethnicity/:ethnicGroupCode/:regRegion' => 'campus_solutions/ethnicity#delete', :via => :delete, :defaults => { :format => 'json' }
+  delete '/api/campus_solutions/work_experience/:sequenceNbr' => 'campus_solutions/work_experience#delete', :via => :delete, :defaults => { :format => 'json' }
 
   # Redirect to College Scheduler
   get '/college_scheduler/:acad_career/:term_id' => 'campus_solutions/college_scheduler#get'

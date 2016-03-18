@@ -111,7 +111,7 @@ describe Oec::PublishTask do
       let(:end_date) { '5/3/2015' }
       before do
         merged_course_confirmations_csv.concat(
-          "#{course_id},#{course_id},LGBT C146A LEC 002 REP SEXUALITY/LIT,Y,GWS/LGBT C146A LEC 002,LGBT,C146A,LEC,002,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,Y,LGBT,G,Y,#{start_date},#{end_date}")
+          "#{course_id},#{course_id},LGBT C146A LEC 002 REP SEXUALITY/LIT,Y,GWS/LGBT C146A LEC 002,LGBT,C146A,LEC,002,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,23,Y,LGBT,G,Y,#{start_date},#{end_date}")
       end
 
       it 'should normalize dates' do
@@ -125,21 +125,76 @@ describe Oec::PublishTask do
     context 'data with suffixed course IDs' do
       before do
         merged_course_confirmations_csv.concat(
-          '2015-B-34821_GSI,2015-B-34821_GSI,LGBT C146A LEC 001 REP SEXUALITY/LIT,,,LGBT,C146A,LEC,001,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,Y,LGBT,G,,01-26-2015,05-11-2015')
+          "2015-B-#{ccn}_GSI,2015-B-#{ccn}_GSI,LGBT C146A LEC 001 REP SEXUALITY/LIT,,,LGBT,C146A,LEC,001,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,23,Y,LGBT,G,,01-26-2015,05-11-2015")
         expect(Oec::Queries).to receive(:enrollments_for_cntl_nums)
-                                  .with(term_code, ['34821'])
-                                  .and_return student_ids.map { |id| {'course_id' => '2015-B-34821', 'ldap_uid' => id} }
+          .with(term_code, [ccn])
+          .and_return student_ids_for_ccn.map { |id| {'course_id' => "2015-B-#{ccn}", 'ldap_uid' => id} }
+        expect(Oec::Queries).to receive(:students_for_cntl_nums)
+          .with(term_code, array_including(ccn))
+          .and_return(student_data_rows + student_data_rows_for_ccn)
+      end
+      let(:student_ids_for_ccn) { %w(1000 2000 3000) }
+      let(:student_data_rows_for_ccn) do
+        student_ids_for_ccn.map do |id|
+          {
+            'ldap_uid' => id,
+            'first_name' => 'Val',
+            'last_name' => 'Valid',
+            'email_address' => 'valid@berkeley.edu',
+            'sis_id' => random_id
+          }
+        end
       end
 
-      let(:student_ids) { %w(1000 2000 3000) }
-
-      it 'should match appropriate data to suffixed CCN' do
-        task.run
-        expect(courses.find { |course| course['COURSE_ID'] == '2015-B-34821_GSI'}).to be_present
-        student_ids.each do |id|
-          expect(course_students.find { |course_student| course_student['COURSE_ID'] == '2015-B-34821_GSI' && course_student['LDAP_UID'] == id }).to be_present
+      shared_examples 'a smart suffix matcher' do
+        it 'should match appropriate data to suffixed CCN' do
+          task.run
+          expect(courses.find { |course| course['COURSE_ID'] == "2015-B-#{ccn}_GSI"}).to be_present
+          student_ids_for_ccn.each do |id|
+            expect(course_students.find { |course_student| course_student['COURSE_ID'] == "2015-B-#{ccn}_GSI" && course_student['LDAP_UID'] == id }).to be_present
+          end
+          expect(course_instructors.find { |course_instructor| course_instructor['COURSE_ID'] == "2015-B-#{ccn}_GSI" && course_instructor['LDAP_UID'] == '562283'}).to be_present
         end
-        expect(course_instructors.find { |course_instructor| course_instructor['COURSE_ID'] == '2015-B-34821_GSI' && course_instructor['LDAP_UID'] == '562283'}).to be_present
+      end
+
+      context 'data with suffixed course ID matching an ID without suffix' do
+        let(:ccn) { '34821' }
+        it_should_behave_like 'a smart suffix matcher'
+      end
+      context 'data with suffixed course ID matching no ID without suffix' do
+        let(:ccn) { '50000' }
+        it_should_behave_like 'a smart suffix matcher'
+      end
+    end
+  end
+
+  describe 'integrity validation' do
+    let(:local_write) { 'Y' }
+    before { allow(Rails.logger).to receive(:warn) }
+    context 'mismatched enrollment data' do
+      before do
+        enrollment_data_rows << {'course_id' => '2016-B-99999', 'ldap_uid' => '99999999'}
+      end
+      it 'should report error' do
+        expect(Rails.logger).to receive(:warn).with /Validation failed!/
+        expect(Rails.logger).to receive(:warn).with /LDAP_UID 99999999 found in course_students but not students/
+        task.run
+      end
+    end
+    context 'mismatched student data' do
+      before do
+        student_data_rows << {
+          'ldap_uid' => 99999999,
+          'first_name' => 'Inter',
+          'last_name' => 'Loper',
+          'email_address' => 'interloper@berkeley.edu',
+          'sis_id' => random_id
+        }
+      end
+      it 'should report error' do
+        expect(Rails.logger).to receive(:warn).with /Validation failed!/
+        expect(Rails.logger).to receive(:warn).with /LDAP_UID 99999999 found in students but not course_students/
+        task.run
       end
     end
   end

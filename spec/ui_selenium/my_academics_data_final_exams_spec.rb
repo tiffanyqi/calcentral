@@ -8,41 +8,40 @@ describe 'My Academics Final Exams card', :testui => true do
       driver = WebDriverUtils.launch_browser
       test_users = UserUtils.load_test_users
       testable_users = []
-      test_output = UserUtils.initialize_output_csv(self)
+      test_output = UserUtils.initialize_output_csv self
 
       CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'Has Exams', 'Exam Dates', 'Exam Times', 'Exam Courses', 'Exam Locations', 'Error?']
+        user_info_csv << ['UID', 'Has Exams', 'Exam Dates', 'Exam Times', 'Exam Courses', 'Exam Locations']
       end
 
       test_users.each do |user|
         if user['finalExams']
-          uid = user['uid'].to_s
+          uid = user['uid']
           logger.info("UID is #{uid}")
           has_exams = false
-          api_exam_dates = nil
-          api_exam_times = nil
-          api_exam_courses = nil
-          api_exam_locations = nil
-          threw_error = false
+          api_exam_dates = []
+          api_exam_times = []
+          api_exam_courses = []
+          api_exam_locations = []
 
           begin
-            splash_page = CalCentralPages::SplashPage.new(driver)
+            splash_page = CalCentralPages::SplashPage.new driver
             splash_page.load_page
             splash_page.basic_auth uid
-            status_api = ApiMyStatusPage.new(driver)
-            status_api.get_json(driver)
-            academics_api = ApiMyAcademicsPage.new(driver)
-            academics_api.get_json(driver)
+            status_api = ApiMyStatusPage.new driver
+            status_api.get_json driver
+            academics_api = ApiMyAcademicsPage.new driver
+            academics_api.get_json driver
             if status_api.is_student?
-              classes_api = ApiMyClassesPage.new(driver)
-              classes_api.get_json(driver)
+              classes_api = ApiMyClassesPage.new driver
+              classes_api.get_json driver
               current_term = classes_api.current_term
               my_academics_page = CalCentralPages::MyAcademicsPage::MyAcademicsFinalExamsCard.new driver
               my_academics_page.load_page
-              my_academics_page.page_heading_element.when_visible(WebDriverUtils.academics_timeout)
+              my_academics_page.page_heading_element.when_visible WebDriverUtils.academics_timeout
               if academics_api.has_exam_schedules
                 has_exams = true
-                testable_users.push(uid)
+                testable_users << uid
 
                 # EXAM SCHEDULES ON MY ACADEMICS LANDING PAGE
                 api_exam_dates = academics_api.all_exam_dates
@@ -77,7 +76,7 @@ describe 'My Academics Final Exams card', :testui => true do
 
                 # EXAM SCHEDULES ON SEMESTER PAGE
                 my_academics_page.click_student_semester_link current_term
-                my_academics_page.final_exams_card_heading_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
+                my_academics_page.final_exams_card_heading_element.when_visible WebDriverUtils.page_load_timeout
                 semester_exam_dates = my_academics_page.all_exam_dates
                 semester_exam_times = my_academics_page.all_exam_times
                 semester_exam_courses = my_academics_page.all_exam_courses
@@ -104,21 +103,20 @@ describe 'My Academics Final Exams card', :testui => true do
             end
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
-            threw_error = true
           ensure
             CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, has_exams, api_exam_dates, api_exam_times, api_exam_courses, api_exam_locations, threw_error]
+              user_info_csv << [uid, has_exams, api_exam_dates * ', ', api_exam_times * ', ', api_exam_courses * ', ', api_exam_locations * ', ']
             end
           end
         end
       end
       it 'has final exams info for at least one of the test UIDs' do
-        expect(testable_users.length).to be > 0
+        expect(testable_users.any?).to be true
       end
     rescue => e
       logger.error e.message + "\n" + e.backtrace.join("\n")
     ensure
-      WebDriverUtils.quit_browser(driver)
+      WebDriverUtils.quit_browser driver
     end
   end
 end

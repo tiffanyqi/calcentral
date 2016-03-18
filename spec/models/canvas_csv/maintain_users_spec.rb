@@ -224,7 +224,7 @@ describe CanvasCsv::MaintainUsers do
     let(:ldap_record) { nil }
     before do
       allow(Settings.canvas_proxy).to receive(:inactivate_expired_users).and_return(inactivate_expired_users)
-      allow_any_instance_of(CanvasCsv::Ldap).to receive(:search_by_uid).with(uid).and_return(ldap_record)
+      allow_any_instance_of(CalnetLdap::Client).to receive(:search_by_uid).with(uid.to_i).and_return(ldap_record)
       subject.categorize_user_account(existing_account, campus_rows)
     end
     context 'when the campus DB account is marked as having no active CalNet account' do
@@ -369,34 +369,47 @@ describe CanvasCsv::MaintainUsers do
 
   describe '#change_sis_user_id' do
     let(:canvas_user_id) { rand(999999) }
-    let(:matching_login_id) { rand(999999) }
+    let(:ldap_uid) { rand(999999) }
     let(:new_sis_id) { "UID:#{rand(99999)}" }
     let(:old_sis_id) { rand(99999).to_s }
-    it 'finds and modifies a user login record' do
-      canvas_logins_response = {
-        statusCode: 200,
-        body: [
-          {
-            'account_id' => 90242,
-            'id' => matching_login_id,
-            'sis_user_id' => old_sis_id,
-            'unique_id' => old_sis_id,
-            'user_id' => canvas_user_id
-          },
-          {
-            'account_id' => 90242,
-            'id' => rand(99999),
-            'sis_user_id' => nil,
-            'unique_id' => "test-#{rand(99999)}",
-            'user_id' => canvas_user_id
-          }
-        ]
-      }
-      fake_logins_proxy = double()
-      expect(fake_logins_proxy).to receive(:user_logins).with(canvas_user_id).and_return canvas_logins_response
-      expect(fake_logins_proxy).to receive(:change_sis_user_id).with(matching_login_id, new_sis_id).and_return(statusCode: 200)
-      allow(Canvas::Logins).to receive(:new).and_return fake_logins_proxy
-      CanvasCsv::MaintainUsers.change_sis_user_id(canvas_user_id, new_sis_id)
+    let(:login_object_id) { rand(999999) }
+
+    shared_examples 'successful change' do
+      it 'calls the API to change the ID' do
+        canvas_logins_response = {
+          statusCode: 200,
+          body: [
+            {
+              'account_id' => 90242,
+              'id' => login_object_id,
+              'sis_user_id' => old_sis_id,
+              'unique_id' => matching_login_id,
+              'user_id' => canvas_user_id
+            },
+            {
+              'account_id' => 90242,
+              'id' => rand(99999),
+              'sis_user_id' => nil,
+              'unique_id' => "test-#{rand(99999)}",
+              'user_id' => canvas_user_id
+            }
+          ]
+        }
+        fake_logins_proxy = double()
+        expect(fake_logins_proxy).to receive(:user_logins).with(canvas_user_id).and_return canvas_logins_response
+        expect(fake_logins_proxy).to receive(:change_sis_user_id).with(login_object_id, new_sis_id).and_return(statusCode: 200)
+        allow(Canvas::Logins).to receive(:new).and_return fake_logins_proxy
+        CanvasCsv::MaintainUsers.change_sis_user_id(canvas_user_id, new_sis_id)
+      end
+    end
+
+    context 'active user account' do
+      let(:matching_login_id) { ldap_uid.to_s }
+      include_examples 'successful change'
+    end
+    context 'before reactivating an inactivated account' do
+      let(:matching_login_id) { "inactive-#{ldap_uid}" }
+      include_examples 'successful change'
     end
   end
 
@@ -526,6 +539,25 @@ describe CanvasCsv::MaintainUsers do
       end
     end
 
+  end
+
+  describe '#parse_login_id' do
+    let(:uid) { random_id }
+    it 'understands an inactive ID' do
+      parsed = CanvasCsv::MaintainUsers.parse_login_id "inactive-#{uid}"
+      expect(parsed[:ldap_uid]).to eq uid.to_i
+      expect(parsed[:inactive_account]).to be_truthy
+    end
+    it 'understands an active ID' do
+      parsed = CanvasCsv::MaintainUsers.parse_login_id uid
+      expect(parsed[:ldap_uid]).to eq uid.to_i
+      expect(parsed[:inactive_account]).to be_falsey
+    end
+    it 'does not even try to deal with anything else' do
+      parsed = CanvasCsv::MaintainUsers.parse_login_id 'forgetit'
+      expect(parsed[:ldap_uid]).to be_nil
+      expect(parsed[:inactive_account]).to be_falsey
+    end
   end
 
 end

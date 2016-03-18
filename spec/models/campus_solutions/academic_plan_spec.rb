@@ -6,7 +6,7 @@ describe CampusSolutions::AcademicPlan do
     it_behaves_like 'a proxy that properly observes the enrollment card flag'
     it_behaves_like 'a proxy that got data successfully'
     it 'returns data with the expected structure' do
-      expect(subject[:feed][:updateAcademicPlan]).to be
+      expect(subject[:feed][:updateAcademicPlanner]).to be
     end
   end
 
@@ -16,7 +16,7 @@ describe CampusSolutions::AcademicPlan do
     it_should_behave_like 'a proxy that gets data'
     it 'includes specific mock data' do
       expect(subject[:feed][:studentId]).to eq '24437121'
-      expect(subject[:feed][:updateAcademicPlan][:url]).to eq 'https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_PLNR_FL.SCI_PLNR_FL.GBL?ucInstitution=UCB01'
+      expect(subject[:feed][:updateAcademicPlanner][:url]).to eq 'https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_PLNR_FL.SCI_PLNR_FL.GBL?ucInstitution=UCB01'
     end
   end
 end

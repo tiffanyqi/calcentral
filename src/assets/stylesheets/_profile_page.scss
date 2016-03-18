@@ -7,6 +7,12 @@
   .cc-page-widget-profile-note {
     padding: 0 10px 10px;
   }
+  .cc-page-widget-profile-margin-top {
+    margin-top: 5px;
+  }
+  .cc-page-widget-profile-margin-bottom {
+    margin-bottom: 5px;
+  }
   .cc-page-widget-profile-sections {
     .cc-page-widget-profile-section-info {
       border-top: 0;
@@ -26,6 +32,10 @@
     > div {
       padding: 10px;
     }
+    .cc-page-widget-profile-fieldset {
+      margin: 5px 0;
+      padding: 0;
+    }
     .cc-page-widget-profile-section-label {
       flex-basis: 120px;
       flex-shrink: 0;
@@ -43,6 +53,14 @@
       margin: -10px -10px 10px;
       padding: 10px;
       white-space: pre-line;
+    }
+    .cc-page-widget-profile-section-error {
+      background-color: $cc-color-red-light;
+      border-bottom: 1px solid $cc-color-red;
+      border-top: 1px solid $cc-color-red;
+      color: $cc-color-red;
+      margin: 10px -10px;
+      padding: 10px;
     }
     .cc-page-widget-profile-section-input-error {
       background-color: $cc-color-red;
@@ -84,9 +102,6 @@
         }
       }
     }
-    .cc-page-widget-profile-section-content-item-margin-top {
-      margin-top: 5px;
-    }
     .cc-page-widget-profile-section-not-available {
       font-style: italic;
     }
@@ -94,6 +109,9 @@
       flex-basis: 60px;
       flex-shrink: 0;
       text-align: right;
+    }
+    .cc-page-widget-profile-section-calendar-icon {
+      margin: 2px;
     }
   }
 

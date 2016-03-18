@@ -28,25 +28,31 @@ module CanvasCsv
       if (user_logins = response[:body])
         # We look for the login with a numeric "unique_id", and assume it is an LDAP UID.
         user_logins.select! do |login|
-          begin
-            Integer(login['unique_id'], 10)
-            true
-          rescue ArgumentError
-            false
-          end
+          parse_login_id(login['unique_id'])[:ldap_uid]
         end
         if user_logins.length > 1
           logger.error "Multiple numeric logins found for Canvas user #{canvas_user_id}; will skip"
         elsif user_logins.empty?
           logger.warn "No LDAP UID login found for Canvas user #{canvas_user_id}; will skip"
         else
-          login_id = user_logins[0]['id']
+          login_object_id = user_logins[0]['id']
           logger.debug "Changing SIS ID for user #{canvas_user_id} to #{new_sis_user_id}"
-          response = logins_proxy.change_sis_user_id(login_id, new_sis_user_id)
+          response = logins_proxy.change_sis_user_id(login_object_id, new_sis_user_id)
           return true if response[:statusCode] == 200
         end
       end
       false
+    end
+
+    def self.parse_login_id(login_id)
+      if (matched = /^(inactive-)?([0-9]+)$/.match login_id)
+        inactive_account = matched[1]
+        ldap_uid = matched[2].to_i
+      end
+      {
+        ldap_uid: ldap_uid,
+        inactive_account: inactive_account.present?
+      }
     end
 
     def initialize(known_uids, sis_user_import_csv)
@@ -131,22 +137,21 @@ module CanvasCsv
     def categorize_user_account(existing_account, campus_user_rows)
       # Convert from CSV::Row for easier manipulation.
       old_account_data = existing_account.to_hash
-      login_id = old_account_data['login_id']
-      if (inactive_account = /^inactive-([0-9]+)$/.match login_id)
-        login_id = inactive_account[1]
-      end
-      if (ldap_uid = Integer(login_id, 10) rescue nil)
-        @known_uids << login_id
+      parsed_login_id = self.class.parse_login_id old_account_data['login_id']
+      ldap_uid = parsed_login_id[:ldap_uid]
+      inactive_account = parsed_login_id[:inactive_account]
+      if ldap_uid
+        @known_uids << ldap_uid.to_s
         campus_row = campus_user_rows.select { |r| (r['ldap_uid'].to_i == ldap_uid) && (r['person_type'] != 'Z') }.first
         if campus_row.present?
           logger.warn "Reactivating account for LDAP UID #{ldap_uid}" if inactive_account
           new_account_data = canvas_user_from_campus_row(campus_row)
         else
           return unless Settings.canvas_proxy.inactivate_expired_users
-          if (ldap_result = CanvasCsv::Ldap.new.search_by_uid(login_id)).present?
+          if (ldap_result = CalnetLdap::Client.new.search_by_uid(ldap_uid)).present?
             # Our LDAP bind does not provide enough data to fully update the Canvas account, and so
             # all we can do is log the disconnect between LDAP and our campus DB.
-            logger.error "UID #{login_id} is not in DB but LDAP reports #{ldap_result.inspect}"
+            logger.error "UID #{ldap_uid} is not in DB but LDAP reports #{ldap_result.inspect}"
             return
           end
           # This LDAP UID no longer appears in campus data. Mark the Canvas user account as inactive.

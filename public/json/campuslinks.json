@@ -6,6 +6,7 @@
       "url": "http://www.511.org/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -23,6 +24,7 @@
       "url": "http://registrar.berkeley.edu/CalendarDisp.aspx?terms=current",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -40,6 +42,7 @@
       "url": "https://www.law.berkeley.edu/php-programs/courses/academic_calendars.php",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -57,6 +60,7 @@
       "url": "http://www.berkeley.edu/academics/dept/a.shtml",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -74,6 +78,7 @@
       "url": "http://bulletin.berkeley.edu/academic-policies/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -91,6 +96,7 @@
       "url": "http://academic-senate.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": false,
         "faculty": true,
         "exStudent": false
@@ -108,6 +114,7 @@
       "url": "http://vcaf.berkeley.edu/who-we-are/divisions",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -125,6 +132,7 @@
       "url": "http://ist.berkeley.edu/airbears/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -142,6 +150,7 @@
       "url": "http://asuc.org/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -159,6 +168,7 @@
       "url": "https://atyourserviceonline.ucop.edu",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -176,6 +186,7 @@
       "url": "https://asc.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -193,6 +204,7 @@
       "url": "http://www.bai.berkeley.edu/BAIRS/index.htm",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -210,6 +222,7 @@
       "url": "http://bcal.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -227,6 +240,7 @@
       "url": "http://ist.berkeley.edu/bconnected",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -244,6 +258,7 @@
       "url": "http://bcourses.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -269,6 +284,7 @@
       "url": "https://www.ets.berkeley.edu/discover-services/bcourses",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -286,6 +302,7 @@
       "url": "http://bdrive.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -303,6 +320,7 @@
       "url": "https://bearfacts.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -320,6 +338,7 @@
       "url": "http://supplychain.berkeley.edu/bearbuy/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -337,6 +356,7 @@
       "url": "http://police.berkeley.edu/programsandservices/campus_safety/index.html",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -354,6 +374,7 @@
       "url": "http://guide.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -371,6 +392,7 @@
       "url": "http://jobs.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -388,6 +410,7 @@
       "url": "http://vcresearch.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -405,6 +428,7 @@
       "url": "http://visitors.berkeley.edu/tour/self.shtml",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -422,6 +446,7 @@
       "url": "http://www.berkeley.edu/a-z/a.shtml",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -439,6 +464,7 @@
       "url": "http://www.bsc.coop/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -456,6 +482,7 @@
       "url": "http://bets.berkeley.edu/BETS/home/BetsHome.cfm",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": false,
         "exStudent": false
@@ -473,6 +500,7 @@
       "url": "http://www.bai.berkeley.edu/BFS/index.htm",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -490,6 +518,7 @@
       "url": "http://studentbilling.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -507,6 +536,7 @@
       "url": "http://blu.berkeley.edu",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -524,6 +554,7 @@
       "url": "https://bcsint.is.berkeley.edu",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -541,6 +572,7 @@
       "url": "http://supplychain.berkeley.edu/programs/card-program-services/blucard",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -558,6 +590,7 @@
       "url": "http://bmail.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -575,6 +608,7 @@
       "url": "http://www.law.berkeley.edu/15687.htm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": true,
         "exStudent": true
@@ -592,6 +626,7 @@
       "url": "https://berkeley.box.com/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -609,6 +644,7 @@
       "url": "http://services.housing.berkeley.edu/c1c/static/index.htm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -630,6 +666,7 @@
       "url": "http://calanswers.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -647,6 +684,7 @@
       "url": "http://calband.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -664,6 +702,7 @@
       "url": "http://calmarketplace.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -681,6 +720,7 @@
       "url": "http://www.calperformances.org/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -698,6 +738,7 @@
       "url": "http://calrentals.housing.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -715,6 +756,7 @@
       "url": "http://calspirit.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -732,6 +774,7 @@
       "url": "http://studentcentral.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -753,6 +796,7 @@
       "url": "https://calstudentstore.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -770,6 +814,7 @@
       "url": "http://www.calbears.com/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -787,6 +832,7 @@
       "url": "http://caldining.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -804,6 +850,7 @@
       "url": "http://www.calgreeks.com/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -825,6 +872,7 @@
       "url": "http://callink.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -842,6 +890,7 @@
       "url": "https://career.berkeley.edu/CareerApps/Callisto/CallistoLogin.aspx",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -859,6 +908,7 @@
       "url": "http://calmail.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -876,6 +926,7 @@
       "url": "https://calmessages.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": false,
         "exStudent": false
@@ -893,6 +944,7 @@
       "url": "https://calnet.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -910,6 +962,7 @@
       "url": "http://budget.berkeley.edu/systems/calplanning",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": false,
         "exStudent": false
@@ -927,6 +980,7 @@
       "url": "https://calshare.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -944,6 +998,7 @@
       "url": "http://caltime.berkeley.edu",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -961,6 +1016,7 @@
       "url": "http://campaign.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -978,6 +1034,7 @@
       "url": "https://calstudentstore.berkeley.edu/textbook",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": true,
         "exStudent": true
@@ -995,6 +1052,7 @@
       "url": "https://cdsonline.berkeley.edu",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": false,
         "exStudent": false
@@ -1012,6 +1070,7 @@
       "url": "http://directory.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1029,6 +1088,7 @@
       "url": "http://www.berkeley.edu/admin/compute.shtml#offices",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1046,6 +1106,7 @@
       "url": "http://www.berkeley.edu/map/3dmap/3dmap.shtml",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1063,6 +1124,7 @@
       "url": "http://sharedservices.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -1080,6 +1142,7 @@
       "url": "http://pt.berkeley.edu/around/transit/routes/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1097,6 +1160,7 @@
       "url": "http://uhs.berkeley.edu/facstaff/care/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -1114,6 +1178,7 @@
       "url": "http://career.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1131,6 +1196,7 @@
       "url": "https://career.berkeley.edu/Internships/Internships.stm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1148,6 +1214,7 @@
       "url": "https://career.berkeley.edu/Tools/Tools.stm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1165,6 +1232,7 @@
       "url": "https://career.berkeley.edu/Parttime/Parttime.stm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1182,6 +1250,7 @@
       "url": "http://www.law.berkeley.edu/careers.htm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1199,6 +1268,7 @@
       "url": "http://www.housing.berkeley.edu/child/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1224,6 +1294,7 @@
       "url": "http://registrar.berkeley.edu/StudentSystems/tbinfo.html",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1241,6 +1312,7 @@
       "url": "http://pt.berkeley.edu/pay/transit/classpass/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1258,6 +1330,7 @@
       "url": "https://www.ets.berkeley.edu/discover-services/classroom-technology-support",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": false,
         "faculty": true,
         "exStudent": false
@@ -1275,6 +1348,7 @@
       "url": "http://www.berkeley.edu/academics/school.shtml",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1292,6 +1366,7 @@
       "url": "https://security.berkeley.edu/policy/usepolicy.html",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1309,6 +1384,7 @@
       "url": "http://uhs.berkeley.edu/students/counseling/cps.shtml",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1330,6 +1406,7 @@
       "url": "https://www.ets.berkeley.edu/discover-services/course-capture",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": false,
         "faculty": true,
         "exStudent": false
@@ -1347,6 +1424,7 @@
       "url": "http://guide.berkeley.edu/courses/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1364,6 +1442,7 @@
       "url": "https://marin.berkeley.edu/darsweb/servlet/ListAuditsServlet ",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1381,6 +1460,7 @@
       "url": "http://www.decal.org/ ",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1402,6 +1482,7 @@
       "url": "http://dsp.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1419,6 +1500,7 @@
       "url": "https://www.ets.berkeley.edu/discover-services/drop-computer-facilities",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1436,6 +1518,7 @@
       "url": "https://bearfacts.berkeley.edu/bearfacts/student/CARS/ebill.do?bfaction=accessEBill ",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1453,6 +1536,7 @@
       "url": "http://eop.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1470,6 +1554,7 @@
       "url": "https://www.edx.org/university_profile/BerkeleyX",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1491,6 +1576,7 @@
       "url": "http://emergency.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1508,6 +1594,7 @@
       "url": "http://oem.berkeley.edu/get-prepared",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1525,6 +1612,7 @@
       "url": "http://www.ehs.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1542,6 +1630,7 @@
       "url": "http://diversity.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1559,6 +1648,7 @@
       "url": "http://ethicscompliance.berkeley.edu/index.shtml",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -1576,6 +1666,7 @@
       "url": "http://events.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1593,6 +1684,7 @@
       "url": "http://evcp.chance.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1610,6 +1702,7 @@
       "url": "http://www.cp.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1627,6 +1720,7 @@
       "url": "http://berkeley.edu/faculty/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": false,
         "faculty": true,
         "exStudent": false
@@ -1644,6 +1738,7 @@
       "url": "https://fafsa.ed.gov/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1661,6 +1756,7 @@
       "url": "http://financialaid.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1678,6 +1774,7 @@
       "url": "https://studentloans.gov/myDirectLoan/whatYouNeed.action?page=repayEst",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1695,6 +1792,7 @@
       "url": "http://ls-yourway.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1712,6 +1810,7 @@
       "url": "http://geneq.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1733,6 +1832,7 @@
       "url": "http://givetocal.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1750,6 +1850,7 @@
       "url": "https://ga.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1767,6 +1868,7 @@
       "url": "http://www.grad.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1784,6 +1886,7 @@
       "url": "http://www.grad.berkeley.edu/financial/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1801,6 +1904,7 @@
       "url": "http://grad.berkeley.edu/professional-development/appointments/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1818,6 +1922,7 @@
       "url": "http://studentbilling.berkeley.edu/exitDirect.htm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1835,6 +1940,7 @@
       "url": "http://studentcentral.berkeley.edu/faqshipwaiver",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1856,6 +1962,7 @@
       "url": "http://hrweb.berkeley.edu/hcm",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -1873,6 +1980,7 @@
       "url": "http://hrweb.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -1890,6 +1998,7 @@
       "url": "http://ist.berkeley.edu/imagine",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": false,
         "exStudent": false
@@ -1907,6 +2016,7 @@
       "url": "http://ihouse.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -1924,6 +2034,7 @@
       "url": "http://ist.berkeley.edu/support/kb",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1941,6 +2052,7 @@
       "url": "http://ist.berkeley.edu/support/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1958,6 +2070,7 @@
       "url": "http://itunes.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1975,6 +2088,7 @@
       "url": "http://kalx.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -1996,6 +2110,7 @@
       "url": "http://rac.berkeley.edu/compliancebook/labsafety.html",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2013,6 +2128,7 @@
       "url": "http://lead.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2030,6 +2146,7 @@
       "url": "http://hrweb.berkeley.edu/learning",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2047,6 +2164,7 @@
       "url": "http://library.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2063,28 +2181,12 @@
       ]
     },
     {
-      "name": "Living At Cal",
-      "description": "UC Berkeley housing options",
-      "url": "http://www.housing.berkeley.edu/livingatcal/",
-      "roles": {
-        "student": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Food \u0026 Housing",
-          "subcategory": "Housing"
-        }
-      ]
-    },
-    {
       "name": "Mail Services",
       "description": "United States Postal Service-incoming and outgoing mail",
       "url": "http://mailservices.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2102,6 +2204,7 @@
       "url": "http://myyears.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2119,6 +2222,7 @@
       "url": "https://myfinaid.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2136,6 +2240,7 @@
       "url": "http://teaching.berkeley.edu/new-faculty-resources",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": false,
         "faculty": true,
         "exStudent": false
@@ -2153,6 +2258,7 @@
       "url": "http://nss.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2170,6 +2276,7 @@
       "url": "http://newscenter.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2187,6 +2294,7 @@
       "url": "http://chancellor.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2204,6 +2312,7 @@
       "url": "http://registrar.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2221,6 +2330,7 @@
       "url": "http://ls-advise.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2238,6 +2348,7 @@
       "url": "http://www.ocf.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2255,6 +2366,7 @@
       "url": "http://hrweb.berkeley.edu/learning/corwe",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": false,
         "exStudent": false
@@ -2272,6 +2384,7 @@
       "url": "http://pt.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2289,6 +2402,7 @@
       "url": "http://studentbilling.berkeley.edu/carsPaymentOptions.htm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2306,6 +2420,7 @@
       "url": "http://controller.berkeley.edu/payroll/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2323,6 +2438,7 @@
       "url": "https://calnet.berkeley.edu/directory/update/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2340,6 +2456,7 @@
       "url": "https://auth.berkeley.edu/cas/login?service=https://hrw-vip-prod.is.berkeley.edu/cgi-bin/cas-hrsprod.pl",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2357,6 +2474,7 @@
       "url": "http://hrweb.berkeley.edu/er/policies",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2374,6 +2492,7 @@
       "url": "http://pe.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2391,6 +2510,7 @@
       "url": "http://police.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2408,6 +2528,7 @@
       "url": "http://campuspol.chance.berkeley.edu/Home/AtoZPolicies.cfm?long_page=yes",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2425,6 +2546,7 @@
       "url": "http://publicservice.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2442,6 +2564,7 @@
       "url": "http://businessservices.berkeley.edu/procurement/services",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2459,6 +2582,7 @@
       "url": "http://recsports.berkeley.edu/ ",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2476,6 +2600,7 @@
       "url": "http://registrar.berkeley.edu/Registration/feesched.html",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2493,6 +2618,7 @@
       "url": "http://berkeley.edu/research/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2510,6 +2636,7 @@
       "url": "http://berkeley.libcal.com/booking/gardner",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": true,
         "exStudent": true
@@ -2522,11 +2649,12 @@
       ]
     },
     {
-      "name": "Residential \u0026 Student Service Programs",
+      "name": "Residence Halls \u0026 Housing Options",
       "description": "UC Berkeley housing options",
-      "url": "http://www.housing.berkeley.edu/",
+      "url": "http://reslife.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2544,6 +2672,7 @@
       "url": "http://www.rescomp.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2565,6 +2694,7 @@
       "url": "http://resource.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2582,6 +2712,7 @@
       "url": "https://atyourserviceonline.ucop.edu",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2599,6 +2730,7 @@
       "url": "http://thecenter.berkeley.edu/index.shtml",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2616,6 +2748,7 @@
       "url": "http://police.berkeley.edu/index.html",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2633,6 +2766,7 @@
       "url": "http://www.bai.berkeley.edu/BFS/systems/systemAccess.htm",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2650,6 +2784,7 @@
       "url": "http://summer.berkeley.edu/registration/schedule",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2667,6 +2802,7 @@
       "url": "https://schedulebuilder.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2684,6 +2820,7 @@
       "url": "http://schedule.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2705,6 +2842,7 @@
       "url": "https://www.law.berkeley.edu/php-programs/courses/courseSearch.php",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2726,6 +2864,7 @@
       "url": "http://ist.berkeley.edu/software-central/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2743,6 +2882,7 @@
       "url": "http://staffombuds.berkeley.edu/ ",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2760,6 +2900,7 @@
       "url": "http://sa.berkeley.edu/conduct/policies",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2777,6 +2918,7 @@
       "url": "http://sa.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2794,6 +2936,7 @@
       "url": "http://financialaid.berkeley.edu/cost-attendance",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2811,6 +2954,7 @@
       "url": "http://slc.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2828,6 +2972,7 @@
       "url": "http://sa.berkeley.edu/ombuds",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2845,6 +2990,7 @@
       "url": "http://students.berkeley.edu/osl/studentgroups/public/index.asp",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2862,6 +3008,7 @@
       "url": "https://shared-services-help.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -2879,6 +3026,7 @@
       "url": "http://summer.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2896,6 +3044,7 @@
       "url": "http://summer.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2917,6 +3066,7 @@
       "url": "http://studentbilling.berkeley.edu/taxpayer.htm",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2934,6 +3084,7 @@
       "url": "http://teaching.berkeley.edu/teaching.html",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": false,
         "faculty": true,
         "exStudent": false
@@ -2951,6 +3102,7 @@
       "url": "https://telebears.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -2968,6 +3120,7 @@
       "url": "http://blogs.berkeley.edu",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -2985,6 +3138,7 @@
       "url": "http://sa.berkeley.edu/conduct",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -3002,6 +3156,7 @@
       "url": "http://www.dailycal.org/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -3019,6 +3174,7 @@
       "url": "http://trsp.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -3036,6 +3192,7 @@
       "url": "http://controller.berkeley.edu/travel/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -3053,6 +3210,7 @@
       "url": "https://twitter.com/UCBerkeley",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -3070,6 +3228,7 @@
       "url": "http://www.facebook.com/UCBerkeley",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -3087,6 +3246,7 @@
       "url": "http://bnhm.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -3104,6 +3264,7 @@
       "url": "http://www.wellnessletter.com/ucberkeley/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -3121,6 +3282,7 @@
       "url": "http://extension.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -3146,6 +3308,7 @@
       "url": "https://shib.berkeley.edu/idp/profile/Shibboleth/SSO?shire=https://uc.sumtotalsystems.com/Shibboleth.sso/SAML/POST\u0026target=https://uc.sumtotalsystems.com/secure/auth.aspx\u0026providerId=https://uc.sumtotalsystems.com/shibboleth",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -3163,6 +3326,7 @@
       "url": "http://www.uhs.berkeley.edu/students/insurance/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -3180,6 +3344,7 @@
       "url": "http://uhs.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -3197,6 +3362,7 @@
       "url": "http://registrar.berkeley.edu/current_students/registration_enrollment/stucal.html",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -3214,6 +3380,7 @@
       "url": "http://undocu.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -3231,6 +3398,7 @@
       "url": "http://www.urel.berkeley.edu/",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": true,
         "faculty": true,
         "exStudent": true
@@ -3248,6 +3416,7 @@
       "url": "http://wisdomcafe.berkeley.edu/",
       "roles": {
         "student": false,
+        "applicant": false,
         "staff": true,
         "faculty": true,
         "exStudent": false
@@ -3265,6 +3434,7 @@
       "url": "http://registrar.berkeley.edu/canwd.html ",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -3282,6 +3452,7 @@
       "url": "http://financialaid.berkeley.edu/work-study",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true
@@ -3303,6 +3474,7 @@
       "url": "http://www.youtube.com/user/UCBerkeley",
       "roles": {
         "student": true,
+        "applicant": true,
         "staff": false,
         "faculty": false,
         "exStudent": true

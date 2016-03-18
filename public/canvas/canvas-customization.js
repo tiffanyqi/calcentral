@@ -266,9 +266,24 @@
   };
 
   /**
+   * Replaces Canvas support link on 404 page with bCourses support
+   */
+  var customizePageNotFound = function() {
+    // Run only on invalid-link page
+    if (document.title === 'Page Not Found') {
+      var pageNotFoundHelp = [
+        '<p>Oops, we couldn\'t find that page! Contact the instructor or project site owner and let them know that something is missing.</p>',
+        '<p>If you\'re still having a problem, email <a href="mailto:bcourseshelp@berkeley.edu">bcourseshelp@berkeley.edu</a> for support.</p>'
+      ].join('');
+      $('p:contains("Oops, we couldn\'t find that page.")').remove();
+      $('.submit_error_link.discussion-topic').before(pageNotFoundHelp);
+      $('.submit_error_link.discussion-topic, #submit_error_form').remove();
+    }
+  };
+
+  /**
    * Removes 'Create a Site' option from the User Settings navigation menu
    */
-
   var removeCreateSiteUserNav = function() {
     // run only on user profile settings page
     if (window.location.pathname === '/profile/settings') {
@@ -340,6 +355,7 @@
     addPeopleInfoAlert();
     addEGradeExportOption();
     addAltMediaPanel();
+    customizePageNotFound();
     removeCreateSiteUserNav();
   });
 

@@ -34,7 +34,7 @@ describe GoogleAuthController do
     end
     context 'viewing as' do
       before do
-        session['original_user_id'] = random_id
+        session[SessionKey.original_user_id] = random_id
       end
       it { is_expected.not_to have_http_status :success }
     end

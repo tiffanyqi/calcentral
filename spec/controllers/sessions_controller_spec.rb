@@ -18,7 +18,7 @@ describe SessionsController do
         expect(controller).to receive(:cookies).and_return cookie_hash
         :create_reauth_cookie
         different_user_id = "some_other_#{user_id}"
-        session['original_user_id'] = different_user_id
+        session[SessionKey.original_user_id] = different_user_id
         session['user_id'] = different_user_id
 
         get :lookup, renew: 'true'
@@ -44,7 +44,7 @@ describe SessionsController do
       it 'will reset session when CAS uid does not match uid in session' do
         expect(controller).to receive(:cookies).and_return cookie_hash
         :create_reauth_cookie
-        session['original_user_id'] = user_id
+        session[SessionKey.original_user_id] = user_id
         session['user_id'] = user_id
 
         get :lookup, renew: 'true'

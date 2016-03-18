@@ -185,4 +185,12 @@ describe MyAcademics::Telebears do
     end
   end
 
+  context 'non-legacy ID' do
+    before { allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return '1234567890' }
+    it 'should not attempt merge' do
+      expect(Bearfacts::Telebears).not_to receive :new
+      feed = {}.tap { |feed| MyAcademics::Telebears.new('61889').merge feed }
+      expect(feed).to be_empty
+    end
+  end
 end

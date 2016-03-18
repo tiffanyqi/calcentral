@@ -6,19 +6,29 @@
         <span class="cc-widget-title-sub" data-ng-bind="enrollmentTerm.termDescr"></span>
       </h2>
     </div>
+
+    <div class="cc-widget-text cc-enrollment-card-advisors-container">
+      <div data-ng-include="'widgets/enrollment/consult_advisor.html'"></div>
+    </div>
+
     <div class="cc-widget-text cc-enrollment-card-head">
-      <div class="cc-flex cc-flex-space-between cc-text-light">
+      <div data-ng-if="!enrollmentTerm.enrollmentPeriod[0]">
+        Please check back regularly for your assigned dates.
+      </div>
+      <div
+        class="cc-flex cc-flex-space-between cc-text-light"
+        data-ng-class="{'cc-enrollment-card-margin-top':(!enrollmentTerm.enrollmentPeriod[0])}">
         <div>
           <strong>Action</strong>
         </div>
-        <div>
+        <div data-ng-if="enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent">
           <strong>When</strong>
         </div>
       </div>
     </div>
     <ul class="cc-widget-list cc-widget-list-border-top">
       <li
-        data-ng-repeat="section in enrollment.sections"
+        data-ng-repeat="section in enrollmentTerm.sections"
         class="cc-widget-list-hover cc-widget-list-hover-notriangle cc-enrollment-card-section"
         data-ng-class="{'cc-widget-list-hover-opened':(section.show)}"
         data-cc-accessible-focus-directive

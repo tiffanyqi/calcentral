@@ -31,10 +31,9 @@ class SessionsController < ApplicationController
 
     if params['renew'] == 'true'
       # If we're re-authenticating due to view-as, then the CAS-provided UID should match original_user_id in session.
-      original_uid = session['original_user_id'] || session['original_advisor_user_id'] || session['original_delegate_user_id']
-      if original_uid
+      if (original_uid = get_original_viewer_uid)
         if original_uid != auth_uid
-          logger.warn "ACT-AS: CAS returned UID #{auth_uid} not matching active session: #{session_message}. Logging user out."
+          logger.warn "User #{original_uid} was view-as on UID #{auth_uid}. Log everyone out. Session message: #{session_message}"
           logout
           return redirect_to Settings.cas_logout_url
         else
@@ -84,6 +83,9 @@ class SessionsController < ApplicationController
   def destroy
     logout
     url = request.protocol + ApplicationController.correct_port(request.host_with_port, request.env['HTTP_REFERER'])
+
+    url = "#{Settings.campus_solutions_proxy.logout_url}&redirect_url=#{CGI.escape url}" if Settings.features.cs_logout
+
     render :json => {
       :redirectUrl => "#{Settings.cas_logout_url}?service=#{CGI.escape url}"
     }.to_json
@@ -112,13 +114,18 @@ class SessionsController < ApplicationController
       redirect_to url_for_path('/uid_error')
     else
       # Unless we're re-authenticating after view-as, initialize the session.
-      session['user_id'] = uid unless session['original_user_id'] || session['original_advisor_user_id'] || session['original_delegate_user_id']
+      session['user_id'] = uid unless get_original_viewer_uid
       redirect_to smart_success_path, :notice => 'Signed in!'
     end
   end
 
   def logout
     begin
+      if (uid = session['user_id']) && get_original_viewer_uid
+        # TODO: Can we eliminate this cache-expiry in favor of smarter cache-key scheme? E.g., Cache::KeyGenerator
+        Cache::UserCacheExpiry.notify uid
+        CampusSolutions::DelegateStudentsExpiry.expire uid
+      end
       delete_reauth_cookie
       reset_session
     ensure

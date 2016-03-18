@@ -45,7 +45,6 @@ module Rosters
               last_name: enr['last_name'],
               email: enr['student_email_address'],
               enroll_status: enr['enroll_status'],
-              photo_bytes: enr['photo_bytes'],
               sections: [{id: section_ccn}],
               section_ccns: [section_ccn]
             }
@@ -59,7 +58,7 @@ module Rosters
       campus_enrollment_map.each do |ldap_uid, campus_student|
         campus_student[:id] = ldap_uid
         campus_student[:login_id] = ldap_uid
-        if campus_student[:enroll_status] == 'E' && campus_student[:photo_bytes]
+        if campus_student[:enroll_status] == 'E'
           campus_student[:photo] = "/canvas/#{@canvas_course_id}/photo/#{ldap_uid}"
         end
 

@@ -1,39 +1,54 @@
 <div
   data-cc-enrollment-card-header-directive
   data-count="$index + 1"
-  data-date="Prior to {{enrollmentTerm.enrollmentPeriodsById.phase1.date.epoch * 1000 | date:'MMM d'}}"
+  data-date="{{enrollmentTerm.enrollmentPeriod[0] ? 'Prior to ' + (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'MMM d'): ''}}"
   data-title="section.title"
 ></div>
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
-  <ul class="cc-list-links" data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks">
-    <li>
-      <div
-        data-cc-enrollment-link-directive
-        data-link="enrollmentTerm.links.scheduleClasses"
-      ></div>
-      <div
-        data-cc-enrollment-link-directive
-        data-link="enrollmentTerm.links.courseCatalog"
-      ></div>
-      <div
-        data-cc-enrollment-link-directive
-        data-link="enrollmentTerm.links.discoveryCourses"
-      ></div>
-      <div
-        data-cc-enrollment-link-directive
-        data-link="enrollmentTerm.links.bigIdeas"
-      ></div>
-      <div
-        data-cc-enrollment-link-directive
-        data-link="enrollmentTerm.links.freshmanSeminars"
-      ></div>
-      <div
-        data-cc-enrollment-link-directive
-        data-link="enrollmentTerm.links.decal"
-      ></div>
-    </li>
-  </ul>
+  <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks">
+    <ul class="cc-list-links" data-ng-if="enrollmentTerm.isClassScheduleAvailable">
+      <li>
+        <div
+          data-cc-campus-solutions-link-item-directive
+          data-link="enrollmentTerm.links.scheduleClasses"
+          data-cache="enrollment"
+        ></div>
+      </li>
+    </ul>
+    <ul class="cc-list-links">
+      <li>
+        <a href="http://guide.berkeley.edu/">
+          Berkeley Academic Guide
+        </a>
+      </li>
+      <li>
+        <a href="http://lsdiscovery.berkeley.edu/">
+          Discovery Courses
+        </a>
+      </li>
+      <li>
+        <a href="http://bigideascourses.berkeley.edu/">
+          Big Ideas Courses
+        </a>
+      </li>
+      <li>
+        <a href="http://fss.berkeley.edu/">
+          Freshman &amp; Sophomore Seminars
+        </a>
+      </li>
+      <li>
+        <a href="http://www.decal.org/">
+          DeCal
+        </a>
+      </li>
+      <li>
+        <a href="http://www.berkeleyconnect.berkeley.edu/">
+          Berkeley Connect
+        </a>
+      </li>
+    </ul>
+  </div>
   <div
     data-ng-if="!api.user.profile.actAsOptions.canSeeCSLinks"
     data-ng-include="'widgets/enrollment/enrollment_hide_links.html'">

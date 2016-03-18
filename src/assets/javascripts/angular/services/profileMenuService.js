@@ -13,20 +13,43 @@ angular.module('calcentral.services').factory('profileMenuService', function(api
       categories: [
         {
           id: 'basic',
-          name: 'Basic Information'
+          name: 'Basic Information',
+          roles: {
+            applicant: true,
+            student: true
+          }
+        },
+        {
+          id: 'basic_nonstudent',
+          name: 'Basic Information',
+          roles: {
+            student: false
+          }
         },
         {
           id: 'contact',
-          name: 'Contact Information'
+          name: 'Contact Information',
+          roles: {
+            applicant: true,
+            student: true
+          }
         },
         {
           id: 'emergency',
           name: 'Emergency Contact',
-          featureFlag: 'csProfileEmergencyContacts'
+          featureFlag: 'csProfileEmergencyContacts',
+          roles: {
+            applicant: true,
+            student: true
+          }
         },
         {
           id: 'demographic',
-          name: 'Demographic Information'
+          name: 'Demographic Information',
+          roles: {
+            applicant: true,
+            student: true
+          }
         }
       ]
     },
@@ -54,6 +77,7 @@ angular.module('calcentral.services').factory('profileMenuService', function(api
           name: 'Title IV Release',
           featureFlag: 'csFinAid',
           roles: {
+            applicant: true,
             student: true
           }
         }
@@ -64,12 +88,21 @@ angular.module('calcentral.services').factory('profileMenuService', function(api
       categories: [
         {
           id: 'languages',
-          name: 'Languages'
+          name: 'Languages',
+          featureFlag: 'csProfileLanguages',
+          roles: {
+            applicant: true,
+            student: true
+          }
         },
         {
           id: 'work-experience',
           name: 'Work Experience',
-          featureFlag: 'csProfileWorkExperience'
+          featureFlag: 'csProfileWorkExperience',
+          roles: {
+            applicant: true,
+            student: true
+          }
         }
       ]
     },

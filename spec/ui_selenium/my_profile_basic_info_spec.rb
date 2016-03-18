@@ -1,6 +1,6 @@
 describe 'My Profile Basic Info', :testui => true, :order => :defined do
 
-  if ENV['UI_TEST'] && Settings.ui_selenium.layer == 'local'
+  if ENV['UI_TEST'] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 
@@ -26,6 +26,20 @@ describe 'My Profile Basic Info', :testui => true, :order => :defined do
       WebDriverUtils.quit_browser(@driver)
     end
 
+    describe 'sidebar links' do
+
+      it ('include a link to Basic Information') { expect(@basic_info_card.basic_info_link?).to be true }
+      it ('include a link to Contact Information') { expect(@basic_info_card.contact_info_link?).to be true }
+      it ('include no link to Emergency Contact') { expect(@basic_info_card.emergency_contact_link?).to be false }
+      it ('include a link to Demographic Information') { expect(@basic_info_card.contact_info_link?).to be true }
+      it ('include a link to Delegate Access') { expect(@basic_info_card.contact_info_link?).to be true }
+      it ('include a link to Information Disclosure') { expect(@basic_info_card.contact_info_link?).to be true }
+      it ('include a link to Title IV Release') { expect(@basic_info_card.contact_info_link?).to be true }
+      it ('include no link to Work Experience') { expect(@basic_info_card.work_experience_link?).to be false }
+      it ('include a link to bConnected') { expect(@basic_info_card.contact_info_link?).to be true }
+
+    end
+
     describe 'viewing official name' do
 
       it 'shows the first name, middle name, last name, and suffix' do
@@ -47,7 +61,10 @@ describe 'My Profile Basic Info', :testui => true, :order => :defined do
 
       it 'allows the student to save an edited name' do
         @basic_info_card.edit_pref_name @preferred_name
-        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) { @basic_info_card.preferred_name == @preferred_name }
+        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) do
+          @basic_info_card.preferred_name == @preferred_name
+          @basic_info_card.popover_first_name == @preferred_name
+        end
       end
 
       it 'allows the student to cancel an edited name' do
@@ -55,19 +72,30 @@ describe 'My Profile Basic Info', :testui => true, :order => :defined do
         @basic_info_card.click_edit_pref_name_button
         @basic_info_card.enter_preferred_name @preferred_name
         @basic_info_card.click_cancel_pref_name_button
-        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) { @basic_info_card.preferred_name == original_name }
+        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) do
+          @basic_info_card.preferred_name == original_name
+          @basic_info_card.popover_first_name == original_name
+        end
       end
 
       it 'allows a maximum of 30 characters for an edited name' do
         max_char_name = @student_info['preferredName']['maxChar']
+        name_truncated = max_char_name[0..29]
         @basic_info_card.edit_pref_name max_char_name
-        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) { @basic_info_card.preferred_name == max_char_name[0..29] }
+        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) do
+          @basic_info_card.preferred_name == name_truncated
+          @basic_info_card.popover_first_name == name_truncated
+        end
       end
 
       it 'permits but trims leading or trailing spaces in an edited name' do
         whitespace_name = @student_info['preferredName']['leadingWhitespace']
+        name_stripped = whitespace_name.strip
         @basic_info_card.edit_pref_name whitespace_name
-        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) { @basic_info_card.preferred_name == whitespace_name.strip }
+        @basic_info_card.wait_until(WebDriverUtils.page_load_timeout) do
+          @basic_info_card.preferred_name == name_stripped
+          @basic_info_card.popover_first_name == name_stripped
+        end
       end
 
     end

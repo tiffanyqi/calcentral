@@ -1,24 +1,30 @@
 <div
   data-cc-enrollment-card-header-directive
   data-count="$index + 1"
-  data-date="{{enrollmentTerm.enrollmentPeriodsById.phase1.date.epoch * 1000 | date:'h:mm a'}}"
-  data-date-important="{{enrollmentTerm.enrollmentPeriodsById.phase1.date.epoch * 1000 | date:'EEE MMM d'}}"
+  data-date="{{enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent ? (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'h:mm a') : ''}}"
+  data-date-important="{{enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent ? (enrollmentTerm.enrollmentPeriod[0].date.epoch * 1000 | date:'EEE MMM d'): ''}}"
   data-title="section.title"
 ></div>
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
-  <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks">
-    <span
-      data-cc-enrollment-link-directive
-      data-link="enrollmentTerm.links.chooseClasses"
-      data-text="Choose classes"
-    ></span> for the upcoming semester.<br/>
-    Learn more about
-    <span
-      data-cc-enrollment-link-directive
-      data-link="enrollmentTerm.links.enrollmentRules"
-      data-text="enrollment rules and information"
-    ></span>
+  <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks && !enrollment.isLawStudent">
+    <div data-ng-if="enrollmentTerm.isClassScheduleAvailable">
+      <span
+        data-cc-campus-solutions-link-item-directive
+        data-link="enrollmentTerm.links.chooseClasses"
+        data-text="Choose classes"
+        data-cache="enrollment"
+      ></span> for the upcoming semester.<br/>
+    </div>
+    <div data-ng-if="!enrollmentTerm.isClassScheduleAvailable">
+      Ability to enroll coming soon. Please try again later.
+    </div>
+    Learn more about <a href="http://registrar.berkeley.edu/Records/tbinfo.html">enrollment rules and information</a>.
+  </div>
+
+  <div
+    data-ng-if="!api.user.profile.actAsOptions.canSeeCSLinks"
+    data-ng-include="'widgets/enrollment/enrollment_hide_links.html'">
   </div>
 
   <div data-ng-if="enrollmentTerm.enrollmentPeriod.length">
@@ -47,6 +53,5 @@
       </table>
     </div>
   </div>
-
 
 </div>

@@ -99,7 +99,7 @@ module Oec
         end
       end
 
-      Oec::Queries.students_for_cntl_nums(@term_code, ccns).each do |student_row|
+      Oec::Queries.students_for_cntl_nums(@term_code, ccns + suffixed_ccns.keys).each do |student_row|
         validate_and_add(students, Oec::Worksheet.capitalize_keys(student_row), %w(LDAP_UID))
       end
 
@@ -118,6 +118,11 @@ module Oec
           validate_and_add(course_students, capitalized_row, %w(LDAP_UID COURSE_ID))
         end
       end
+
+      validate_integrity('LDAP_UID', students, course_students)
+      validate_integrity('LDAP_UID', instructors, course_instructors)
+      validate_integrity('COURSE_ID', courses, course_instructors)
+
       if valid?
         log :info, 'Validation passed.'
         [instructors, course_instructors, courses, students, course_students, supervisors, course_supervisors]
@@ -126,6 +131,20 @@ module Oec
         log :warn, 'Validation failed!'
         log_validation_errors
         nil
+      end
+    end
+
+    def validate_integrity(key, *worksheets)
+      id_sets = worksheets.map do |worksheet|
+        {
+          name: worksheet.class.export_name,
+          ids: worksheet.inject(Set.new) { |set, row| set.add row[key] }
+        }
+      end
+      id_sets.permutation do |set1, set2|
+        (set1[:ids] - set2[:ids]).each do |id|
+          validate(set1[:name], key) { |errors| errors.add "#{key} #{id} found in #{set1[:name]} but not #{set2[:name]}" }
+        end
       end
     end
 

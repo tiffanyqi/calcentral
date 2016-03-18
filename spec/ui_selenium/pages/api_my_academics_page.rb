@@ -34,8 +34,9 @@ class ApiMyAcademicsPage
     @parsed['collegeAndLevel']
   end
 
-  def standing
-    college_and_level['standing']
+  # Use case for multiple careers is Law + MBA
+  def careers
+    college_and_level['careers']
   end
 
   def has_no_standing?
@@ -72,23 +73,21 @@ class ApiMyAcademicsPage
   end
 
   def colleges_and_majors
-    college_and_level['colleges']
+    college_and_level['majors']
   end
 
   def colleges
     colleges = []
-    colleges_and_majors.each do |college|
+    colleges_and_majors.each do |college_and_major|
       # For double majors within the same college, only show the college once
-      unless college['college'] == ''
-        colleges.push(college['college'])
-      end
+      colleges << college_and_major['college'] unless college_and_major['college'] == ''
     end
     colleges
   end
 
   def majors
     majors = []
-    colleges_and_majors.each { |major| majors.push(major['major'].split.join(' ')) }
+    colleges_and_majors.each { |college_and_major| majors << college_and_major['major'].split.join(' ') }
     majors
   end
 
@@ -252,7 +251,7 @@ class ApiMyAcademicsPage
       date = (Time.strptime(block_cleared_date(item), '%m/%d/%Y')).strftime('%m/%d/%y')
       dates.push(date)
     end
-    dates
+    dates.sort!
   end
 
   # FINAL EXAMS

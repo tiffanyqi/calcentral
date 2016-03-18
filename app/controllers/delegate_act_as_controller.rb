@@ -1,9 +1,7 @@
 class DelegateActAsController < ActAsController
 
-  skip_before_filter :check_reauthentication, :only => [:stop_delegate_act_as]
-
   def initialize
-    super(act_as_session_key: 'original_delegate_user_id')
+    super act_as_session_key: SessionKey.original_delegate_user_id
   end
 
   def act_as_authorization(uid_param)
@@ -14,15 +12,19 @@ class DelegateActAsController < ActAsController
     if response[:feed] && (students = response[:feed][:students])
       student = students.detect { |s| uid_param == s[:uid] }
       authorized = student && [:financial, :viewEnrollments, :viewGrades].any? { |k| student[:privileges][k] }
-      raise NotAuthorizedError.new("User #{acting_user_id} is unauthorized to delegate-view-as student: #{student.as_json}") unless authorized
+      raise Pundit::NotAuthorizedError.new("User #{acting_user_id} is unauthorized to delegate-view-as student: #{student.as_json}") unless authorized
       logger.warn "User #{acting_user_id} is authorized to delegate-view-as #{uid_param} with privileges: #{student[:privileges]}"
     else
-      raise NotAuthorizedError.new "User #{acting_user_id} does not have delegate affiliation"
+      raise Pundit::NotAuthorizedError.new "User #{acting_user_id} does not have delegate affiliation"
     end
   end
 
   def after_successful_start(session, params)
     # Do nothing
+  end
+
+  def after_successful_stop(session)
+    CampusSolutions::DelegateStudentsExpiry.expire session['user_id']
   end
 
 end

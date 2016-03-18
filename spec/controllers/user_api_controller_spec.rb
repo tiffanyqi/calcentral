@@ -62,7 +62,7 @@ describe UserApiController do
     end
     context 'when viewing as' do
       let(:original_user_id) { random_id }
-      before { session['original_user_id'] = original_user_id }
+      before { session[SessionKey.original_user_id] = original_user_id }
       it { should eq original_user_id }
     end
     context 'when authenticated by LTI' do
@@ -88,7 +88,7 @@ describe UserApiController do
     context 'viewing as' do
       let(:original_delegate_user_id) { random_id }
       before do
-        session['original_delegate_user_id'] = original_delegate_user_id
+        session[SessionKey.original_delegate_user_id] = original_delegate_user_id
         # Give student superpowers with the hope that delegate user has powers turned off.
         allow(User::Auth).to receive(:get) do |uid|
           case uid
@@ -123,7 +123,7 @@ describe UserApiController do
     context 'viewing as' do
       let(:original_advisor_user_id) { random_id }
       before do
-        session['original_advisor_user_id'] = original_advisor_user_id
+        session[SessionKey.original_advisor_user_id] = original_advisor_user_id
         allow(User::Auth).to receive(:get) do |uid|
           case uid
             when user_id
@@ -141,7 +141,7 @@ describe UserApiController do
 
   describe 'superuser status' do
     before do
-      session['original_user_id'] = original_user_id
+      session[SessionKey.original_user_id] = original_user_id
       allow(User::Auth).to receive(:get) do |uid|
         case uid
           when user_id

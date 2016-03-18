@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<UC_SR_FERPA>
+  <FERPA_DEEPLINK>
+    <NAME>Manage FERPA Restrictions</NAME>
+    <IS_CS_LINK type="boolean">true</IS_CS_LINK>
+    <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/CC_PORTFOLIO.SS_CC_FERPA_SETUP.GBL?Page=SS_CC_FERPA</URL>
+  </FERPA_DEEPLINK>
+</UC_SR_FERPA>

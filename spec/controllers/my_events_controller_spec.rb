@@ -76,7 +76,7 @@ describe MyEventsController do
 
         context 'viewing as another user' do
           before do
-            session['original_user_id'] = rand(99999).to_s
+            session[SessionKey.original_user_id] = rand(99999).to_s
             allow(GoogleApps::Proxy).to receive(:access_granted?).with(random_id).and_return(true)
           end
           subject do

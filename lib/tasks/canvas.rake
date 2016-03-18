@@ -16,8 +16,8 @@ namespace :canvas do
 
   desc 'Add new guest user accounts, and update existing ones, within Canvas'
   task :guest_user_sync => :environment do
-    canvas_worker = CanvasCsv::Ldap.new
-    canvas_worker.update_guests
+    canvas_worker = CanvasCsv::UpdateGuests.new
+    canvas_worker.run
   end
 
   desc 'Performs incremental sync of new active CalNet users in Canvas'

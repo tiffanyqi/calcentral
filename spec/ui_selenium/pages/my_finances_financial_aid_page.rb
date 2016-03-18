@@ -12,6 +12,7 @@ module CalCentralPages
       # T & C / TITLE IV
 
       h3(:t_and_c_heading, :xpath => '//h3[text()="Terms and Conditions"]')
+      div(:t_and_c_body, :xpath => '//h3[text()="Terms and Conditions"]/following-sibling::div')
       button(:decline_t_and_c, :xpath => '//button[text()="I Do Not Agree"]')
       button(:accept_t_and_c, :xpath => '//button[text()="I Do Agree"]')
       h2(:declined_t_and_c_heading, :xpath => '//h2[text()="Declined Terms and Conditions"]')

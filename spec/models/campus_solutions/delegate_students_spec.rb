@@ -11,12 +11,12 @@ describe CampusSolutions::DelegateStudents do
     let(:tom_uid) { random_id }
     let(:maggie_uid) { random_id }
     before do
-      allow(CalnetCrosswalk::BySid).to receive(:new).with(user_id: '23009422').and_return (tom = double)
+      allow(CalnetCrosswalk::ByCsId).to receive(:new).with(user_id: '23009422').and_return (tom = double)
       allow(tom).to receive(:lookup_ldap_uid).and_return tom_uid
-      allow(CalnetCrosswalk::BySid).to receive(:new).with(user_id: '24363318').and_return (maggie = double)
+      allow(CalnetCrosswalk::ByCsId).to receive(:new).with(user_id: '24363318').and_return (maggie = double)
       allow(maggie).to receive(:lookup_ldap_uid).and_return maggie_uid
-      %w(17986976 23623575 24346769 24549574).each do |sid|
-        allow(CalnetCrosswalk::BySid).to receive(:new).with(user_id: sid).and_return (proxy = double)
+      %w(17986976 23623575 24346769 24549574 232132138971298721398231).each do |sid|
+        allow(CalnetCrosswalk::ByCsId).to receive(:new).with(user_id: sid).and_return (proxy = double)
         allow(proxy).to receive(:lookup_ldap_uid).and_return random_id
       end
     end

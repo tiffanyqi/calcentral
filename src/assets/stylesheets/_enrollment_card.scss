@@ -1,9 +1,23 @@
 .cc-enrollment-card {
-  .cc-enrollment-card-advisors {
-    margin-left: 0;
+  .cc-enrollment-card-advisors-consult {
+    margin: 0 10px;
+  }
+  .cc-enrollment-card-advisors-container {
+    padding-bottom: 0;
+  }
+  .cc-enrollment-card-advisors-list {
+    margin: 10px 10px 0;
     > li {
       &:not(:last-child) {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .cc-enrollment-card-enrolled-links {
+    > div:not(:last-child) {
+      padding-right: 5px;
+      &::after {
+        content: "|";
       }
     }
   }
@@ -19,6 +33,9 @@
   }
   .cc-enrollment-card-icon {
     padding-right: 5px;
+  }
+  .cc-enrollment-card-margin-top {
+    margin-top: 10px;
   }
   .cc-enrollment-card-section {
     padding: 5px 10px;

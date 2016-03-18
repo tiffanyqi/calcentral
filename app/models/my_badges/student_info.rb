@@ -11,7 +11,7 @@ module MyBadges
       campus_attributes = CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       result = {
         californiaResidency: campus_attributes[:california_residency],
-        isLawStudent: law_student,
+        isLawStudent: law_student?,
         regBlock: get_reg_blocks
       }
       if campus_attributes[:reg_status] && campus_attributes[:reg_status][:transitionTerm]
@@ -42,17 +42,18 @@ module MyBadges
       end
     end
 
-    # Set isLawStudent to true iff user's only college is School of Law
-    def law_student
-      college_feed = {}
-      MyAcademics::CollegeAndLevel.new(@uid).merge(college_feed)
-      if !(college_feed.empty? || college_feed[:empty])
-        colleges = college_feed[:collegeAndLevel][:colleges]
-        if !colleges.nil?
-          return colleges[0][:college].eql? "School of Law"
+    # True if user has a Law 'career' according to Campus Solutions, or if the first college is the School of Law.
+    def law_student?
+      if (college_feed = MyAcademics::CollegeAndLevel.new(@uid).merge({}))
+        if college_feed[:careers].present? && college_feed[:careers].include?('Law')
+          true
+        else
+          college_feed[:majors].present? &&
+            college_feed[:majors].first[:college] == Berkeley::Departments.get('CLLAW')
         end
+      else
+        false
       end
-      return false
     end
 
     def get_reg_blocks

@@ -55,7 +55,7 @@ angular.module('calcentral.services').service('profileService', function() {
     if (!values) {
       return [];
     }
-    var currentTypes = _.pluck(items.content, 'type.code');
+    var currentTypes = _.map(items.content, 'type.code');
     return _.filter(values, function(value) {
       return currentTypes.indexOf(value.fieldvalue) === -1 && value.typeControl !== 'D';
     });
@@ -100,6 +100,20 @@ angular.module('calcentral.services').service('profileService', function() {
   };
 
   /**
+   * Map address fields to the current country and the ones (depending on country) that the user has entered
+   */
+  var matchFields = function(fields, item) {
+    var fieldIds = _.map(fields, 'field');
+    var returnObject = {};
+    _.forEach(item, function(value, key) {
+      if (_.includes(fieldIds, key)) {
+        returnObject[key] = value || '';
+      }
+    });
+    return returnObject;
+  };
+
+  /**
    * Parse a certain section in the profile
    */
   var parseSection = function($scope, data, section) {
@@ -109,6 +123,13 @@ angular.module('calcentral.services').service('profileService', function() {
         content: person[section]
       }
     });
+  };
+
+  /**
+   * Removes the current error message
+   */
+  var removeErrorMessage = function($scope) {
+    $scope.errorMessage = '';
   };
 
   /**
@@ -170,7 +191,9 @@ angular.module('calcentral.services').service('profileService', function() {
     findPreferred: findPreferred,
     findPrimary: findPrimary,
     fixFormattedAddress: fixFormattedAddress,
+    matchFields: matchFields,
     parseSection: parseSection,
+    removeErrorMessage: removeErrorMessage,
     save: save,
     showAdd: showAdd,
     showEdit: showEdit

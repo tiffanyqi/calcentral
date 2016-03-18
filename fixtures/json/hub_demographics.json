@@ -1,0 +1,104 @@
+{
+  "apiResponse": {
+    "correlationId": "46ecc88c-82d7-48ed-b935-c318e83f43e6",
+    "response": {
+      "any": {
+        "students": [
+          {
+            "confidential": false,
+            "ethnicities": [
+              {
+                "group": {
+                  "code": "2",
+                  "description": "Black/African American"
+                },
+                "hispanicLatino": false,
+                "detail": {
+                  "code": "BLACK",
+                  "description": "African American/Black"
+                }
+              }
+            ],
+            "identifiers": [
+              {
+                "disclose": false,
+                "id": "11667051",
+                "type": "student-id"
+              },
+              {
+                "disclose": false,
+                "id": "61889",
+                "type": "campus-uid"
+              },
+              {
+                "disclose": false,
+                "id": "000-00-0000",
+                "type": "Social Security Number"
+              },
+              {
+                "disclose": false,
+                "fromDate": "1902-02-01",
+                "id": "11667051",
+                "type": "DB2"
+              }
+            ],
+            "languages": [],
+            "names": [
+              {
+                "type": {
+                  "code": "PRF",
+                  "description": "Preferred"
+                },
+                "familyName": "Bear",
+                "givenName": "René",
+                "middleName": "",
+                "prefixName": "",
+                "suffixName": "",
+                "formattedName": "René  Bear ",
+                "preferred": true,
+                "disclose": false,
+                "uiControl": {
+                  "code": "U",
+                  "description": "Edit - No Delete"
+                },
+                "fromDate": "2015-11-06"
+              },
+              {
+                "type": {
+                  "code": "PRI",
+                  "description": "Primary"
+                },
+                "familyName": "Bear",
+                "givenName": "Oski",
+                "middleName": "",
+                "prefixName": "",
+                "suffixName": "",
+                "formattedName": "Oski  Bear ",
+                "preferred": false,
+                "disclose": false,
+                "uiControl": {
+                  "code": "D",
+                  "description": "Display Only"
+                },
+                "fromDate": "1902-02-01"
+              }
+            ],
+            "usaCountry": {
+              "citizenshipStatus": {
+                "code": "1",
+                "description": "Native"
+              },
+              "militaryStatus": {
+                "code": "",
+                "description": "",
+                "fromDate": "1902-02-01"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "responseType": "edu.berkeley.sis.model.edo.student.generated.Students",
+    "source": "UCB-SIS-STUDENT"
+  }
+}

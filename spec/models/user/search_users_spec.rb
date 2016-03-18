@@ -39,10 +39,11 @@ describe User::SearchUsers do
     let(:uid_proxy_campus_solutions_id) { '9350306150' }
     it 'should return valid record for valid uid' do
       result = User::SearchUsers.new({:id => uid_proxy_ldap_uid}).search_users
+      expect(result).to be_an Enumerable
       expect(result).to have(1).item
-      expect(result[0]['ldap_uid']).to eq uid_proxy_ldap_uid
-      expect(result[0]['student_id']).to eq uid_proxy_student_id
-      expect(result[0]['campus_solutions_id']).to eq uid_proxy_campus_solutions_id
+      expect(result.first['ldap_uid']).to eq uid_proxy_ldap_uid
+      expect(result.first['student_id']).to eq uid_proxy_student_id
+      expect(result.first['campus_solutions_id']).to eq uid_proxy_campus_solutions_id
     end
   end
   context 'BySid returns results' do
@@ -52,9 +53,9 @@ describe User::SearchUsers do
     it 'should return valid record for valid sid' do
       result = User::SearchUsers.new({:id => '24680'}).search_users
       expect(result).to have(1).item
-      expect(result[0]['ldap_uid']).to eq sid_proxy_ldap_uid
-      expect(result[0]['student_id']).to eq sid_proxy_student_id
-      expect(result[0]['campus_solutions_id']).to eq sid_proxy_campus_solutions_id
+      expect(result.first['ldap_uid']).to eq sid_proxy_ldap_uid
+      expect(result.first['student_id']).to eq sid_proxy_student_id
+      expect(result.first['campus_solutions_id']).to eq sid_proxy_campus_solutions_id
     end
   end
   context 'ByCsId returns results' do
@@ -63,9 +64,9 @@ describe User::SearchUsers do
     it 'should return valid record for valid sid' do
       result = User::SearchUsers.new({:id => '24680'}).search_users
       expect(result).to have(1).item
-      expect(result[0]['ldap_uid']).to eq cs_id_proxy_ldap_uid
-      expect(result[0]['student_id']).to be_nil
-      expect(result[0]['campus_solutions_id']).to eq cs_id_proxy_campus_solutions_id
+      expect(result.first['ldap_uid']).to eq cs_id_proxy_ldap_uid
+      expect(result.first['student_id']).to be_nil
+      expect(result.first['campus_solutions_id']).to eq cs_id_proxy_campus_solutions_id
     end
   end
   context 'no results from all no proxies' do

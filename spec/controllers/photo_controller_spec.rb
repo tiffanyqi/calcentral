@@ -1,34 +1,44 @@
 describe PhotoController do
-  let(:user_id) { random_id }
+  let(:make_request) { get :my_photo }
+  it_should_behave_like 'an authenticated endpoint'
 
-  context 'when serving a users photo' do
-    context 'when user is logged in' do
-        before do
-          session['user_id'] = random_id
-        end
-      context 'when user has photo' do
-        before do
-          test_photo_object = {'photo' => 'photo_binary_content'}
-          allow(CampusOracle::Queries).to receive(:get_photo).and_return(test_photo_object)
-        end
-        it 'renders users raw image' do
-          get :my_photo
-          expect(response.status).to eq 200
-          expect(response.body).to eq 'photo_binary_content'
-        end
-      end
-      context 'when user has no photo' do
-        before do
-          allow(CampusOracle::Queries).to receive(:get_photo).and_return(nil)
-        end
-        it 'renders users raw image' do
-          get :my_photo
-          expect(response.status).to eq 200
-          expect(response.body).to eq ' '
-        end
+  context 'when a user is authenticated' do
+    before do
+      session['user_id'] = random_id
+      allow_any_instance_of(Cal1card::Photo).to receive(:get_feed).and_return(test_photo_object)
+    end
+
+    shared_examples 'a controller with no photo' do
+      it 'returns an empty body' do
+        make_request
+        expect(response.status).to eq 200
+        expect(response.body).to eq ' '
       end
     end
 
-  end
+    shared_examples 'a controller with a photo' do
+      it 'renders raw image' do
+        make_request
+        expect(response.status).to eq 200
+        expect(response.body).to eq 'photo_binary_content'
+      end
+    end
 
+    context 'when user has no photo' do
+      let(:test_photo_object) { {} }
+      it_should_behave_like 'a controller with no photo'
+    end
+
+    context 'when user has photo' do
+      let(:test_photo_object) { {photo: 'photo_binary_content'} }
+      it_should_behave_like 'a controller with a photo'
+      context 'delegate view' do
+        before do
+          session[SessionKey.original_delegate_user_id] = random_id
+          allow(Settings.features).to receive(:cs_delegated_access).and_return true
+        end
+        it_should_behave_like 'a controller with no photo'
+      end
+    end
+  end
 end

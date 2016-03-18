@@ -19,6 +19,11 @@ module Oec
         DEPT_NAME_3
         DEPT_NAME_4
         DEPT_NAME_5
+        DEPT_NAME_6
+        DEPT_NAME_7
+        DEPT_NAME_8
+        DEPT_NAME_9
+        DEPT_NAME_10
       )
     end
 

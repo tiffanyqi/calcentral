@@ -3,18 +3,33 @@
     Work Experience
   </div>
   <div class="cc-page-widget-profile-section-content">
+    <div data-ng-if="currentObject.isAdding" class="cc-page-widget-profile-section-content-item">
+      <div data-ng-include="'widgets/profile/work_experience_editor.html'"></div>
+    </div>
     <div data-ng-repeat="item in items.content" class="cc-page-widget-profile-section-content-item">
-      <div>
-        <strong data-ng-bind="item.employer"></strong>
+      <div data-ng-if="!item.isModifying">
+        <div>
+          <strong data-ng-bind="item.employer"></strong>
+        </div>
+        <div data-ng-if="item.payFrequency.fromDate || item.payFrequency.toDate">
+          <span data-ng-bind="item.payFrequency.fromDate"></span>
+          <span data-ng-if="!item.payFrequency.fromDate">No start date</span>
+          <span data-ng-if="item.payFrequency.toDate">-</span>
+          <span data-ng-bind="item.payFrequency.toDate"></span>
+        </div>
+        <div>
+          <button class="cc-button-link" data-ng-click="showEdit(item)" data-ng-disabled="!api.user.profile.actAsOptions.canPost">Edit <span class="cc-visuallyhidden">Your <span data-ng-bind="item.employer"></span> Work Experience</span></button>
+        </div>
       </div>
-      <div data-ng-if="item.payFrequency.fromDate">
-        <span data-ng-bind="item.payFrequency.fromDate"></span>
-        -
-        <span data-ng-bind="item.payFrequency.toDate"></span>
-      </div>
+      <div data-ng-if="item.isModifying" data-ng-include="'widgets/profile/work_experience_editor.html'"></div>
     </div>
     <div data-ng-if="!items.content.length" class="cc-page-widget-profile-section-not-available">
       There is no work experience available.
     </div>
+  </div>
+  <div class="cc-page-widget-profile-section-add" data-ng-if="!items.editorEnabled">
+    <button class="cc-button-link" data-ng-click="showAdd()">
+      <i class="fa fa-plus"></i> Add <span class="cc-visuallyhidden">Work Experience</span>
+    </button>
   </div>
 </div>

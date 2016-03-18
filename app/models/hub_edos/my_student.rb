@@ -5,6 +5,8 @@ module HubEdos
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
+    # Needed to expire cache entries specific to Viewing-As users alongside original user's cache.
+    include Cache::RelatedCacheKeyTracker
     include CampusSolutions::ProfileFeatureFlagged
 
     def get_feed_internal
@@ -16,8 +18,9 @@ module HubEdos
       }
       return merged unless is_cs_profile_feature_enabled
 
+      proxy_options = @options.merge user_id: @uid
       [HubEdos::Contacts, HubEdos::Demographics, HubEdos::Affiliations].each do |proxy|
-        hub_response = proxy.new({user_id: @uid}).get
+        hub_response = proxy.new(proxy_options).get
         if hub_response[:errored]
           merged[:statusCode] = 500
           merged[:errored] = true
@@ -35,6 +38,10 @@ module HubEdos
       end
 
       merged
+    end
+
+    def instance_key
+      Cache::KeyGenerator.per_view_as_type @uid, @options
     end
 
   end

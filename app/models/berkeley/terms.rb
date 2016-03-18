@@ -24,7 +24,7 @@
 
 module Berkeley
   class Terms
-    include ActiveAttr::Model, ClassLogger, DatedFeed
+    include ActiveAttrModel, ClassLogger, DatedFeed
     extend Cache::Cacheable
 
     # The term shown in the My Classes widget & highlighted in the top Academics page.

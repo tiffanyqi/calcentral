@@ -1,5 +1,5 @@
 module CampusSolutions
-  class NameType < CachedProxy
+  class NameType < GlobalCachedProxy
 
     include ProfileFeatureFlagged
 

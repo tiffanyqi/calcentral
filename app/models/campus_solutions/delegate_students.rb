@@ -30,7 +30,7 @@ module CampusSolutions
         transformation = {}
         empl_id = student['EMPLID']
         transformation['campus_solutions_id'] = empl_id
-        transformation['uid'] = CalnetCrosswalk::BySid.new(user_id: empl_id).lookup_ldap_uid
+        transformation['uid'] = CalnetCrosswalk::ByCsId.new(user_id: empl_id).lookup_ldap_uid
         transformation['full_name'] = student['NAME']
         transformation['privileges'] = { 'financial' => false, 'view_enrollments' => false, 'view_grades' => false, 'phone' => false }
         if (role_names = student['ROLENAMES'])
@@ -39,7 +39,7 @@ module CampusSolutions
               when /financial/ then transformation['privileges']['financial'] = true
               when /enrollments_view/ then transformation['privileges']['view_enrollments'] = true
               when /grades/ then transformation['privileges']['view_grades'] = true
-              when /person call/ then transformation['privileges']['phone'] = true
+              when /release/ then transformation['privileges']['phone'] = true
             end
           end
         end

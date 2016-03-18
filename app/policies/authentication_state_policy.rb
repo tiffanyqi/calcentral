@@ -27,7 +27,7 @@ class AuthenticationStatePolicy
   end
 
   def can_administer_oec?
-    can_administrate? || Oec::Administrator.is_admin?(@user.user_id)
+    @user.directly_authenticated? && (can_administrate? || Oec::Administrator.is_admin?(@user.user_id))
   end
 
   def can_author?

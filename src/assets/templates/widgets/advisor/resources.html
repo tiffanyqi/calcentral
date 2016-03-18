@@ -1,0 +1,64 @@
+<div class="cc-widget cc-widget-advising-resources" data-ng-controller="AdvisingResourcesController">
+  <div class="cc-widget-title">
+    <h2>Advising Resources</h2>
+  </div>
+  <div data-cc-spinner-directive="advisingResources.isLoading">
+    <div class="cc-list-link-container" data-ng-if="ucAdvisingResources.ucAdvisingFavoriteReports.length">
+      <h3>Favorite Reports</h3>
+      <ul class="cc-list-links">
+        <li data-ng-repeat="report in ucAdvisingResources.ucAdvisingFavoriteReports">
+          <div
+            data-cc-campus-solutions-link-item-directive
+            data-link="report"
+          ></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="cc-list-link-container">
+      <h3>Other</h3>
+
+      <ul class="cc-list-links">
+        <li data-ng-if="api.user.profile.features.csAcademicProgressReport">
+          <div
+            data-cc-campus-solutions-link-item-directive
+            data-link="ucAdvisingResources.ucAdvisingLinks.ucAcademicProgressReport"
+            data-text="Academic Progress Report"
+          ></div>
+        </li>
+        <li>
+          <div
+            data-cc-campus-solutions-link-item-directive
+            data-link="ucAdvisingResources.ucAdvisingLinks.ucServiceIndicator"
+          ></div>
+        </li>
+        <li>
+          <a
+            data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.ucStudentAdvisor.url}}"
+          >Advising Assignments</a>
+        </li>
+        <li>
+          <div
+            data-cc-campus-solutions-link-item-directive
+            data-link="ucAdvisingResources.ucAdvisingLinks.ucReportingCenter"
+            data-text="Reporting Center"
+          ></div>
+        </li>
+        <li>
+          <div
+            data-cc-campus-solutions-link-item-directive
+            data-link="ucAdvisingResources.ucAdvisingLinks.scheduleClasses"
+            data-text="Schedule of Classes"
+          ></div>
+        </li>
+        <li data-ng-if="api.user.profile.features.csAdvisingGteForms">
+          <div
+            data-cc-campus-solutions-link-item-directive
+            data-link="ucAdvisingResources.ucAdvisingLinks.ucGteformsWorkcenter"
+            data-text="GTE Forms"
+          ></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

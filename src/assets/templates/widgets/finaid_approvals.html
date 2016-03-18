@@ -5,6 +5,7 @@
       data-title="approvalMessage.ucHeaderDecline"
       data-text="approvalMessage.ucLongTextDecline"
       data-button-go-back="true"
+      data-can-post="api.user.profile.actAsOptions.canPost"
     ></div>
   </div>
   <div data-ng-if="!approvalMessage.ucHeaderDecline">
@@ -18,6 +19,7 @@
       data-button-text-approve="'I Do Agree'"
       data-button-action-dont-approve="sendResponseTC(finaidYear.id, 'N')"
       data-button-action-approve="sendResponseTC(finaidYear.id, 'Y')"
+      data-can-post="api.user.profile.actAsOptions.canPost"
     ></div>
     <div
       data-ng-if="finaidYear.termsAndConditions.approved && finaidSummary.title4.approved === null"
@@ -29,6 +31,7 @@
       data-button-text-approve="'Authorize'"
       data-button-action-dont-approve="sendResponseT4('N')"
       data-button-action-approve="sendResponseT4('Y')"
+      data-can-post="api.user.profile.actAsOptions.canPost"
     ></div>
   </div>
 </div>
