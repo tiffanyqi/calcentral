@@ -111,12 +111,19 @@ angular.module('calcentral.controllers').controller('StatusController', function
 
       // Get all the necessary data from the different factories
       var getBadges = badgesFactory.getBadges().success(loadStudentInfo);
-      var getFinances = financesFactory.getFinances().success(loadFinances);
-      var getFinaidActivityOld = activityFactory.getFinaidActivityOld().then(loadActivity);
       var getHolds = holdsFactory.getHolds().then(loadHolds);
+      var statusGets = [getBadges, getHolds];
+
+      // Only fetch financial data for delegates who have been given explicit permssion.
+      var includeFinancial = (!apiService.user.profile.delegateActingAsUid || apiService.user.profile.delegateViewAsPrivileges.financial);
+      if (includeFinancial) {
+        var getFinances = financesFactory.getFinances().success(loadFinances);
+        var getFinaidActivityOld = activityFactory.getFinaidActivityOld().then(loadActivity);
+        statusGets.push(getFinances, getFinaidActivityOld);
+      }
 
       // Make sure to hide the spinner when everything is loaded
-      $q.all(getBadges, getFinances, getFinaidActivityOld, getHolds).then(finishLoading);
+      $q.all(statusGets).then(finishLoading);
     }
   });
 });

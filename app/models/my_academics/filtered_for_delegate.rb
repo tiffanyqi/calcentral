@@ -17,7 +17,8 @@ module MyAcademics
     end
 
     def get_feed_as_json(force_cache_write=false)
-      if show_grades?
+      privileges = authentication_state.delegated_privileges
+      if privileges[:viewGrades]
         super(force_cache_write)
       else
         feed = get_feed(force_cache_write)
@@ -49,17 +50,6 @@ module MyAcademics
         end
       end
       feed[:gpaUnits].delete :cumulativeGpa
-    end
-
-    def show_grades?
-      response = CampusSolutions::DelegateStudents.new(user_id: authentication_state.original_delegate_user_id).get
-      if response[:feed] && (students = response[:feed][:students])
-        campus_solutions_id = CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_campus_solutions_id
-        student = students.detect { |s| campus_solutions_id == s[:campusSolutionsId] }
-        student && student[:privileges] && student[:privileges][:viewGrades]
-      else
-        false
-      end
     end
   end
 end

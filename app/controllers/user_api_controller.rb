@@ -1,6 +1,6 @@
 class UserApiController < ApplicationController
-
   extend Cache::Cacheable
+  include DelegateAccessible
 
   def self.expire(id = nil)
     # no-op; this class uses the cache only to reduce the number of writes to User::Visit. We want to just expire

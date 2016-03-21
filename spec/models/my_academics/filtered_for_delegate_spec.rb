@@ -17,26 +17,14 @@ describe MyAcademics::FilteredForDelegate do
     fake_classes.each do |klass|
       allow(klass).to receive(:new).and_return klass.new(user_id: uid, fake: true)
     end
-    campus_solutions_id = random_id
-    response = {
-      feed: {
-        students: [
-          {
-            campusSolutionsId: campus_solutions_id,
-            uid: uid,
-            privileges: {
-              financial: false,
-              viewEnrollments: view_enrollments,
-              viewGrades: view_grades,
-              phone: false
-            }
-          }
-        ]
+    allow_any_instance_of(AuthenticationState).to receive(:delegated_privileges).and_return(
+      {
+        financial: false,
+        viewEnrollments: view_enrollments,
+        viewGrades: view_grades,
+        phone: false
       }
-    }
-    proxy = double lookup_campus_solutions_id: campus_solutions_id
-    expect(CalnetCrosswalk::ByUid).to receive(:new).with(user_id: uid).at_least(:once).and_return proxy
-    expect(CampusSolutions::DelegateStudents).to receive(:new).once.and_return double get: response
+    )
   end
   let(:feed) { JSON.parse described_class.new(uid).get_feed_as_json }
 

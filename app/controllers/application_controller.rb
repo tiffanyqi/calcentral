@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   protect_from_forgery
   before_filter :check_reauthentication
+  before_filter :deny_if_filtered
   after_filter :access_log
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -46,6 +47,16 @@ class ApplicationController < ActionController::Base
       return
     end
     reauthenticate(redirect_path: '/') if session_state_requires_reauthentication?
+  end
+
+  # Only a small subset of student API feeds are available to a delegate, and so
+  # these methods filter controller endpoints by default.
+  def accessible_by_delegate?
+    false
+  end
+  def deny_if_filtered
+    filtered = !accessible_by_delegate? && current_user.authenticated_as_delegate?
+    raise Pundit::NotAuthorizedError.new("By delegate #{current_user.original_delegate_user_id}") if filtered
   end
 
   def delete_reauth_cookie

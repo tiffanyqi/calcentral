@@ -22,6 +22,10 @@ describe MyGroupsController do
       group_entry["site_url"].blank?.should_not == true
       (group_entry["emitter"] =~ (/(bcourses|callink)$/i)).should_not be_nil
     end
-
   end
+
+  let(:make_request) { get :get_feed }
+  it_should_behave_like 'a user authenticated api endpoint'
+  it_behaves_like 'an unauthorized endpoint for delegates'
+
 end
