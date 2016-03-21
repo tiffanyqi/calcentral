@@ -26,6 +26,7 @@ module CalCentralPages
     span(:phone_validation_error, :xpath => '//span[@data-ng-bind="errorMessage"]')
 
     def load_page
+      logger.debug 'Loading profile contact info page'
       navigate_to "#{WebDriverUtils.base_url}/profile/contact"
     end
 

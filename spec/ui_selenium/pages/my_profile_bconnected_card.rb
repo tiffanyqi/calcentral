@@ -16,23 +16,23 @@ module CalCentralPages
     button(:connect_button, :xpath => '//button[@data-ng-click="api.user.enableOAuth(service)"]')
 
     def load_page
-      logger.info('Loading bConnected page')
+      logger.debug 'Loading bConnected page'
       navigate_to "#{WebDriverUtils.base_url}/profile/bconnected"
     end
 
     def disconnect_bconnected
-      logger.info('Checking if user is connected to Google')
+      logger.debug 'Checking if user is connected to Google'
       bconnected_section_element.when_visible WebDriverUtils.page_load_timeout
       if disconnect_button_element.visible?
-        logger.info('User is connected, so disconnecting from Google')
+        logger.debug 'User is connected, so disconnecting from Google'
         disconnect_button
         WebDriverUtils.wait_for_element_and_click disconnect_yes_button_element
-        disconnect_yes_button_element.when_not_present(timeout=WebDriverUtils.page_event_timeout)
+        disconnect_yes_button_element.when_not_present WebDriverUtils.page_event_timeout
         connect_button_element.when_visible timeout
         logger.info('Pausing so that OAuth token is revoked')
         sleep timeout
       else
-        logger.info('User not connected')
+        logger.debug 'User not connected'
       end
     end
 

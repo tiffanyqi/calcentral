@@ -6,6 +6,8 @@ module CalCentralPages
     include CalCentralPages
     include ClassLogger
 
+    div(:sidebar, :id => 'cc-local-navigation')
+
     # Profile
     link(:basic_info_link, :text => 'Basic Information')
     link(:contact_info_link, :text => 'Contact Information')
@@ -27,6 +29,11 @@ module CalCentralPages
 
     def click_contact_info
       WebDriverUtils.wait_for_element_and_click contact_info_link_element
+    end
+
+    def click_delegate_access(driver)
+      WebDriverUtils.wait_for_element_and_click delegate_access_link_element
+      CalCentralPages::MyProfileDelegateAccessCard.new driver
     end
 
     def click_bconnected(driver)

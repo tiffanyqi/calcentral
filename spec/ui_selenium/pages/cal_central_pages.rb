@@ -22,6 +22,12 @@ module CalCentralPages
   span(:email_one_subject, :xpath => '//button[@title="bMail"]/following-sibling::div//span[@data-ng-bind="item.title"]')
   span(:email_one_summary, :xpath => '//button[@title="bMail"]/following-sibling::div//span[@data-ng-bind="item.summary"]')
 
+  # Calendar Badge
+  button(:calendar_badge, :xpath => '//button[@title="bCal"]')
+
+  # Drive Badge
+  button(:drive_badge, :xpath => '//button[@title="bDrive"]')
+
   # Popover: Profile, Status, Log Out
   list_item(:status_loading, :xpath => '//li[@data-ng-show="statusLoading"]')
   button(:profile_icon, :xpath => '//button[@title="Settings"]')
@@ -57,6 +63,14 @@ module CalCentralPages
   text_field(:basic_auth_uid_input, :name => 'email')
   text_field(:basic_auth_password_input, :name => 'password')
   button(:basic_auth_login_button, :xpath => '//button[contains(text(),"Login")]')
+
+  button(:stop_viewing_as, :xpath => '//button[@data-ng-click="admin.stopActAs()"]')
+  button(:delegate_stop_viewing_as, :xpath => '//button[@data-ng-click="admin.stopDelegateActAs()"]')
+
+  # 404
+  h3(:not_found, :xpath => '//h3[text()="Cannot Find That Page"]')
+  h1(:access_denied, :xpath => '//h1[text()="Access Denied"]')
+  h1(:unexpected_error, :xpath => '//h1[text()="Unexpected Error"]')
 
   def click_my_dashboard_link
     logger.info('Clicking My Dashboard link')
@@ -163,6 +177,19 @@ module CalCentralPages
 
   def click_class_link_by_url(url)
     WebDriverUtils.wait_for_page_and_click link_element(:xpath => "//a[@href='#{url}']")
+  end
+
+  def stop_viewing_as
+    WebDriverUtils.wait_for_element_and_click stop_viewing_as_element
+    stop_viewing_as_element.when_not_present WebDriverUtils.page_event_timeout
+  end
+
+  def delegate_stop_viewing
+    if delegate_stop_viewing_as?
+      logger.debug 'Stopping delegate view-as'
+      delegate_stop_viewing_as
+      sleep 1
+    end
   end
 
 end

@@ -134,6 +134,10 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
     course['url']
   end
 
+  def course_slug(course)
+    course['slug']
+  end
+
   def course_transcripts(course)
     course['transcript']
   end

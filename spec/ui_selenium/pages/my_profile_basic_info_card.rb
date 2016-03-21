@@ -19,7 +19,8 @@ module CalCentralPages
     div(:uid, :xpath => '//div[@data-ng-bind="api.user.profile.uid"]')
 
     def load_page
-      navigate_to "#{WebDriverUtils.base_url}/profile/basic"
+      logger.debug 'Loading profile basic info page'
+      navigate_to "#{WebDriverUtils.base_url}/profile"
     end
 
     def click_add_pref_name_button

@@ -44,6 +44,9 @@ module CalCentralPages
     div(:no_course_capture_msg, :xpath => '//div[contains(text(),"There are no recordings available.")]')
     link(:report_problem_link, :xpath => '//a[contains(text(),"Report a problem with this recording")]')
 
+    # TEXTBOOKS
+    h2(:textbooks_heading, :xpath => '//h2[text()="Textbooks"]')
+
     def all_student_section_labels
       labels = []
       student_section_label_elements.each { |label| labels.push(label.text) }

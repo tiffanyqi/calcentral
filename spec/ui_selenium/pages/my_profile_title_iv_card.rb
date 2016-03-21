@@ -14,6 +14,11 @@ module CalCentralPages
     div(:authorized_msg_long, :xpath => '//div[@data-ng-if="title4.isApproved"]')
     div(:non_authorized_msg_long, :xpath => '//div[@data-ng-if="title4.isApproved === false"]')
 
+    def load_page
+      logger.debug 'Loading profile Title IV page'
+      navigate_to "#{WebDriverUtils.base_url}/profile/title4"
+    end
+
     def authorize_title_iv
       authorize_cbx_element.when_visible timeout=WebDriverUtils.page_event_timeout
       check_authorize_cbx
