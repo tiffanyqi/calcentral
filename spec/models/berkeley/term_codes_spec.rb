@@ -1,5 +1,23 @@
 describe Berkeley::TermCodes do
 
+  describe "EDO database conversions" do
+    it "should convert code and year into EDO term id" do
+      expect(Berkeley::TermCodes.to_edo_id("2013", "B")).to eq "2132"
+      expect(Berkeley::TermCodes.to_edo_id("2002", "C")).to eq "2025"
+      expect(Berkeley::TermCodes.to_edo_id("2016", "D")).to eq "2168"
+    end
+
+    it "should convert EDO term id to legacy term hash" do
+      result = Berkeley::TermCodes.from_edo_id('2132')
+      expect(result[:term_yr]).to eq '2013'
+      expect(result[:term_cd]).to eq 'B'
+
+      result = Berkeley::TermCodes.from_edo_id('2028')
+      expect(result[:term_yr]).to eq '2002'
+      expect(result[:term_cd]).to eq 'D'
+    end
+  end
+
   it "should convert code and year into nice English" do
     Berkeley::TermCodes.to_english("2013", "B").should == "Spring 2013"
   end

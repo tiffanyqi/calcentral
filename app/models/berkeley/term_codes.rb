@@ -17,6 +17,18 @@ module Berkeley
       @names ||= init_names
     end
 
+    def to_edo_id(term_yr, term_cd)
+      edo_year = term_yr[0] + term_yr[2..3]
+      season_code = legacy_to_edo_code.fetch(term_cd)
+      edo_year + season_code
+    end
+
+    def from_edo_id(edo_term_id)
+      legacy_term_cd = edo_to_legacy_code.fetch(edo_term_id[3])
+      legacy_term_yr = edo_term_id[0] + '0' + edo_term_id[1..2]
+      {:term_yr => legacy_term_yr, :term_cd => legacy_term_cd}
+    end
+
     def to_english(term_yr, term_cd)
       term = codes[term_cd.to_sym]
       unless term
@@ -83,5 +95,16 @@ module Berkeley
       names
     end
 
+    def legacy_to_edo_code
+      @edo_year_codes ||= {
+        'B' => '2',
+        'C' => '5',
+        'D' => '8',
+      }
+    end
+
+    def edo_to_legacy_code
+      legacy_to_edo_code.invert
+    end
   end
 end

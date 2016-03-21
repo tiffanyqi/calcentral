@@ -1,6 +1,24 @@
 describe CampusOracle::Queries do
   let(:current_term) {Berkeley::Terms.fetch.current}
 
+  it_behaves_like 'an Oracle driven data source' do
+    subject { CampusOracle::Queries }
+  end
+
+  describe '.stringify_column!' do
+    context 'when column is course control number' do
+      it 'converts to 5 digit string with zero padding' do
+        row_hash = {'course_cntl_num' => 123}
+        CampusOracle::Queries.stringify_column!(row_hash, 'course_cntl_num')
+        expect(row_hash['course_cntl_num']).to eq '00123'
+      end
+    end
+  end
+
+  it 'provides settings' do
+    expect(CampusOracle::Queries.settings).to be Settings.campusdb
+  end
+
   it 'should find Oliver' do
     data = CampusOracle::Queries.get_person_attributes 2040, current_term.year, current_term.code
     expect(data['first_name']).to eq 'Oliver'
