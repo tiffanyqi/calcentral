@@ -1,5 +1,7 @@
 #!/bin/bash
 
+API_ERROR_INDICATORS="error\|unable to find\|not authorized\|no service\|not available"
+
 parse_yaml() {
   # --------------------------------------------
   # Read YAML file from Bash script and other utilities.
@@ -53,9 +55,11 @@ validate_api_response() {
   elif [[ ! -f "${path_to_file}" ]] ; then
     report_error $@
   else
-    error_count=$(grep -i 'error\|unable to find a routing\|not authorized\|no service was found' ${path_to_file} | wc -l)
+    error_count=$(grep -i "${API_ERROR_INDICATORS}" ${path_to_file} | wc -l)
     if [ "${error_count}" -ne "0" ]; then
       report_error $@
+      echo "    NOTE: API response body contains one of the following error indicators:"
+      echo "          ${API_ERROR_INDICATORS}"; echo
     else
       report_success "${api_path}" "${response_metadata}"
     fi
