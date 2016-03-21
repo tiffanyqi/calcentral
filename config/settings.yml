@@ -35,7 +35,7 @@ postgres:
   pool: 95
 
 edodb:
-  fake: true
+  fake: false
   adapter: h2
   driver: org.h2.Driver
   url: jdbc:h2:mem:h2EdoOracle::EdoDataSource;DB_CLOSE_DELAY=-1;MODE=Oracle
@@ -402,16 +402,6 @@ hub_edos_proxy:
   username: secret
   password: secret
   http_timeout_seconds: 30
-
-edo_oracle:
-  fake: true
-  adapter: jdbc
-  driver: oracle.jdbc.OracleDriver
-  url:
-  username: calcentral_bcs
-  password:
-  pool: 200
-  timeout: 5000
 
 calnet_crosswalk_proxy:
   fake: true
