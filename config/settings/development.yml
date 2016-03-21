@@ -51,6 +51,9 @@ postgres:
 campusdb:
   fake: true
 
+edodb:
+  fake: true
+
 ist_jms:
   fake: true
   enabled: false
