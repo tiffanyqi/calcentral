@@ -16,6 +16,14 @@ describe Berkeley::TermCodes do
       expect(result[:term_yr]).to eq '2002'
       expect(result[:term_cd]).to eq 'D'
     end
+
+    it 'should accept integer input' do
+      expect(Berkeley::TermCodes.to_edo_id(2013, 'B')).to eq '2132'
+      expect(Berkeley::TermCodes.from_edo_id(2028)).to eq({
+        term_yr: '2002',
+        term_cd: 'D'
+      })
+    end
   end
 
   it "should convert code and year into nice English" do

@@ -48,6 +48,10 @@ module Berkeley
       end
     end
 
+    def campus_solutions_id
+      TermCodes.to_edo_id(year, code)
+    end
+
     def to_english
       TermCodes.to_english(year, code)
     end
