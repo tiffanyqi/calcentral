@@ -41,7 +41,8 @@ describe ConfigController do
         expect(AuthenticationState).to receive(:new).and_return double(
           policy: double(can_administrate?: true),
           classic_viewing_as?: false,
-          authenticated_as_advisor?: false
+          authenticated_as_advisor?: false,
+          authenticated_as_delegate?: false
         )
       end
       it 'should contain sensitive data' do

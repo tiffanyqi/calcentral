@@ -1,4 +1,5 @@
 class ConfigController < ApplicationController
+  include DelegateAccessible
   before_filter :get_settings, :initialize_calcentral_config
 
   def get

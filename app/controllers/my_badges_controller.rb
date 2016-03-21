@@ -1,4 +1,5 @@
 class MyBadgesController < ApplicationController
+  include DelegateAccessible
 
   before_filter :api_authenticate
 

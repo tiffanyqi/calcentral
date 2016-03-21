@@ -20,6 +20,10 @@ class AuthenticationState
     @original_delegate_user_id.present?
   end
 
+  def delegated_privileges
+    @delegated_privileges ||= get_delegated_privileges
+  end
+
   def authenticated_as_advisor?
     @original_advisor_user_id.present?
   end
@@ -91,6 +95,20 @@ class AuthenticationState
     # Return true if either of the two view_as modes is active
     original_uid = original_user_id || original_advisor_user_id || original_delegate_user_id
     original_uid.present? && user_id.present? && (original_uid != user_id)
+  end
+
+  private
+
+  def get_delegated_privileges
+    return {} unless authenticated_as_delegate?
+    response = CampusSolutions::DelegateStudents.new(user_id: original_delegate_user_id).get
+    if response[:feed] && (students = response[:feed][:students])
+      campus_solutions_id = CalnetCrosswalk::ByUid.new(user_id: user_id).lookup_campus_solutions_id
+      student = students.detect { |s| campus_solutions_id == s[:campusSolutionsId] }
+      (student && student[:privileges] && student[:privileges]) || {}
+    else
+      {}
+    end
   end
 
 end

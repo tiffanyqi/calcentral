@@ -22,45 +22,78 @@ describe MyAcademicsController do
       end
       allow(fake_profile_class).to receive(:new).and_return fake_profile_class.new(user_id: uid, fake: true)
       session['user_id'] = uid
-      allow_any_instance_of(AuthenticationState).to receive(:authenticated_as_delegate?).and_return false
     end
-
-    it 'should get a feed full of content' do
-      get :get_feed
-      json_response = JSON.parse(response.body)
-      expect(json_response['feedName']).to eq 'MyAcademics::Merged'
-      expect(json_response['examSchedule']).to have(3).items
-      expect(json_response['gpaUnits']).to include 'cumulativeGpa'
-      expect(json_response['otherSiteMemberships']).to be_present
-      expect(json_response['regblocks']).to be_present
-      expect(json_response['requirements']).to be_present
-      expect(json_response['semesters']).to have(24).items
-      expect(json_response['semesters'][0]['slug']).to be_present
-      expect(json_response['semesters'][1]['classes'][0]['transcript'][0]['grade']).to be_present
-      expect(json_response['transitionTerm']).to be_present
-    end
-
-    context 'delegate view' do
-      before do
-        allow(CalnetCrosswalk::ByUid).to receive(:new).and_return (crosswalk = double)
-        allow(crosswalk).to receive(:lookup_campus_solutions_id).and_return '24363318'
-        allow_any_instance_of(AuthenticationState).to receive(:authenticated_as_delegate?).and_return true
-        allow_any_instance_of(AuthenticationState).to receive(:delegate_permissions).and_return({ privileges: { view_grades: true } })
-        allow(Settings.features).to receive(:cs_delegated_access).and_return true
-      end
-
-      it 'should get a filtered feed' do
+    context 'normal user session' do
+      it 'should get a feed full of content' do
         get :get_feed
-        json_response = JSON.parse response.body
+        json_response = JSON.parse(response.body)
+        expect(json_response['feedName']).to eq 'MyAcademics::Merged'
         expect(json_response['examSchedule']).to have(3).items
-        expect(json_response['gpaUnits']).not_to include 'cumulativeGpa'
-        expect(json_response).not_to include 'otherSiteMemberships'
-        expect(json_response).not_to include 'regblocks'
-        expect(json_response).not_to include 'requirements'
+        expect(json_response['gpaUnits']).to include 'cumulativeGpa'
+        expect(json_response['otherSiteMemberships']).to be_present
+        expect(json_response['regblocks']).to be_present
+        expect(json_response['requirements']).to be_present
         expect(json_response['semesters']).to have(24).items
-        expect(json_response['semesters'][0]).not_to include 'slug'
-        expect(json_response['semesters'][1]['classes'][0]['transcript'][0]).not_to include 'grade'
+        expect(json_response['semesters'][0]['slug']).to be_present
+        expect(json_response['semesters'][1]['classes'][0]['transcript'][0]['grade']).to be_present
         expect(json_response['transitionTerm']).to be_present
+      end
+    end
+    context 'delegate view' do
+      include_context 'delegated access'
+      let(:campus_solutions_id) {'24363318'}
+      context 'no academics-related permissions' do
+        let(:privileges) do
+          {
+            financial: true
+          }
+        end
+        it 'denies all access' do
+          get :get_feed
+          expect(response.status).to eq 403
+          expect(response.body).to eq ' '
+        end
+      end
+      context 'permission for My Academics' do
+        subject do
+          get :get_feed
+          JSON.parse response.body
+        end
+        shared_examples 'shared academics feed' do
+          it 'views most data' do
+            expect(subject['examSchedule']).to have(3).items
+            expect(subject).not_to include 'otherSiteMemberships'
+            expect(subject).not_to include 'regblocks'
+            expect(subject).not_to include 'requirements'
+            expect(subject['semesters']).to have(24).items
+            expect(subject['semesters'][0]).not_to include 'slug'
+            expect(subject['transitionTerm']).to be_present
+          end
+        end
+        context 'can view enrollments but not grades' do
+          let(:privileges) do
+            {
+              viewEnrollments: true
+            }
+          end
+          include_examples 'shared academics feed'
+          it 'should get a filtered feed' do
+            expect(subject['gpaUnits']).not_to include 'cumulativeGpa'
+            expect(subject['semesters'][1]['classes'][0]['transcript'][0]).not_to include 'grade'
+          end
+        end
+        context 'can view grades' do
+          let(:privileges) do
+            {
+              viewGrades: true
+            }
+          end
+          include_examples 'shared academics feed'
+          it 'should get a less filtered feed' do
+            expect(subject['gpaUnits']).to include 'cumulativeGpa'
+            expect(subject['semesters'][1]['classes'][0]['transcript'][0]).to include 'grade'
+          end
+        end
       end
     end
   end
