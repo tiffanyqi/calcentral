@@ -18,12 +18,14 @@ module Berkeley
     end
 
     def to_edo_id(term_yr, term_cd)
+      term_yr = term_yr.to_s
       edo_year = term_yr[0] + term_yr[2..3]
       season_code = legacy_to_edo_code.fetch(term_cd)
       edo_year + season_code
     end
 
     def from_edo_id(edo_term_id)
+      edo_term_id = edo_term_id.to_s
       legacy_term_cd = edo_to_legacy_code.fetch(edo_term_id[3])
       legacy_term_yr = edo_term_id[0] + '0' + edo_term_id[1..2]
       {:term_yr => legacy_term_yr, :term_cd => legacy_term_cd}
