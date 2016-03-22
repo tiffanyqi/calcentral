@@ -1,5 +1,8 @@
 module CampusSolutions
   class AidYearsController < CampusSolutionsController
+    include DelegateAccessible
+
+    before_filter :authorize_for_financial
 
     def get
       render json: CampusSolutions::MyAidYears.from_session(session).get_feed_as_json

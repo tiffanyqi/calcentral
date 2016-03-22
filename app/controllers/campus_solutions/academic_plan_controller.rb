@@ -1,5 +1,8 @@
 module CampusSolutions
   class AcademicPlanController < CampusSolutionsController
+    include DelegateAccessible
+
+    before_filter :authorize_for_enrollments
 
     def get
       model = CampusSolutions::MyAcademicPlan.from_session(session)

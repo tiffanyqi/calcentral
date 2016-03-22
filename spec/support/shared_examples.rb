@@ -32,6 +32,18 @@ shared_examples "an authenticated endpoint" do
   end
 end
 
+shared_examples 'an unauthorized endpoint for delegates' do
+  before do
+    session['user_id'] = random_id
+    session[SessionKey.original_delegate_user_id] = random_id
+  end
+  it 'denies all access' do
+    make_request
+    expect(response.status).to eq 403
+    expect(response.body).to eq ' '
+  end
+end
+
 shared_examples "an api endpoint" do
   context "when standarderror exception raised" do
     it "returns json formatted 500 error" do
@@ -61,5 +73,30 @@ shared_examples "a cross-domain endpoint" do
     expect(response.headers['Access-Control-Allow-Origin']).to eq Settings.canvas_proxy.url_root
     expect(response.header["Access-Control-Allow-Methods"]).to eq 'GET, OPTIONS, HEAD'
     expect(response.header["Access-Control-Max-Age"]).to eq '86400'
+  end
+end
+
+# Needs the following variables defined: uid, campus_solutions_id, privileges
+shared_context 'delegated access' do
+  before do
+    session['user_id'] = uid
+    original_uid = random_id
+    session[SessionKey.original_delegate_user_id] = original_uid
+    allow(CalnetCrosswalk::ByUid).to receive(:new).and_return (crosswalk = double)
+    allow(crosswalk).to receive(:lookup_campus_solutions_id).and_return campus_solutions_id
+    allow(CampusSolutions::DelegateStudents).to receive(:new).and_return (cs_proxy = double)
+    allow(cs_proxy).to receive(:get).and_return(
+      {
+        feed: {
+          students: [
+            {
+              campusSolutionsId: campus_solutions_id,
+              privileges: privileges
+            }
+          ]
+        }
+      }
+    )
+    allow(Settings.features).to receive(:cs_delegated_access).and_return true
   end
 end

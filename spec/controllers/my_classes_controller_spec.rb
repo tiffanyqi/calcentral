@@ -23,4 +23,8 @@ describe MyClassesController do
     json_response[0]["course_code"].should == "PLEO 22"
   end
 
+  let(:make_request) { get :get_feed }
+  it_should_behave_like 'a user authenticated api endpoint'
+  it_behaves_like 'an unauthorized endpoint for delegates'
+
 end

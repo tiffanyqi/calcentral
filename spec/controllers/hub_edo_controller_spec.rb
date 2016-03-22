@@ -10,11 +10,6 @@ describe HubEdoController do
       it_behaves_like 'a successful feed'
     end
     context 'view-as session' do
-      context 'delegate user' do
-        let(:view_as_key) { SessionKey.original_delegate_user_id }
-        let(:expected_elements) { %w(identifiers affiliations) }
-        it_behaves_like 'a successful feed during view-as session'
-      end
       context 'advisor-view-as' do
         let(:view_as_key) { SessionKey.original_advisor_user_id }
         let(:expected_elements) { %w(addresses affiliations emails emergencyContacts identifiers names phones urls) }
