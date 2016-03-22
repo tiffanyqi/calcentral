@@ -15,7 +15,7 @@
       <div data-ng-include="'widgets/finaid_activity.html'" data-ng-if="!api.user.profile.isApplicantOnly"></div>
     </div>
 
-    <div class="medium-4 columns" data-ng-class="{'medium-pull-4':(api.user.profile.isApplicantOnly)}">
+    <div class="medium-4 columns" data-ng-class="{'medium-pull-4':(api.user.profile.isApplicantOnly), 'cc-column-last':(!api.user.profile.isApplicantOnly)}">
       <div data-ng-include="'widgets/finances_links.html'"></div>
     </div>
 
