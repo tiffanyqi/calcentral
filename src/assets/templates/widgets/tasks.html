@@ -53,7 +53,7 @@
           </div>
 
           <div class="cc-clearfix-container cc-widget-tasks-bottom-margin">
-            <h3 class="cc-widget-tasks-section-label">Today <span class="cc-widget-tasks-section-label-count cc-widget-tasks-section-label-count-green" data-ng-bind="dueTodayTasks.length"></span></h3>
+            <h3 class="cc-widget-tasks-section-label">Today <span class="cc-widget-tasks-section-label-count cc-widget-tasks-section-label-count-green" data-ng-bind="dueTodayTasks.length"></span> <span class="cc-right">Due</span></h3>
             <ul class="cc-widget-tasks-list cc-widget-list-color cc-widget-list-color-green">
               <li
                 data-ng-repeat="task in dueTodayTasks | limitTo: dueTodayLimit"
@@ -68,7 +68,7 @@
           </div>
 
           <div class="cc-clearfix-container">
-            <h3 class="cc-widget-tasks-section-label">Future <span class="cc-widget-tasks-section-label-count" data-ng-bind="futureTasks.length"></span></h3>
+            <h3 class="cc-widget-tasks-section-label">Future <span class="cc-widget-tasks-section-label-count" data-ng-bind="futureTasks.length"></span> <span class="cc-right">Due</span></h3>
             <ul class="cc-widget-tasks-list cc-widget-list-color">
               <li
                 data-ng-repeat="task in futureTasks | limitTo: futureLimit"
