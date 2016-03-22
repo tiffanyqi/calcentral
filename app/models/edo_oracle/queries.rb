@@ -83,28 +83,34 @@ module EdoOracle
       stringify_ints! result
     end
 
-    def self.get_sections_from_section_ids(term_yr, term_cd, section_ids)
-      edo_term_id = Berkeley::TermCodes.to_edo_id(term_yr, term_cd)
+    # EDO equivalent of CampusOracle::Queries.get_sections_from_ccns
+    # Changes:
+    #   - 'course_cntl_num' now 'section_id'
+    #   - 'term_yr' and 'term_cd' replaced by 'term_id'
+    #   - 'catalog_suffix_1' and 'catalog_suffix_2' replaced by 'catalog_suffix' (combined)
+    #   - 'display_name' added
+    def self.get_sections_by_ids(term_id, section_ids)
       result = {}
       use_pooled_connection {
         sql = <<-SQL
         SELECT
-          crs."title" AS course_title,
+          sec."id" AS section_id,
+          sec."term-id" AS term_id,
+          TRIM(crs."title") AS course_title,
           TRIM(crs."transcriptTitle") AS course_title_short,
-          crs."academicDepartment-descr" as dept_name,
-          crs."catalogNumber-formatted" as catalog_id,
-          crs."catalogNumber-number" as catalog_root,
-          crs."catalogNumber-prefix" as catalog_prefix,
-          crs."catalogNumber-suffix" as catalog_suffix
-          sec."term-id" as term_id,
-          sec."id" as section_id,
-          sec."primary" as primary,
-          sec."sectionNumber" as section_num,
+          crs."academicDepartment-descr" AS dept_name,
+          sec."primary" AS primary_secondary_cd,
+          sec."sectionNumber" AS section_num,
           sec."component-code" as instruction_format,
+          crs."displayName" AS display_name,
+          crs."catalogNumber-formatted" AS catalog_id,
+          crs."catalogNumber-number" AS catalog_root,
+          crs."catalogNumber-prefix" AS catalog_prefix,
+          crs."catalogNumber-suffix" AS catalog_suffix
         FROM SISEDO.CLASSSECTIONV00_VW sec
         LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (sec."displayName" = crs."displayName")
         WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."term-id" = '#{edo_term_id}'
+          AND sec."term-id" = '#{term_id}'
           AND sec."id" IN (#{section_ids.collect { |id| id.to_i }.join(', ')})
         ORDER BY #{CANONICAL_SECTION_ORDERING}
         SQL
