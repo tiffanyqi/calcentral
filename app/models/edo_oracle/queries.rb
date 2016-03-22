@@ -50,8 +50,9 @@ module EdoOracle
           crs."catalogNumber-prefix" as catalog_prefix, crs."catalogNumber-suffix" as catalog_suffix
         FROM SISEDO.CLASSSECTIONV00_VW sec
         LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (sec."displayName" = crs."displayName")
-        LEFT OUTER JOIN SISEDO.CLASSV00_VW cls ON (sec."displayName" = cls."displayName" AND sec."term-id" = cls."term-id" AND sec."session-id" = cls."session-id" AND sec."offeringNumber" = cls."offeringNumber")
-        WHERE crs."status-code" = 'ACTIVE' AND cls."term-id" = '#{edo_term_id}' AND sec."id" IN (#{section_ids.collect { |id| id.to_i }.join(', ')})
+        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
+          AND sec."term-id" = '#{edo_term_id}'
+          AND sec."id" IN (#{section_ids.collect { |id| id.to_i }.join(', ')})
         ORDER BY dept_name, catalog_root, catalog_prefix nulls first, catalog_suffix nulls first, primary_secondary_cd, instruction_format, section_num
         SQL
         result = connection.select_all(sql)
