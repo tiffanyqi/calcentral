@@ -1,0 +1,48 @@
+<div class="cc-widget" data-ng-controller="BillingController">
+  <div class="cc-widget-title">
+    <h2 class="cc-left">Billing Summary</h2>
+    <a data-ng-if="!billingDetails && billing.data.activity" class="cc-right cc-widget-title-link" href="/billing/details">
+      <strong>Details</strong>
+    </a>
+  </div>
+
+  <div data-cc-spinner-directive="billing.isLoading">
+    <ul class="cc-widget-list cc-page-myfinances-account-summary-list" data-ng-show="billing.data.summary">
+      <li class="cc-page-myfinances-account-summary-item cc-clearfix-container">
+        <div class="small-8 columns cc-print-width-auto">
+          <strong data-ng-if="billing.data.summary.amountDueNow >= 0">
+            Amount Due Now
+          </strong>
+          <div data-ng-if="billing.data.summary.pastDueAmount > 0" class="cc-page-myfinances-red cc-page-myfinances-account-summary-subtitle">Includes Past Due Amount of <span data-cc-amount-directive="billing.data.summary.pastDueAmount"></span>
+          </div>
+        </div>
+        <div class="small-4 columns cc-print-width-auto cc-print-right">
+          <div class="cc-page-myfinances-amount">
+            <strong data-cc-amount-directive="billing.data.summary.amountDueNow"></strong>
+          </div>
+        </div>
+        <section class="cc-clearfix-container" data-ng-if="billing.data.summary.chargesNotYetDue !== '0.00'">
+          <div class="small-8 columns cc-print-width-auto cc-print-clear">
+            Charges Not Yet Due
+          </div>
+          <div class="small-4 columns cc-print-width-auto cc-print-right">
+            <div class="cc-page-myfinances-amount" data-cc-amount-directive="billing.data.summary.chargesNotYetDue"></div>
+          </div>
+        </section>
+      </li>
+      <li class="cc-page-myfinances-account-summary-item cc-clearfix-container" data-ng-if="billing.data.summary.accountBalance !== '0.00'">
+        <div class="small-8 columns cc-print-width-auto">Account Balance
+          <div class="cc-page-myfinances-account-summary-subtitle cc-page-myfinances-light">Includes charges not yet due</div>
+        </div>
+        <div class="small-4 columns cc-print-width-auto cc-print-right">
+          <div class="cc-page-myfinances-amount" data-cc-amount-directive="billing.data.summary.accountBalance"></div>
+        </div>
+      </li>
+      <li data-ng-if="billing.data.summary.accountBalance !== 0">
+        <div class="cc-page-myfinances-account-summary-buttons cc-print-hide">
+          <a class="cc-button" href="">Make Payment</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
