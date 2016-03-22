@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# cd to 'calcentral' directory
+cd $( dirname "${BASH_SOURCE[0]}" )/../..
+
+LOG_RELATIVE_PATH="log/sis_api_test_$(date +"%Y-%m-%d_%H%M%S")"
+LOG_DIRECTORY="${PWD}/${LOG_RELATIVE_PATH}"
+CURL_STDOUT_LOG_FILE="${LOG_DIRECTORY}/curl_stdout.log"
 API_ERROR_INDICATORS="error\|unable to find\|not authorized\|no service\|not available"
 
 parse_yaml() {
@@ -76,26 +82,26 @@ verify_sis_endpoints() {
   echo; echo "${sis_system} > feature flag ${feature_flag_name} = ${feature_flag_value}"
   echo
   if [ "${feature_flag_value}" == "true" ] ; then
-    curl_write_out='\n\t%{http_code} HTTP status\n\tTotal time (seconds): %{time_total}\n\tContent-type: %{content_type}\n'
+    curl_write_out='\n\t%{http_code} HTTP status\n\tTotal time (seconds): %{time_total}\n\tURL: %{url_effective}\n'
     for path in ${endpoints[@]}; do
       case "${sis_system}" in
         ("Campus Solutions")
           mkdir -p "${LOG_DIRECTORY}/campus_solutions"
           log_file="${LOG_DIRECTORY}/campus_solutions/${path//\//_}.log"
           url="${CS_BASE_URL}${path}"
-          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" -u "${CS_CREDENTIALS}" "${url}")
+          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" -u "${CS_CREDENTIALS}" "${url}" 2>&1 | tee -a ${CURL_STDOUT_LOG_FILE})
           ;;
         ("Crosswalk")
           mkdir -p "${LOG_DIRECTORY}/calnet_crosswalk"
           log_file="${LOG_DIRECTORY}/calnet_crosswalk/${path//\//_}.log"
           url="${CROSSWALK_BASE_URL}${path}"
-          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" --digest -u "${CROSSWALK_CREDENTIALS}" "${url}")
+          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" --digest -u "${CROSSWALK_CREDENTIALS}" "${url}" 2>&1 | tee -a ${CURL_STDOUT_LOG_FILE})
           ;;
         ("Hub")
           mkdir -p "${LOG_DIRECTORY}/hub_edos"
           log_file="${LOG_DIRECTORY}/hub_edos/${path//\//_}.log"
           url="${HUB_BASE_URL}${path}"
-          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" -H "Accept:application/json" -u "${HUB_CREDENTIALS}" --header "app_id: ${HUB_APP_ID}" --header "app_key: ${HUB_APP_KEY}" "${url}")
+          response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" -H "Accept:application/json" -u "${HUB_CREDENTIALS}" --header "app_id: ${HUB_APP_ID}" --header "app_key: ${HUB_APP_KEY}" "${url}" 2>&1 | tee -a ${CURL_STDOUT_LOG_FILE})
           ;;
         (*)
           echo; echo "[ERROR] Unknown SIS system: ${sis_system}"; echo
@@ -103,16 +109,11 @@ verify_sis_endpoints() {
           ;;
       esac
       validate_api_response "${path}" "${response_metadata}" "${url}" "${log_file}"
+      echo "	Response body: ${log_file}" | tee -a "${CURL_STDOUT_LOG_FILE}"; echo
     done
   fi
   echo
 }
-
-# cd to 'calcentral' directory
-cd $( dirname "${BASH_SOURCE[0]}" )/../..
-
-LOG_RELATIVE_PATH="log/sis_api_test_$(date +"%Y-%m-%d_%H%M%S")"
-LOG_DIRECTORY="${PWD}/${LOG_RELATIVE_PATH}"
 
 # --------------------
 # Verify API endpoints: Crosswalk, Campus Solutions, Hub
@@ -286,6 +287,11 @@ HUB_GENERAL=(
 verify_sis_endpoints "Hub" HUB_GENERAL
 
 echo; echo "----------------------------------------------------------------------------------------------------"; echo
-echo "DONE"; echo "    Results can be found in the directory: ${LOG_RELATIVE_PATH}"; echo; echo
+echo "Results can be found in the directory:"
+echo "  ${LOG_DIRECTORY}/${LOG_RELATIVE_PATH}"; echo;
+echo "Output of all cURL commands:";
+echo "  ${CURL_STDOUT_LOG_FILE}";
+echo; echo "----------------------------------------------------------------------------------------------------"; echo
+echo "[DONE]"; echo
 
 exit 0
