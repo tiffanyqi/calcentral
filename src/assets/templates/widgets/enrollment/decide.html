@@ -16,9 +16,11 @@
         data-cache="enrollment"
       ></span> for the upcoming semester.<br/>
     </div>
-    <div data-ng-if="!enrollmentTerm.isClassScheduleAvailable">
-      Ability to enroll coming soon. Please try again later.
-    </div>
+  </div>
+  <div data-ng-if="!enrollmentTerm.isClassScheduleAvailable">
+    Ability to enroll coming soon. Please try again later.
+  </div>
+  <div data-ng-if="!enrollment.isLawStudent">
     Learn more about <a href="http://registrar.berkeley.edu/Records/tbinfo.html">enrollment rules and information</a>.
   </div>
 
@@ -28,6 +30,9 @@
   </div>
 
   <div data-ng-if="enrollmentTerm.enrollmentPeriod.length">
+    <div data-ng-if="enrollment.isLawStudent" class="cc-enrollment-card-margin-bottom">
+      Enrollment periods are open until add/drop deadline. Limits will be enforced.
+    </div>
     <h4 class="cc-enrollment-card-headersub-title">Enrollment Period</h4>
     <div class="cc-table">
       <table>
