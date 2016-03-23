@@ -24,7 +24,7 @@ describe Berkeley::CalResidency do
     let(:fee_resid_cd) { ' ' }
     it { should eq({
       summary: 'No SLR submitted',
-      explanation: Berkeley::CalResidency::RESIDENCY_UNSTARTED_MESSAGE,
+      explanation: Berkeley::CalResidency::RESIDENCY_READ_MORE_MESSAGE,
       needsAction: true
     }) }
   end
@@ -33,7 +33,7 @@ describe Berkeley::CalResidency do
     let(:fee_resid_cd) { ' ' }
     it { should eq({
       summary: 'No SLR submitted',
-      explanation: Berkeley::CalResidency::RESIDENCY_UNSTARTED_MESSAGE,
+      explanation: Berkeley::CalResidency::RESIDENCY_READ_MORE_MESSAGE,
       needsAction: true
     }) }
   end
@@ -42,7 +42,7 @@ describe Berkeley::CalResidency do
     let(:fee_resid_cd) { 'P' }
     it { should eq({
       summary: 'Case pending',
-      explanation: Berkeley::CalResidency::RESIDENCY_INCOMPLETE_MESSAGE,
+      explanation: Berkeley::CalResidency::RESIDENCY_READ_MORE_MESSAGE,
       needsAction: true
     }) }
   end
@@ -51,7 +51,7 @@ describe Berkeley::CalResidency do
     let(:fee_resid_cd) { '1' }
     it { should eq({
       summary: 'SLR started but not completed',
-      explanation: Berkeley::CalResidency::RESIDENCY_INCOMPLETE_MESSAGE,
+      explanation: Berkeley::CalResidency::RESIDENCY_READ_MORE_MESSAGE,
       needsAction: true
     }) }
   end
@@ -60,7 +60,7 @@ describe Berkeley::CalResidency do
     let(:fee_resid_cd) { '2' }
     it { should eq({
       summary: 'SLR submitted but documentation pending',
-      explanation: Berkeley::CalResidency::RESIDENCY_INCOMPLETE_MESSAGE,
+      explanation: Berkeley::CalResidency::RESIDENCY_READ_MORE_MESSAGE,
       needsAction: true
     }) }
     context 'Fall Program for Freshmen students during the Fall semester' do
@@ -82,7 +82,7 @@ describe Berkeley::CalResidency do
     let(:fee_resid_cd) { 'N' }
     it { should eq({
       summary: 'Non-Resident',
-      explanation: Berkeley::CalResidency::RESIDENCY_COMPLETE_MESSAGE,
+      explanation: Berkeley::CalResidency::RESIDENCY_READ_MORE_MESSAGE,
       needsAction: false
     }) }
   end
@@ -91,7 +91,7 @@ describe Berkeley::CalResidency do
     let(:fee_resid_cd) { 'L' }
     it { should eq({
       summary: 'Provisional resident',
-      explanation: Berkeley::CalResidency::RESIDENCY_COMPLETE_MESSAGE,
+      explanation: Berkeley::CalResidency::RESIDENCY_READ_MORE_MESSAGE,
       needsAction: false
     }) }
   end
