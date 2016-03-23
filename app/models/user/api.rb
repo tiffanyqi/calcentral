@@ -174,20 +174,8 @@ module User
       policy.can_administrate? || authentication_state.real_user_auth.is_viewer? || is_delegate_user? || !!roles[:advisor]
     end
 
-    def get_delegate_view_as_privileges
-      return nil unless is_cs_delegated_access_feature_enabled && authentication_state.authenticated_as_delegate?
-      if @delegate_students
-        campus_solutions_id = CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_campus_solutions_id
-        student = @delegate_students.detect { |s| campus_solutions_id == s[:campusSolutionsId] }
-        (student && student[:privileges]) || {}
-      else
-        # Returning nil might inadvertantly trigger non-delegate logic.
-        {}
-      end
-    end
-
     def filter_user_api_for_delegator(feed)
-      view_as_privileges = get_delegate_view_as_privileges
+      view_as_privileges = authentication_state.delegated_privileges
       feed[:delegateViewAsPrivileges] = view_as_privileges
       # Delegate users get a pared-down UX.
       feed[:hasDashboardTab] = false

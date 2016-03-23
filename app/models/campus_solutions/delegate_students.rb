@@ -39,6 +39,7 @@ module CampusSolutions
               when /financial/ then transformation['privileges']['financial'] = true
               when /enrollments_view/ then transformation['privileges']['view_enrollments'] = true
               when /grades/ then transformation['privileges']['view_grades'] = true
+              # This corresponds to CS 'Transactions: Phone and In-Person' permission, but is not exposed in CalCentral.
               when /release/ then transformation['privileges']['phone'] = true
             end
           end

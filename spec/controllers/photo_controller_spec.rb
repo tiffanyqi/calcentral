@@ -37,7 +37,10 @@ describe PhotoController do
           session[SessionKey.original_delegate_user_id] = random_id
           allow(Settings.features).to receive(:cs_delegated_access).and_return true
         end
-        it_should_behave_like 'a controller with no photo'
+        it 'returns an empty body' do
+          make_request
+          expect(response.body).to eq ' '
+        end
       end
     end
   end

@@ -1,6 +1,7 @@
 class MyCampusLinksController < ApplicationController
-
   extend Cache::Cacheable
+  include DelegateAccessible
+
   before_filter :api_authenticate
 
   def get_feed
