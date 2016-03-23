@@ -43,7 +43,7 @@ describe 'My Academics Status and Blocks', :testui => true do
 
             # Check contents of profile popover
             my_academics_page.open_profile_popover
-            has_status_heading = my_academics_page.status_popover_heading_element.visible?
+            has_status_heading = WebDriverUtils.verify_block { my_academics_page.status_popover_heading_element.when_visible 3 }
             has_reg_alert = my_academics_page.reg_status_alert?
             has_block_alert = my_academics_page.block_status_alert?
             popover_block_count = my_academics_page.block_status_alert_number if has_block_alert
@@ -173,9 +173,9 @@ describe 'My Academics Status and Blocks', :testui => true do
                   api_res_needs_action = badges_api_page.residency_needs_action
                   my_acad_res_status = my_academics_page.res_status_summary
 
-                      it "shows residency status of '#{my_acad_res_status}' for UID #{uid}" do
-                        expect(my_acad_res_status).to eql(api_res_status)
-                      end
+                  it "shows residency status of '#{my_acad_res_status}' for UID #{uid}" do
+                    expect(my_acad_res_status).to eql(api_res_status)
+                  end
 
                   if api_res_needs_action == true
                     has_red_res_status_icon = my_academics_page.res_status_icon_red?
