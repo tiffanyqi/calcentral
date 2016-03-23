@@ -44,18 +44,25 @@
             data-text="Reporting Center"
           ></div>
         </li>
-        <li>
-          <div
-            data-cc-campus-solutions-link-item-directive
-            data-link="ucAdvisingResources.ucAdvisingLinks.scheduleClasses"
-            data-text="Schedule of Classes"
-          ></div>
-        </li>
         <li data-ng-if="api.user.profile.features.csAdvisingGteForms">
           <div
             data-cc-campus-solutions-link-item-directive
             data-link="ucAdvisingResources.ucAdvisingLinks.ucGteformsWorkcenter"
             data-text="GTE Forms"
+          ></div>
+        </li>
+        <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.classSearch.url">
+          <div
+            data-cc-campus-solutions-link-item-directive
+            data-link="ucAdvisingResources.ucAdvisingLinks.classSearch"
+            data-text="Schedule of Classes - Class Search"
+          ></div>
+        </li>
+        <li>
+          <div
+            data-cc-campus-solutions-link-item-directive
+            data-link="ucAdvisingResources.ucAdvisingLinks.scheduleClasses"
+            data-text="Schedule of Classes - Scheduler View"
           ></div>
         </li>
       </ul>
