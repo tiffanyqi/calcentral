@@ -27,7 +27,7 @@ module CalCentralPages
         logger.debug 'User is connected, so disconnecting from Google'
         disconnect_button
         WebDriverUtils.wait_for_element_and_click disconnect_yes_button_element
-        disconnect_yes_button_element.when_not_present WebDriverUtils.page_event_timeout
+        disconnect_yes_button_element.when_not_present timeout=WebDriverUtils.page_event_timeout
         connect_button_element.when_visible timeout
         logger.info('Pausing so that OAuth token is revoked')
         sleep timeout
