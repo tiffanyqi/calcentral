@@ -87,6 +87,51 @@ module EdoOracle
       stringify_ints! result
     end
 
+    # EDO equivalent of CampusOracle::Queries.get_section_schedules
+    # Changes:
+    #   - 'course_cntl_num' is replaced with 'section_id'
+    #   - 'term_yr' and 'term_cd' replaced by 'term_id'
+    #   - 'session_id' added
+    #   - 'building_name' and 'room_number' combined as 'location'
+    #   - 'meeting_start_time_ampm_flag' is included in 'meeting_start_time' timestamp
+    #   - 'meeting_end_time_ampm_flag' is included in 'meeting_end_time' timestamp
+    #   - 'multi_entry_cd' obsolete now that multiple meetings directly associated with section
+    #   - 'print_cd' replaced with 'print_in_schedule_of_classes' boolean
+    def self.get_section_meetings(term_id, section_id)
+      results = []
+      use_pooled_connection {
+        sql = <<-SQL
+        SELECT
+          sec."id" AS section_id,
+          sec."printInScheduleOfClasses" AS print_in_schedule_of_classes,
+          mtg."term-id" AS term_id,
+          mtg."session-id" AS session_id,
+          mtg."location-code" AS location,
+          mtg."meetsDays" AS meeting_days,
+          mtg."startTime" AS meeting_start_time,
+          mtg."endTime" AS meeting_end_time
+        FROM
+          SISEDO.MEETINGV00_VW mtg
+        LEFT OUTER JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+            mtg."cs-course-id" = sec."cs-course-id" AND
+            mtg."term-id" = sec."term-id" AND
+            mtg."session-id" = sec."session-id" AND
+            mtg."offeringNumber" = sec."offeringNumber" AND
+            mtg."sectionNumber" = sec."sectionNumber"
+          )
+        WHERE
+          sec."printInScheduleOfClasses" = 'Y' AND
+          sec."term-id" = '#{term_id}' AND
+          sec."id" = '#{section_id}' AND
+          mtg."location-code" IS NOT NULL
+        ORDER BY
+          mtg."sectionNumber" ASC
+        SQL
+        results = connection.select_all(sql)
+      }
+      stringify_ints! results
+    end
+
     # EDO equivalent of CampusOracle::Queries.get_sections_from_ccns
     def self.get_sections_by_ids(term_id, section_ids)
       result = {}
