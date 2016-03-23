@@ -1,0 +1,108 @@
+<div class="cc-widget cc-page-myfinances-account-activity" data-ng-controller="BillingController">
+  <div data-ng-if="billing.data.activity.length">
+    <div class="cc-widget-title">
+      <h2 class="cc-left">Activity</h2>
+      <button class="cc-button cc-right cc-widget-title-button" data-ng-click="printPage()">
+        <i class="fa fa-print"></i> Print
+      </button>
+    </div>
+
+    <div class="cc-table cc-page-myfinances-table cc-table-finances">
+      <table>
+        <thead>
+          <tr>
+            <th width="15%" scope="col">Date</th>
+            <th width="35%" scope="col">Description</th>
+            <th width="30%" class="cc-table-right cc-table-right-spacing" scope="col">Amount</th>
+            <th width="10%" scope="col">Type</th>
+            <th width="15%" class="cc-table-center" scope="col">Due</th>
+          </tr>
+        </thead>
+        <tbody
+          class="cc-widget-table-hover"
+          data-cc-accessible-focus-directive
+          data-ng-class="{'cc-widget-table-hover-opened cc-widget-list-selected':(item.show)}"
+          data-ng-click="api.widget.toggleShow($event, billing.data.activity, item, 'Billing - Transaction')"
+           data-ng-repeat="item in (billing.data.activity | orderBy:billing.sort.column:billing.sort.descending) | limitTo:activityLimit">
+          <tr data-ng-class="{'cc-page-myfinances-red':(item.itemDueFlag === OVER_DUE), 'cc-page-myfinances-green':(item.itemBalance < 0)}">
+            <td>
+              <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd/yy'" class="hide-for-small"></span>
+              <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd'" class="hide-for-medium-up"></span>
+            </td>
+            <td>
+              <div data-ng-bind="item.itemDescription" data-ng-class="{'cc-ellipsis':(!item.show)}"></div>
+            </td>
+            <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-cc-amount-directive="item.itemBalance"></td>
+            <td class="cc-page-myfinances-type">
+              <span class="hide-for-small cc-print-show" data-ng-bind="item.itemType"></span>
+              <div class="hide-for-medium-up cc-print-hide">
+                <i class="fa" data-ng-attr-title="{{item.itemType}}"
+                   data-ng-class="{'fa-plus':(item.itemBalance > 0),'fa-minus':(item.itemBalance < 0)}"></i>
+              </div>
+            </td>
+            <td class="cc-table-center">
+              <i class="fa" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.itemDueFlag === 'OVER_DUE'),'fa-exclamation':(item.itemDueFlag === 'DUE_NOW'),'fa-arrow-right':(item.itemDueFlag === 'FUTURE_DUE')}" data-ng-if="item.itemDueFlag">
+            </td>
+          </tr>
+          <tr data-ng-if="item.show">
+            <td></td>
+            <td colspan="4">
+              <div class="row collapse">
+                <div data-ng-if="item.itemReferenceDescription">
+                  <strong>Transaction
+                    <span aria-hidden="true"> #</span>
+                    <span class="cc-visuallyhidden">Number</span>:
+                  </strong>
+                  <span data-ng-bind="item.itemReferenceDescription"></span>
+                </div>
+                <div data-ng-if="item.itemLineAmount">
+                  <strong>Original Amount:</strong>
+                  <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemLineAmount"></span>
+                </div>
+                <div data-ng-if="item.itemDueDate && item.itemStatus === 'Unpaid'">
+                  <strong>Due Date:</strong>
+                  <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'"></span>
+                </div>
+                <div data-ng-if="item.itemEffectiveDate">
+                  <strong>Effective Date:</strong>
+                  <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd/yy'"></span>
+                </div>
+                <div data-ng-if="item.itemTermDescription">
+                  <strong>Term:</strong>
+                  <span data-ng-bind="item.itemTermDescription"></span>
+                </div>
+                <div data-ng-if="item.itemType">
+                  <strong>Type:</strong>
+                  <span data-ng-bind="item.itemType"></span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cc-clearfix-container">
+      <div class="cc-hidden cc-print-show cc-text-center">
+        Displaying <span data-ng-bind="activityLimit <= billing.data.activity.length ? activityLimit : billing.data.activity.length"></span> of <span data-ng-bind="billing.data.activity.length"></span> transactions
+      </div>
+      <div data-cc-show-more-directive data-cc-show-more-list="billing.data.activity" data-cc-show-more-increment="activityIncrement" data-cc-show-more-watch="billing.data.activity.length" data-cc-show-more-limit="activityLimit"></div>
+    </div>
+
+    <div class="cc-page-myfinances-footer cc-clearfix-container">
+      <div class="medium-12 columns">
+        <ul>
+          <li>
+            <i class="fa fa-exclamation"></i> Due now
+          </li>
+          <li>
+            <i class="fa fa-exclamation-circle cc-icon-red"></i> Overdue
+          </li>
+          <li>
+            <i class="fa fa-arrow-right"></i> Due in the future
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
