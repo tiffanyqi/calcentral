@@ -41,7 +41,7 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     },
     {
       id: 'decide',
-      title: 'Appointment Time',
+      title: 'Appointment Start Times',
       show: true
     },
     {
