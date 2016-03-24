@@ -53,10 +53,10 @@ describe 'My Finances landing page', :testui => true do
 
     context 'Cal 1 Card card' do
       it 'includes a link to Cal 1 Card' do
-        WebDriverUtils.verify_external_link(@driver, @my_finances_page.cal_1_card_link_element, 'Cal 1 Card: Home')
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.cal_1_card_link_element, 'Cal 1 Card |')).to be true
       end
       it 'includes a link to Cal Dining' do
-        WebDriverUtils.verify_external_link(@driver, @my_finances_page.cal_dining_link_element, 'Caldining')
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.cal_dining_link_element, 'Caldining')).to be true
       end
     end
 
@@ -71,7 +71,7 @@ describe 'My Finances landing page', :testui => true do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.student_billing_svcs_link_element, 'Student Billing Services, University of California, Berkeley')).to be true
       end
       it 'includes a link to "How does my SHIP Waiver affect my billing?"' do
-        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.ship_waiver_link_element, 'How does my SHIP Waiver affect my billing? | Cal Student Central'))
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.ship_waiver_link_element, 'How does my SHIP waiver affect my billing? | Cal Student Central')).to be true
       end
       it 'includes a link to e-bills' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.ebills_link_element, 'BearFacts | ')).to be true
@@ -80,7 +80,7 @@ describe 'My Finances landing page', :testui => true do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.payment_options_link_element, 'CARS Payment Options')).to be true
       end
       it 'includes a link to Registration Fees' do
-        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.reg_fees_link_element, 'Registration Fees - Office Of The Registrar')).to be true
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.reg_fees_link_element, 'Fee Schedule | Office of the Registrar')).to be true
       end
       it 'includes a link to Tax 1098-T Form' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.tax_1098t_form_link_element, 'Taxpayer Relief Act of 1997')).to be true
@@ -116,7 +116,7 @@ describe 'My Finances landing page', :testui => true do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.have_loan_link_element, 'Exit Loan Counseling')).to be true
       end
       it 'includes a link to Withdrawing or Canceling?' do
-        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.withdraw_cancel_link_element, 'Cancellation,  Withdrawal and Readmission - Office Of The Registrar')).to be true
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.withdraw_cancel_link_element, 'Cancellation & Withdrawal | Office of the Registrar')).to be true
       end
 
       # Summer Programs
