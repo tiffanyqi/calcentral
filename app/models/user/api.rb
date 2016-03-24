@@ -6,7 +6,6 @@ module User
     include Cache::JsonAddedCacher
     # Needed to expire cache entries specific to Viewing-As users alongside original user's cache.
     include Cache::RelatedCacheKeyTracker
-    include CampusSolutions::ProfileFeatureFlagged
     include CampusSolutions::DelegatedAccessFeatureFlagged
     include ClassLogger
 
@@ -14,20 +13,9 @@ module User
       use_pooled_connection {
         @calcentral_user_data ||= User::Data.where(:uid => @uid).first
       }
-      @ldap_attributes ||= CalnetLdap::UserAttributes.new(user_id: @uid).get_feed
-      @oracle_attributes ||= CampusOracle::UserAttributes.new(user_id: @uid).get_feed
-      if is_cs_profile_feature_enabled
-        @edo_attributes ||= HubEdos::UserAttributes.new(user_id: @uid).get
-      end
-      @roles = get_campus_roles
-      @default_name ||= get_campus_attribute('person_name', :string)
+      @user_attributes ||= User::AggregatedAttributes.new @uid, @options
       @first_login_at ||= @calcentral_user_data ? @calcentral_user_data.first_login_at : nil
-      @first_name ||= get_campus_attribute('first_name', :string) || ''
-      @last_name ||= get_campus_attribute('last_name', :string) || ''
       @override_name ||= @calcentral_user_data ? @calcentral_user_data.preferred_name : nil
-      @given_first_name = (@edo_attributes && @edo_attributes[:given_name]) || @first_name || ''
-      @family_name = (@edo_attributes && @edo_attributes[:family_name]) || @last_name || ''
-      @student_id = get_campus_attribute('student_id', :numeric_string)
       @delegate_students = get_delegate_students
     end
 
@@ -42,50 +30,8 @@ module User
       response && response[:feed] && response[:feed][:students]
     end
 
-    # Split brain three ways until some subset of the brain proves more trustworthy.
-    def get_campus_attribute(field, format)
-      if is_sis_profile_visible? &&
-        (@roles[:student] || @roles[:applicant]) &&
-        @edo_attributes[:noStudentId].blank? && (edo_attribute = @edo_attributes[field.to_sym])
-        begin
-          validated_edo_attribute = validate_attribute(edo_attribute, format)
-        rescue
-          logger.error "EDO attribute #{field} failed validation for UID #{@uid}: expected a #{format}, got #{edo_attribute}"
-        end
-      end
-      validated_edo_attribute || @ldap_attributes[field.to_sym] || @oracle_attributes[field]
-    end
-
-    def validate_attribute(value, format)
-      case format
-        when :string
-          raise ArgumentError unless value.is_a?(String) && value.present?
-        when :numeric_string
-          raise ArgumentError unless value.is_a?(String) && Integer(value, 10)
-      end
-      value
-    end
-
-    # Conservative merge of roles from EDO
-    WHITELISTED_EDO_ROLES = [:student, :applicant, :advisor]
-
-    def get_campus_roles
-      ldap_roles = (@ldap_attributes && @ldap_attributes[:roles]) || {}
-      oracle_roles = (@oracle_attributes && @oracle_attributes[:roles]) || {}
-      campus_roles = oracle_roles.merge ldap_roles
-      if is_sis_profile_visible?
-        edo_roles = (@edo_attributes && @edo_attributes[:roles]) || {}
-        edo_roles_to_merge = edo_roles.slice *WHITELISTED_EDO_ROLES
-        # While we're in the split-brain stage, LDAP and Oracle are more trusted on ex-student status.
-        edo_roles_to_merge.delete(:student) if campus_roles[:exStudent]
-        campus_roles.merge edo_roles_to_merge
-      else
-        campus_roles
-      end
-    end
-
     def preferred_name
-      @override_name || @default_name || ''
+      @override_name || @user_attributes.default_name || ''
     end
 
     def preferred_name=(val)
@@ -148,17 +94,8 @@ module User
       save
     end
 
-    def is_campus_solutions_student?
-      @edo_attributes.present? && (@edo_attributes[:is_legacy_user] == false)
-    end
-
     def is_delegate_user?
       authentication_state.directly_authenticated? && !@delegate_students.nil? && @delegate_students.any?
-    end
-
-    def is_sis_profile_visible?
-      is_cs_profile_feature_enabled &&
-        (is_campus_solutions_student? || is_profile_visible_for_legacy_users)
     end
 
     def has_academics_tab?(roles, has_instructor_history, has_student_history)
@@ -197,27 +134,28 @@ module User
     end
 
     def get_feed_internal
+      given_first_name = @user_attributes.given_first_name
+      first_name = @user_attributes.first_name
+      last_name = @user_attributes.last_name
       google_mail = User::Oauth2Data.get_google_email @uid
       canvas_mail = User::Oauth2Data.get_canvas_email @uid
-      primary_email_address = get_campus_attribute('email_address', :string)
-      official_bmail_address = get_campus_attribute('official_bmail_address', :string)
       current_user_policy = authentication_state.policy
       is_google_reminder_dismissed = User::Oauth2Data.is_google_reminder_dismissed(@uid)
       is_google_reminder_dismissed = is_google_reminder_dismissed && is_google_reminder_dismissed.present?
       is_calendar_opted_in = Calendar::User.where(:uid => @uid).first.present?
       has_student_history = CampusOracle::UserCourses::HasStudentHistory.new(user_id: @uid).has_student_history?
       has_instructor_history = CampusOracle::UserCourses::HasInstructorHistory.new(user_id: @uid).has_instructor_history?
-      roles = @roles
+      roles = @user_attributes.roles
       can_view_academics = has_academics_tab?(roles, has_instructor_history, has_student_history)
       feed = {
         isSuperuser: current_user_policy.can_administrate?,
         isViewer: current_user_policy.can_view_as?,
         firstLoginAt: @first_login_at,
-        firstName: @first_name,
-        lastName: @last_name,
-        fullName: @first_name + ' ' + @last_name,
-        givenFirstName: @given_first_name,
-        givenFullName: @given_first_name + ' ' + @family_name,
+        firstName: first_name,
+        lastName: last_name,
+        fullName: first_name + ' ' + last_name,
+        givenFirstName: given_first_name,
+        givenFullName: given_first_name + ' ' + @user_attributes.family_name,
         isGoogleReminderDismissed: is_google_reminder_dismissed,
         isCalendarOptedIn: is_calendar_opted_in,
         hasCanvasAccount: Canvas::Proxy.has_account?(@uid),
@@ -230,19 +168,19 @@ module User
         hasFinancialsTab: has_financials_tab?(roles),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
         hasPhoto: !!User::Photo.fetch(@uid, @options),
-        inEducationAbroadProgram: @oracle_attributes[:education_abroad],
+        inEducationAbroadProgram: @user_attributes.education_abroad?,
         googleEmail: google_mail,
         canvasEmail: canvas_mail,
-        officialBmailAddress: official_bmail_address,
-        primaryEmailAddress: primary_email_address,
+        officialBmailAddress: @user_attributes.official_bmail_address,
+        primaryEmailAddress: @user_attributes.primary_email_address,
         preferredName: self.preferred_name,
         roles: roles,
         uid: @uid,
-        sid: @student_id,
-        campusSolutionsID: get_campus_attribute('campus_solutions_id', :string),
-        isCampusSolutionsStudent: is_campus_solutions_student?,
+        sid: @user_attributes.student_id,
+        campusSolutionsID: @user_attributes.campus_solutions_id,
+        isCampusSolutionsStudent: @user_attributes.campus_solutions_student?,
         isDelegateUser: is_delegate_user?,
-        showSisProfileUI: is_sis_profile_visible?
+        showSisProfileUI: @user_attributes.sis_profile_visible?
       }
       filter_user_api_for_delegator(feed) if authentication_state.authenticated_as_delegate?
       feed
