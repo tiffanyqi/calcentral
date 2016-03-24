@@ -151,5 +151,47 @@ module EdoOracle
       stringify_ints!(result)
     end
 
+    # EDO equivalent of CampusOracle::Queries.get_section_instructors
+    # Changes:
+    #   - 'ccn' replaced by 'section_id' argument
+    #   - 'term_yr' and 'term_yr' replaced by 'term_id'
+    #   - 'instructor_func' has become represented by 'role_code' and 'role_description'
+    #   - Does not provide all user profile fields ('email_address', 'student_id', 'affiliations').
+    #     This will require a programatic join at a higher level.
+    #     See CLC-6239 for implementation of batch LDAP profile requests.
+    #
+    # TODO: Update dependencies in CampusOracle::CourseSections and CanvasCsv::SiteMembershipsMaintainer
+    #   to merge user profile data into this feed
+    def self.get_section_instructors(section_id, term_id)
+      results = []
+      use_pooled_connection {
+        sql = <<-SQL
+          SELECT
+            TRIM(instr."formattedName") AS person_name,
+            TRIM(instr."givenName") AS first_name,
+            TRIM(instr."givenName") AS last_name,
+            instr."campus-uid" AS ldap_uid,
+            instr."role-code" AS role_code,
+            instr."role-descr" AS role_description
+          FROM
+            SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
+          LEFT OUTER JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+            instr."cs-course-id" = sec."cs-course-id" AND
+            instr."term-id" = sec."term-id" AND
+            instr."session-id" = sec."session-id" AND
+            instr."offeringNumber" = sec."offeringNumber" AND
+            instr."number" = sec."number"
+          )
+          WHERE
+            sec."id" = '#{section_id.to_s}' AND
+            sec."term-id" = '#{term_id.to_s}'
+          ORDER BY
+            role_code
+        SQL
+        results = connection.select_all(sql)
+      }
+      stringify_ints! results
+    end
+
   end
 end

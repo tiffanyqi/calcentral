@@ -1,4 +1,8 @@
 describe EdoOracle::Queries, :ignore => true do
+  # BIOENG C125 - Fall 2016
+  let(:section_ids) { ['26340', '26341'] }
+  let(:term_id) { '2168' }
+
   it_behaves_like 'an Oracle driven data source' do
     subject { EdoOracle::Queries }
   end
@@ -16,9 +20,7 @@ describe EdoOracle::Queries, :ignore => true do
       expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
       results.each do |result|
         expect(result['term_id']).to eq '2102'
-        expected_keys.each do |expected_key|
-          expect(result).to have_key(expected_key)
-        end
+        expect(result).to have_keys(expected_keys)
       end
     end
   end
@@ -32,17 +34,12 @@ describe EdoOracle::Queries, :ignore => true do
       expected_keys = ['section_id', 'term_id', 'course_title', 'course_title_short', 'dept_name', 'primary', 'section_num', 'instruction_format', 'display_name', 'catalog_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix', 'enroll_limit', 'enroll_status', 'waitlist_position', 'unit', 'grading_basis']
       results.each do |result|
         expect(result['term_id']).to eq '2102'
-        expected_keys.each do |expected_key|
-          expect(result).to have_key(expected_key)
-        end
+        expect(result).to have_keys(expected_keys)
       end
     end
   end
 
   describe '.get_sections_by_ids', :testext => true do
-    # BIOENG C125 - Fall 2016
-    let(:term_id) { '2168' }
-    let(:section_ids) { ['26340', '26341'] }
     it 'returns sections specified by id array' do
       results = EdoOracle::Queries.get_sections_by_ids(term_id, section_ids)
       expect(results.count).to eq 2
@@ -59,9 +56,6 @@ describe EdoOracle::Queries, :ignore => true do
   end
 
   describe '.get_section_meetings', :testext => true do
-    # BIOENG C125 - Fall 2016
-    let(:term_id) { '2168' }
-    let(:section_ids) { ['26340', '26341'] }
     it 'returns meetings for section id specified' do
       results = EdoOracle::Queries.get_section_meetings(term_id, section_ids[0])
       expect(results.count).to eq 1
@@ -70,9 +64,17 @@ describe EdoOracle::Queries, :ignore => true do
         expect(result['section_id']).to eq '26340'
         expect(result['term_id']).to eq '2168'
         expect(result['print_in_schedule_of_classes']).to eq 'Y'
-        expected_keys.each do |expected_key|
-          expect(result).to have_key(expected_key)
-        end
+        expect(result).to have_keys(expected_keys)
+      end
+    end
+  end
+
+  describe '.get_section_instructors', :testext => true do
+    let(:expected_keys) { ['person_name', 'first_name', 'last_name', 'ldap_uid', 'role_code', 'role_description'] }
+    it 'returns instructors for section' do
+      results = EdoOracle::Queries.get_section_instructors(section_ids[0], term_id)
+      results.each do |result|
+        expect(result).to have_keys(expected_keys)
       end
     end
   end
