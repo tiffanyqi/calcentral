@@ -46,6 +46,8 @@ module Berkeley
     attr_reader :grading_in_progress
     # How far back do we look for enrollments, transcripts, & teaching assignments?
     attr_reader :oldest
+    # This term and earlier will pull academic data from legacy CampusOracle. Later terms will pull from EdoOracle.
+    attr_reader :legacy_cutoff
     # Full list of terms in DB.
     attr_reader :campus
 
@@ -75,6 +77,7 @@ module Berkeley
           @previous ||= term
           @grading_in_progress ||= term if term.grades_entered >= current_date
         end
+        @legacy_cutoff = term if term.slug == Settings.terms.legacy_cutoff
         break if term.slug == @oldest
       end
       @current = @running || future_terms.pop

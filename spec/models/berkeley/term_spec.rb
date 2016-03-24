@@ -71,6 +71,21 @@ describe Berkeley::Term do
     its(:start) {should eq Time.zone.parse('2014-01-14 00:00:00').to_datetime}
     its(:end) {should eq Time.zone.parse('2014-05-16 23:59:59').to_datetime}
     its(:to_english) {should eq 'Spring 2014'}
+    context 'legacy source-of-record checks' do
+      before { allow(Settings.terms).to receive(:legacy_cutoff).and_return legacy_cutoff }
+      context 'term is before legacy cutoff' do
+        let(:legacy_cutoff) { 'summer-2014' }
+        its(:legacy?) { should eq true }
+      end
+      context 'term is equal to legacy cutoff' do
+        let(:legacy_cutoff) { 'spring-2014' }
+        its(:legacy?) { should eq true }
+      end
+      context 'term is after legacy cutoff' do
+        let(:legacy_cutoff) { 'fall-2013' }
+        its(:legacy?) { should eq false }
+      end
+    end
   end
 
 end

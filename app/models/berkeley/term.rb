@@ -1,6 +1,7 @@
 module Berkeley
   class Term
     include ActiveAttrModel, ClassLogger
+    include Comparable
     extend Cache::Cacheable
 
     attr_reader :code
@@ -54,6 +55,14 @@ module Berkeley
 
     def to_english
       TermCodes.to_english(year, code)
+    end
+
+    def <=>(other_term)
+      [year, code] <=> [other_term.year, other_term.code]
+    end
+
+    def legacy?
+      self <= Berkeley::Terms.fetch.legacy_cutoff
     end
 
     # Most final grades should appear on the transcript by this date.
