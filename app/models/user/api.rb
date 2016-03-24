@@ -13,7 +13,7 @@ module User
       use_pooled_connection {
         @calcentral_user_data ||= User::Data.where(:uid => @uid).first
       }
-      @user_attributes ||= User::AggregatedAttributes.new @uid, @options
+      @user_attributes ||= User::AggregatedAttributes.new(@uid, @options).get_feed
       @first_login_at ||= @calcentral_user_data ? @calcentral_user_data.first_login_at : nil
       @override_name ||= @calcentral_user_data ? @calcentral_user_data.preferred_name : nil
       @delegate_students = get_delegate_students
@@ -31,7 +31,7 @@ module User
     end
 
     def preferred_name
-      @override_name || @user_attributes.default_name || ''
+      @override_name || @user_attributes[:default_name] || ''
     end
 
     def preferred_name=(val)
@@ -134,9 +134,9 @@ module User
     end
 
     def get_feed_internal
-      given_first_name = @user_attributes.given_first_name
-      first_name = @user_attributes.first_name
-      last_name = @user_attributes.last_name
+      given_first_name = @user_attributes[:given_first_name]
+      first_name = @user_attributes[:first_name]
+      last_name = @user_attributes[:last_name]
       google_mail = User::Oauth2Data.get_google_email @uid
       canvas_mail = User::Oauth2Data.get_canvas_email @uid
       current_user_policy = authentication_state.policy
@@ -145,7 +145,7 @@ module User
       is_calendar_opted_in = Calendar::User.where(:uid => @uid).first.present?
       has_student_history = CampusOracle::UserCourses::HasStudentHistory.new(user_id: @uid).has_student_history?
       has_instructor_history = CampusOracle::UserCourses::HasInstructorHistory.new(user_id: @uid).has_instructor_history?
-      roles = @user_attributes.roles
+      roles = @user_attributes[:roles]
       can_view_academics = has_academics_tab?(roles, has_instructor_history, has_student_history)
       feed = {
         isSuperuser: current_user_policy.can_administrate?,
@@ -155,7 +155,7 @@ module User
         lastName: last_name,
         fullName: first_name + ' ' + last_name,
         givenFirstName: given_first_name,
-        givenFullName: given_first_name + ' ' + @user_attributes.family_name,
+        givenFullName: given_first_name + ' ' + @user_attributes[:family_name],
         isGoogleReminderDismissed: is_google_reminder_dismissed,
         isCalendarOptedIn: is_calendar_opted_in,
         hasCanvasAccount: Canvas::Proxy.has_account?(@uid),
@@ -168,19 +168,19 @@ module User
         hasFinancialsTab: has_financials_tab?(roles),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
         hasPhoto: !!User::Photo.fetch(@uid, @options),
-        inEducationAbroadProgram: @user_attributes.education_abroad?,
+        inEducationAbroadProgram: @user_attributes[:education_abroad],
         googleEmail: google_mail,
         canvasEmail: canvas_mail,
-        officialBmailAddress: @user_attributes.official_bmail_address,
-        primaryEmailAddress: @user_attributes.primary_email_address,
+        officialBmailAddress: @user_attributes[:official_bmail_address],
+        primaryEmailAddress: @user_attributes[:primary_email_address],
         preferredName: self.preferred_name,
         roles: roles,
         uid: @uid,
-        sid: @user_attributes.student_id,
-        campusSolutionsID: @user_attributes.campus_solutions_id,
-        isCampusSolutionsStudent: @user_attributes.campus_solutions_student?,
+        sid: @user_attributes[:student_id],
+        campusSolutionsID: @user_attributes[:campus_solutions_id],
+        isCampusSolutionsStudent: @user_attributes[:campus_solutions_student],
         isDelegateUser: is_delegate_user?,
-        showSisProfileUI: @user_attributes.sis_profile_visible?
+        showSisProfileUI: @user_attributes[:sis_profile_visible]
       }
       filter_user_api_for_delegator(feed) if authentication_state.authenticated_as_delegate?
       feed
