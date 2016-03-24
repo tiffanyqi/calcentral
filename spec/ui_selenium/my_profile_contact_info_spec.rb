@@ -1,6 +1,6 @@
 describe 'My Profile Contact Info', :testui => true, :order => :defined do
 
-  if ENV['UI_TEST'] && Settings.ui_selenium.layer != 'production'
+  if ENV['UI_TEST'] && Settings.ui_selenium.layer == 'local'
 
     include ClassLogger
 
