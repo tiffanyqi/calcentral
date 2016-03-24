@@ -120,6 +120,9 @@ Spork.prefork do
       config.filter_run_excluding :testui => true
     end
 
+    # Include custom matchers
+    config.include CustomMatchers, :type => :model
+
     # Include Auth helper:
     config.include IntegrationSpecHelper, :type => :feature
 
