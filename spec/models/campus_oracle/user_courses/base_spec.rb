@@ -1,5 +1,18 @@
 describe CampusOracle::UserCourses::Base do
 
+  RSpec::Matchers.define :terms_preceding_and_including_cutoff do |cutoff|
+    match do |terms|
+      term_ids = terms.map &:campus_solutions_id
+      term_ids.include?(cutoff) && term_ids.all? { |term_id| term_id <= cutoff }
+    end
+  end
+
+  it 'should query legacy terms only' do
+    allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2013'
+    expect(CampusOracle::Queries).to receive(:get_enrolled_sections).with(anything, terms_preceding_and_including_cutoff('2135')).and_return []
+    described_class.new(user_id: random_id).merge_enrollments({})
+  end
+
   describe '#merge_enrollments' do
     let(:user_id) {rand(99999).to_s}
     let(:catalog_id) {"#{rand(999)}"}
