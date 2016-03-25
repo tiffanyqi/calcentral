@@ -62,13 +62,16 @@ module EdoOracle
     end
 
     # EDO equivalent of CampusOracle::Queries.get_instructing_sections
+    # Changes:
+    #   - 'cs-course-id' added.
     def self.get_instructing_sections(person_id, terms = nil)
       result = []
       terms_list = terms.map { |term| "'#{term.campus_solutions_id}'" }.join ','
       use_pooled_connection do
         sql = <<-SQL
         SELECT
-          #{SECTION_COLUMNS}
+          #{SECTION_COLUMNS},
+          sec."cs-course-id" AS cs_course_id
         FROM SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
         JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
           instr."term-id" = sec."term-id" AND
@@ -82,6 +85,32 @@ module EdoOracle
           AND instr."term-id" IN (#{terms_list})
           AND instr."campus-uid" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
+        SQL
+        result = connection.select_all sql
+      end
+      stringify_ints! result
+    end
+
+    # EDO equivalent of CampusOracle::Queries.get_secondary_sections.
+    # Changes:
+    #   - More precise associations allow us to query by primary section rather
+    #     than course catalog ID.
+    #   - 'cs-course-id' added.
+    def self.get_associated_secondary_sections(term_id, section_id)
+      result = []
+      use_pooled_connection do
+        sql = <<-SQL
+        SELECT
+          #{SECTION_COLUMNS},
+          sec."cs-course-id" AS cs_course_id
+        FROM SISEDO.CLASSSECTIONV00_VW sec
+        LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (sec."displayName" = crs."displayName")
+        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
+          AND sec."status-code" = 'A'
+          AND sec."primary" = 'false'
+          AND sec."term-id" = '#{term_id}' AND
+          AND sec."primaryAssociatedSectionId" = '#{section_id}'
+        ORDER BY #{CANONICAL_SECTION_ORDERING}
         SQL
         result = connection.select_all sql
       end

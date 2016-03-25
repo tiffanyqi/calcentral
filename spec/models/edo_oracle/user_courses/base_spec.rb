@@ -68,7 +68,7 @@ describe EdoOracle::UserCourses::Base do
         })
       ]
     end
-    before { allow(EdoOracle::Queries).to receive(:get_enrolled_sections).and_return enrollment_query_results }
+    before { expect(EdoOracle::Queries).to receive(:get_enrolled_sections).and_return enrollment_query_results }
     let(:feed) { {}.tap { |feed| EdoOracle::UserCourses::Base.new(user_id: random_id).merge_enrollments feed } }
     subject { feed['2016-D'] }
     its(:size) { should eq 1 }
@@ -109,6 +109,7 @@ describe EdoOracle::UserCourses::Base do
         else
           expect(section).not_to include(:enroll_limit, :waitlistPosition)
         end
+        expect(section).not_to include :cross_listing_hash
       end
     end
     it 'includes only non-blank grades' do
@@ -122,18 +123,21 @@ describe EdoOracle::UserCourses::Base do
     let(:instructing_query_results) do
       [
         base_course_data.merge({
+          'cs_course_id' => '10001',
           'instruction_format' => 'LEC',
           'primary' => true,
           'section_id' => '44206',
           'section_num' => '001'
         }),
         base_course_data.merge({
+          'cs_course_id' => '10001',
           'instruction_format' => 'LEC',
           'primary' => true,
           'section_id' => '44207',
           'section_num' => '002'
         }),
         base_course_data.merge({
+          'cs_course_id' => '20001',
           'catalog_id' => '99C',
           'catalog_prefix' => nil,
           'catalog_root' => '99',
@@ -146,17 +150,88 @@ describe EdoOracle::UserCourses::Base do
           'primary' => true,
           'section_id' => '44807',
           'section_num' => '001'
+        }),
+        base_course_data.merge({
+          'cs_course_id' => '30001',
+          'catalog_id' => 'C105',
+          'catalog_prefix' => 'C',
+          'catalog_root' => '99',
+          'catalog_suffix' => nil,
+          'course_title' => 'Einstuerzende Neubauten and Structural Failure',
+          'course_title_short' => 'KOLLAPS',
+          'dept_name' => 'MUSIC',
+          'display_name' => 'MUSIC C105',
+          'instruction_format' => 'LEC',
+          'primary' => true,
+          'section_id' => '45807',
+          'section_num' => '001'
+        }),
+        base_course_data.merge({
+          'cs_course_id' => '30001',
+          'catalog_id' => 'C112',
+          'catalog_prefix' => 'C',
+          'catalog_root' => '112',
+          'catalog_suffix' => nil,
+          'course_title' => 'Einstuerzende Neubauten and Structural Failure',
+          'course_title_short' => 'KOLLAPS',
+          'dept_name' => 'MEC ENG',
+          'display_name' => 'MEC ENG C112',
+          'instruction_format' => 'LEC',
+          'primary' => true,
+          'section_id' => '54807',
+          'section_num' => '001'
+        }),
+      ]
+    end
+    let(:secondary_query_results) do
+      [
+        base_course_data.merge({
+          'cs_course_id' => '10001',
+          'instruction_format' => 'DIS',
+          'primary' => false,
+          'section_id' => '44210',
+          'section_num' => '201'
+        }),
+        base_course_data.merge({
+          'cs_course_id' => '10001',
+          'instruction_format' => 'DIS',
+          'primary' => false,
+          'section_id' => '44211',
+          'section_num' => '202'
+        }),
+        base_course_data.merge({
+          'cs_course_id' => '10001',
+          'instruction_format' => 'DIS',
+          'primary' => false,
+          'section_id' => '44211',
+          'section_num' => '202'
         })
       ]
     end
-    before { allow(EdoOracle::Queries).to receive(:get_instructing_sections).and_return instructing_query_results }
+    before do
+      expect(EdoOracle::Queries).to receive(:get_instructing_sections).and_return instructing_query_results
+      expect(EdoOracle::Queries).to receive(:get_associated_secondary_sections).with('2168', '44207').and_return secondary_query_results
+      %w(44206 44807 45807 54807).each do |primary_section_id|
+        expect(EdoOracle::Queries).to receive(:get_associated_secondary_sections).with('2168', primary_section_id).and_return []
+      end
+    end
     let(:feed) { {}.tap { |feed| EdoOracle::UserCourses::Base.new(user_id: random_id).merge_instructing feed } }
     subject { feed['2016-D'] }
 
+    def get_sections(course_code)
+      subject.find { |course| course[:course_code] == course_code }[:sections]
+    end
+
     it 'sorts out sections based on course code' do
-      expect(subject).to have(2).items
-      expect(subject.find { |course| course[:course_code] == 'MUSIC 74'}[:sections]).to have(2).items
-      expect(subject.find { |course| course[:course_code] == 'MUSIC 99C'}[:sections]).to have(1).items
+      expect(subject).to have(4).items
+      expect(get_sections 'MUSIC 74').to have(4).items
+      expect(get_sections 'MUSIC 99C').to have(1).items
+      expect(get_sections 'MUSIC C105').to have(1).items
+      expect(get_sections 'MEC ENG C112').to have(1).items
+    end
+
+    it 'adds de-duplicated secondaries to the right course' do
+      expect(get_sections('MUSIC 74').select { |section| !section[:is_primary_section]}).to have(2).items
     end
 
     it 'includes course data without enrollment-specific properties' do
@@ -169,6 +244,12 @@ describe EdoOracle::UserCourses::Base do
           expect(section.keys).not_to include(:grading_basis, :enroll_limit, :waitlistPosition)
         end
       end
+    end
+
+    it 'assigns cross-listing hashes to matching cs_course_id and section only' do
+      expect(get_sections('MUSIC 74').first).not_to include(:cross_listing_hash)
+      expect(get_sections('MUSIC 99C').first).not_to include(:cross_listing_hash)
+      expect(get_sections('MUSIC C105').first[:cross_listing_hash]).to eq get_sections('MEC ENG C112').first[:cross_listing_hash]
     end
   end
 

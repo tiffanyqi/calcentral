@@ -29,13 +29,33 @@ module EdoOracle
 
       def merge_instructing(campus_classes)
         previous_item = {}
-        # TODO flag cross-listings
-        # TODO get implicitly instructed sections
+        cross_listing_tracker = {}
         EdoOracle::Queries.get_instructing_sections(@uid, @non_legacy_academic_terms).each do |row|
-          if (item = row_to_feed_item(row, previous_item))
+          if (item = row_to_feed_item(row, previous_item, cross_listing_tracker))
             item[:role] = 'Instructor'
             merge_feed_item(item, campus_classes)
             previous_item = item
+          end
+        end
+        merge_implicit_instructing campus_classes
+      end
+
+      # This is done in a separate step so that all secondary sections
+      # are ordered after explicitly assigned primary sections.
+      def merge_implicit_instructing(campus_classes)
+        campus_classes.each_value do |term|
+          term.each do |course|
+            if course[:role] == 'Instructor'
+              section_ids = course[:sections].map { |section| section[:ccn] }.to_set
+              course[:sections].select { |section| section[:is_primary_section] }.each do |primary|
+                EdoOracle::Queries.get_associated_secondary_sections(course[:term_id], primary[:ccn]).each do |row|
+                  # Skip duplicates.
+                  if section_ids.add? row['section_id']
+                    course[:sections] << row_to_section_data(row)
+                  end
+                end
+              end
+            end
           end
         end
       end
@@ -46,9 +66,9 @@ module EdoOracle
         campus_classes[semester_key] << item
       end
 
-      def row_to_feed_item(row, previous_item)
+      def row_to_feed_item(row, previous_item, cross_listing_tracker=nil)
         unless (course_item = new_course_item(row, previous_item))
-          previous_item[:sections] << row_to_section_data(row)
+          previous_item[:sections] << row_to_section_data(row, cross_listing_tracker)
           nil
         else
           term_data = Berkeley::TermCodes.from_edo_id(row['term_id']).merge({
@@ -62,7 +82,7 @@ module EdoOracle
             emitter: 'Campus',
             name: course_name,
             sections: [
-              row_to_section_data(row)
+              row_to_section_data(row, cross_listing_tracker)
             ]
           }
           course_item.merge(term_data).merge(course_data)
@@ -93,7 +113,7 @@ module EdoOracle
         str.downcase.gsub(/[^a-z0-9-]+/, '_')
       end
 
-      def row_to_section_data(row)
+      def row_to_section_data(row, cross_listing_tracker=nil)
         section_data = {
           ccn: row['section_id'].to_s,
           instruction_format: row['instruction_format'],
@@ -112,6 +132,23 @@ module EdoOracle
             section_data[:enroll_limit] = row['enroll_limit'].to_i
           end
         end
+
+        # Cross-listed primaries are tracked only when merging instructed sections.
+        if cross_listing_tracker && row['primary']
+          cross_listing_slug = row.values_at('term_id', 'cs_course_id', 'instruction_format', 'section_num').join '-'
+          if (cross_listings = cross_listing_tracker[cross_listing_slug])
+            # The front end expects cross-listed primaries to share a unique identifer, called 'hash'
+            # because it was formerly implemented as an Oracle hash.
+            section_data[:cross_listing_hash] = cross_listing_slug
+            if cross_listings.length == 1
+              cross_listings.first[:cross_listing_hash] = cross_listing_slug
+            end
+            cross_listings << section_data
+          else
+            cross_listing_tracker[cross_listing_slug] = ([] << section_data)
+          end
+        end
+
         section_data
       end
 
