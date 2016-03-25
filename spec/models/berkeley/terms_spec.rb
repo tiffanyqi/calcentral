@@ -69,4 +69,21 @@ describe Berkeley::Terms do
     end
   end
 
+  context 'legacy source-of-record checks' do
+    before { allow(Settings.terms).to receive(:legacy_cutoff).and_return legacy_cutoff }
+    subject { Berkeley::Terms.fetch.campus['spring-2014'] }
+    context 'term is before legacy cutoff' do
+      let(:legacy_cutoff) { 'summer-2014' }
+      its(:legacy?) { should eq true }
+    end
+    context 'term is equal to legacy cutoff' do
+      let(:legacy_cutoff) { 'spring-2014' }
+      its(:legacy?) { should eq true }
+    end
+    context 'term is after legacy cutoff' do
+      let(:legacy_cutoff) { 'fall-2013' }
+      its(:legacy?) { should eq false }
+    end
+  end
+
 end
