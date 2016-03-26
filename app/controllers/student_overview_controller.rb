@@ -1,5 +1,5 @@
 class StudentOverviewController < ApplicationController
-  include ClassLogger
+  include CampusSolutions::StudentLookupFeatureFlagged
 
   before_action :api_authenticate
   before_action :authorize_access_to_student
@@ -9,7 +9,8 @@ class StudentOverviewController < ApplicationController
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   def authorize_access_to_student
-    authorize current_user, :can_view_as_for_all_uids?
+    raise NotAuthorizedError.new('The student lookup feature is disabled') unless is_feature_enabled
+    authorize(current_user, :can_view_as_for_all_uids?)
   end
 
   def student
