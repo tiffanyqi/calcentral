@@ -332,8 +332,7 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
   };
 
   $scope.printPage = function() {
-    apiService.analytics.sendEvent('Finances', 'Print');
-    window.print();
+    apiService.financials.printPage();
   };
 
   /**
