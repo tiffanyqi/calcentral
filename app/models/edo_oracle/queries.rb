@@ -41,7 +41,8 @@ module EdoOracle
           sec."maxEnroll" AS enroll_limit,
           enr."STDNT_ENRL_STATUS_CODE" AS enroll_status,
           enr."WAITLISTPOSITION" AS waitlist_position,
-          enr."UNITS_TAKEN" AS unit,
+          enr."UNITS_TAKEN" AS units,
+          enr."GRADE_MARK" AS grade,
           enr."GRADING_BASIS_CODE" AS grading_basis
         FROM SISEDO.ENROLLMENTV00_VW enr
         JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
@@ -61,13 +62,16 @@ module EdoOracle
     end
 
     # EDO equivalent of CampusOracle::Queries.get_instructing_sections
+    # Changes:
+    #   - 'cs-course-id' added.
     def self.get_instructing_sections(person_id, terms = nil)
       result = []
       terms_list = terms.map { |term| "'#{term.campus_solutions_id}'" }.join ','
       use_pooled_connection do
         sql = <<-SQL
         SELECT
-          #{SECTION_COLUMNS}
+          #{SECTION_COLUMNS},
+          sec."cs-course-id" AS cs_course_id
         FROM SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
         JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
           instr."term-id" = sec."term-id" AND
@@ -81,6 +85,32 @@ module EdoOracle
           AND instr."term-id" IN (#{terms_list})
           AND instr."campus-uid" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
+        SQL
+        result = connection.select_all sql
+      end
+      stringify_ints! result
+    end
+
+    # EDO equivalent of CampusOracle::Queries.get_secondary_sections.
+    # Changes:
+    #   - More precise associations allow us to query by primary section rather
+    #     than course catalog ID.
+    #   - 'cs-course-id' added.
+    def self.get_associated_secondary_sections(term_id, section_id)
+      result = []
+      use_pooled_connection do
+        sql = <<-SQL
+        SELECT
+          #{SECTION_COLUMNS},
+          sec."cs-course-id" AS cs_course_id
+        FROM SISEDO.CLASSSECTIONV00_VW sec
+        LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (sec."displayName" = crs."displayName")
+        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
+          AND sec."status-code" = 'A'
+          AND sec."primary" = 'false'
+          AND sec."term-id" = '#{term_id}' AND
+          AND sec."primaryAssociatedSectionId" = '#{section_id}'
+        ORDER BY #{CANONICAL_SECTION_ORDERING}
         SQL
         result = connection.select_all sql
       end
@@ -157,19 +187,18 @@ module EdoOracle
     #   - 'term_yr' and 'term_yr' replaced by 'term_id'
     #   - 'instructor_func' has become represented by 'role_code' and 'role_description'
     #   - Does not provide all user profile fields ('email_address', 'student_id', 'affiliations').
-    #     This will require a programatic join at a higher level.
+    #     This will require a programmatic join at a higher level.
     #     See CLC-6239 for implementation of batch LDAP profile requests.
     #
-    # TODO: Update dependencies in CampusOracle::CourseSections and CanvasCsv::SiteMembershipsMaintainer
-    #   to merge user profile data into this feed
-    def self.get_section_instructors(section_id, term_id)
+    # TODO: Update CanvasCsv::SiteMembershipsMaintainer to merge user profile data into this feed.
+    def self.get_section_instructors(term_id, section_id)
       results = []
       use_pooled_connection {
         sql = <<-SQL
           SELECT
             TRIM(instr."formattedName") AS person_name,
             TRIM(instr."givenName") AS first_name,
-            TRIM(instr."givenName") AS last_name,
+            TRIM(instr."familyName") AS last_name,
             instr."campus-uid" AS ldap_uid,
             instr."role-code" AS role_code,
             instr."role-descr" AS role_description

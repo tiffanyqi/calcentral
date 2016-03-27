@@ -62,7 +62,11 @@ module Berkeley
     end
 
     def legacy?
-      self <= Berkeley::Terms.fetch.legacy_cutoff
+      @is_legacy || false
+    end
+
+    def set_as_legacy
+      @is_legacy = true
     end
 
     # Most final grades should appear on the transcript by this date.
