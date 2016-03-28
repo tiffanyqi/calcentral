@@ -4,6 +4,7 @@ module MyActivities
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
+    include Cache::FilteredViewAsFeed
     include MergedModel
 
     def self.providers
@@ -46,6 +47,17 @@ module MyActivities
 
     def dashboard_sites
       MyActivities::DashboardSites.fetch(@uid, @options)
+    end
+
+    def filter_for_view_as(feed)
+      if authentication_state.authenticated_as_delegate?
+        if authentication_state.delegated_privileges[:financial]
+          feed[:activities] = feed[:activities].select {|t| (t[:emitter] == 'Campus Solutions') && t[:cs][:isFinaid]}
+        else
+          feed[:activities] = []
+        end
+      end
+      feed
     end
 
   end

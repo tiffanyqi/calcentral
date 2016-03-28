@@ -46,6 +46,13 @@ module MyTasks
 
     def filter_for_view_as(feed)
       feed[:tasks].delete_if {|t| t[:emitter] == 'Google'}
+      if authentication_state.authenticated_as_delegate?
+        if authentication_state.delegated_privileges[:financial]
+          feed[:tasks] = feed[:tasks].select {|t| (t[:emitter] == 'Campus Solutions') && t[:cs][:isFinaid]}
+        else
+          feed[:tasks] = []
+        end
+      end
       feed
     end
 
