@@ -184,7 +184,7 @@ module EdoOracle
     # EDO equivalent of CampusOracle::Queries.get_section_instructors
     # Changes:
     #   - 'ccn' replaced by 'section_id' argument
-    #   - 'term_yr' and 'term_yr' replaced by 'term_id'
+    #   - 'term_yr' and 'term_cd' replaced by 'term_id'
     #   - 'instructor_func' has become represented by 'role_code' and 'role_description'
     #   - Does not provide all user profile fields ('email_address', 'student_id', 'affiliations').
     #     This will require a programmatic join at a higher level.
@@ -220,6 +220,32 @@ module EdoOracle
         results = connection.select_all(sql)
       }
       stringify_ints! results
+    end
+
+    # EDO equivalent of CampusOracle::Queries.terms
+    # Changes:
+    #   - 'term_yr' and 'term_cd' replaced by 'term_id'
+    #   - 'term_status', 'term_status_desc', and 'current_tb_term_flag' are not present.
+    #     No indication of past, current, or future term status
+    #   - Multiple entries for each term due to differing start and end dates that
+    #     may exist for LAW as compared to GRAD, UGRAD, or UCBX
+    def self.terms
+      result = []
+      use_pooled_connection {
+        sql = <<-SQL
+        SELECT
+          term."STRM" as term_code,
+          trim(term."DESCR") AS term_name,
+          term."TERM_BEGIN_DT" AS term_start_date,
+          term."TERM_END_DT" AS term_end_date
+        FROM
+          SISEDO.TERM_TBL_VW term
+        ORDER BY
+          term_start_date desc
+        SQL
+        result = connection.select_all(sql)
+      }
+      result
     end
 
   end

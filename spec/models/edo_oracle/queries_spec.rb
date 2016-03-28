@@ -94,4 +94,18 @@ describe EdoOracle::Queries, :ignore => true do
       end
     end
   end
+
+  describe '.terms', :testext => true do
+    let(:expected_keys) { ['term_code', 'term_name', 'term_start_date', 'term_end_date'] }
+    it 'returns terms' do
+      results = EdoOracle::Queries.terms
+      results.each do |result|
+        expect(result).to have_keys(expected_keys)
+      end
+      result_codes = results.collect { |result| result['term_code'] }
+      # check for Spring 2015 - Summer 2017 terms
+      expect(result_codes).to include('2152', '2155', '2158', '2162', '2165', '2168', '2172', '2175')
+    end
+  end
+
 end
