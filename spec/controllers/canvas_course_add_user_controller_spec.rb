@@ -64,6 +64,11 @@ describe CanvasCourseAddUserController do
             allow_any_instance_of(Canvas::Admins).to receive(:admin_user?).and_return(false)
             allow_any_instance_of(Canvas::CourseUser).to receive(:course_user).and_return(canvas_course_student_hash)
           end
+          context 'advisor in view-as mode' do
+            let(:make_request) { get :course_user_roles, request_params }
+            before { allow(Settings.features).to receive(:reauthentication).and_return false }
+            it_behaves_like 'an unauthorized endpoint for users in advisor-view-as mode'
+          end
 
           it 'returns canvas root url and course id' do
             get :course_user_roles, request_params

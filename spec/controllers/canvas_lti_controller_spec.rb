@@ -7,10 +7,7 @@ describe CanvasLtiController do
     'canvas_masquerading_user_id' => canvas_masquerading_user_id
   }}
   let(:lti) do
-    obj = double
-    allow(obj).to receive(:get_custom_param) do |key|
-      lti_values[key]
-    end
+    allow(obj = double).to receive(:get_custom_param) { |key| lti_values[key] }
     obj
   end
   let(:canvas_masquerading_user_id) { CanvasLtiController::EMPTY_MASQUERADE_VALUE }
@@ -30,7 +27,7 @@ describe CanvasLtiController do
       it 'notes that the authentication is valid only for LTI' do
         subject.send(:authenticate_by_lti, lti)
         expect(session['canvas_masquerading_user_id']).to eq canvas_masquerading_user_id
-        expect(session['lti_authenticated_only']).to be_truthy
+        expect(session['lti_authenticated_only']).to be true
       end
       it 'does not initiate a view-as session' do
         subject.send(:authenticate_by_lti, lti)
@@ -42,6 +39,27 @@ describe CanvasLtiController do
         subject.send(:authenticate_by_lti, lti)
         expect(session).not_to include 'canvas_masquerading_user_id'
         expect(session['lti_authenticated_only']).to be_falsey
+      end
+    end
+  end
+
+  describe 'advisor-view-as restriction' do
+    before do
+      allow(Settings.features).to receive(:reauthentication).and_return false
+    end
+    context 'when the user is logged into CalCentral' do
+      let(:make_request) {
+        session['user_id'] = lti_values['canvas_user_login_id']
+        subject.send(:authenticate_by_lti, lti)
+        get action
+      }
+      context 'site creation' do
+        let(:action) { :lti_site_creation }
+        it_behaves_like 'an unauthorized endpoint for users in advisor-view-as mode'
+      end
+      context 'manage sections' do
+        let(:action) { :lti_course_manage_official_sections }
+        it_behaves_like 'an unauthorized endpoint for users in advisor-view-as mode'
       end
     end
   end

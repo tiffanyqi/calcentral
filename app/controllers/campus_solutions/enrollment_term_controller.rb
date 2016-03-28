@@ -1,6 +1,6 @@
 module CampusSolutions
   class EnrollmentTermController < CampusSolutionsController
-    include DelegateAccessible
+    include AllowDelegateViewAs
 
     before_filter :authorize_for_enrollments
 

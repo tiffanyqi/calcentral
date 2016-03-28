@@ -1,4 +1,5 @@
 class CanvasProjectProvisionController < ApplicationController
+  include DisallowAdvisorViewAs
   include ClassLogger
 
   before_filter :api_authenticate

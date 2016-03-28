@@ -1,4 +1,5 @@
 class CanvasLtiController < ApplicationController
+  include DisallowAdvisorViewAs
   include ClassLogger
   include CanvasLti::ExternalAppConfigurations
 
