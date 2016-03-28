@@ -1,4 +1,5 @@
 class CanvasController < ApplicationController
+  include DisallowAdvisorViewAs
   include ClassLogger
 
   before_filter :set_cross_origin_access_control_headers, :only => [:external_tools, :user_can_create_site]

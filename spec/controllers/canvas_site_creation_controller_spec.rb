@@ -22,6 +22,11 @@ describe CanvasSiteCreationController do
       let(:make_request) { get :authorizations }
     end
 
+    it_behaves_like 'an unauthorized endpoint for users in advisor-view-as mode' do
+      before { allow(Settings.features).to receive(:reauthentication).and_return false }
+      let(:make_request) { get :authorizations }
+    end
+
     it 'should return sections feed' do
       get :authorizations
       expect(response.status).to eq 200

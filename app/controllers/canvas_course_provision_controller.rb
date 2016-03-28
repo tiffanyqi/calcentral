@@ -1,4 +1,5 @@
 class CanvasCourseProvisionController < ApplicationController
+  include DisallowAdvisorViewAs
   include ClassLogger
   include SpecificToCourseSite
 

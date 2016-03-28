@@ -1,6 +1,6 @@
-module DelegateAccessible
+module AllowDelegateViewAs
   # Indicates that controller endpoints are either publicly available or filtered for delegated access.
-  def accessible_by_delegate?
+  def allow_if_delegate_view_as?
     true
   end
 

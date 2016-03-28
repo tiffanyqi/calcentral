@@ -1,4 +1,5 @@
 class CanvasCourseAddUserController < ApplicationController
+  include DisallowAdvisorViewAs
   include SpecificToCourseSite
 
   before_filter :api_authenticate

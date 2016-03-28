@@ -1,6 +1,6 @@
 class MyCampusLinksController < ApplicationController
   extend Cache::Cacheable
-  include DelegateAccessible
+  include AllowDelegateViewAs
 
   before_filter :api_authenticate
 

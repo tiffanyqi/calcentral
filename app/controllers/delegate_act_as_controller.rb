@@ -1,5 +1,5 @@
 class DelegateActAsController < ActAsController
-  include DelegateAccessible
+  include AllowDelegateViewAs
 
   def initialize
     super act_as_session_key: SessionKey.original_delegate_user_id

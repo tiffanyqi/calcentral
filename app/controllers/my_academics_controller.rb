@@ -1,5 +1,5 @@
 class MyAcademicsController < ApplicationController
-  include DelegateAccessible
+  include AllowDelegateViewAs
   before_filter :api_authenticate
   before_filter :authorize_for_enrollments
 

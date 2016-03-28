@@ -1,4 +1,5 @@
 class OecTasksController < ApplicationController
+  include DisallowAdvisorViewAs
   include ClassLogger
 
   before_action :api_authenticate

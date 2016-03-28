@@ -51,12 +51,18 @@ class ApplicationController < ActionController::Base
 
   # Only a small subset of student API feeds are available to a delegate, and so
   # these methods filter controller endpoints by default.
-  def accessible_by_delegate?
+  def allow_if_delegate_view_as?
     false
   end
+  # The majority of API feeds are available to advisors during view-as mode. Remove advisor access by overriding this method.
+  def allow_if_advisor_view_as?
+    true
+  end
   def deny_if_filtered
-    filtered = !accessible_by_delegate? && current_user.authenticated_as_delegate?
-    raise Pundit::NotAuthorizedError.new("By delegate #{current_user.original_delegate_user_id}") if filtered
+    deny_delegate = !allow_if_delegate_view_as? && current_user.authenticated_as_delegate?
+    raise Pundit::NotAuthorizedError.new("By delegate #{current_user.original_delegate_user_id}") if deny_delegate
+    deny_advisor = !allow_if_advisor_view_as? && current_user.authenticated_as_advisor?
+    raise Pundit::NotAuthorizedError.new("By advisor #{current_user.original_advisor_user_id}") if deny_advisor
   end
 
   def delete_reauth_cookie

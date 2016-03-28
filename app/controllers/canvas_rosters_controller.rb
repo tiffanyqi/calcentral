@@ -1,4 +1,5 @@
 class CanvasRostersController < RostersController
+  include DisallowAdvisorViewAs
   include ClassLogger
   include SpecificToCourseSite
 

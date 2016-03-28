@@ -1,4 +1,5 @@
 class CanvasCourseGradeExportController < ApplicationController
+  include DisallowAdvisorViewAs
   include SpecificToCourseSite
 
   before_action :api_authenticate_401, :except => [:is_official_course]

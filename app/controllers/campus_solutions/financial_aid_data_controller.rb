@@ -1,6 +1,6 @@
 module CampusSolutions
   class FinancialAidDataController < CampusSolutionsController
-    include DelegateAccessible
+    include AllowDelegateViewAs
 
     before_filter :authorize_for_financial
 
