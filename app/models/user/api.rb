@@ -31,7 +31,7 @@ module User
     end
 
     def preferred_name
-      @override_name || @user_attributes[:default_name] || ''
+      @override_name || @user_attributes[:defaultName] || ''
     end
 
     def preferred_name=(val)
@@ -134,9 +134,9 @@ module User
     end
 
     def get_feed_internal
-      given_first_name = @user_attributes[:given_first_name]
-      first_name = @user_attributes[:first_name]
-      last_name = @user_attributes[:last_name]
+      given_first_name = @user_attributes[:givenFirstName]
+      first_name = @user_attributes[:firstName]
+      last_name = @user_attributes[:lastName]
       google_mail = User::Oauth2Data.get_google_email @uid
       canvas_mail = User::Oauth2Data.get_canvas_email @uid
       current_user_policy = authentication_state.policy
@@ -155,7 +155,7 @@ module User
         lastName: last_name,
         fullName: first_name + ' ' + last_name,
         givenFirstName: given_first_name,
-        givenFullName: given_first_name + ' ' + @user_attributes[:family_name],
+        givenFullName: given_first_name + ' ' + @user_attributes[:familyName],
         isGoogleReminderDismissed: is_google_reminder_dismissed,
         isCalendarOptedIn: is_calendar_opted_in,
         hasCanvasAccount: Canvas::Proxy.has_account?(@uid),
@@ -168,19 +168,19 @@ module User
         hasFinancialsTab: has_financials_tab?(roles),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
         hasPhoto: !!User::Photo.fetch(@uid, @options),
-        inEducationAbroadProgram: @user_attributes[:education_abroad],
+        inEducationAbroadProgram: @user_attributes[:educationAbroad],
         googleEmail: google_mail,
         canvasEmail: canvas_mail,
-        officialBmailAddress: @user_attributes[:official_bmail_address],
-        primaryEmailAddress: @user_attributes[:primary_email_address],
+        officialBmailAddress: @user_attributes[:officialBmailAddress],
+        primaryEmailAddress: @user_attributes[:primaryEmailAddress],
         preferredName: self.preferred_name,
         roles: roles,
         uid: @uid,
-        sid: @user_attributes[:student_id],
-        campusSolutionsID: @user_attributes[:campus_solutions_id],
-        isCampusSolutionsStudent: @user_attributes[:campus_solutions_student],
+        sid: @user_attributes[:studentId],
+        campusSolutionsID: @user_attributes[:campusSolutionsId],
+        isCampusSolutionsStudent: @user_attributes[:campusSolutionsStudent],
         isDelegateUser: is_delegate_user?,
-        showSisProfileUI: @user_attributes[:sis_profile_visible]
+        showSisProfileUI: @user_attributes[:sisProfileVisible]
       }
       filter_user_api_for_delegator(feed) if authentication_state.authenticated_as_delegate?
       feed

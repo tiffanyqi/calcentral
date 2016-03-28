@@ -21,19 +21,19 @@ module User
       first_name = get_campus_attribute('first_name', :string) || ''
       last_name = get_campus_attribute('last_name', :string) || ''
       {
-        campus_solutions_student: campus_solutions_student,
-        sis_profile_visible: @sis_profile_visible,
+        campusSolutionsStudent: campus_solutions_student,
+        sisProfileVisible: @sis_profile_visible,
         roles: @roles,
-        default_name: get_campus_attribute('person_name', :string),
-        first_name: first_name,
-        last_name: last_name,
-        given_first_name: (@edo_attributes && @edo_attributes[:given_name]) || first_name || '',
-        family_name: (@edo_attributes && @edo_attributes[:family_name]) || last_name || '',
-        student_id: get_campus_attribute('student_id', :numeric_string),
-        campus_solutions_id: get_campus_attribute('campus_solutions_id', :string),
-        primary_email_address: get_campus_attribute('email_address', :string),
-        official_bmail_address: get_campus_attribute('official_bmail_address', :string),
-        education_abroad: !!@oracle_attributes[:education_abroad]
+        defaultName: get_campus_attribute('person_name', :string),
+        firstName: first_name,
+        lastName: last_name,
+        givenFirstName: (@edo_attributes && @edo_attributes[:given_name]) || first_name || '',
+        familyName: (@edo_attributes && @edo_attributes[:family_name]) || last_name || '',
+        studentId: get_campus_attribute('student_id', :numeric_string),
+        campusSolutionsId: get_campus_attribute('campus_solutions_id', :string),
+        primaryEmailAddress: get_campus_attribute('email_address', :string),
+        officialBmailAddress: get_campus_attribute('official_bmail_address', :string),
+        educationAbroad: !!@oracle_attributes[:education_abroad]
       }
     end
 

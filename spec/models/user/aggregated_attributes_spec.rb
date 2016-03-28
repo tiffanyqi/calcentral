@@ -32,11 +32,11 @@ describe User::AggregatedAttributes do
   describe 'all systems available' do
     context 'Hub feed' do
       it 'should return edo user attributes' do
-        expect(subject[:campus_solutions_student]).to be true
-        expect(subject[:sis_profile_visible]).to be true
-        expect(subject[:official_bmail_address]).to eq bmail_from_edo
-        expect(subject[:campus_solutions_id]).to eq campus_solutions_id
-        expect(subject[:student_id]).to eq student_id
+        expect(subject[:campusSolutionsStudent]).to be true
+        expect(subject[:sisProfileVisible]).to be true
+        expect(subject[:officialBmailAddress]).to eq bmail_from_edo
+        expect(subject[:campusSolutionsId]).to eq campus_solutions_id
+        expect(subject[:studentId]).to eq student_id
       end
     end
   end
@@ -57,13 +57,13 @@ describe User::AggregatedAttributes do
     context 'active student' do
       let(:is_active_student) { true }
       it 'should prefer EDO' do
-        expect(subject[:official_bmail_address]).to eq bmail_from_edo
+        expect(subject[:officialBmailAddress]).to eq bmail_from_edo
       end
     end
     context 'former student' do
       let(:is_active_student) { false }
       it 'should fall back to LDAP' do
-        expect(subject[:official_bmail_address]).to eq bmail_from_ldap
+        expect(subject[:officialBmailAddress]).to eq bmail_from_ldap
       end
     end
     context 'applicant' do
@@ -84,7 +84,7 @@ describe User::AggregatedAttributes do
       end
       let(:is_active_student) { false }
       it 'should prefer EDO' do
-        expect(subject[:official_bmail_address]).to eq bmail_from_edo
+        expect(subject[:officialBmailAddress]).to eq bmail_from_edo
       end
     end
     context 'broken Hub API' do
@@ -96,7 +96,7 @@ describe User::AggregatedAttributes do
         }
       end
       it 'relies on LDAP and Oracle' do
-        expect(subject[:official_bmail_address]).to eq bmail_from_ldap
+        expect(subject[:officialBmailAddress]).to eq bmail_from_ldap
       end
     end
   end
@@ -121,8 +121,8 @@ describe User::AggregatedAttributes do
         allow(Settings.features).to receive(:cs_profile_visible_for_legacy_users).and_return false
       end
       it 'should hide SIS profile for legacy students' do
-        expect(subject[:campus_solutions_student]).to be false
-        expect(subject[:sis_profile_visible]).to be false
+        expect(subject[:campusSolutionsStudent]).to be false
+        expect(subject[:sisProfileVisible]).to be false
       end
     end
     context 'with the fallback disabled' do
@@ -130,8 +130,8 @@ describe User::AggregatedAttributes do
         allow(Settings.features).to receive(:cs_profile_visible_for_legacy_users).and_return true
       end
       it 'should show SIS profile for legacy students' do
-        expect(subject[:campus_solutions_student]).to be false
-        expect(subject[:sis_profile_visible]).to be true
+        expect(subject[:campusSolutionsStudent]).to be false
+        expect(subject[:sisProfileVisible]).to be true
       end
     end
   end

@@ -36,6 +36,15 @@ describe StudentOverviewController do
       let(:applicant) { false }
       let(:user_attributes) { { roles: { student: student, exStudent: ex_student, applicant: applicant } } }
 
+      context 'feature flag false' do
+        let(:student) { true }
+        before do
+          allow(Settings.features).to receive(:cs_advisor_student_lookup).and_return false
+        end
+        it 'should raise an error' do
+          expect(subject.status).to eq 403
+        end
+      end
       context 'not a student' do
         it 'should raise an error' do
           expect(subject.status).to eq 403
