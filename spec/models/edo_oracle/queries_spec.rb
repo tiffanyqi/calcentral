@@ -17,7 +17,7 @@ describe EdoOracle::Queries, :ignore => true do
     it 'fetches expected data' do
       results = EdoOracle::Queries.get_instructing_sections(uid, [term])
       expect(results.count).to eq 17
-      expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
+      expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
       results.each do |result|
         expect(result['term_id']).to eq '2102'
         expect(result).to have_keys(expected_keys)
@@ -31,7 +31,7 @@ describe EdoOracle::Queries, :ignore => true do
     it 'fetches expected data' do
       results = EdoOracle::Queries.get_enrolled_sections(uid, [term])
       expect(results.count).to eq 5
-      expected_keys = ['section_id', 'term_id', 'course_title', 'course_title_short', 'dept_name', 'primary', 'section_num', 'instruction_format', 'display_name', 'catalog_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix', 'enroll_limit', 'enroll_status', 'waitlist_position', 'units', 'grade', 'grading_basis']
+      expected_keys = ['section_id', 'term_id', 'course_title', 'course_title_short', 'dept_name', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'display_name', 'catalog_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix', 'enroll_limit', 'enroll_status', 'waitlist_position', 'units', 'grade', 'grading_basis']
       results.each do |result|
         expect(result['term_id']).to eq '2102'
         expect(result).to have_keys(expected_keys)
@@ -45,7 +45,7 @@ describe EdoOracle::Queries, :ignore => true do
       expect(results.count).to eq 2
       expect(results[0]['section_id']).to eq '26340'
       expect(results[1]['section_id']).to eq '26341'
-      expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
+      expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
       results.each do |result|
         expect(result['term_id']).to eq '2168'
         expected_keys.each do |expected_key|
@@ -59,7 +59,7 @@ describe EdoOracle::Queries, :ignore => true do
     it 'returns a set of secondary sections' do
       results = EdoOracle::Queries.get_associated_secondary_sections(term_id, '31586')
       expect(results).to be_present
-      expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
+      expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
       results.each do |result|
         expect(result).to have_keys(expected_keys)
         expect(result['display_name']).to eq 'ESPM 155AC'

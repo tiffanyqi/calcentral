@@ -167,8 +167,16 @@ module MyAcademics
           section[:slug] = section_slug(section)
           section[:url] = "#{course[:url]}/#{section[:slug]}"
         else
-          associated_primary = course[:sections].find do |prim|
-            prim[:is_primary_section] && Berkeley::CourseOptions.nested?(course_option, prim[:section_number], section[:section_number], section[:instruction_format])
+          if section[:associated_primary_id]
+            # Logic for Campus Solutions course data, which provides explicit primary-secondary association by ID.
+            associated_primary = course[:sections].find do |primary|
+              primary[:is_primary_section] && (primary[:ccn] == section[:associated_primary_id])
+            end
+          else
+            # Logic for legacy course data.
+            associated_primary = course[:sections].find do |primary|
+              primary[:is_primary_section] && Berkeley::CourseOptions.nested?(course_option, primary[:section_number], section[:section_number], section[:instruction_format])
+            end
           end
           section[:associatedWithPrimary] = section_slug associated_primary
         end

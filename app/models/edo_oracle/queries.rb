@@ -19,6 +19,7 @@ module EdoOracle
       sec."primary" AS primary,
       sec."sectionNumber" AS section_num,
       sec."component-code" as instruction_format,
+      sec."primaryAssociatedSectionId" as primary_associated_section_id,
       crs."displayName" AS display_name,
       crs."catalogNumber-formatted" AS catalog_id,
       crs."catalogNumber-number" AS catalog_root,

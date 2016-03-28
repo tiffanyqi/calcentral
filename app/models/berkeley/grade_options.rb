@@ -3,6 +3,24 @@ module Berkeley
     extend self
     include ClassLogger
 
+    # Translate Campus Solutions basis codes.
+
+    def grade_option_from_basis(grading_basis)
+      case grading_basis
+        when 'GRD'
+          'Letter'
+        when 'LAW'
+          'Law'
+        when 'CNC', 'EPN', 'PNP'
+          'P/NP'
+        when 'ESU', 'SUS'
+          'S/U'
+        else
+          ''
+      end
+    end
+
+    # Translate legacy Oracle codes.
     # See http://registrar.berkeley.edu/Records/gradeskey.html for background.
     #
     # A course's "credit_code" describes how the student's grade transcript should be interpreted
