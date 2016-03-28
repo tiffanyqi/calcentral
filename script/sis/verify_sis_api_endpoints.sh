@@ -1,12 +1,43 @@
 #!/bin/bash
 
-# cd to 'calcentral' directory
-cd $( dirname "${BASH_SOURCE[0]}" )/../..
+echo_usage() {
+  echo; echo "USAGE"; echo "    ${0} [Path to YAML file]"; echo
+  echo; echo "[OPTIONAL] Environment variables:"; echo
+  echo "  export TRANSITIVE_DEPENDENCIES=true"
+  echo
+  echo "    The 'TRANSITIVE_DEPENDENCIES' are endpoints used by the Hub when proxying to"
+  echo "    Campus Solutions. You won't find them referenced in CalCentral"
+  echo "    code. To test these particular endpoints, in addition to the rest,"
+  echo "    set environment variable as above."
+  echo
+  echo "  export UID_CROSSWALK=123"
+  echo "  export SID=456"
+  echo "  export CAMPUS_SOLUTIONS_ID=789"
+  echo
+  echo "    The script uses hard-coded IDs (i.e., test users) to construct"
+  echo "    API calls. You can override those defaults with the environment"
+  echo "    variables above."
+  echo
+}
+
+[[ $# -gt 0 ]] || { echo_usage; exit 1; }
+
+# Parse YAML
+yaml_file="${1}"
+if [[ ! -f "${yaml_file}" ]] ; then
+  echo; echo "[ERROR]"
+  echo "    YAML file not found: ${yaml_file}"; echo
+  exit 1
+fi
 
 LOG_RELATIVE_PATH="log/sis_api_test_$(date +"%Y-%m-%d_%H%M%S")"
 LOG_DIRECTORY="${PWD}/${LOG_RELATIVE_PATH}"
 CURL_STDOUT_LOG_FILE="${LOG_DIRECTORY}/curl_stdout.log"
 API_ERROR_INDICATORS="error\|unable to find\|not authorized\|no service\|not available"
+
+UID_CROSSWALK=${UID_CROSSWALK:-1079058}
+SID=${SID:-25129630}
+CAMPUS_SOLUTIONS_ID=${CAMPUS_SOLUTIONS_ID:-25129630}
 
 parse_yaml() {
   # --------------------------------------------
@@ -115,48 +146,13 @@ verify_sis_endpoints() {
   echo
 }
 
-# --------------------
-# Verify API endpoints: Crosswalk, Campus Solutions, Hub
-# https://jira.ets.berkeley.edu/jira/browse/CLC-6123
-# --------------------
-
-if [[ $# -eq 0 ]] ; then
-  echo; echo "USAGE"; echo "    ${0} [Path to YAML file]"; echo
-  echo; echo "[OPTIONAL] Environment variables:"; echo
-  echo "  export TRANSITIVE_DEPENDENCIES=true"
-  echo
-  echo "    The 'TRANSITIVE_DEPENDENCIES' are endpoints used by the Hub when proxying to"
-  echo "    Campus Solutions. You won't find them referenced in CalCentral"
-  echo "    code. To test these particular endpoints, in addition to the rest,"
-  echo "    set environment variable as above."
-  echo
-  echo "  export UID_CROSSWALK=123"
-  echo "  export SID=456"
-  echo "  export CAMPUS_SOLUTIONS_ID=789"
-  echo
-  echo "    The script uses hard-coded IDs (i.e., test users) to construct"
-  echo "    API calls. You can override those defaults with the environment"
-  echo "    variables above."
-  echo
-  exit 0
-fi
-
-# Load YAML file
-yaml_filename="${1}"
-
-if [[ ! -f "${yaml_filename}" ]] ; then
-  echo; echo "ERROR"; echo "    YAML file not found: ${yaml_filename}"; echo
-  exit 0
-fi
+# cd to 'calcentral' directory
+cd $( dirname "${BASH_SOURCE[0]}" )/../..
 
 eval $(parse_yaml ${PWD}/config/settings.yml 'yml_')
-eval $(parse_yaml ${yaml_filename} 'yml_')
+eval $(parse_yaml ${yaml_file} 'yml_')
 
 # --------------------
-UID_CROSSWALK=${UID_CROSSWALK:-1079058}
-SID=${SID:-25129630}
-CAMPUS_SOLUTIONS_ID=${CAMPUS_SOLUTIONS_ID:-25129630}
-
 CROSSWALK_BASE_URL="${yml_calnet_crosswalk_proxy_base_url//\'}"
 CROSSWALK_CREDENTIALS="${yml_calnet_crosswalk_proxy_username//\'}:${yml_calnet_crosswalk_proxy_password//\'}"
 
@@ -270,6 +266,11 @@ CS_ENROLLMENT_CARD=(
 )
 verify_sis_endpoints "Campus Solutions" CS_ENROLLMENT_CARD "cs_enrollment_card" "${yml_features_cs_enrollment_card}"
 
+CS_BILLING=(
+  "/BILLING_API/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01"
+)
+verify_sis_endpoints "Campus Solutions" CS_BILLING "cs_billing" "${yml_features_cs_billing}"
+
 if [ "${yml_features_cs_profile_emergency_contacts}" == "true" ] ; then
   echo; echo "----------------------------------------------------------------------------------------------------"
   echo "  [INFO] No API endpoints associated with cs_profile_emergency_contacts feature flag"; echo
@@ -282,7 +283,6 @@ HUB_GENERAL=(
   "/${CAMPUS_SOLUTIONS_ID}/contacts"
   "/${CAMPUS_SOLUTIONS_ID}/demographic"
   "/${CAMPUS_SOLUTIONS_ID}/work-experiences"
-  "/${CAMPUS_SOLUTIONS_ID}?id-type=uid"
 )
 verify_sis_endpoints "Hub" HUB_GENERAL
 
