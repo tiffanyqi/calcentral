@@ -1,6 +1,6 @@
 describe EdoOracle::Queries, :ignore => true do
-  # BIOENG C125 - Fall 2016
-  let(:section_ids) { ['26340', '26341'] }
+  # BIOLOGY 1A - Fall 2016
+  let(:section_ids) { ['13572', '31352'] }
   let(:term_id) { '2168' }
 
   it_behaves_like 'an Oracle driven data source' do
@@ -43,8 +43,8 @@ describe EdoOracle::Queries, :ignore => true do
     it 'returns sections specified by id array' do
       results = EdoOracle::Queries.get_sections_by_ids(term_id, section_ids)
       expect(results.count).to eq 2
-      expect(results[0]['section_id']).to eq '26340'
-      expect(results[1]['section_id']).to eq '26341'
+      expect(results[0]['section_id']).to eq '13572'
+      expect(results[1]['section_id']).to eq '31352'
       expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
       results.each do |result|
         expect(result['term_id']).to eq '2168'
@@ -105,6 +105,16 @@ describe EdoOracle::Queries, :ignore => true do
       result_codes = results.collect { |result| result['term_code'] }
       # check for Spring 2015 - Summer 2017 terms
       expect(result_codes).to include('2152', '2155', '2158', '2162', '2165', '2168', '2172', '2175')
+    end
+  end
+
+  describe '.get_enrolled_students', :textext => true do
+    let(:expected_keys) { ['ldap_uid', 'student_id', 'enroll_status', 'pnp_flag'] }
+    it 'returns enrollments for section' do
+      results = EdoOracle::Queries.get_enrolled_students(section_ids[0], term_id)
+      results.each do |enrollment|
+        expect(enrollment).to have_keys(expected_keys)
+      end
     end
   end
 

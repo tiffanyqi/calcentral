@@ -249,5 +249,41 @@ module EdoOracle
       result
     end
 
+    # EDO equivalent of CampusOracle::Queries.get_section_instructors
+    # Changes:
+    #   - 'ccn' replaced by 'section_id' argument
+    #   - 'term_yr' and 'term_yr' replaced by 'term_id'
+    #   - 'calcentral_student_info_vw' data (first_name, last_name, student_email_address,
+    #     affiliations) are not present as these are provided by the CalNet LDAP or HubEdos module.
+    #   - ''
+    def self.get_enrolled_students(section_id, term_id)
+      result = []
+      use_pooled_connection {
+        sql = <<-SQL
+        SELECT
+          enroll."CAMPUS_UID" AS ldap_uid,
+          enroll."STUDENT_ID" AS student_id,
+          enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
+          trim(enroll."GRADING_BASIS_CODE") AS pnp_flag
+        FROM SISEDO.ENROLLMENTV00_VW enroll
+        LEFT OUTER JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+          enroll."CLASS_SECTION_ID" = sec."id" AND
+          enroll."CS_COURSE_ID" = sec."cs-course-id" AND
+          enroll."STDNT_ENRL_STATUS_CODE" != 'D' AND
+          enroll."TERM_ID" = sec."term-id" AND
+          enroll."SESSION_ID" = sec."session-id" AND
+          enroll."OFFERINGNUMBER" = sec."offeringNumber" AND
+          enroll."CLASS_SECTIONNUMBER" = sec."number"
+        )
+        WHERE
+          enroll."CLASS_SECTION_ID" = '#{section_id}' AND
+          enroll."TERM_ID" = '#{term_id}'
+        SQL
+        puts "SQL query: #{sql.inspect}"
+        result = connection.select_all(sql)
+      }
+      stringify_ints! result
+    end
+
   end
 end
