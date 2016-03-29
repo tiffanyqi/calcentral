@@ -6,17 +6,20 @@ var angular = require('angular');
  * Advisor student overview controller
  */
 angular.module('calcentral.controllers').controller('AdvisorStudentOverviewController', function(apiService, advisorStudentOverviewFactory, $routeParams, $scope) {
-  $scope.student = {
-    isLoading: true
+  $scope.academics = {
+    isLoading: true,
+    excludeLinksToRegistrar: true
   };
 
   var loadInformation = function() {
-    advisorStudentOverviewFactory.getPerson({
+    advisorStudentOverviewFactory.getStudent({
       uid: $routeParams.uid
     }).then(function(data) {
-      $scope.student.attributes = data.data;
+      $scope.student = data.data;
       apiService.util.setTitle($scope.student.attributes.defaultName);
-      $scope.student.isLoading = false;
+      // The university_requirements widget is also used on My Academics.
+      $scope.academics.universityRequirements = $scope.student.academics.requirements;
+      $scope.academics.isLoading = false;
     });
   };
 

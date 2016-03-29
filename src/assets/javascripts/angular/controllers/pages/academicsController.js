@@ -11,6 +11,9 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
   var title = 'My Academics';
   apiService.util.setTitle(title);
   $scope.backToText = title;
+  $scope.academics = {
+    isLoading: true
+  };
 
   var checkPageExists = function(page) {
     if (!page) {
@@ -165,7 +168,8 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.isAcademicInfoAvailable = !!($scope.hasRegstatus ||
                                        ($scope.semesters && $scope.semesters.length) ||
                                        ($scope.requirements && $scope.requirements.length));
-
+    // The university_requirements widget is also used on Advising Dashboard.
+    $scope.academics.universityRequirements = $scope.requirements;
     $scope.showStatusAndBlocks = !$scope.filteredForDelegate &&
                                  ($scope.hasRegStatus ||
                                  ($scope.regblocks && !$scope.regblocks.noStudentId) ||
@@ -196,5 +200,6 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
       var getBadges = badgesFactory.getBadges().success(loadBadges);
       $q.all([getAcademics, getBadges]).then(filterWidgets);
     }
+    $scope.academics.isLoading = false;
   });
 });
