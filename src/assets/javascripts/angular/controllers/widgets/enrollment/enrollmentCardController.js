@@ -7,7 +7,7 @@ var _ = require('lodash');
  * Enrollment Card Controller
  * Main controller for the enrollment card on the My Academics page
  */
-angular.module('calcentral.controllers').controller('EnrollmentCardController', function(apiService, enrollmentFactory, holdsFactory, $scope, $q) {
+angular.module('calcentral.controllers').controller('EnrollmentCardController', function(apiService, badgesFactory, enrollmentFactory, holdsFactory, $scope, $q) {
   var backToText = 'Class Enrollment';
   var sections = [
     {
@@ -30,6 +30,23 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     {
       id: 'adjust',
       title: 'Adjust',
+      show: true
+    }
+  ];
+  var sectionsLaw = [
+    {
+      id: 'plan_law',
+      title: 'Plan',
+      show: true
+    },
+    {
+      id: 'decide',
+      title: 'Appointment Start Times',
+      show: true
+    },
+    {
+      id: 'adjust',
+      title: 'Enroll',
       show: true
     }
   ];
@@ -85,7 +102,12 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   };
 
   var setSections = function(data) {
-    data.sections = angular.copy(sections);
+    if ($scope.enrollment.isLawStudent) {
+      data.sections = angular.copy(sectionsLaw);
+    } else {
+      data.sections = angular.copy(sections);
+    }
+
     return data;
   };
 
@@ -183,12 +205,22 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   };
 
   /**
+   * Parse the badges
+   * We need this information to see whether they are a law student
+   */
+  var parseBadges = function(data) {
+    $scope.enrollment.isLawStudent = _.get(data, 'data.studentInfo.isLawStudent');
+  };
+
+  var getBadges = badgesFactory.getBadges().then(parseBadges);
+
+  /**
    * We should check the roles of the current person since we should only load
    * the enrollment card for students
    */
   var checkRoles = function(data) {
     if (_.get(data, 'student')) {
-      loadEnrollmentData().then(loadAcademicPlan);
+      getBadges.then(loadEnrollmentData).then(loadAcademicPlan);
       loadHolds();
     } else {
       stopMainSpinner();
