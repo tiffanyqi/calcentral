@@ -1,15 +1,12 @@
 describe MyAcademics::Semesters do
 
-  let(:initial_feed) { {} }
-  let(:feed) { feed = initial_feed; MyAcademics::Semesters.new(random_id).merge(feed); feed }
+  let(:feed) { {}.tap { |feed| MyAcademics::Semesters.new(random_id).merge(feed) } }
 
   before do
-    allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
     allow_any_instance_of(CampusOracle::UserCourses::Transcripts).to receive(:get_all_transcripts).and_return transcript_data
   end
 
   let(:term_keys) { ['2013-B', '2013-D', '2014-B', '2014-C'] }
-  let(:enrollment_data) { Hash[term_keys.map{|key| [key, enrollment_term(key)]}] }
   let(:transcript_data) do
     {
       semesters: Hash[term_keys.map{|key| [key, transcript_term(key)]}],
@@ -17,8 +14,12 @@ describe MyAcademics::Semesters do
     }
   end
 
-  def enrollment_term(key)
-    rand(2..4).times.map { course_enrollment(key) }
+  def generate_enrollment_data(opts={})
+    Hash[term_keys.map{|key| [key, enrollment_term(key, opts)]}]
+  end
+
+  def enrollment_term(key, opts={})
+    rand(2..4).times.map { course_enrollment(key, opts) }
   end
 
   def transcript_term(key)
@@ -28,31 +29,34 @@ describe MyAcademics::Semesters do
     }
   end
 
-  def course_enrollment(term_key)
+  def course_enrollment(term_key, opts={})
     term_yr, term_cd = term_key.split('-')
     dept = random_string(5)
     catid = rand(999).to_s
-    {
+    enrollment = {
       id: "#{dept}-#{catid}-#{term_key}",
       slug: "#{dept}-#{catid}",
       course_code: "#{dept.upcase} #{catid}",
       term_yr: term_yr,
       term_cd: term_cd,
       dept: dept.upcase,
-      dept_desc: dept,
       catid: catid,
       course_catalog: catid,
-      course_option: 'A1',
       emitter: 'Campus',
       name: random_string(15).capitalize,
-      sections: course_enrollment_sections,
+      sections: course_enrollment_sections(opts),
       role: 'Student'
     }
+    unless opts[:edo_source]
+      enrollment[:dept_desc] = dept
+      enrollment[:course_option] = 'A1'
+    end
+    enrollment
   end
 
-  def course_enrollment_sections
-    sections = [ course_enrollment_section(is_primary_section: true) ]
-    rand(1..3).times { sections << course_enrollment_section(is_primary_section: false) }
+  def course_enrollment_sections(opts)
+    sections = [ course_enrollment_section(opts.merge(is_primary_section: true)) ]
+    rand(1..3).times { sections << course_enrollment_section(opts.merge(is_primary_section: false)) }
     sections
   end
 
@@ -60,17 +64,15 @@ describe MyAcademics::Semesters do
     format = opts[:format] || ['LEC', 'DIS', 'SEM'].sample
     section_number = opts[:section_number] || "00#{rand(9)}"
     is_primary_section = opts[:is_primary_section] || false
-    {
-      ccn: random_ccn,
+    section = {
+      associated_primary_id: opts[:associated_primary_id],
+      ccn: opts[:ccn] || random_ccn,
       instruction_format: format,
       is_primary_section: is_primary_section,
       section_label: "#{format} #{section_number}",
       section_number: section_number,
       units: (is_primary_section ? rand(1.0..5.0).round(1) : 0.0),
-      pnp_flag: 'N ',
-      cred_cd: nil,
       grade: (is_primary_section ? random_grade : nil),
-      cross_listed_flag: nil,
       schedules: [{
         buildingName: random_string(10),
         roomNumber: rand(9).to_s,
@@ -78,6 +80,14 @@ describe MyAcademics::Semesters do
       }],
       instructors: [{name: random_name, uid: random_id}]
     }
+    if opts[:edo_source]
+      section[:grading_basis] = 'GRD'
+    else
+      section[:cross_listed_flag] = nil
+      section[:pnp_flag] = 'N '
+      section[:cred_cd] = nil
+    end
+    section
   end
 
   def course_transcript_matching_enrollment(enrollment)
@@ -126,38 +136,74 @@ describe MyAcademics::Semesters do
     end
   end
 
-  include_examples 'semester ordering'
-
-  it 'should preserve structure of enrollment data' do
-    feed[:semesters].each do |s|
-      expect(s[:hasEnrollmentData]).to eq true
-      enrollment_semester = enrollment_data["#{s[:termYear]}-#{s[:termCode]}"]
-      expect(s[:classes].length).to eq enrollment_semester.length
-      s[:classes].each do |course|
-        matching_enrollment = enrollment_semester.find { |e| e[:id] == course[:course_id] }
-        expect(course[:sections].count).to eq matching_enrollment[:sections].count
-        expect(course[:title]).to eq matching_enrollment[:name]
-        expect(course[:courseCatalog]).to eq matching_enrollment[:course_catalog]
-        expect(course[:url]).to include matching_enrollment[:slug]
-        [:course_code, :dept, :dept_desc, :role, :slug].each do |key|
-          expect(course[key]).to eq matching_enrollment[key]
+  shared_examples 'a good and proper munge' do
+    include_examples 'semester ordering'
+    it 'should preserve structure of enrollment data' do
+      pp feed
+      feed[:semesters].each do |s|
+        expect(s[:hasEnrollmentData]).to eq true
+        enrollment_semester = enrollment_data["#{s[:termYear]}-#{s[:termCode]}"]
+        expect(s[:classes].length).to eq enrollment_semester.length
+        s[:classes].each do |course|
+          matching_enrollment = enrollment_semester.find { |e| e[:id] == course[:course_id] }
+          expect(course[:sections].count).to eq matching_enrollment[:sections].count
+          expect(course[:title]).to eq matching_enrollment[:name]
+          expect(course[:courseCatalog]).to eq matching_enrollment[:course_catalog]
+          expect(course[:url]).to include matching_enrollment[:slug]
+          [:course_code, :dept, :dept_desc, :role, :slug].each do |key|
+            expect(course[key]).to eq matching_enrollment[key]
+          end
         end
       end
     end
+    it 'should include additional credits' do
+      expect(feed[:additionalCredits]).to eq transcript_data[:additional_credits]
+    end
   end
 
-  context 'multiple primaries' do
-    let(:multiple_primary_enrollment_term) do
-      term = enrollment_term('2013-D')
-      term.first[:course_option] = 'E1'
-      term.first[:sections] = [
-        course_enrollment_section(is_primary_section: true, format: 'LEC', section_number: '001'),
-        course_enrollment_section(is_primary_section: true, format: 'LEC', section_number: '002'),
-        course_enrollment_section(is_primary_section: false, format: 'DIS', section_number: '101'),
-        course_enrollment_section(is_primary_section: false, format: 'DIS', section_number: '201')
-      ]
-      term
+  context 'legacy academic data' do
+    before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2014'
+      allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
+      expect(EdoOracle::Queries).not_to receive :get_enrolled_sections
     end
+    let(:enrollment_data) { generate_enrollment_data(edo_source: false)  }
+    it_should_behave_like 'a good and proper munge'
+  end
+
+  context 'Campus Solutions academic data' do
+    before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2009'
+      expect(CampusOracle::Queries).not_to receive :get_enrolled_sections
+      allow_any_instance_of(EdoOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
+    end
+    let(:enrollment_data) { generate_enrollment_data(edo_source: true) }
+    it_should_behave_like 'a good and proper munge'
+  end
+
+  context 'mixed legacy and Campus Solutions academic data' do
+    let(:legacy_enrollment_data) do
+      {
+        '2013-B' => enrollment_term('2013-B', edo_source: false),
+        '2013-D' => enrollment_term('2013-B', edo_source: false)
+      }
+    end
+    let(:edo_enrollment_data) {
+      {
+        '2014-B' => enrollment_term('2013-B', edo_source: true),
+        '2014-C' => enrollment_term('2013-B', edo_source: true)
+      }
+    }
+    let(:enrollment_data) { legacy_enrollment_data.merge edo_enrollment_data }
+    before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'fall-2013'
+      allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return legacy_enrollment_data
+      allow_any_instance_of(EdoOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return edo_enrollment_data
+    end
+    it_should_behave_like 'a good and proper munge'
+  end
+
+  shared_examples 'a good and proper multiple-primary munge' do
     let(:term_keys) { ['2013-D'] }
     let(:enrollment_data) { {'2013-D' => multiple_primary_enrollment_term} }
 
@@ -196,18 +242,52 @@ describe MyAcademics::Semesters do
     end
   end
 
-  it 'should include additional credits' do
-    expect(feed[:additionalCredits]).to eq transcript_data[:additional_credits]
+  context 'legacy multiple-primary munge' do
+    before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2014'
+      allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
+    end
+    let(:multiple_primary_enrollment_term) do
+      enrollment_term('2013-D', edo_source: false).tap do |term|
+        term.first[:course_option] = 'E1'
+        term.first[:sections] = [
+          course_enrollment_section(is_primary_section: true, format: 'LEC', section_number: '001'),
+          course_enrollment_section(is_primary_section: true, format: 'LEC', section_number: '002'),
+          course_enrollment_section(is_primary_section: false, format: 'DIS', section_number: '101'),
+          course_enrollment_section(is_primary_section: false, format: 'DIS', section_number: '201')
+        ]
+      end
+    end
+    it_should_behave_like 'a good and proper multiple-primary munge'
+  end
+
+  context 'Campus Solutions multiple-primary munge' do
+    before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2009'
+      allow_any_instance_of(EdoOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
+    end
+    let(:multiple_primary_enrollment_term) do
+      enrollment_term('2013-D', edo_source: true).tap do |term|
+        term.first[:sections] = [
+          course_enrollment_section(ccn: '10001', is_primary_section: true, format: 'LEC', section_number: '001'),
+          course_enrollment_section(ccn: '10002', is_primary_section: true, format: 'LEC', section_number: '002'),
+          course_enrollment_section(ccn: '10003', is_primary_section: false, format: 'DIS', section_number: '101', associated_primary_id: '10001'),
+          course_enrollment_section(ccn: '10004', is_primary_section: false, format: 'DIS', section_number: '201', associated_primary_id: '10002')
+        ]
+        term
+      end
+    end
+    it_should_behave_like 'a good and proper multiple-primary munge'
   end
 
   context 'when enrollment data for a term is unavailable' do
     let(:term_yr) { '2013' }
     let(:term_cd) { 'D' }
+    let(:enrollment_data) { generate_enrollment_data(edo_source: false)  }
+    before { allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data.except('2013-D') }
+
     let(:feed_semester) { feed[:semesters].find { |s| s[:name] == Berkeley::TermCodes.to_english(term_yr, term_cd) } }
     let(:transcript_semester) { transcript_data[:semesters]["#{term_yr}-#{term_cd}"] }
-
-    let(:sparse_enrollment_data) { enrollment_data.except "#{term_yr}-#{term_cd}" }
-    before { allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return sparse_enrollment_data }
 
     it 'should include transcript data' do
       expect(feed_semester[:hasEnrollmentData]).to eq false
@@ -220,9 +300,9 @@ describe MyAcademics::Semesters do
         expect(course[:course_code]).to eq "#{transcript_match[:dept]} #{transcript_match[:courseCatalog]}"
         expect(course[:sections]).to eq []
         expect(course[:transcript]).to eq [{
-                units: transcript_match[:units],
-                grade: transcript_match[:grade]
-              }]
+          units: transcript_match[:units],
+          grade: transcript_match[:grade]
+        }]
       end
     end
 
@@ -242,10 +322,14 @@ describe MyAcademics::Semesters do
   end
 
   describe 'merging grade data' do
-    before { allow(Settings.terms).to receive(:fake_now).and_return(fake_now) }
+    before do
+      allow(Settings.terms).to receive(:fake_now).and_return(fake_now)
+      allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
+    end
 
     let(:term_yr) { '2013' }
     let(:term_cd) { 'D' }
+    let(:enrollment_data) { generate_enrollment_data(edo_source: false)  }
     let(:feed_semester) { feed[:semesters].find { |s| s[:name] == Berkeley::TermCodes.to_english(term_yr, term_cd) } }
     let(:feed_semester_grades) { feed_semester[:classes].map { |course| course[:transcript] } }
 
@@ -331,9 +415,13 @@ describe MyAcademics::Semesters do
       enrollment
     end
 
-    let(:initial_feed) { {filteredForDelegate: true} }
+    let(:feed) { {filteredForDelegate: true}.tap { |feed| MyAcademics::Semesters.new(random_id).merge(feed) } }
+    let(:enrollment_data) { generate_enrollment_data(edo_source: false) }
     let(:enrollment_summary_data) { Hash[term_keys.map{|key| [key, enrollment_summary_term(key)]}] }
-    before { allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_enrollments_summary).and_return enrollment_summary_data }
+    before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2014'
+      allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_enrollments_summary).and_return enrollment_summary_data
+    end
 
     include_examples 'semester ordering'
 

@@ -68,7 +68,10 @@ describe EdoOracle::UserCourses::Base do
         })
       ]
     end
-    before { expect(EdoOracle::Queries).to receive(:get_enrolled_sections).and_return enrollment_query_results }
+    before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2013'
+      expect(EdoOracle::Queries).to receive(:get_enrolled_sections).and_return enrollment_query_results
+    end
     let(:feed) { {}.tap { |feed| EdoOracle::UserCourses::Base.new(user_id: random_id).merge_enrollments feed } }
     subject { feed['2016-D'] }
     its(:size) { should eq 1 }
@@ -209,6 +212,7 @@ describe EdoOracle::UserCourses::Base do
       ]
     end
     before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2013'
       expect(EdoOracle::Queries).to receive(:get_instructing_sections).and_return instructing_query_results
       expect(EdoOracle::Queries).to receive(:get_associated_secondary_sections).with('2168', '44207').and_return secondary_query_results
       %w(44206 44807 45807 54807).each do |primary_section_id|

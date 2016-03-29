@@ -17,6 +17,7 @@ module EdoOracle
       end
 
       def merge_enrollments(campus_classes)
+        return if @non_legacy_academic_terms.empty?
         previous_item = {}
         EdoOracle::Queries.get_enrolled_sections(@uid, @non_legacy_academic_terms).each do |row|
           if (item = row_to_feed_item(row, previous_item))
@@ -28,6 +29,7 @@ module EdoOracle
       end
 
       def merge_instructing(campus_classes)
+        return if @non_legacy_academic_terms.empty?
         previous_item = {}
         cross_listing_tracker = {}
         EdoOracle::Queries.get_instructing_sections(@uid, @non_legacy_academic_terms).each do |row|
@@ -122,6 +124,7 @@ module EdoOracle
           section_number: row['section_num']
         }
         section_data[:units] = row['units'] if row['primary']
+        section_data[:associated_primary_id] = row['primary_associated_section_id'] unless row['primary']
 
         # Grading and waitlist data only apply to enrollment records and will be skipped for instructors.
         if row.include? 'enroll_status'
@@ -137,7 +140,7 @@ module EdoOracle
         if cross_listing_tracker && row['primary']
           cross_listing_slug = row.values_at('term_id', 'cs_course_id', 'instruction_format', 'section_num').join '-'
           if (cross_listings = cross_listing_tracker[cross_listing_slug])
-            # The front end expects cross-listed primaries to share a unique identifer, called 'hash'
+            # The front end expects cross-listed primaries to share a unique identifier, called 'hash'
             # because it was formerly implemented as an Oracle hash.
             section_data[:cross_listing_hash] = cross_listing_slug
             if cross_listings.length == 1

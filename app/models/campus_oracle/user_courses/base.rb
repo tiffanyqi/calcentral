@@ -21,6 +21,7 @@ module CampusOracle
       end
 
       def merge_enrollments(campus_classes)
+        return if @legacy_academic_terms.empty?
         previous_item = {}
         enrollments = CampusOracle::Queries.get_enrolled_sections(@uid, @legacy_academic_terms)
         enrollments.each do |row|
@@ -35,6 +36,7 @@ module CampusOracle
       end
 
       def merge_explicit_instructing(campus_classes)
+        return if @legacy_academic_terms.empty?
         previous_item = {}
         assigneds = CampusOracle::Queries.get_instructing_sections(@uid, @legacy_academic_terms)
         is_instructing = assigneds.present?

@@ -7,10 +7,15 @@ module MyAcademics
     end
 
     def merge(data)
-      @filtered = data[:filteredForDelegate]
+      legacy_user_courses = CampusOracle::UserCourses::All.new(user_id: @uid)
+      edo_user_courses = EdoOracle::UserCourses::All.new(user_id: @uid)
 
-      all_user_courses = CampusOracle::UserCourses::All.new(user_id: @uid)
-      enrollments = @filtered ? all_user_courses.get_enrollments_summary : all_user_courses.get_all_campus_courses
+      if (@filtered = data[:filteredForDelegate])
+        enrollments = legacy_user_courses.get_enrollments_summary.merge(edo_user_courses.get_enrollments_summary)
+      else
+        enrollments = legacy_user_courses.get_all_campus_courses.merge(edo_user_courses.get_all_campus_courses)
+      end
+
       transcripts = CampusOracle::UserCourses::Transcripts.new(user_id: @uid).get_all_transcripts
 
       data[:additionalCredits] = transcripts[:additional_credits] if transcripts[:additional_credits].any?
@@ -44,7 +49,11 @@ module MyAcademics
           primaries_count = 0
           mapped_course[:sections].each do |section|
             if section[:is_primary_section]
-              section[:gradeOption] = Berkeley::GradeOptions.grade_option_for_enrollment(section[:cred_cd], section[:pnp_flag])
+              if section.has_key? :grading_basis
+                section[:gradeOption] = Berkeley::GradeOptions.grade_option_from_basis(section[:grading_basis])
+              else
+                section[:gradeOption] = Berkeley::GradeOptions.grade_option_for_enrollment(section[:cred_cd], section[:pnp_flag])
+              end
               primaries_count += 1
             end
           end

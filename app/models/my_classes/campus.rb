@@ -10,11 +10,15 @@ module MyClasses
 
     def classes_for_term(term)
       classes = []
-      all_courses = CampusOracle::UserCourses::All.new(user_id: @uid).get_all_campus_courses
+      if term.legacy?
+        all_courses = CampusOracle::UserCourses::All.new(user_id: @uid).get_all_campus_courses
+      else
+        all_courses = EdoOracle::UserCourses::All.new(user_id: @uid).get_all_campus_courses
+      end
       semester_key = "#{term.year}-#{term.code}"
       if all_courses[semester_key]
         # Ask My Academics for the URL to this class info page in My Academics, and to merge
-        # any crosslisted courses for non-students.
+        # any cross-listed courses for non-students.
         my_academics = MyAcademics::Semesters.new(@uid)
         listing_specific_properties = [:catid, :course_catalog, :course_code, :dept, :dept_desc, :id]
         all_courses[semester_key].each do |course|
@@ -63,7 +67,13 @@ module MyClasses
       end
 
       secondary_sections.each do |sec|
-        primary = primary_sections.find { |prim| Berkeley::CourseOptions.nested?(campus_course[:course_option], prim[:section_number], sec[:section_number], sec[:instruction_format]) }
+        if sec[:associated_primary_id]
+          # Logic for Campus Solutions course data, which provides explicit primary-secondary association by ID.
+          primary = primary_sections.find { |primary| primary[:ccn] == sec[:associated_primary_id] }
+        else
+          # Logic for legacy course data.
+          primary = primary_sections.find { |primary| Berkeley::CourseOptions.nested?(campus_course[:course_option], primary[:section_number], sec[:section_number], sec[:instruction_format]) }
+        end
         # Fallback if we can't find anything nested
         primary ||= primary_sections.first
         primary_in_class_list = class_list.find { |course| course[:sections].first[:ccn] == primary[:ccn]}

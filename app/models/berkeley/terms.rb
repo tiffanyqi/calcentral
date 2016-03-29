@@ -56,6 +56,10 @@ module Berkeley
       end
     end
 
+    def self.legacy?(term_yr, term_cd)
+      self.fetch.campus[Berkeley::TermCodes.to_slug(term_yr, term_cd)].legacy?
+    end
+
     def initialize(options)
       terms = {}
       future_terms = []
