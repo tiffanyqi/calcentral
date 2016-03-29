@@ -28,7 +28,7 @@ module CalnetLdap
     end
 
     def search_by_uid(uid)
-      filter = Net::LDAP::Filter.eq('uid', uid.to_s)
+      filter = uids_filter([uid])
       results = search(base: PEOPLE_DN, filter: filter)
       if results.empty?
         results = search(base: GUEST_DN, filter: filter)
@@ -36,7 +36,26 @@ module CalnetLdap
       results.first
     end
 
+    # TODO Ask CalNet for suggested maximum number of search values.
+    # For now, it would be safest to limit batches to 20 or less.
+    def search_by_uids(uids)
+      results = search(base: PEOPLE_DN, filter: uids_filter(uids))
+      if results.length != uids.length
+        remaining_uids = uids - results.collect {|entry| entry[:uid].first}
+        results.concat search(base: GUEST_DN, filter: uids_filter(remaining_uids))
+      end
+      results
+    end
+
     private
+
+    def uids_filter(uids)
+      filters = nil
+      uids.each do |uid|
+        filters = filters.nil? ? Net::LDAP::Filter.eq('uid', uid.to_s) : filters | Net::LDAP::Filter.eq('uid', uid.to_s)
+      end
+      filters
+    end
 
     def search(args = {})
       ActiveSupport::Notifications.instrument('proxy', {class: self.class, search: args}) do
