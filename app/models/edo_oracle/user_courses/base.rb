@@ -119,17 +119,20 @@ module EdoOracle
         section_data = {
           ccn: row['section_id'].to_s,
           instruction_format: row['instruction_format'],
-          is_primary_section: row['primary'],
+          is_primary_section: to_boolean(row['primary']),
           section_label: "#{row['instruction_format']} #{row['section_num']}",
           section_number: row['section_num']
         }
-        section_data[:units] = row['units'] if row['primary']
-        section_data[:associated_primary_id] = row['primary_associated_section_id'] unless row['primary']
+        if section_data[:is_primary_section]
+          section_data[:units] = row['units']
+        else
+          section_data[:associated_primary_id] = row['primary_associated_section_id']
+        end
 
         # Grading and waitlist data only apply to enrollment records and will be skipped for instructors.
         if row.include? 'enroll_status'
           section_data[:grade] = row['grade'].strip if row['grade'].present?
-          section_data[:grading_basis] = row['grading_basis'] if row['primary']
+          section_data[:grading_basis] = row['grading_basis'] if section_data[:is_primary_section]
           if row['enroll_status'] == 'W'
             section_data[:waitlistPosition] = row['waitlist_position'].to_i
             section_data[:enroll_limit] = row['enroll_limit'].to_i
@@ -137,7 +140,7 @@ module EdoOracle
         end
 
         # Cross-listed primaries are tracked only when merging instructed sections.
-        if cross_listing_tracker && row['primary']
+        if cross_listing_tracker && section_data[:is_primary_section]
           cross_listing_slug = row.values_at('term_id', 'cs_course_id', 'instruction_format', 'section_num').join '-'
           if (cross_listings = cross_listing_tracker[cross_listing_slug])
             # The front end expects cross-listed primaries to share a unique identifier, called 'hash'
@@ -164,6 +167,10 @@ module EdoOracle
             end
           end
         end
+      end
+
+      def to_boolean(string)
+        string == 'true'
       end
 
     end

@@ -36,7 +36,7 @@ describe EdoOracle::UserCourses::Base do
           'grade' => 'B',
           'grading_basis' => 'GRD',
           'instruction_format' => 'LEC',
-          'primary' => true,
+          'primary' => 'true',
           'section_id' => '44203',
           'section_num' => '001',
           'units' => '4',
@@ -48,7 +48,7 @@ describe EdoOracle::UserCourses::Base do
           'grade' => nil,
           'grading_basis' => 'PNP',
           'instruction_format' => 'LEC',
-          'primary' => true,
+          'primary' => 'true',
           'section_id' => '44206',
           'section_num' => '002',
           'units' => '3',
@@ -60,7 +60,7 @@ describe EdoOracle::UserCourses::Base do
           'grade' => nil,
           'grading_basis' => nil,
           'instruction_format' => 'DIS',
-          'primary' => false,
+          'primary' => 'false',
           'section_id' => '44214',
           'section_num' => '201',
           'units' => nil,
@@ -98,7 +98,7 @@ describe EdoOracle::UserCourses::Base do
         expect(section[:instruction_format]).to eq enrollment['instruction_format']
         expect(section[:section_label]).to eq "#{enrollment['instruction_format']} #{enrollment['section_num']}"
         expect(section[:section_number]).to eq enrollment['section_num']
-        if enrollment['primary']
+        if (enrollment['primary'] == 'true')
           expect(section[:grading_basis]).to eq enrollment['grading_basis']
           expect(section[:is_primary_section]).to eq true
           expect(section[:units]).to eq enrollment['units']
@@ -128,14 +128,14 @@ describe EdoOracle::UserCourses::Base do
         base_course_data.merge({
           'cs_course_id' => '10001',
           'instruction_format' => 'LEC',
-          'primary' => true,
+          'primary' => 'true',
           'section_id' => '44206',
           'section_num' => '001'
         }),
         base_course_data.merge({
           'cs_course_id' => '10001',
           'instruction_format' => 'LEC',
-          'primary' => true,
+          'primary' => 'true',
           'section_id' => '44207',
           'section_num' => '002'
         }),
@@ -150,7 +150,7 @@ describe EdoOracle::UserCourses::Base do
           'dept_name' => 'MUSIC',
           'display_name' => 'MUSIC 99C',
           'instruction_format' => 'LEC',
-          'primary' => true,
+          'primary' => 'true',
           'section_id' => '44807',
           'section_num' => '001'
         }),
@@ -165,7 +165,7 @@ describe EdoOracle::UserCourses::Base do
           'dept_name' => 'MUSIC',
           'display_name' => 'MUSIC C105',
           'instruction_format' => 'LEC',
-          'primary' => true,
+          'primary' => 'true',
           'section_id' => '45807',
           'section_num' => '001'
         }),
@@ -180,7 +180,7 @@ describe EdoOracle::UserCourses::Base do
           'dept_name' => 'MEC ENG',
           'display_name' => 'MEC ENG C112',
           'instruction_format' => 'LEC',
-          'primary' => true,
+          'primary' => 'true',
           'section_id' => '54807',
           'section_num' => '001'
         }),
@@ -191,21 +191,21 @@ describe EdoOracle::UserCourses::Base do
         base_course_data.merge({
           'cs_course_id' => '10001',
           'instruction_format' => 'DIS',
-          'primary' => false,
+          'primary' => 'false',
           'section_id' => '44210',
           'section_num' => '201'
         }),
         base_course_data.merge({
           'cs_course_id' => '10001',
           'instruction_format' => 'DIS',
-          'primary' => false,
+          'primary' => 'false',
           'section_id' => '44211',
           'section_num' => '202'
         }),
         base_course_data.merge({
           'cs_course_id' => '10001',
           'instruction_format' => 'DIS',
-          'primary' => false,
+          'primary' => 'false',
           'section_id' => '44211',
           'section_num' => '202'
         })
