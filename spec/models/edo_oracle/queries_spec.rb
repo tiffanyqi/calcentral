@@ -64,7 +64,7 @@ describe EdoOracle::Queries, :ignore => true do
         expect(result).to have_keys(expected_keys)
         expect(result['display_name']).to eq 'ESPM 155AC'
         expect(result['instruction_format']).to eq 'DIS'
-        expect(result['primary']).to eq false
+        expect(result['primary']).to eq 'false'
         expect(result['term_id']).to eq term_id
       end
     end
