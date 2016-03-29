@@ -34,7 +34,7 @@ module EdoOracle
     #   - 'cred_cd' and 'pnp_flag' replaced by 'grading_basis'
     def self.get_enrolled_sections(person_id, terms = nil)
       result = []
-      terms_list = terms.map { |term| "'#{term.campus_solutions_id}'" }.join ','
+      terms_list = terms_query_list(terms)
       use_pooled_connection do
         sql = <<-SQL
         SELECT
@@ -67,7 +67,7 @@ module EdoOracle
     #   - 'cs-course-id' added.
     def self.get_instructing_sections(person_id, terms = nil)
       result = []
-      terms_list = terms.map { |term| "'#{term.campus_solutions_id}'" }.join ','
+      terms_list = terms_query_list(terms)
       use_pooled_connection do
         sql = <<-SQL
         SELECT
@@ -283,6 +283,27 @@ module EdoOracle
         result = connection.select_all(sql)
       }
       stringify_ints! result
+    end
+
+    # EDO equivalent of CampusOracle::Queries.has_instructor_history?
+    def self.has_instructor_history?(ldap_uid, instructor_terms = nil)
+      result = {}
+      terms_list = terms_query_list(instructor_terms)
+      use_pooled_connection {
+        sql = <<-SQL
+        SELECT
+          count(instr."term-id") AS course_count
+        FROM
+          SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
+        WHERE
+          instr."campus-uid" = '#{ldap_uid}' AND
+          rownum < 2 AND
+          instr."term-id" IN (#{terms_list})
+        SQL
+        result = connection.select_one(sql)
+      }
+      Rails.logger.debug "Instructor #{ldap_uid} history for terms #{instructor_terms} count = #{result}"
+      result["course_count"].to_i > 0
     end
 
   end
