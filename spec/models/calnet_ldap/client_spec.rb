@@ -69,6 +69,23 @@ describe CalnetLdap::Client do
     expect(results[0][:mail][0]).to eq 'rjaffe@lmi.net'
   end
 
+  it 'performs a bulk query on a mixed person-and-guest set of UIDs', testext: true do
+    results = subject.search_by_uids %w(212373 11000023)
+    expect(results).to have(2).items
+    expect(results.find { |result| result[:sn][0] == 'TEST' }).to be_present
+    expect(results.find { |result| result[:sn][0] == 'Jaffe' }).to be_present
+  end
+
+  it 'batches bulk queries' do
+    lots_of_uids = (CalnetLdap::Client::BATCH_QUERY_MAXIMUM * 4 + 1).times.map { rand(9999).to_s }
+    fake_search_results = CalnetLdap::Client::BATCH_QUERY_MAXIMUM.times.map do
+      {uid: [rand(9999).to_s]}
+    end
+    expect(subject).to receive(:search).exactly(5).times.with(hash_including base: CalnetLdap::Client::PEOPLE_DN).and_return fake_search_results
+    expect(subject).to receive(:search).exactly(1).times.with(hash_including base: CalnetLdap::Client::GUEST_DN).and_return fake_search_results
+    subject.search_by_uids lots_of_uids
+  end
+
   it 'deals gracefully with errors' do
     allow_any_instance_of(Net::LDAP).to receive(:search).and_return(nil)
     results = subject.search_by_uid random_id

@@ -8,6 +8,9 @@ module CalnetLdap
     GUEST_DN = 'ou=guests,dc=berkeley,dc=edu'
     TIMESTAMP_FORMAT = '%Y%m%d%H%M%SZ'
 
+    # TODO Ask CalNet for suggested maximum number of search values.
+    BATCH_QUERY_MAXIMUM = 20
+
     def initialize
       @ldap = Net::LDAP.new({
         host: Settings.ldap.host,
@@ -36,25 +39,24 @@ module CalnetLdap
       results.first
     end
 
-    # TODO Ask CalNet for suggested maximum number of search values.
-    # For now, it would be safest to limit batches to 20 or less.
     def search_by_uids(uids)
-      results = search(base: PEOPLE_DN, filter: uids_filter(uids))
-      if results.length != uids.length
-        remaining_uids = uids - results.collect {|entry| entry[:uid].first}
-        results.concat search(base: GUEST_DN, filter: uids_filter(remaining_uids))
+      [].tap do |results|
+        uids.each_slice(BATCH_QUERY_MAXIMUM).map do |uid_slice|
+          people_results = search(base: PEOPLE_DN, filter: uids_filter(uid_slice))
+          results.concat people_results
+          if people_results.length != uid_slice.length
+            remaining_uids = uid_slice - people_results.collect { |entry| entry[:uid].first }
+            guest_results = search(base: GUEST_DN, filter: uids_filter(remaining_uids))
+            results.concat guest_results
+          end
+        end
       end
-      results
     end
 
     private
 
     def uids_filter(uids)
-      filters = nil
-      uids.each do |uid|
-        filters = filters.nil? ? Net::LDAP::Filter.eq('uid', uid.to_s) : filters | Net::LDAP::Filter.eq('uid', uid.to_s)
-      end
-      filters
+      uids.map { |uid| Net::LDAP::Filter.eq('uid', uid.to_s) }.inject :|
     end
 
     def search(args = {})
