@@ -180,10 +180,10 @@ describe 'My Academics Status and Blocks', :testui => true do
 
                   shows_residency_info_link = my_academics_page.res_info_link?
                   if api_res_status == 'Non-Resident'
-                    residency_info_link_works = WebDriverUtils.verify_external_link(driver, my_academics_page.res_info_link_element, 'Tuition, Fees, & Residency | Office of the Registrar')
                     it "shows a 'residency info' link for UID #{uid}" do
                       expect(shows_residency_info_link).to be true
                     end
+                    residency_info_link_works = WebDriverUtils.verify_external_link(driver, my_academics_page.res_info_link_element, 'Tuition, Fees, & Residency | Office of the Registrar')
                     it "offers a valid 'residency info' link for UID #{uid}" do
                       expect(residency_info_link_works).to be true
                     end
