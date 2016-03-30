@@ -96,6 +96,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def check_directly_authenticated
+    unless current_user.directly_authenticated?
+      raise Pundit::NotAuthorizedError.new("By View-As user #{current_user.real_user_id}")
+    end
+  end
+
   def check_google_access
     authorize current_user, :access_google?
   end

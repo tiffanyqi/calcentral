@@ -22,7 +22,7 @@ module CampusSolutions
     def exclude_acting_as_users
       return unless Settings.features.prevent_acting_as_users_from_posting
       unless current_user.directly_authenticated?
-        logger.warn "ACT-AS: User #{current_user.original_user_id} attempted access to an endpoint which is forbidden while acting-as user #{current_user.user_id}"
+        logger.warn "ACT-AS: User #{current_user.real_user_id} attempted access to an endpoint which is forbidden while acting-as user #{current_user.user_id}"
         render :nothing => true, :status => 403
       end
     end

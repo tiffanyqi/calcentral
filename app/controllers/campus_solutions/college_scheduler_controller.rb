@@ -1,6 +1,8 @@
 module CampusSolutions
   class CollegeSchedulerController < CampusSolutionsController
 
+    before_filter :check_directly_authenticated
+
     # GET /college_scheduler/:acad_career/:term_id
     def get
       proxy = CampusSolutions::CollegeSchedulerUrl.new(user_id: session['user_id'], term_id: params['term_id'], acad_career: params['acad_career'])
