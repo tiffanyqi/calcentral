@@ -99,7 +99,7 @@ class ApiCSFinAidDataPage
   end
 
   def budget_term_data
-    budget['semester'].nil? ? nil : budget['fullyear']['data']
+    budget['semester'].nil? ? nil : budget['semester']['data']
   end
 
   def budget_total
