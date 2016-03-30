@@ -30,8 +30,8 @@ module Berkeley
       term_cd = db_row['term_cd']
       term_yr = db_row['term_yr'].to_i
       @code = term_cd
-      @name = db_row['term_name']
       @year = term_yr
+      @name = db_row['term_name']
       @slug = TermCodes.to_slug(term_yr, term_cd)
       @classes_start = db_row['term_start_date'].to_date.in_time_zone.to_datetime
       @instruction_end = db_row['term_end_date'].to_date.in_time_zone.to_datetime.end_of_day
