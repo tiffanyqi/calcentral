@@ -40,15 +40,6 @@ describe 'My Profile Basic Info', :testui => true, :order => :defined do
 
     end
 
-    describe 'viewing official name' do
-
-      it 'shows the first name, middle name, last name, and suffix' do
-        @basic_info_card.name_element.when_visible WebDriverUtils.page_load_timeout
-        expect(@basic_info_card.name).to eql("#{@student_info['officialName']['firstName']} #{@student_info['officialName']['lastName']}")
-      end
-
-    end
-
     describe 'viewing and editing preferred name' do
 
       before(:each) do
