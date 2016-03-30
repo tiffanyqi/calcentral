@@ -86,4 +86,17 @@ describe Berkeley::Terms do
     end
   end
 
+  describe '.legacy_group' do
+    let(:terms) { Berkeley::Terms.fetch.campus.values[0..1] }
+    it 'returns terms grouped by data source' do
+      terms[0].instance_eval { @is_legacy = false }
+      terms[1].instance_eval { @is_legacy = true }
+      result = Berkeley::Terms.legacy_group(terms)
+      expect(result[:legacy].count).to eq 1
+      expect(result[:legacy][0]).to eq terms[1]
+      expect(result[:sisedo].count).to eq 1
+      expect(result[:sisedo][0]).to eq terms[0]
+    end
+  end
+
 end

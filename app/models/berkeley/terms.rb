@@ -97,5 +97,16 @@ module Berkeley
       @campus = terms
     end
 
+    def self.legacy_group(terms)
+      terms = terms.to_a
+      sisedo_terms, legacy_terms = [], []
+      if terms.count > 0
+        grouped = terms.group_by &:legacy?
+        legacy_terms = grouped[true]
+        sisedo_terms = grouped[false]
+      end
+      return {:legacy => legacy_terms, :sisedo => sisedo_terms}
+    end
+
   end
 end

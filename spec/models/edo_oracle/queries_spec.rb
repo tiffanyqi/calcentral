@@ -110,7 +110,6 @@ describe EdoOracle::Queries, :ignore => true do
     end
   end
 
-
   describe '.get_section_meetings', :testext => true do
     it 'returns meetings for section id specified' do
       results = EdoOracle::Queries.get_section_meetings(fall_term_id, section_ids[0])
@@ -162,10 +161,18 @@ describe EdoOracle::Queries, :ignore => true do
     subject { EdoOracle::Queries.has_instructor_history?(ldap_uid, terms) }
     context 'when user is an instructor' do
       let(:ldap_uid) { '172701' } # Leah A Carroll - Haas Scholars Program Manager and Advisor
+      context 'when terms array is empty' do
+        let(:terms) { [] }
+        it {should eq true}
+      end
       it {should eq true}
     end
     context 'when user is not an instructor' do
       let(:ldap_uid) { '211159' } # Ray Davis - staff / developer
+      context 'when terms array is empty' do
+        let(:terms) { [] }
+        it {should eq false}
+      end
       it {should eq false}
     end
   end
@@ -174,10 +181,18 @@ describe EdoOracle::Queries, :ignore => true do
     subject { EdoOracle::Queries.has_student_history?(ldap_uid, terms) }
     context 'when user has a student history' do
       let(:ldap_uid) { '184270' }
+      context 'when terms array is empty' do
+        let(:terms) { [] }
+        it {should eq true}
+      end
       it {should eq true}
     end
     context 'when user does not have a student history' do
       let(:ldap_uid) { '211159' } # Ray Davis - staff / developer
+      context 'when terms array is empty' do
+        let(:terms) { [] }
+        it {should eq false}
+      end
       it {should eq false}
     end
   end
