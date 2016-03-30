@@ -1,10 +1,34 @@
 describe EdoOracle::Queries, :ignore => true do
+  # Stubbing terms not available in TestExt env
+  let(:summer_2016_db_term) do
+    {
+      'term_yr' => '2016',
+      'term_cd' => 'C',
+      'term_status' => 'CS',
+      'term_status_desc' => 'Current Summer',
+      'term_name' => 'Summer',
+      'current_tb_term_flag' => 'N',
+      'term_start_date' => Time.parse('2016-05-23 00:00:00 UTC'),
+      'term_end_date' => Time.parse('2016-08-12 00:00:00 UTC')
+    }
+  end
+  let(:fall_2016_db_term) do
+    {
+      'term_yr' => '2016',
+      'term_cd' => 'D',
+      'term_status' => 'FT',
+      'term_status_desc' => 'Future Term',
+      'term_name' => 'Fall',
+      'current_tb_term_flag' => 'Y',
+      'term_start_date' => Time.parse('2016-08-13 00:00:00 UTC'),
+      'term_end_date' => Time.parse('2016-12-31 00:00:00 UTC')
+    }
+  end
+  let(:terms) { [Berkeley::Term.new(fall_2016_db_term), Berkeley::Term.new(summer_2016_db_term)] }
+  let(:fall_term_id) { terms[0].campus_solutions_id }
+
   # BIOLOGY 1A - Fall 2016
   let(:section_ids) { ['13572', '31352'] }
-  let(:all_terms) { Berkeley::Terms.fetch.campus }
-  let(:term_slugs) { ['summer-2010', 'fall-2010'] }
-  let(:terms) { term_slugs.collect {|term_slug| all_terms[term_slug] } }
-  let(:fall_term_id) { '2168' }
 
   it_behaves_like 'an Oracle driven data source' do
     subject { EdoOracle::Queries }
@@ -127,7 +151,7 @@ describe EdoOracle::Queries, :ignore => true do
   describe '.get_enrolled_students', :textext => true do
     let(:expected_keys) { ['ldap_uid', 'student_id', 'enroll_status', 'pnp_flag'] }
     it 'returns enrollments for section' do
-      results = EdoOracle::Queries.get_enrolled_students(section_ids[0], term_id)
+      results = EdoOracle::Queries.get_enrolled_students(section_ids[0], fall_term_id)
       results.each do |enrollment|
         expect(enrollment).to have_keys(expected_keys)
       end
@@ -137,10 +161,22 @@ describe EdoOracle::Queries, :ignore => true do
   describe '.has_instructor_history?', :textext => true do
     subject { EdoOracle::Queries.has_instructor_history?(ldap_uid, terms) }
     context 'when user is an instructor' do
-      let(:ldap_uid) { '211449' } # Michael Larkin - Lecturer with College Writing dept
+      let(:ldap_uid) { '172701' } # Leah A Carroll - Haas Scholars Program Manager and Advisor
       it {should eq true}
     end
     context 'when user is not an instructor' do
+      let(:ldap_uid) { '211159' } # Ray Davis - staff / developer
+      it {should eq false}
+    end
+  end
+
+  describe '.has_student_history?', :textext => true do
+    subject { EdoOracle::Queries.has_student_history?(ldap_uid, terms) }
+    context 'when user has a student history' do
+      let(:ldap_uid) { '184270' }
+      it {should eq true}
+    end
+    context 'when user does not have a student history' do
       let(:ldap_uid) { '211159' } # Ray Davis - staff / developer
       it {should eq false}
     end

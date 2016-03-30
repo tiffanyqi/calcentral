@@ -306,5 +306,25 @@ module EdoOracle
       result["course_count"].to_i > 0
     end
 
+    def self.has_student_history?(ldap_uid, student_terms = nil)
+      result = {}
+      terms_list = terms_query_list(student_terms)
+      use_pooled_connection {
+        sql = <<-SQL
+        SELECT
+          count(enroll."TERM_ID") AS enroll_count
+        FROM
+          SISEDO.ENROLLMENTV00_VW enroll
+        WHERE
+          enroll."CAMPUS_UID" = '#{ldap_uid.to_i}' AND
+          rownum < 2 AND
+          enroll."TERM_ID" IN (#{terms_list})
+        SQL
+        result = connection.select_one(sql)
+      }
+      Rails.logger.debug "Student #{ldap_uid} history for terms #{student_terms} count = #{result}"
+      result["enroll_count"].to_i > 0
+    end
+
   end
 end
