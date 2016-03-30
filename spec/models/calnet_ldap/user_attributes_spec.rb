@@ -114,4 +114,13 @@ describe CalnetLdap::UserAttributes do
       expect(feed[:person_name]).to eq 'AFF-GUEST TEST'
     end
   end
+
+  context 'two test users from real LDAP connection', testext: true do
+    let(:feed) { described_class.get_bulk_attributes %w(212373 11000023) }
+    it 'translates attributes' do
+      expect(feed).to have(2).items
+      expect(feed.find { |result| result[:ldap_uid] == '212373' }).to be_present
+      expect(feed.find { |result| result[:ldap_uid] == '11000023' }).to be_present
+    end
+  end
 end
