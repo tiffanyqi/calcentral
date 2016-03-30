@@ -11,5 +11,11 @@ module EdoOracle
     def self.stringified_columns
       %w(section_id campus-uid)
     end
+
+    def self.terms_query_list(terms = nil)
+      terms.try :compact!
+      return '' unless terms.present?
+      terms.map { |term| "'#{term.campus_solutions_id}'" }.join ','
+    end
   end
 end
