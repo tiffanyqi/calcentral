@@ -2,7 +2,7 @@ module EdoOracle
   class Queries < Connection
     include ActiveRecordHelper
 
-    CANONICAL_SECTION_ORDERING = 'dept_name, catalog_root, catalog_prefix nulls first, catalog_suffix nulls first, primary, instruction_format, display_name, section_num'
+    CANONICAL_SECTION_ORDERING = 'dept_name, catalog_root, catalog_prefix nulls first, catalog_suffix nulls first, primary DESC, instruction_format, display_name, section_num'
 
     # Changes from CampusOracle::Queries section columns:
     #   - 'course_cntl_num' now 'section_id'
