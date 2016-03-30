@@ -21,7 +21,8 @@ class StudentOverviewController < ApplicationController
     end
     render json: {
       attributes: attributes,
-      academics: MyAcademics::Merged.new(student_uid).get_feed
+      academics: MyAcademics::Merged.new(student_uid).get_feed,
+      examSchedule: MyAcademics::Exams.new(student_uid).merge
     }
   end
 

@@ -19,6 +19,7 @@ angular.module('calcentral.controllers').controller('AdvisorStudentOverviewContr
       apiService.util.setTitle($scope.student.attributes.defaultName);
       // The university_requirements widget is also used on My Academics.
       $scope.academics.universityRequirements = $scope.student.academics.requirements;
+      $scope.examSchedule = $scope.student.examSchedule;
       $scope.academics.isLoading = false;
     });
   };
