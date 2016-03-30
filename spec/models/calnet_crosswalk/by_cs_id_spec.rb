@@ -8,9 +8,9 @@ describe CalnetCrosswalk::ByCsId do
   end
 
   shared_context 'looking up ids' do
-    context 'looking up cs id' do
+    context 'CS ID lookup with consideration of \'isPrimaryForIdentifierType\' attribute' do
       subject { proxy.lookup_campus_solutions_id }
-      it 'should return the CS ID' do
+      it 'should return the primary CS ID' do
         expect(subject).to eq campus_solutions_id
       end
     end

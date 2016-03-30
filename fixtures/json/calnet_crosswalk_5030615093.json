@@ -4,22 +4,32 @@
       "emailAddress": "heathcliff@berkeley.edu",
       "emailTypeName": "CAMPUS_EMAIL_SERVICE_ADDRESS"
     }],
-    "identifiers": [{
-      "identifierTypeName": "HRMS_EMPLOYEE_ID",
-      "identifierValue": "712611260",
-      "isActive": false,
-      "isPrimaryForIdentifierType": true
-    }, {
-      "identifierTypeName": "CALNET_ID",
-      "identifierValue": "heathcliff",
-      "isActive": true,
-      "isPrimaryForIdentifierType": true
-    }, {
-      "identifierTypeName": "CAMPUS_SOLUTIONS_ID",
-      "identifierValue": "5030615093",
-      "isActive": true,
-      "isPrimaryForIdentifierType": true
-    }],
+    "identifiers": [
+      {
+        "identifierTypeName": "HRMS_EMPLOYEE_ID",
+        "identifierValue": "712611260",
+        "isActive": false,
+        "isPrimaryForIdentifierType": true
+      },
+      {
+        "identifierTypeName": "CALNET_ID",
+        "identifierValue": "heathcliff",
+        "isActive": false,
+        "isPrimaryForIdentifierType": true
+      },
+      {
+        "identifierTypeName": "CAMPUS_SOLUTIONS_ID",
+        "identifierValue": "15938282",
+        "isActive": false,
+        "isPrimaryForIdentifierType": false
+      },
+      {
+        "identifierTypeName": "CAMPUS_SOLUTIONS_ID",
+        "identifierValue": "5030615093",
+        "isActive": false,
+        "isPrimaryForIdentifierType": true
+      }
+    ],
     "uid": "9110492"
   }
 }

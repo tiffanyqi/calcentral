@@ -32,6 +32,12 @@ describe CalnetCrosswalk::ByUid do
       response = proxy.get
       expect(response[:errored]).to eq true
     end
+    context 'Crosswalk \'isPrimaryForIdentifierType\' attribute' do
+      subject { proxy.lookup_campus_solutions_id.to_i }
+      it 'should return the primary CS ID' do
+        expect(subject).to eq 11667051
+      end
+    end
     include_context 'looking up ids'
   end
 

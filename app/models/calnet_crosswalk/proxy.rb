@@ -109,7 +109,8 @@ module CalnetCrosswalk
         feed = response[:feed]
         if feed.present?
           feed['Person']['identifiers'].each do |identifier|
-            if identifier['identifierTypeName'] == id_type
+            # Conservative check on isPrimaryForIdentifierType: evaluate to false if and only if element is present and equal to false.
+            if (identifier['identifierTypeName'] == id_type) && !(identifier['isPrimaryForIdentifierType'].to_s =~ /false/i)
               id = identifier['identifierValue']
               break
             end
