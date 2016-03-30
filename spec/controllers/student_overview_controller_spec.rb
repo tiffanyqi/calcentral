@@ -4,6 +4,7 @@ describe StudentOverviewController do
   let(:student_uid) { random_id }
   let(:can_view_as_for_all_uids) { false }
   let(:user_attributes) { double }
+  let(:academics) { { requirements: { name: 'UC Entry Level Writing', status: 'met' } } }
 
   before do
     session['user_id'] = session_user_id
@@ -21,6 +22,7 @@ describe StudentOverviewController do
     let(:session_user_id) { random_id }
     before do
       allow(User::AggregatedAttributes).to receive(:new).with(student_uid).and_return double get_feed: user_attributes
+      allow(MyAcademics::Merged).to receive(:new).with(student_uid).and_return double get_feed: academics
     end
     subject { get :student, student_uid: student_uid }
 
@@ -54,21 +56,23 @@ describe StudentOverviewController do
         let(:student) { true }
         it 'should succeed' do
           expect(subject.status).to eq 200
-          expect(JSON.parse(subject.body).deep_symbolize_keys).to eq user_attributes
+          feed = JSON.parse(subject.body).deep_symbolize_keys
+          expect(feed[:attributes]).to eq user_attributes
+          expect(feed[:academics]).to eq academics
         end
       end
       context 'ex-student' do
         let(:ex_student) { true }
         it 'should succeed' do
           expect(subject.status).to eq 200
-          expect(JSON.parse(subject.body).deep_symbolize_keys).to eq user_attributes
+          expect(JSON.parse(subject.body).deep_symbolize_keys[:attributes]).to eq user_attributes
         end
       end
       context 'applicant' do
         let(:applicant) { true }
         it 'should succeed' do
           expect(subject.status).to eq 200
-          expect(JSON.parse(subject.body).deep_symbolize_keys).to eq user_attributes
+          expect(JSON.parse(subject.body).deep_symbolize_keys[:attributes]).to eq user_attributes
         end
       end
     end

@@ -15,11 +15,14 @@ class StudentOverviewController < ApplicationController
 
   def student
     student_uid = params.require 'student_uid'
-    person = User::AggregatedAttributes.new(student_uid).get_feed
-    unless person[:roles][:student] || person[:roles][:exStudent] || person[:roles][:applicant]
+    attributes = User::AggregatedAttributes.new(student_uid).get_feed
+    unless attributes[:roles][:student] || attributes[:roles][:exStudent] || attributes[:roles][:applicant]
       raise Pundit::NotAuthorizedError.new "#{current_user.user_id} is forbidden to view #{student_uid} because #{student_uid} is neither student, ex-student nor applicant"
     end
-    render json: person
+    render json: {
+      attributes: attributes,
+      academics: MyAcademics::Merged.new(student_uid).get_feed
+    }
   end
 
 end
