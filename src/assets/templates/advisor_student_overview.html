@@ -10,6 +10,7 @@
       <div data-ng-include="'widgets/student_university_requirements.html'" data-ng-if="student.attributes.roles.undergrad"></div>
     </div>
     <div class="medium-4 columns cc-column-last">
+      <div data-ng-include="'widgets/final_exam_schedule.html'" data-ng-if="examSchedule.length"></div>
     </div>
   </div>
 </div>

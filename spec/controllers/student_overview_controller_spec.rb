@@ -23,6 +23,7 @@ describe StudentOverviewController do
     before do
       allow(User::AggregatedAttributes).to receive(:new).with(student_uid).and_return double get_feed: user_attributes
       allow(MyAcademics::Merged).to receive(:new).with(student_uid).and_return double get_feed: academics
+      allow(MyAcademics::Exams).to receive(:new).with(student_uid).and_return double merge: double
     end
     subject { get :student, student_uid: student_uid }
 

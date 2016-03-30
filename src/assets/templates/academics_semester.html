@@ -19,7 +19,7 @@
   <div class="medium-8 columns cc-academics-row-margin cc-clearfix" data-ng-hide="selectedStudentSemester && !selectedCourses.length && selectedSemester.timeBucket === 'future'">
     <div data-ng-include="'academics_semester_classes.html'"></div>
 
-    <div data-ng-include="'academics_final_exam_schedule.html'" data-ng-if="selectedSemester.timeBucket === 'current'"></div>
+    <div data-ng-include="'widgets/final_exam_schedule.html'" data-ng-if="selectedSemester.timeBucket === 'current'"></div>
 
   </div>
 
