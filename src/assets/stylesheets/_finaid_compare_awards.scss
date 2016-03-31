@@ -1,0 +1,42 @@
+.cc-finaid-compare-awards-margin-top {
+  margin-top: 10px;
+}
+.cc-finaid-compare-awards-packages-select {
+  max-width: 200px;
+}
+
+.cc-finaid-compare-awards-current-prior-headers > div {
+  background: $cc-color-dark-blue;
+  color: $cc-color-white;
+  flex-basis: 50%;
+  padding: 10px 15px;
+}
+@media #{$small-only} {
+  .cc-finaid-compare-awards-current-prior-headers {
+    flex-direction: column;
+  }
+}
+
+.cc-finaid-compare-awards-current-prior-columns {
+  h4 {
+    font-size: 15px;
+  }
+  > div {
+    flex-basis: 50%;
+    margin-bottom: 15px;
+    &:nth-child(2) {
+      padding-left: 15px;
+    }
+  }
+}
+
+@media #{$small-only} {
+  .cc-finaid-compare-awards-current-prior-columns {
+    flex-direction: column;
+    > div {
+      &:nth-child(2) {
+        padding-left: 0;
+      }
+    }
+  }
+}

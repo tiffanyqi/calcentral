@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ROOT>
+  <STATUS>
+    <CATEGORIES type="array">
+      <CATEGORY>
+        <TITLE>Summary Information</TITLE>
+        <ITEM_GROUPS type="array">
+          <ITEM>
+            <TITLE>Enrollment</TITLE><VALUES type="array"/></ITEM>
+        </ITEM_GROUPS>
+        <ITEM_GROUPS type="array">
+          <ITEM>
+            <TITLE>Level</TITLE><VALUES type="array"/></ITEM>
+        </ITEM_GROUPS>
+        <ITEM_GROUPS type="array">
+          <ITEM>
+            <TITLE>Housing</TITLE><VALUES type="array"/></ITEM>
+        </ITEM_GROUPS><ITEM_GROUPS type="array"/></CATEGORY>
+    </CATEGORIES>
+  </STATUS>
+  <COA>
+    <FULLYEAR>
+      <DATA type="array">
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Cost</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <TOTAL type="float">26864</TOTAL>
+              <TITLE>Tuition and Fees</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">24480</TOTAL>
+                  <TITLE>Fees</TITLE>
+                </SUB_ITEM>
+                <SUB_ITEM>
+                  <TOTAL type="float">2384</TOTAL>
+                  <TITLE>Campus Fees &amp; Class Pass</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTAL type="float">15422</TOTAL>
+              <TITLE>Books and Supplies</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">1240</TOTAL>
+                  <TITLE>Books &amp; Supplies</TITLE>
+                </SUB_ITEM>
+                <SUB_ITEM>
+                  <TOTAL type="float">14388</TOTAL>
+                  <TITLE>Room &amp; Board - Res. Hall</TITLE>
+                </SUB_ITEM>
+                <SUB_ITEM>
+                  <TOTAL type="float">1034</TOTAL>
+                  <TITLE>Food - Res. Hall</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTAL type="float">1068</TOTAL>
+              <TITLE>Transportation</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">1068</TOTAL>
+                  <TITLE>Transportation-Res. Hall</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTAL type="float">2580</TOTAL>
+              <TITLE>Health Insurance</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">2580</TOTAL>
+                  <TITLE>Health Insurance - UG</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTAL type="float">2018</TOTAL>
+              <TITLE>Personal Expenses</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">2018</TOTAL>
+                  <TITLE>Personal - Res. Hall</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTALS type="array">
+                <TOTAL type="float">50432</TOTAL>
+              </TOTALS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>Standard Budget Items</TITLE>
+        </DATA_ITEM>
+      </DATA>
+    </FULLYEAR>
+  </COA>
+</ROOT>

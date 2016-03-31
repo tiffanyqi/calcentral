@@ -8,6 +8,11 @@ var angular = require('angular');
 angular.module('calcentral.factories').factory('finaidFactory', function(apiService, $http) {
   var urlAwards = '/api/campus_solutions/financial_aid_funding_sources';
   var urlAwardsTerm = '/api/campus_solutions/financial_aid_funding_sources_term';
+
+  var urlCompareAwardsCurrent = '/api/campus_solutions/financial_aid_compare_awards_current';
+  var urlCompareAwardsList = '/api/campus_solutions/financial_aid_compare_awards_list';
+  var urlCompareAwardsPrior = '/api/campus_solutions/financial_aid_compare_awards_prior';
+
   var urlFinaidYear = '/api/campus_solutions/financial_aid_data';
   // var urlFinaidYear = '/dummy/json/financial_aid_data.json';
   var urlSummary = '/api/campus_solutions/aid_years';
@@ -22,6 +27,24 @@ angular.module('calcentral.factories').factory('finaidFactory', function(apiServ
   var getAwardsTerm = function(options) {
     return apiService.http.request(options, urlAwardsTerm + '?aid_year=' + options.finaidYearId);
   };
+
+  var getAwardCompareCurrent = function(options) {
+    return apiService.http.request(options, urlCompareAwardsCurrent +
+      '?aid_year=' + options.finaidYearId
+    );
+  };
+  var getAwardCompareList = function(options) {
+    return apiService.http.request(options, urlCompareAwardsList +
+      '?aid_year=' + options.finaidYearId
+    );
+  };
+  var getAwardComparePrior = function(options) {
+    return apiService.http.request(options, urlCompareAwardsPrior +
+      '?aid_year=' + options.finaidYearId +
+      '&date=' + options.date
+    );
+  };
+
   var getFinaidYearInfo = function(options) {
     return apiService.http.request(options, urlFinaidYear + '?aid_year=' + options.finaidYearId);
   };
@@ -44,6 +67,9 @@ angular.module('calcentral.factories').factory('finaidFactory', function(apiServ
   return {
     getAwards: getAwards,
     getAwardsTerm: getAwardsTerm,
+    getAwardCompareCurrent: getAwardCompareCurrent,
+    getAwardCompareList: getAwardCompareList,
+    getAwardComparePrior: getAwardComparePrior,
     getFinaidYearInfo: getFinaidYearInfo,
     getSummary: getSummary,
     postTCResponse: postTCResponse,

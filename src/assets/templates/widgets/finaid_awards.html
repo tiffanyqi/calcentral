@@ -14,9 +14,13 @@
           <div data-ng-bind="finaidAwards.message"></div>
 
           <div class="cc-widget-finaid-awards-padding-top" data-ng-if="finaidAwards.awards.grandtotal.total.amount">
-            <a data-ng-href="/finances/finaid/awards/{{finaidYear.id}}">
-              Term View
-            </a>
+            <a data-ng-href="/finances/finaid/awards/{{finaidYear.id}}">Term View</a>
+            <span data-ng-if="api.user.profile.features.csFinAidAwardCompare">
+              <span aria-hidden> | </span>
+              <a data-ng-href="/finances/finaid/compare/{{finaidYear.id}}">
+                Compare Packages
+              </a>
+            </span>
           </div>
         </div>
 
