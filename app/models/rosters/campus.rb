@@ -40,26 +40,19 @@ module Rosters
             ccn: section[:ccn],
             name: "#{course[:dept]} #{course[:catid]} #{section[:section_label]}"
           }
-
-          section_enrollments = CampusOracle::Queries.get_enrolled_students(section[:ccn], course[:term_yr], course[:term_cd])
+          section_enrollments = get_enrollments(section[:ccn], course[:term_yr], course[:term_cd])
           section_enrollments.each do |enr|
-            if (existing_entry = campus_enrollment_map[enr['ldap_uid']])
+            if (existing_entry = campus_enrollment_map[enr[:ldap_uid]])
               # We include waitlisted students in the roster. However, we do not show the official photo if the student
               # is waitlisted in ALL sections.
-              if existing_entry[:enroll_status] == 'W' &&
-                enr['enroll_status'] == 'E'
+              if existing_entry[:enroll_status] == 'W' && enr[:enroll_status] == 'E'
                 existing_entry[:enroll_status] = 'E'
               end
-              campus_enrollment_map[enr['ldap_uid']][:section_ccns] |= [section[:ccn]]
+              campus_enrollment_map[enr[:ldap_uid]][:section_ccns] |= [section[:ccn]]
             else
-              campus_enrollment_map[enr['ldap_uid']] = {
-                student_id: enr['student_id'],
-                first_name: enr['first_name'],
-                last_name: enr['last_name'],
-                email: enr['student_email_address'],
-                enroll_status: enr['enroll_status'],
+              campus_enrollment_map[enr[:ldap_uid]] = enr.slice(:student_id, :first_name, :last_name, :email, :enroll_status).merge({
                 section_ccns: [section[:ccn]]
-              }
+              })
             end
           end
         end

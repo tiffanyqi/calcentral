@@ -66,5 +66,29 @@ module Rosters
       sections.map {|section| section[:name]}.sort.join(', ')
     end
 
+    def get_enrollments(course_id, term_yr, term_cd)
+      if Berkeley::Terms.legacy?(term_yr, term_cd)
+        CampusOracle::Queries.get_enrolled_students(course_id, term_yr, term_cd).map do |row|
+          {
+            ldap_uid: row['ldap_uid'],
+            student_id: row['student_id'],
+            first_name: row['first_name'],
+            last_name: row['last_name'],
+            email: row['student_email_address'],
+            enroll_status: row['enroll_status']
+          }
+        end
+      else
+        term_id = Berkeley::TermCodes.to_edo_id(term_yr, term_cd)
+        enrollments_by_uid = EdoOracle::Queries.get_enrolled_students(course_id, term_id).group_by { |row| row['ldap_uid'] }
+        CalnetLdap::UserAttributes.get_bulk_attributes(enrollments_by_uid.keys).each do |attrs|
+          attrs[:email] = attrs.delete :email_address
+          if (enrollment_row = enrollments_by_uid[attrs[:ldap_uid]].first)
+            attrs[:enroll_status] = enrollment_row['enroll_status']
+          end
+        end
+      end
+    end
+
   end
 end
