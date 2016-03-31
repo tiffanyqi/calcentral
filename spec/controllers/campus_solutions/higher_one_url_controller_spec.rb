@@ -18,4 +18,51 @@ describe CampusSolutions::HigherOneUrlController do
     end
   end
 
+  context 'classic view-as' do
+    before do
+      session['user_id'] = user_id
+      session[SessionKey.original_user_id] = random_id
+      allow(CalnetCrosswalk::ByUid).to receive(:new).and_return (crosswalk = double)
+      allow(crosswalk).to receive(:lookup_campus_solutions_id).and_return random_id
+      expect(Settings.features).to receive(:reauthentication).and_return false
+    end
+    it 'denies all access' do
+      get :get
+      expect(response.status).to eq 403
+      expect(response.body).to eq ' '
+    end
+  end
+
+  context 'delegated access' do
+    let(:uid) {random_id}
+    let(:campus_solutions_id) {random_id}
+    include_context 'delegated access'
+    context 'enrollments-only access' do
+      let(:privileges) do
+        {
+          viewEnrollments: true
+        }
+      end
+      it 'denies all access' do
+        get :get
+        expect(response.status).to eq 403
+        expect(response.body).to eq ' '
+      end
+    end
+    context 'financial access' do
+      let(:privileges) do
+        {
+          financial: true
+        }
+      end
+      it 'allows access' do
+        get :get
+        assert_response :success
+        json_response = JSON.parse(response.body)
+        json_response.should be_present
+      end
+    end
+  end
+
+
 end

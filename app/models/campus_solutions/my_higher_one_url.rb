@@ -9,14 +9,11 @@ module CampusSolutions
 
     def get_feed_internal
       return {} unless is_feature_enabled
+      proxy_args = {
+        user_id: @uid,
+        delegate_uid: @options[:delegate_uid]
+      }
       CampusSolutions::HigherOneUrl.new(proxy_args).get
-    end
-
-    private
-
-    def proxy_args
-      args = { user_id: @uid }
-      (delegate_uid = @options[:delegate_uid]) ? args.merge(delegate_uid: delegate_uid) : args
     end
 
   end
