@@ -68,6 +68,8 @@ describe User::Api do
       expect(api[:campusSolutionsID]).to eq 'CC12345678'
       expect(api[:sid]).to eq '1234567890'
       expect(api[:delegateViewAsPrivileges]).to be_nil
+      expect(api[:isDirectlyAuthenticated]).to be true
+      expect(api[:canActOnFinances]).to be true
     end
   end
 
@@ -132,6 +134,8 @@ describe User::Api do
           expect(api[:hasToolboxTab]).to be true
           expect(api[:delegateViewAsPrivileges]).to be_nil
           expect(api[:hasPhoto]).to be false
+          expect(api[:isDirectlyAuthenticated]).to be true
+          expect(api[:canActOnFinances]).to be true
         end
       end
       context 'view-as session' do
@@ -155,6 +159,8 @@ describe User::Api do
             expect(privileges).to be_a Hash
             expect(privileges).to include financial: false, viewEnrollments: false, viewGrades: true, phone: false
             expect(api[:hasPhoto]).to be false
+            expect(api[:isDirectlyAuthenticated]).to be false
+            expect(api[:canActOnFinances]).to be false
           end
         end
         context 'tabs per privileges' do
@@ -163,6 +169,8 @@ describe User::Api do
             expect(api[:hasAcademicsTab]).to be true
             expect(api[:canViewGrades]).to be false
             expect(api[:hasPhoto]).to be false
+            expect(api[:isDirectlyAuthenticated]).to be false
+            expect(api[:canActOnFinances]).to be false
           end
         end
         context 'tabs per privileges' do
@@ -173,6 +181,8 @@ describe User::Api do
             expect(api[:hasFinancialsTab]).to be true
             expect(api[:delegateViewAsPrivileges]).to include financial: true, viewEnrollments: false, viewGrades: false, phone: false
             expect(api[:hasPhoto]).to be false
+            expect(api[:isDirectlyAuthenticated]).to be false
+            expect(api[:canActOnFinances]).to be true
           end
         end
       end
