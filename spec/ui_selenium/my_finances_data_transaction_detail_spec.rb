@@ -6,14 +6,11 @@ describe 'My Finances activity details', :testui => true do
 
     begin
       driver = WebDriverUtils.launch_browser
-      test_output = UserUtils.initialize_output_csv(self)
       test_users = UserUtils.load_test_users
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'Has Adjustment', 'Has Award', 'Has Charge', 'Has Payment', 'Has Refund', 'Has Waiver',
-                          'Has Unapplied Award', 'Has Partial Payment', 'Has Potential Disburse', 'Error?']
-      end
+      test_output_heading = ['UID', 'Has Adjustment', 'Has Award', 'Has Charge', 'Has Payment', 'Has Refund', 'Has Waiver',
+                             'Has Unapplied Award', 'Has Partial Payment', 'Has Potential Disburse']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['financesDetails']
@@ -42,7 +39,6 @@ describe 'My Finances activity details', :testui => true do
               has_unapplied_award = false
               has_partial_payment = false
               has_potential_disburse = false
-              threw_error = false
               testable_users.push(uid)
 
               WebDriverUtils.wait_for_element_and_select(my_finances_page.activity_filter_select_element, 'All Transactions')
@@ -538,12 +534,10 @@ describe 'My Finances activity details', :testui => true do
             end
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
-            threw_error = true
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, has_adjustment, has_award, has_charge, has_payment, has_refund, has_waiver,
-                                has_unapplied_award, has_partial_payment,has_potential_disburse, threw_error]
-            end
+            test_output_row = [uid, has_adjustment, has_award, has_charge, has_payment, has_refund, has_waiver,
+                               has_unapplied_award, has_partial_payment,has_potential_disburse]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

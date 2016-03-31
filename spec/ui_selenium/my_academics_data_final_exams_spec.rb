@@ -8,11 +8,8 @@ describe 'My Academics Final Exams card', :testui => true do
       driver = WebDriverUtils.launch_browser
       test_users = UserUtils.load_test_users
       testable_users = []
-      test_output = UserUtils.initialize_output_csv self
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'Has Exams', 'Exam Dates', 'Exam Times', 'Exam Courses', 'Exam Locations']
-      end
+      test_output_heading = ['UID', 'Has Exams', 'Exam Dates', 'Exam Times', 'Exam Courses', 'Exam Locations']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['finalExams']
@@ -104,9 +101,8 @@ describe 'My Academics Final Exams card', :testui => true do
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, has_exams, api_exam_dates * ', ', api_exam_times * ', ', api_exam_courses * ', ', api_exam_locations * ', ']
-            end
+            test_output_row = [uid, has_exams, api_exam_dates * ', ', api_exam_times * ', ', api_exam_courses * ', ', api_exam_locations * ', ']
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

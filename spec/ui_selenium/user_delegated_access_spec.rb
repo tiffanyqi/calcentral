@@ -50,10 +50,8 @@ describe 'Delegated access', :testui => true do
       @profile_title_iv = CalCentralPages::MyProfileTitleIVCard.new @driver
       @profile_bconnected = CalCentralPages::MyProfileBconnectedCard.new @driver
 
-      test_output = UserUtils.initialize_output_csv self
-      CSV.open(test_output, 'wb') do |heading|
-        heading << ['UID', 'Student UID', 'Student', 'Faculty', 'Staff', 'Enrollment', 'Grades', 'Financial', 'Phone']
-      end
+      test_output_heading = ['UID', 'Student UID', 'Student', 'Faculty', 'Staff', 'Enrollment', 'Grades', 'Financial', 'Phone']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_delegates = UserUtils.load_test_users.select { |user| user['delegatedAccess'] }
       test_delegates.each do |delegate|
@@ -177,10 +175,9 @@ describe 'Delegated access', :testui => true do
                 is_faculty = @status_api.is_faculty?
                 is_staff = @status_api.is_staff?
 
-                CSV.open(test_output, 'a+') do |row|
-                  row << [uid, student_uid, is_student, is_faculty, is_staff, privileges['viewEnrollments'], privileges['viewGrades'],
-                          privileges['financial'], privileges['phone']]
-                end
+                test_output_row = [uid, student_uid, is_student, is_faculty, is_staff, privileges['viewEnrollments'],
+                                   privileges['viewGrades'], privileges['financial'], privileges['phone']]
+                UserUtils.add_csv_row(test_output, test_output_row)
 
                 # Log in as delegate to check filtered data
 

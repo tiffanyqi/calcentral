@@ -8,11 +8,8 @@ describe 'My Academics L&S Advising card', :testui => true do
       driver = WebDriverUtils.launch_browser
       test_users = UserUtils.load_test_users
       testable_users = []
-      test_output = UserUtils.initialize_output_csv(self)
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'L&S', 'Has Current Appt', 'Has Past Appt', 'Has Advisor', 'Error?']
-      end
+      test_output_heading = ['UID', 'L&S', 'Has Current Appt', 'Has Past Appt', 'Has Advisor']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['advising']
@@ -22,7 +19,6 @@ describe 'My Academics L&S Advising card', :testui => true do
           has_future_appt = false
           has_past_appt = false
           has_advisor = false
-          threw_error = false
 
           begin
             splash_page = CalCentralPages::SplashPage.new(driver)
@@ -194,11 +190,9 @@ describe 'My Academics L&S Advising card', :testui => true do
             end
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
-            threw_error = true
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, is_l_and_s, has_future_appt, has_past_appt, has_advisor, threw_error]
-            end
+            test_output_row = [uid, is_l_and_s, has_future_appt, has_past_appt, has_advisor]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

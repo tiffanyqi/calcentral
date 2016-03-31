@@ -6,13 +6,11 @@ describe 'My Academics Status and Blocks', :testui => true do
 
     begin
       driver = WebDriverUtils.launch_browser
-      test_output = UserUtils.initialize_output_csv self
+
       test_users = UserUtils.load_test_users
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'Student', 'Ex-Student', 'Registered', 'Resident', 'Needs Action', 'Active Block', 'Block Types', 'Block History']
-      end
+      test_output_heading = ['UID', 'Student', 'Ex-Student', 'Registered', 'Resident', 'Needs Action', 'Active Block', 'Block Types', 'Block History']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['status']
@@ -364,10 +362,9 @@ describe 'My Academics Status and Blocks', :testui => true do
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, is_student, is_ex_student, api_reg_status, api_res_status, api_res_needs_action, has_active_block,
-                                block_types, has_block_history]
-            end
+            test_output_row = [uid, is_student, is_ex_student, api_reg_status, api_res_status, api_res_needs_action, has_active_block,
+                               block_types, has_block_history]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

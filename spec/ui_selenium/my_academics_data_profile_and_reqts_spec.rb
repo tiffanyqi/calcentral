@@ -6,13 +6,11 @@ describe 'My Academics profile and university requirements cards', :testui => tr
 
     begin
       driver = WebDriverUtils.launch_browser
-      test_output = UserUtils.initialize_output_csv(self)
       test_users = UserUtils.load_test_users
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'User Type', 'Term Transition', 'Colleges', 'Majors', 'Careers', 'Units', 'Level', 'Level No AP']
-      end
+      test_output_heading = ['UID', 'User Type', 'Term Transition', 'Colleges', 'Majors', 'Careers', 'Units', 'GPA', 'Level',
+                             'Level No AP', 'Writing', 'History', 'Institutions', 'Cultures']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['profile']
@@ -20,11 +18,17 @@ describe 'My Academics profile and university requirements cards', :testui => tr
           logger.info("UID is #{uid}")
           user_type = nil
           term_transition = false
-          api_careers = []
           api_colleges = []
           api_majors = []
-          api_level = nil
+          api_careers = []
           api_units = nil
+          api_gpa = nil
+          api_level = nil
+          api_level_no_ap = nil
+          writing = nil
+          history = nil
+          institutions = nil
+          cultures = nil
 
           begin
             splash_page = CalCentralPages::SplashPage.new(driver)
@@ -142,11 +146,13 @@ describe 'My Academics profile and university requirements cards', :testui => tr
               else
 
                 if academics_api_page.writing_reqt_met?
+                  writing = 'complete'
                   my_academics_writing_met = reqts_card.writing_reqt_met?
                   it "show 'UC Entry Level Writing' 'Completed' for UID #{uid}" do
                     expect(my_academics_writing_met).to be true
                   end
                 else
+                  writing = 'incomplete'
                   my_academics_writing_unmet = reqts_card.writing_reqt_unmet?
                   writing_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.writing_reqt_unmet_element, 'Undergraduate Degree Requirements - Office Of The Registrar')
                   it "show 'UC Entry Level Writing' 'Incomplete' for UID #{uid}" do
@@ -158,11 +164,13 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 end
 
                 if academics_api_page.history_reqt_met?
+                  history = 'complete'
                   my_academics_history_met = reqts_card.history_reqt_met?
                   it "show 'American History' 'Completed' for UID #{uid}" do
                     expect(my_academics_history_met).to be true
                   end
                 else
+                  history = 'incomplete'
                   my_academics_history_unmet = reqts_card.history_reqt_unmet?
                   history_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.history_reqt_unmet_element, 'Undergraduate Degree Requirements - Office Of The Registrar')
                   it "show 'American History' 'Incomplete' for UID #{uid}" do
@@ -174,11 +182,13 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 end
 
                 if academics_api_page.institutions_reqt_met?
+                  institutions = 'complete'
                   my_academics_institutions_met = reqts_card.institutions_reqt_met?
                   it "show 'American Institutions' 'Completed' for UID #{uid}" do
                     expect(my_academics_institutions_met).to be true
                   end
                 else
+                  institutions = 'incomplete'
                   my_academics_institutions_unmet = reqts_card.institutions_reqt_unmet?
                   institutions_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.institutions_reqt_unmet_element, 'Undergraduate Degree Requirements - Office Of The Registrar')
                   it "show 'American Institutions' 'Incomplete' for UID #{uid}" do
@@ -190,11 +200,13 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 end
 
                 if academics_api_page.cultures_reqt_met?
+                  cultures = 'complete'
                   my_academics_cultures_met = reqts_card.cultures_reqt_met?
                   it "show 'American Cultures' 'Completed' for UID #{uid}" do
                     expect(my_academics_cultures_met).to be true
                   end
                 else
+                  cultures = 'incomplete'
                   my_academics_cultures_unmet = reqts_card.cultures_reqt_unmet?
                   cultures_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.cultures_reqt_unmet_element, 'Undergraduate Degree Requirements - Office Of The Registrar')
                   it "show 'American Cultures' 'Incomplete' for UID #{uid}" do
@@ -297,10 +309,9 @@ describe 'My Academics profile and university requirements cards', :testui => tr
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, user_type, term_transition, api_colleges * '; ', api_majors * '; ',
-                                api_careers * '; ', api_units, api_level, api_level_no_ap]
-            end
+            test_output_row = [uid, user_type, term_transition, api_colleges * '; ', api_majors * '; ', api_careers * '; ',
+                               api_units, api_gpa, api_level, api_level_no_ap, writing, history, institutions, cultures]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

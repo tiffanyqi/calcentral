@@ -8,12 +8,9 @@ describe 'My Dashboard My Classes card', :testui => true do
 
       driver = WebDriverUtils.launch_browser
       test_users = UserUtils.load_test_users
-      test_output = UserUtils.initialize_output_csv self
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'Enrolled', 'Course Sites', 'Teaching', 'Teaching Sites', 'Other Sites']
-      end
+      test_output_heading = ['UID', 'Enrolled', 'Course Sites', 'Teaching', 'Teaching Sites', 'Other Sites']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['classes']
@@ -335,9 +332,8 @@ describe 'My Dashboard My Classes card', :testui => true do
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, has_enrollments, has_course_sites, has_teaching, has_teaching_sites, has_other_sites]
-            end
+            test_output_row = [uid, has_enrollments, has_course_sites, has_teaching, has_teaching_sites, has_other_sites]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

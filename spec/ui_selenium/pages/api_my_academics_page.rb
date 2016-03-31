@@ -20,12 +20,7 @@ class ApiMyAcademicsPage
 
   def academics_time(epoch)
     time_format = (Time.strptime(epoch, '%s')).strftime("%-l:%M %p")
-    if time_format == '12:00 PM'
-      time = 'Noon'
-    else
-      time = time_format
-    end
-    time
+    (time_format == '12:00 PM') ? 'Noon' : time_format
   end
 
   # PROFILE
@@ -303,85 +298,6 @@ class ApiMyAcademicsPage
     all_locations = []
     exam_schedules.each { |exam| all_locations.concat(exam_locations(exam)) }
     all_locations.sort
-  end
-
-  # TELE-BEARS
-
-  def tele_bears
-    @parsed['telebears']
-  end
-
-  def has_tele_bears
-    begin
-      tele_bears.length > 0
-      true
-    rescue
-      false
-    end
-  end
-
-  def tele_bears_phases(semesters)
-    all_phases = []
-    semesters.each { |semester| all_phases.concat(semester['phases']) }
-    all_phases
-  end
-
-  def tele_bears_term_year(semester)
-    semester['term'] + ' ' + semester['year'].to_s
-  end
-
-  def tele_bears_term_years(semesters)
-    term_years = []
-    semesters.each { |semester| term_years.concat(semester['term'] + ' ' + semester['year'].to_s) }
-    term_years
-  end
-
-  def tele_bears_semester_slug(semester)
-    semester['slug']
-  end
-
-  def tele_bears_advisor_code_req?(semester)
-    semester['advisorCodeRequired']['required']
-  end
-
-  def tele_bears_advisor_codes(semesters)
-    code_reqts = []
-    semesters.each { |semester| code_reqts.push(tele_bears_advisor_code_req?(semester)) }
-    code_reqts
-  end
-
-  def tele_bears_advisor_code_msgs(semesters)
-    code_msgs = []
-    semesters.each do |semester|
-      if tele_bears_advisor_code_req?(semester)
-        # Deliberately ignore calso and revoked messages, which will therefore trigger a test failure if either turns up in test data.
-        # These messages rarely appear, so QA would like to hear about them when they do.
-        code_msgs.push('Before your Tele-BEARS appointment you need to get a code from your advisor.')
-      else
-        code_msgs.push('You do not need an advisor code for this semester.')
-      end
-    end
-    code_msgs
-  end
-
-  def tele_bears_phase_starts(semesters)
-    epochs = []
-    tele_bears_phases(semesters).each { |item| epochs.push(item['startTime']['epoch'].to_s) }
-    phase_starts = []
-    epochs.each { |epoch| phase_starts.push(tele_bears_date_time(epoch)) }
-    phase_starts
-  end
-
-  def tele_bears_phase_endings(semesters)
-    epochs = []
-    tele_bears_phases(semesters).each { |item| epochs.push(item['endTime']['epoch'].to_s) }
-    phase_ends = []
-    epochs.each { |item| phase_ends.push(tele_bears_date_time(item)) }
-    phase_ends
-  end
-
-  def tele_bears_date_time(epoch)
-    academics_date(epoch) + ' | ' + academics_time(epoch)
   end
 
   # OTHER SITE MEMBERSHIPS

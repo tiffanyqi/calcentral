@@ -8,12 +8,9 @@ describe 'My Finances Financial Aid summary card', :testui => true do
       @driver = WebDriverUtils.launch_browser
       test_users = UserUtils.load_test_users
       testable_users = []
-      test_output = UserUtils.initialize_output_csv(self)
+      test_output_heading = ['UID', 'FinAid Years', 'T & C Tested?', 'Title IV Tested?', 'COA', 'Grants', 'Fee Waivers', 'Work Study', 'Loans']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
       links_tested = false
-
-      CSV.open(test_output, 'wb') do |row|
-        row << ['UID', 'FinAid Years', 'T & C Tested?', 'Title IV Tested?', 'COA', 'Grants', 'Fee Waivers', 'Work Study', 'Loans']
-      end
 
       @api_aid_years = ApiCSAidYearsPage.new @driver
       @api_fin_aid_data = ApiCSFinAidDataPage.new @driver
@@ -337,9 +334,9 @@ describe 'My Finances Financial Aid summary card', :testui => true do
             it ("caused an unexpected error in the test for UID #{uid}") { fail }
 
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, aid_years * ', ', t_and_c_tested, title_iv_tested, api_cost_of_attend, api_grants_amt, api_waivers_amt, api_work_study_amt, api_loans_amt]
-            end
+            test_output_row = [uid, aid_years * ', ', t_and_c_tested, title_iv_tested, api_cost_of_attend, api_grants_amt,
+                               api_waivers_amt, api_work_study_amt, api_loans_amt]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end
