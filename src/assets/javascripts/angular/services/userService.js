@@ -93,10 +93,8 @@ angular.module('calcentral.services').service('userService', function($http, $lo
 
     // Set whether the current user can POST information when acting as someone
     profile.actAsOptions = {
-      canPost: !(_.get(profile, 'features.preventActingAsUsersFromPosting') &&
-      (profile.actingAsUid || profile.delegateActingAsUid || profile.advisorActingAsUid)),
-      canSeeCSLinks: !(profile.delegateActingAsUid || profile.advisorActingAsUid) && !$route.current.isAdvisingStudentLookup,
-      isDirectlyAuthenticated: !(profile.actingAsUid || profile.delegateActingAsUid || profile.advisorActingAsUid)
+      canPost: !(_.get(profile, 'features.preventActingAsUsersFromPosting') && !profile.isDirectlyAuthenticated),
+      canSeeCSLinks: (profile.canSeeCSLinks && !$route.current.isAdvisingStudentLookup)
     };
 
     return profile;
