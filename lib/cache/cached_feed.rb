@@ -7,6 +7,7 @@ module Cache
     def init
       # override to do any initialization that requires database access or other expensive computation.
       # If you do expensive work from initialize, it will happen even when this object is cached -- not desirable!
+      self
     end
 
     def get_feed(force_cache_write=false)
