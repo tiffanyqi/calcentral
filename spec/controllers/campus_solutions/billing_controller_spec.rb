@@ -7,13 +7,13 @@ describe CampusSolutions::BillingController do
     it_behaves_like 'an unauthenticated user'
 
     context 'authenticated user' do
-      let(:feed_key) { 'ucSfActivity' }
+      let(:feed_key) { 'summary' }
       it_behaves_like 'a successful feed'
       it 'has some field mapping info' do
         session['user_id'] = user_id
         get feed
         json = JSON.parse(response.body)
-        expect(json['feed']['ucSfActivity']['activity'][0]['itemDescription']).to eq 'Room and board'
+        expect(json['feed']['activity'][0]['itemDescription']).to eq 'Class Pass Fee - Transit'
       end
     end
   end
