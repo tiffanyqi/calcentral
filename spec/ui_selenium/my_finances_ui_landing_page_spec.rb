@@ -71,7 +71,8 @@ describe 'My Finances landing page', :testui => true do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.student_billing_svcs_link_element, 'Student Billing Services, University of California, Berkeley')).to be true
       end
       it 'includes a link to "How does my SHIP Waiver affect my billing?"' do
-        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.ship_waiver_link_element, 'How does my SHIP waiver affect my billing? | Cal Student Central')).to be true      end
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.ship_waiver_link_element, 'How does my SHIP waiver affect my billing? | Cal Student Central')).to be true
+      end
       it 'includes a link to e-bills' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.ebills_link_element, 'BearFacts | ')).to be true
       end

@@ -15,7 +15,7 @@ module CalCentralPages
     span(:res_status_summary, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td/span[@data-ng-bind="studentInfo.californiaResidency.summary"]')
     image(:res_status_icon_green, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-check-circle cc-icon-green"]')
     image(:res_status_icon_red, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-exclamation-circle cc-icon-red"]')
-    link(:res_info_link, :xpath => '//a[contains(text(),"residency information"]')
+    link(:res_info_link, :xpath => '//a[contains(text(),"residency information")]')
 
     h3(:active_blocks_heading, :xpath => '//h3[text()="Active Blocks"]')
     table(:active_blocks_table, :xpath => '//div[@data-ng-if="regblocks.activeBlocks.length"]/table')
