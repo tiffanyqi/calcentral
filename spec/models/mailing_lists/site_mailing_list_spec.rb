@@ -174,6 +174,10 @@ describe MailingLists::SiteMailingList do
         let(:ray) { {'login_id' => '67890', 'first_name' => 'Ray', 'last_name' => 'Davis', 'email_address' => 'raydavis@berkeley.edu'}  }
         let(:paul) { {'login_id' => '65536', 'first_name' => 'Paul', 'last_name' => 'Kerschen', 'email_address' => 'kerschen@berkeley.edu'}  }
 
+        def basic_attributes(user)
+          %w(first_name last_name email_address).inject({}) { |attrs, key| attrs.merge(key.to_sym => user[key]) }
+        end
+
         before do
           allow(Canvas::CourseUsers).to receive(:new).and_return course_users
           allow(Calmail::ListMembers).to receive(:new).and_return list_members
@@ -182,7 +186,7 @@ describe MailingLists::SiteMailingList do
           allow(Calmail::RemoveListMember).to receive(:new).and_return fake_remove_proxy
 
           expect(course_users).to receive(:course_users).exactly(1).times.and_return(statusCode: 200, body: fake_site_users)
-          expect(CampusOracle::Queries).to receive(:get_basic_people_attributes).exactly(1).times.and_return fake_site_users
+          expect(User::BasicAttributes).to receive(:attributes_for_uids).exactly(1).times.and_return(fake_site_users.map { |user| basic_attributes user })
         end
 
         def expect_empty_population_results(list, action)

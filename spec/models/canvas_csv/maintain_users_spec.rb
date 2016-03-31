@@ -23,11 +23,11 @@ describe CanvasCsv::MaintainUsers do
       }
       let(:campus_rows) { [
         {
-          'ldap_uid' => uid.to_i,
-          'first_name' => 'Ema',
-          'last_name' => 'Ilcha',
-          'email_address' => 'new@example.edu',
-          'affiliations' => 'EMPLOYEE-TYPE-STAFF'
+          ldap_uid: uid.to_i,
+          first_name: 'Ema',
+          last_name: 'Ilcha',
+          email_address: 'new@example.edu',
+          roles: {faculty: true}
         }
       ] }
       it 'finds email change' do
@@ -57,12 +57,12 @@ describe CanvasCsv::MaintainUsers do
       }
       let(:campus_rows) { [
         {
-          'ldap_uid' => changed_sis_id_uid.to_i,
-          'first_name' => 'Sissy',
-          'last_name' => 'Changer',
-          'email_address' => "#{changed_sis_id_uid}@example.edu",
-          'affiliations' => 'EMPLOYEE-TYPE-STAFF,STUDENT-TYPE-REGISTERED',
-          'student_id' => changed_sis_id_student_id.to_i
+          ldap_uid: changed_sis_id_uid.to_i,
+          first_name: 'Sissy',
+          last_name: 'Changer',
+          email_address: "#{changed_sis_id_uid}@example.edu",
+          roles: {staff: true, student: true, registered: true},
+          student_id: changed_sis_id_student_id.to_i
         }
       ] }
       it 'finds SIS ID change' do
@@ -89,12 +89,12 @@ describe CanvasCsv::MaintainUsers do
       }
       let(:campus_rows) { [
         {
-          'ldap_uid' => uid.to_i,
-          'first_name' => 'Noam',
-          'last_name' => 'Changey',
-          'email_address' => "#{uid}@example.edu",
-          'affiliations' => 'EMPLOYEE-TYPE-STAFF,STUDENT-STATUS-EXPIRED',
-          'student_id' => 9999999
+          ldap_uid: uid.to_i,
+          first_name: 'Noam',
+          last_name: 'Changey',
+          email_address: "#{uid}@example.edu",
+          roles: {staff: true, exStudent: true},
+          student_id: 9999999
         }
       ] }
       it 'just notes the UID' do
@@ -120,12 +120,12 @@ describe CanvasCsv::MaintainUsers do
       }
       let(:campus_rows) { [
         {
-          'ldap_uid' => uid.to_i,
-          'first_name' => 'Eugene V',
-          'last_name' => 'Debs',
-          'email_address' => "#{uid}@example.edu",
-          'affiliations' => 'EMPLOYEE-TYPE-STAFF,STUDENT-STATUS-EXPIRED',
-          'student_id' => 9999999
+          ldap_uid: uid.to_i,
+          first_name: 'Eugene V',
+          last_name: 'Debs',
+          email_address: "#{uid}@example.edu",
+          roles: {staff: true, exStudent: true},
+          student_id: 9999999
         }
       ] }
       it 'considers the account to be unchanged' do
@@ -151,12 +151,12 @@ describe CanvasCsv::MaintainUsers do
       }
       let(:campus_rows) { [
         {
-          'ldap_uid' => 0,
-          'first_name' => 'Sumotha',
-          'last_name' => 'Match',
-          'email_address' => 'zero@example.edu',
-          'affiliations' => 'STUDENT-TYPE-REGISTERED',
-          'student_id' => 9999999
+          ldap_uid: 0,
+          first_name: 'Sumotha',
+          last_name: 'Match',
+          email_address: 'zero@example.edu',
+          roles: {student: true, registered: true},
+          student_id: 9999999
         }
       ] }
       it 'skips the record' do
@@ -184,12 +184,12 @@ describe CanvasCsv::MaintainUsers do
       }
       let(:campus_rows) { [
         {
-          'ldap_uid' => uid.to_i,
-          'first_name' => 'Skip',
-          'last_name' => 'James',
-          'email_address' => "#{uid}@example.edu",
-          'affiliations' => 'STUDENT-TYPE-REGISTERED',
-          'student_id' => student_id
+          ldap_uid: uid.to_i,
+          first_name: 'Skip',
+          last_name: 'James',
+          email_address: "#{uid}@example.edu",
+          roles: {student: true, registered: true},
+          student_id: student_id
         }
       ] }
       it 'reactivates the user account' do
@@ -230,13 +230,12 @@ describe CanvasCsv::MaintainUsers do
     context 'when the campus DB account is marked as having no active CalNet account' do
       let(:campus_rows) { [
         {
-          'ldap_uid' => uid.to_i,
-          'first_name' => 'Syd',
-          'last_name' => 'Barrett',
-          'email_address' => "#{uid}@example.edu",
-          'affiliations' => 'STUDENT-TYPE-REGISTERED',
-          'student_id' => student_id,
-          'person_type' => 'Z'
+          ldap_uid: uid.to_i,
+          first_name: 'Syd',
+          last_name: 'Barrett',
+          email_address: "#{uid}@example.edu",
+          roles: {student: true, registered: true, expiredAccount: true},
+          student_id: student_id,
         }
       ] }
       let(:inactivate_expired_users) { true }
@@ -271,73 +270,48 @@ describe CanvasCsv::MaintainUsers do
         expect(subject.user_email_deletions).to eq []
       end
     end
-    context 'when the user does appear in LDAP' do
-      let(:inactivate_expired_users) { true }
-      let(:ldap_record) do
-        {
-          dn: ["uid=#{uid},ou=guests,dc=berkeley,dc=edu"],
-          uid: [uid],
-          berkeleyeduaffiliations: ['GUEST-TYPE-COLLABORATOR']
-        }
-      end
-      it 'does nothing' do
-        expect(account_changes.length).to eq(0)
-        expect(subject.sis_user_id_changes).to eq({})
-        expect(known_uids.length).to eq(1)
-        expect(subject.user_email_deletions).to eq []
-      end
-    end
   end
 
   describe '#derive_sis_user_id' do
     let(:uid) { rand(999999).to_s }
     let(:student_id) { rand(999999).to_s }
+    let(:derived_id) { subject.derive_sis_user_id(ldap_uid: uid, student_id: student_id, roles: roles) }
     context 'when an ex-student' do
-      let(:affiliations) { 'AFFILIATE-TYPE-GENERAL,EMPLOYEE-STATUS-EXPIRED,STUDENT-STATUS-EXPIRED' }
+      let(:roles) { {exStudent: true} }
       it 'uses the LDAP UID' do
-        expect(subject.derive_sis_user_id({
-          'ldap_uid' => uid, 'student_id' => student_id, 'affiliations' => affiliations
-        })).to eq("UID:#{uid}")
+        expect(derived_id).to eq "UID:#{uid}"
       end
     end
     context 'when a student employee' do
-      let(:affiliations) { 'STUDENT-TYPE-REGISTERED,EMPLOYEE-TYPE-ACADEMIC' }
+      let(:roles) { {student: true, registered: true, faculty: true} }
       it 'uses the student ID' do
-        expect(subject.derive_sis_user_id({
-          'ldap_uid' => uid, 'student_id' => student_id, 'affiliations' => affiliations
-        })).to eq(student_id)
+        expect(derived_id).to eq student_id
       end
     end
     context 'when a student with registration issues' do
-      let(:affiliations) { 'EMPLOYEE-TYPE-STAFF,STUDENT-TYPE-NOT REGISTERED' }
+      let(:roles) { {staff: true, student: true, registered: false} }
       it 'uses the student ID' do
-        expect(subject.derive_sis_user_id({
-          'ldap_uid' => uid, 'student_id' => student_id, 'affiliations' => affiliations
-        })).to eq(student_id)
+        expect(derived_id).to eq student_id
       end
     end
     context 'when missing a student ID' do
-      let(:affiliations) { 'STUDENT-TYPE-REGISTERED' }
+      let(:roles) { {student: true, registered: true} }
+      let(:student_id) { nil }
       it 'uses the LDAP UID' do
-        expect(subject.derive_sis_user_id({
-          'ldap_uid' => uid, 'student_id' => nil, 'affiliations' => affiliations
-        })).to eq("UID:#{uid}")
+        expect(derived_id).to eq "UID:#{uid}"
       end
     end
     context 'when fancy SIS user IDs are disabled' do
-      before { Settings.canvas_proxy.stub(:mixed_sis_user_id).and_return(nil) }
+      before { allow(Settings.canvas_proxy).to receive(:mixed_sis_user_id).and_return nil }
+      let(:roles) { {student: true, registered: true} }
       it 'uses the LDAP UID for everyone' do
-        expect(subject.derive_sis_user_id({
-          'ldap_uid' => uid, 'student_id' => student_id, 'affiliations' => 'STUDENT-TYPE-REGISTERED'
-        })).to eq(uid)
+        expect(derived_id).to eq uid
       end
     end
     context 'when a concurrent enrollment student' do
-      let(:affiliations) { 'AFFILIATE-TYPE-CONCURR ENROLL' }
+      let(:roles) { {concurrentEnrollmentStudent: true} }
       it 'uses the student ID' do
-        expect(subject.derive_sis_user_id({
-              'ldap_uid' => uid, 'student_id' => student_id, 'affiliations' => affiliations
-            })).to eq(student_id)
+        expect(derived_id).to eq student_id
       end
     end
   end

@@ -41,7 +41,7 @@ module CanvasCsv
     def load_new_active_users
       @new_active_sis_users = []
       new_active_user_uids.each_slice(1000) do |uid_group|
-        @new_active_sis_users.concat CampusOracle::Queries.get_basic_people_attributes(uid_group)
+        @new_active_sis_users.concat User::BasicAttributes.attributes_for_uids(uid_group)
       end
       @new_active_sis_users
     end
@@ -50,7 +50,7 @@ module CanvasCsv
     def process_new_users
       logger.warn "#{@new_active_sis_users.length} new user accounts detected. Adding to SIS User Import CSV"
       @new_active_sis_users.each do |new_user|
-        new_canvas_user = canvas_user_from_campus_row new_user
+        new_canvas_user = canvas_user_from_campus_attributes new_user
         add_user_to_import new_canvas_user
       end
       @new_active_sis_users = nil

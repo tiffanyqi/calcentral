@@ -6,10 +6,10 @@ describe CanvasCsv::Base do
     context 'when all users known' do
       before do
         people_attributes = [
-          { 'ldap_uid'=>'1234', 'first_name'=>'John', 'last_name'=>'Smith',  'email_address'=>'johnsmith@example.com', 'student_id'=>nil, 'affiliations'=>'EMPLOYEE-TYPE-ACADEMIC' },
-          { 'ldap_uid'=>'1235', 'first_name'=>'Jane', 'last_name'=>'Smith', 'email_address'=>'janesmith@example.com', 'student_id'=>nil, 'affiliations'=>'EMPLOYEE-TYPE-ACADEMIC' },
+          { ldap_uid: '1234', first_name: 'John', last_name: 'Smith', email_address: 'johnsmith@example.com', student_id: nil, roles: {faculty: true} },
+          { ldap_uid: '1235', first_name: 'Jane', last_name: 'Smith', email_address: 'janesmith@example.com', student_id: nil, roles: {faculty: true} },
         ]
-        expect(CampusOracle::Queries).to receive(:get_basic_people_attributes).with(['1234','1235']).and_return people_attributes
+        expect(User::BasicAttributes).to receive(:attributes_for_uids).with(['1234','1235']).and_return people_attributes
       end
 
       it 'should assemble array with user attribute hashes' do
@@ -32,6 +32,9 @@ describe CanvasCsv::Base do
     end
 
     context 'when querying many user records from the DB' do
+      before do
+        allow(CalnetLdap::UserAttributes).to receive(:get_bulk_attributes).and_return []
+      end
       it 'should find all available ones' do
         known_first = ['238382', '2040']
         known_last = ['3060', '211159', '238382']

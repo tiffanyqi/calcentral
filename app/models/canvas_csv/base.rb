@@ -12,35 +12,34 @@ module CanvasCsv
     def accumulate_user_data(user_ids)
       users = []
       user_ids.each_slice(1000) do |uid_slice|
-        campus_results = CampusOracle::Queries.get_basic_people_attributes uid_slice
-        users.concat campus_results.map { |row| canvas_user_from_campus_row row }
+        campus_attributes = User::BasicAttributes.attributes_for_uids uid_slice
+        users.concat campus_attributes.map { |attrs| canvas_user_from_campus_attributes attrs }
       end
       users
     end
 
-    def canvas_user_from_campus_row(campus_user)
+    def canvas_user_from_campus_attributes(campus_user)
       {
         'user_id' => derive_sis_user_id(campus_user),
-        'login_id' => campus_user['ldap_uid'].to_s,
+        'login_id' => campus_user[:ldap_uid].to_s,
         'password' => nil,
-        'first_name' => campus_user['first_name'],
-        'last_name' => campus_user['last_name'],
-        'email' => campus_user['email_address'],
+        'first_name' => campus_user[:first_name],
+        'last_name' => campus_user[:last_name],
+        'email' => campus_user[:email_address],
         'status' => 'active'
       }
     end
 
     def derive_sis_user_id(campus_user)
       if Settings.canvas_proxy.mixed_sis_user_id
-        roles = Berkeley::UserRoles.roles_from_campus_row(campus_user)
-        if campus_user['student_id'].present? &&
-          (roles[:student] || roles[:concurrentEnrollmentStudent])
-          campus_user['student_id'].to_s
+        if campus_user[:student_id].present? &&
+          (campus_user[:roles][:student] || campus_user[:roles][:concurrentEnrollmentStudent])
+          campus_user[:student_id].to_s
         else
-          "UID:#{campus_user['ldap_uid']}"
+          "UID:#{campus_user[:ldap_uid]}"
         end
       else
-        campus_user['ldap_uid'].to_s
+        campus_user[:ldap_uid].to_s
       end
     end
 
