@@ -11,6 +11,9 @@ canvas_proxy:
   fake: true
   app_provider_host: 'https://cc-dev.example.com'
 
+edodb:
+  fake: true
+
 ldap:
   fake: 'true'
   host: 'nds-test.berkeley.edu'

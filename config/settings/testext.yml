@@ -5,6 +5,9 @@ logger:
   level: <%= ENV['LOGGER_LEVEL'] || DEBUG %>
   stdout: <%= ENV['LOGGER_STDOUT'] || 'only' %>
 
+edodb:
+  fake: false
+
 ldap:
   host: 'nds-test.berkeley.edu'
 

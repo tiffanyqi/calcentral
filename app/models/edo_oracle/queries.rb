@@ -34,6 +34,7 @@ module EdoOracle
     #   - 'cred_cd' and 'pnp_flag' replaced by 'grading_basis'
     def self.get_enrolled_sections(person_id, terms = nil)
       result = []
+      return result if fake?
       terms_list = terms_query_list(terms)
       use_pooled_connection do
         sql = <<-SQL
@@ -67,6 +68,7 @@ module EdoOracle
     #   - 'cs-course-id' added.
     def self.get_instructing_sections(person_id, terms = nil)
       result = []
+      return result if fake?
       terms_list = terms_query_list(terms)
       use_pooled_connection do
         sql = <<-SQL
@@ -99,6 +101,7 @@ module EdoOracle
     #   - 'cs-course-id' added.
     def self.get_associated_secondary_sections(term_id, section_id)
       result = []
+      return result if fake?
       use_pooled_connection do
         sql = <<-SQL
         SELECT
@@ -130,6 +133,7 @@ module EdoOracle
     #   - 'print_cd' replaced with 'print_in_schedule_of_classes' boolean
     def self.get_section_meetings(term_id, section_id)
       results = []
+      return results if fake?
       use_pooled_connection {
         sql = <<-SQL
         SELECT
@@ -166,6 +170,7 @@ module EdoOracle
     # EDO equivalent of CampusOracle::Queries.get_sections_from_ccns
     def self.get_sections_by_ids(term_id, section_ids)
       result = {}
+      return result if fake?
       use_pooled_connection {
         sql = <<-SQL
         SELECT
@@ -194,6 +199,7 @@ module EdoOracle
     # TODO: Update CanvasCsv::SiteMembershipsMaintainer to merge user profile data into this feed.
     def self.get_section_instructors(term_id, section_id)
       results = []
+      return results if fake?
       use_pooled_connection {
         sql = <<-SQL
           SELECT
@@ -232,6 +238,7 @@ module EdoOracle
     #     may exist for LAW as compared to GRAD, UGRAD, or UCBX
     def self.terms
       result = []
+      return result if fake?
       use_pooled_connection {
         sql = <<-SQL
         SELECT
@@ -258,6 +265,7 @@ module EdoOracle
     #   - ''
     def self.get_enrolled_students(section_id, term_id)
       result = []
+      return result if fake?
       use_pooled_connection {
         sql = <<-SQL
         SELECT
@@ -288,6 +296,7 @@ module EdoOracle
     # EDO equivalent of CampusOracle::Queries.has_instructor_history?
     def self.has_instructor_history?(ldap_uid, instructor_terms = nil)
       result = {}
+      return result if fake?
       terms_list = terms_query_list(instructor_terms)
       use_pooled_connection {
         sql = <<-SQL
@@ -308,6 +317,7 @@ module EdoOracle
 
     def self.has_student_history?(ldap_uid, student_terms = nil)
       result = {}
+      return result if fake?
       terms_list = terms_query_list(student_terms)
       use_pooled_connection {
         sql = <<-SQL
