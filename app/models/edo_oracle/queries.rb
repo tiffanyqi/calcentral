@@ -109,7 +109,7 @@ module EdoOracle
         WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
           AND sec."status-code" = 'A'
           AND sec."primary" = 'false'
-          AND sec."term-id" = '#{term_id}' AND
+          AND sec."term-id" = '#{term_id}'
           AND sec."primaryAssociatedSectionId" = '#{section_id}'
         ORDER BY #{CANONICAL_SECTION_ORDERING}
         SQL
@@ -210,7 +210,7 @@ module EdoOracle
             instr."term-id" = sec."term-id" AND
             instr."session-id" = sec."session-id" AND
             instr."offeringNumber" = sec."offeringNumber" AND
-            instr."number" = sec."number"
+            instr."number" = sec."sectionNumber"
           )
           WHERE
             sec."id" = '#{section_id.to_s}' AND
