@@ -12,7 +12,7 @@ angular.module('calcentral.controllers').controller('AdvisorStudentOverviewContr
   };
 
   var loadInformation = function() {
-    advisorStudentOverviewFactory.getStudent({
+    advisorStudentOverviewFactory.getAcademics({
       uid: $routeParams.uid
     }).then(function(data) {
       $scope.student = data.data;

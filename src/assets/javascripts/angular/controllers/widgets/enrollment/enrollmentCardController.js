@@ -7,7 +7,7 @@ var _ = require('lodash');
  * Enrollment Card Controller
  * Main controller for the enrollment card on the My Academics page
  */
-angular.module('calcentral.controllers').controller('EnrollmentCardController', function(apiService, badgesFactory, enrollmentFactory, holdsFactory, $scope, $q) {
+angular.module('calcentral.controllers').controller('EnrollmentCardController', function(apiService, badgesFactory, enrollmentFactory, holdsFactory, $route, $scope, $q) {
   var backToText = 'Class Enrollment';
   var sections = [
     {
@@ -219,7 +219,8 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
    * the enrollment card for students
    */
   var checkRoles = function(data) {
-    if (_.get(data, 'student')) {
+    $scope.isAdvisingStudentLookup = $route.current.isAdvisingStudentLookup;
+    if ($scope.isAdvisingStudentLookup || _.get(data, 'student')) {
       getBadges.then(loadEnrollmentData).then(loadAcademicPlan);
       loadHolds();
     } else {

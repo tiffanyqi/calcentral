@@ -95,7 +95,7 @@ angular.module('calcentral.services').service('userService', function($http, $lo
     profile.actAsOptions = {
       canPost: !(_.get(profile, 'features.preventActingAsUsersFromPosting') &&
       (profile.actingAsUid || profile.delegateActingAsUid || profile.advisorActingAsUid)),
-      canSeeCSLinks: !(profile.delegateActingAsUid || profile.advisorActingAsUid),
+      canSeeCSLinks: !(profile.delegateActingAsUid || profile.advisorActingAsUid) && !$route.current.isAdvisingStudentLookup,
       isDirectlyAuthenticated: !(profile.actingAsUid || profile.delegateActingAsUid || profile.advisorActingAsUid)
     };
 

@@ -138,7 +138,10 @@ Calcentral::Application.routes.draw do
   post '/delete_users/saved' => 'stored_users#delete_all_saved', via: :post, defaults: { format: 'json' }
 
   # Advisor endpoints
-  get '/api/student/:student_uid' => 'student_overview#student', :defaults => { :format => 'json' }
+  get '/api/advising/academic_plan/:student_uid' => 'student_overview#academic_plan', :defaults => { :format => 'json' }
+  get '/api/advising/academics/:student_uid' => 'student_overview#academics', :defaults => { :format => 'json' }
+  get '/api/advising/enrollment_term/:student_uid' => 'student_overview#enrollment_term', :defaults => { :format => 'json' }
+  get '/api/advising/enrollment_terms/:student_uid' => 'student_overview#enrollment_terms', :defaults => { :format => 'json' }
   post '/advisor_act_as' => 'advisor_act_as#start'
   post '/stop_advisor_act_as' => 'advisor_act_as#stop'
 

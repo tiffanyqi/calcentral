@@ -88,7 +88,8 @@ angular.module('calcentral.config').config(function($routeProvider) {
   }).
   when('/advising/student/:uid', {
     templateUrl: 'advisor_student_overview.html',
-    controller: 'AdvisorStudentOverviewController'
+    controller: 'AdvisorStudentOverviewController',
+    isAdvisingStudentLookup: true
   }).
   when('/toolbox', {
     templateUrl: 'toolbox.html',
