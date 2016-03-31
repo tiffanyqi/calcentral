@@ -3,6 +3,10 @@ class OracleBase < ActiveRecord::Base
     self.settings.adapter == "h2"
   end
 
+  def self.fake?
+    self.settings.fake
+  end
+
   # Oracle and H2 have no timestamp formatting function in common.
   def self.timestamp_format(timestamp_column)
     return "formatdatetime(#{timestamp_column}, 'yyyy-MM-dd HH:mm:ss')" if test_data?
