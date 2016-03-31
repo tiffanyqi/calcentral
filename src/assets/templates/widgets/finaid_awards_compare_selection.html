@@ -1,5 +1,5 @@
 <div class="cc-widget-text">
-  <h3>Choose Aid Year and Package to Compare with Current Package {{finaidAwardsCompare.showInformation}}</h3>
+  <h3>Choose Aid Year and Package to Compare with Current Package</h3>
 
   <div data-ng-if="finaidAwardsCompare.information.show">
     The "Current Package" refers to your financial aid award package for the current year. When comparing packages from a previous aid year, the "Current Package" will be the last package from that same aid year. The "Prior Package" refers to the package you choose to compare with the "Current Package". The "Prior Package" you choose can be any package from the same aid year.
@@ -44,7 +44,7 @@
     </div>
     <div data-ng-if="!finaidAwardsCompare.data.list.data.length">
       <i class="fa fa-exclamation-triangle cc-icon-gold"></i>
-      There are no packages available for {{finaidAwardsCompare.selected.aidYear.name}}
+      There are no packages available for <span data-ng-bind="finaidAwardsCompare.selected.aidYear.name"></span>
     </div>
   </div>
 </div>
