@@ -102,7 +102,13 @@ module EdoOracle
       #   "slug" : URL-friendly ID without term information; used by Academics
       #   "course_code" : the short course name as displayed in the UX
       def course_ids_from_row(row)
-        slug = %w(dept_name catalog_id).map { |key| normalize_to_slug row[key] }.join '-'
+        dept_name, catalog_id = row.values_at('dept_name', 'catalog_id')
+        unless dept_name && catalog_id
+          name_components = row['display_name'].split
+          catalog_id = name_components.pop
+          dept_name = name_components.join '_'
+        end
+        slug = [dept_name, catalog_id].map { |str| normalize_to_slug str }.join '-'
         term_code = Berkeley::TermCodes.edo_id_to_code row['term_id']
         {
           course_code: row['display_name'],

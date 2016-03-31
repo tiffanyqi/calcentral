@@ -258,16 +258,30 @@ describe EdoOracle::UserCourses::Base do
   end
 
   describe '#course_ids_from_row' do
-    let(:row) {{
-      'catalog_id' => '0109AL',
-      'dept_name' => 'MEC ENG/I,RES',
-      'display_name' => 'MEC ENG/I,RES 0109AL',
-      'term_id' => '2168'
-    }}
     subject { EdoOracle::UserCourses::Base.new(user_id: random_id).course_ids_from_row row }
-    its([:slug]) { should eq 'mec_eng_i_res-0109al' }
-    its([:id])  {should eq 'mec_eng_i_res-0109al-2016-D' }
-    its([:course_code]) { should eq 'MEC ENG/I,RES 0109AL' }
+    shared_examples 'a well-parsed id set' do
+      its([:slug]) { should eq 'mec_eng_i_res-0109al' }
+      its([:id])  {should eq 'mec_eng_i_res-0109al-2016-D' }
+      its([:course_code]) { should eq 'MEC ENG/I,RES 0109AL' }
+    end
+    context 'dept_name and catalog_id available' do
+      let(:row) {{
+        'catalog_id' => '0109AL',
+        'dept_name' => 'MEC ENG/I,RES',
+        'display_name' => 'MEC ENG/I,RES 0109AL',
+        'term_id' => '2168'
+      }}
+      it_should_behave_like 'a well-parsed id set'
+    end
+    context 'dept_name and catalog_id unavailable' do
+      let(:row) {{
+        'catalog_id' => nil,
+        'dept_name' => nil,
+        'display_name' => 'MEC ENG/I,RES 0109AL',
+        'term_id' => '2168'
+      }}
+      it_should_behave_like 'a well-parsed id set'
+    end
   end
 
   describe '#row_to_feed_item' do
