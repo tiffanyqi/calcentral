@@ -12,20 +12,20 @@ describe StudentOverviewController do
   end
 
   context 'no user in session' do
-    subject { get :student, student_uid: student_uid }
+    subject { get :academics, student_uid: student_uid }
     it 'should return empty json' do
       expect(JSON.parse subject.body).to be_empty
     end
   end
 
-  describe '#student' do
+  describe '#academics' do
     let(:session_user_id) { random_id }
     before do
       allow(User::AggregatedAttributes).to receive(:new).with(student_uid).and_return double get_feed: user_attributes
       allow(MyAcademics::Merged).to receive(:new).with(student_uid).and_return double get_feed: academics
       allow(MyAcademics::Exams).to receive(:new).with(student_uid).and_return double merge: double
     end
-    subject { get :student, student_uid: student_uid }
+    subject { get :academics, student_uid: student_uid }
 
     context 'cannot view_as for all UIDs' do
       it 'should raise an error' do
