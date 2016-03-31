@@ -10,7 +10,7 @@ module CalCentralPages
     h1(:page_heading, :xpath => '//h1[text()="My Finances"]')
 
     # BILLING SUMMARY CARD
-    h2(:billing_summary_heading, :xpath => '//h2[contains(text(),"Billing Summary")]')
+    h2(:billing_summary_heading, :xpath => '//h2[text()="Billing Summary"]')
     link(:details_link, :text => 'Details')
     div(:billing_summary_spinner, :xpath => '//h2[contains(.,"Billing Summary")]/../following-sibling::div[@class="cc-spinner"]')
     paragraph(:no_cars_data_msg, :xpath => '//p[@data-ng-if="myfinancesError"]')

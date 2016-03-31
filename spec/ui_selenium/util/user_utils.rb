@@ -48,14 +48,26 @@ class UserUtils
     Settings.ui_selenium.admin_uid
   end
 
-  def self.initialize_output_csv(spec)
-    output_dir = Rails.root.join('tmp', 'ui_selenium_ouput')
-    output_file = "#{spec.inspect.sub('RSpec::ExampleGroups::', '')}.csv"
-    logger.info("Initializing test output CSV named #{output_file}")
-    unless File.exists?(output_dir)
-      FileUtils.mkdir_p(output_dir)
+  def self.initialize_output_csv(spec, column_headers)
+    if Settings.ui_selenium.layer == 'local'
+      output_dir = Rails.root.join('tmp', 'ui_selenium_ouput')
+      output_file = "#{spec.inspect.sub('RSpec::ExampleGroups::', '')}.csv"
+      logger.info "Initializing test output CSV named #{output_file}"
+      FileUtils.mkdir_p(output_dir) unless File.exists?(output_dir)
+      test_output = Rails.root.join(output_dir, output_file)
+      CSV.open(test_output, 'wb') do |heading|
+        heading << column_headers
+      end
+      test_output
     end
-    Rails.root.join(output_dir, output_file)
+  end
+
+  def self.add_csv_row(file, values)
+    if Settings.ui_selenium.layer == 'local'
+      CSV.open(file, 'a+') do |row|
+        row << values
+      end
+    end
   end
 
   def self.load_test_users

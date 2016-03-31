@@ -6,13 +6,10 @@ describe 'My Academics profile and university requirements cards', :testui => tr
 
     begin
       driver = WebDriverUtils.launch_browser
-      test_output = UserUtils.initialize_output_csv(self)
       test_users = UserUtils.load_test_users
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'User Type', 'Term Transition', 'Colleges', 'Majors', 'Careers', 'Units', 'Level', 'Level No AP']
-      end
+      test_output_heading = ['UID', 'User Type', 'Term Transition', 'Colleges', 'Majors', 'Careers', 'Units', 'GPA', 'Level', 'Level No AP']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['profile']
@@ -20,11 +17,13 @@ describe 'My Academics profile and university requirements cards', :testui => tr
           logger.info("UID is #{uid}")
           user_type = nil
           term_transition = false
-          api_careers = []
           api_colleges = []
           api_majors = []
-          api_level = nil
+          api_careers = []
           api_units = nil
+          api_gpa = nil
+          api_level = nil
+          api_level_no_ap = nil
 
           begin
             splash_page = CalCentralPages::SplashPage.new(driver)
@@ -297,10 +296,9 @@ describe 'My Academics profile and university requirements cards', :testui => tr
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, user_type, term_transition, api_colleges * '; ', api_majors * '; ',
-                                api_careers * '; ', api_units, api_level, api_level_no_ap]
-            end
+            test_output_row = [uid, user_type, term_transition, api_colleges * '; ', api_majors * '; ',
+                               api_careers * '; ', api_units, api_gpa, api_level, api_level_no_ap]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

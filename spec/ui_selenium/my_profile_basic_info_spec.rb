@@ -1,6 +1,6 @@
 describe 'My Profile Basic Info', :testui => true, :order => :defined do
 
-  if ENV['UI_TEST'] && Settings.ui_selenium.layer == 'local'
+  if ENV['UI_TEST'] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 
@@ -37,6 +37,15 @@ describe 'My Profile Basic Info', :testui => true, :order => :defined do
       it ('include a link to Title IV Release') { expect(@basic_info_card.contact_info_link?).to be true }
       it ('include no link to Work Experience') { expect(@basic_info_card.work_experience_link?).to be false }
       it ('include a link to bConnected') { expect(@basic_info_card.contact_info_link?).to be true }
+
+    end
+
+    describe 'viewing official name' do
+
+      it 'shows the first name, middle name, last name, and suffix' do
+        @basic_info_card.name_element.when_visible WebDriverUtils.page_load_timeout
+        expect(@basic_info_card.name).to eql("#{@student_info['officialName']['firstName']} #{@student_info['officialName']['lastName']}")
+      end
 
     end
 

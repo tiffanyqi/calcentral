@@ -6,14 +6,11 @@ describe 'My Finances financial aid messages', :testui => true do
 
     begin
       driver = WebDriverUtils.launch_browser
-      test_output = UserUtils.initialize_output_csv(self)
       test_users = UserUtils.load_test_users
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'Finances Tab', 'Has Messages', 'Has Dupe Messages', 'Has Popover Alert', 'Has Alert Msg',
-                          'Has Info Msg', 'Has Message Msg', 'Has Financial Msg', 'Has Dated Msg', 'Error?']
-      end
+      test_output_heading = ['UID', 'Finances Tab', 'Has Messages', 'Has Dupe Messages', 'Has Popover Alert', 'Has Alert Msg',
+                             'Has Info Msg', 'Has Message Msg', 'Has Financial Msg', 'Has Dated Msg']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['finAid']
@@ -28,7 +25,6 @@ describe 'My Finances financial aid messages', :testui => true do
           has_message = false
           has_financial = false
           has_date = false
-          threw_error = false
 
           begin
             splash_page = CalCentralPages::SplashPage.new(driver)
@@ -159,12 +155,10 @@ describe 'My Finances financial aid messages', :testui => true do
             end
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
-            threw_error = true
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, has_finances_tab, has_messages, has_dupe_messages, has_popover_alert, has_alert, has_info, has_message,
-                                has_financial, has_date, threw_error]
-            end
+            test_output_row = [uid, has_finances_tab, has_messages, has_dupe_messages, has_popover_alert, has_alert, has_info, has_message,
+                               has_financial, has_date]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

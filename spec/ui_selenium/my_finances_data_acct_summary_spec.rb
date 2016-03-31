@@ -6,14 +6,11 @@ describe 'My Finances Billing Summary', :testui => true do
 
     begin
       driver = WebDriverUtils.launch_browser
-      test_output = UserUtils.initialize_output_csv(self)
       test_users = UserUtils.load_test_users
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'Finances Tab', 'CARS Data', 'Acct Bal', 'Amt Due Now', 'Past Due', 'Future Activity',
-                          'On DPP', 'Norm Install', 'DPP Past Due', 'Error?']
-      end
+      test_output_heading = ['UID', 'Finances Tab', 'CARS Data', 'Acct Bal', 'Amt Due Now', 'Past Due', 'Future Activity',
+                             'On DPP', 'Norm Install', 'DPP Past Due']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['finances']
@@ -28,7 +25,6 @@ describe 'My Finances Billing Summary', :testui => true do
           is_dpp = false
           has_dpp_balance = false
           is_dpp_past_due = false
-          threw_error = false
 
           begin
             splash_page = CalCentralPages::SplashPage.new(driver)
@@ -208,12 +204,10 @@ describe 'My Finances Billing Summary', :testui => true do
 
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
-            threw_error = true
           ensure
-            CSV.open(test_output, 'a+') do |user_info_csv|
-              user_info_csv << [uid, has_finances_tab, has_cars_data, acct_bal, amt_due_now, has_past_due_amt, has_future_activity,
-                                is_dpp, has_dpp_balance, is_dpp_past_due, threw_error]
-            end
+            test_output_row = [uid, has_finances_tab, has_cars_data, acct_bal, amt_due_now, has_past_due_amt, has_future_activity,
+                               is_dpp, has_dpp_balance, is_dpp_past_due]
+            UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
       end

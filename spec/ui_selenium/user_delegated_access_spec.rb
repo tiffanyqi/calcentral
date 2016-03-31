@@ -108,7 +108,7 @@ describe 'Delegated access', :testui => true do
               api_students = @cs_delegate_students_api.student_names
               it ("shows delegate UID #{uid} the list of linked students") { expect(ui_students).to eql(api_students) }
 
-              subscribe_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.subscribe_to_calendar_element, 'Calendar | Office of the Registrar')
+              subscribe_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.subscribe_to_calendar_element, 'UC Berkeley Academic Calendar - Office Of The Registrar')
               it ("shows delegate UID #{uid} a link to 'Subscribe to the Academic Calendar'") { expect(subscribe_calendar_link).to be true }
 
               grad_div_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.grad_div_deadlines_element, 'Degree Deadlines | Berkeley Graduate Division')
@@ -135,7 +135,7 @@ describe 'Delegated access', :testui => true do
               academics_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academics_element, 'UC Berkeley - Cal Parents')
               it ("shows delegate UID #{uid} a link to 'Academics'") { expect(academics_link).to be true }
 
-              academic_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academic_calendar_element, 'Calendar | Office of the Registrar')
+              academic_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academic_calendar_element, 'UC Berkeley Academic Calendar - Office Of The Registrar')
               it ("shows delegate UID #{uid} a link to 'Academic Calendar'") { expect(academic_calendar_link).to be true }
 
               newscenter_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.news_center_element, 'Berkeley News | News from the University of California, Berkeley')
@@ -218,7 +218,7 @@ describe 'Delegated access', :testui => true do
 
                     # Profile - career
                     unless @academics_api.has_no_standing?
-                      shows_career = @academic_profile_card.all_careers.any?
+                      shows_career = @academic_profile_card.career?
                       it ("shows delegate UID #{uid} the academic career for UID #{student_uid}") { expect(shows_career).to be true }
                     end
 
@@ -398,7 +398,7 @@ describe 'Delegated access', :testui => true do
                       api_aid_years.each do |year|
 
                         if @cs_fin_aid_years_api.t_and_c_approval year
-                          @finances_fin_aid_page.load_fin_aid_profile @cs_fin_aid_years_api.fin_aid_year_id(year)
+                          @finances_fin_aid_page.load_fin_aid_profile year
                           @finances_fin_aid_page.show_profile
 
                           shows_efc = @finances_fin_aid_page.efc?
@@ -551,7 +551,7 @@ describe 'Delegated access', :testui => true do
 
                   blocks_ccadmin = WebDriverUtils.verify_block do
                     @driver.get "#{WebDriverUtils.base_url}/ccadmin"
-                    wait.until { @driver.find_element(:xpath => '//pre').text == ' ' }
+                    wait.until { @cal_net_page.username? }
                   end
                   it ("prevents UID #{uid} from reaching CCAdmin for UID #{student_uid}") { expect(blocks_ccadmin).to be true }
 

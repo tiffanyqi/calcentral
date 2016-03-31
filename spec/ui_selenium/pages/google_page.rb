@@ -58,7 +58,7 @@ class GooglePage
     log_into_google(gmail_user, gmail_pass)
     if current_url.include? 'oauth2'
       logger.info('Google permissions page loaded as expected')
-      sleep 3
+      sleep WebDriverUtils.page_event_timeout
       WebDriverUtils.wait_for_element_and_click approve_access_button_element
     else
       logger.warn('Google permissions page did not load')
@@ -93,7 +93,7 @@ class GooglePage
 
   def send_email(recipient, subject, body)
     logger.info("Sending an email with the subject #{subject}")
-    sleep 3
+    sleep WebDriverUtils.page_event_timeout
     WebDriverUtils.wait_for_page_and_click compose_email_button_element
     WebDriverUtils.wait_for_element_and_click new_message_heading_element
     new_message_heading
@@ -101,7 +101,7 @@ class GooglePage
     WebDriverUtils.wait_for_element_and_type(to_element, recipient)
     self.subject_element.value = subject
     self.body_element.value = body
-    sleep 3
+    sleep WebDriverUtils.page_event_timeout
     send_email_button
     mail_sent_link_element.when_present(timeout=WebDriverUtils.page_event_timeout)
   end
@@ -111,7 +111,7 @@ class GooglePage
     WebDriverUtils.wait_for_page_and_click create_event_button_element
     WebDriverUtils.wait_for_element_and_click event_title_element
     self.event_title_element.value = event_name
-    sleep 3
+    sleep(WebDriverUtils.page_event_timeout)
     WebDriverUtils.wait_for_element_and_click event_location_element
     self.event_location_element.value = location
     sleep 3

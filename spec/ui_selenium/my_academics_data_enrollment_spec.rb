@@ -9,12 +9,10 @@ describe 'My Academics enrollments', :testui => true do
       driver = WebDriverUtils.launch_browser
 
       test_users = UserUtils.load_test_users
-      test_output = UserUtils.initialize_output_csv(self)
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'Semester', 'CCN', 'Course Code', 'Course Title', 'Section', 'Grade Option', 'Units', 'Schedule', 'Wait List Position']
-      end
+      test_output_heading = ['UID', 'Semester', 'CCN', 'Course Code', 'Course Title', 'Section', 'Primary?',
+                            'Grade Option', 'Grade', 'Units', 'Schedule', 'Wait List Position']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['enrollments']
@@ -51,7 +49,7 @@ describe 'My Academics enrollments', :testui => true do
 
                 show_more_button_visible = my_academics.show_more_element.visible?
                 if all_semester_names.length > default_semester_names.length ||
-                  (academics_api_page.past_semesters(all_semesters).any? && !academics_api_page.addl_credits.nil?)
+                    (academics_api_page.past_semesters(all_semesters).any? && !academics_api_page.addl_credits.nil?)
                   it "offers a 'Show More' button for UID #{uid}" do
                     expect(show_more_button_visible).to be true
                   end
@@ -67,9 +65,7 @@ describe 'My Academics enrollments', :testui => true do
                 end
 
                 all_semesters.each do |semester|
-                  if my_academics.show_more_element.visible?
-                    my_academics.show_more
-                  end
+                  my_academics.show_more if my_academics.show_more_element.visible?
                   begin
                     semester_name = academics_api_page.semester_name(semester)
                     semester_courses = academics_api_page.semester_courses(semester)
@@ -101,23 +97,6 @@ describe 'My Academics enrollments', :testui => true do
                       expect(academics_page_course_grades).to eql(api_grades)
                     end
 
-                    # ADDITIONAL CREDIT
-
-                    unless academics_api_page.addl_credits.nil?
-
-                      api_addl_titles = academics_api_page.addl_credits_titles
-                      api_addl_units = academics_api_page.addl_credits_units
-
-                      academics_page_addl_titles = my_academics.addl_credit_titles
-                      academics_page_addl_units = my_academics.addl_credit_units
-
-                      it "shows the Additional Credit titles for UID #{uid}" do
-                        expect(academics_page_addl_titles).to eql(api_addl_titles)
-                      end
-                      it "shows the Additional Credit units for UID #{uid}" do
-                        expect(academics_page_addl_units).to eql(api_addl_units)
-                      end
-                    end
 
                     # SEMESTER PAGES
 
@@ -205,7 +184,7 @@ describe 'My Academics enrollments', :testui => true do
 
                       # CLASS PAGES
 
-                      semester_card_courses.each do |course|
+                      semester_courses.each do |course|
 
                         begin
 
@@ -214,6 +193,7 @@ describe 'My Academics enrollments', :testui => true do
 
                           # Multiple primary sections in a course have one class page per primary section
                           if academics_api_page.multiple_primaries?(course)
+                            logger.warn "Found multiple primary sections in #{semester_name} #{api_course_code}"
                             academics_api_page.course_primary_sections(course).each do |prim_section|
 
                               api_sections = academics_api_page.associated_sections(course, prim_section)
@@ -284,14 +264,12 @@ describe 'My Academics enrollments', :testui => true do
                                 expect(class_page_section_schedules).to eql(api_section_schedules)
                               end
 
-                              if semester == academics_api_page.current_semester(all_semesters) || academics_api_page.future_semesters(all_semesters).include?(semester)
-                                api_sections.each do |api_section|
-                                  i = api_sections.index(api_section)
-                                  CSV.open(test_output, 'a+') do |user_info_csv|
-                                    user_info_csv << [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
-                                                      api_grade_options[i], api_section_units[i], api_section_schedules[i], academics_api_page.wait_list_position(api_section)]
-                                  end
-                                end
+                              api_sections.each do |api_section|
+                                i = api_sections.index(api_section)
+                                test_output_row = [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
+                                                   academics_api_page.primary_section?(api_section), api_grade_options[i], api_section_units[i],
+                                                   nil, api_section_schedules[i], academics_api_page.wait_list_position(api_section)]
+                                UserUtils.add_csv_row(test_output, test_output_row)
                               end
 
                               class_page.back
@@ -367,14 +345,12 @@ describe 'My Academics enrollments', :testui => true do
                               expect(class_page_section_schedules).to eql(api_section_schedules)
                             end
 
-                            if semester == academics_api_page.current_semester(all_semesters) || academics_api_page.future_semesters(all_semesters).include?(semester)
-                              api_sections.each do |api_section|
-                                i = api_sections.index(api_section)
-                                CSV.open(test_output, 'a+') do |user_info_csv|
-                                  user_info_csv << [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
-                                                    api_grade_options[i], api_section_units[i], api_section_schedules[i], academics_api_page.wait_list_position(api_section)]
-                                end
-                              end
+                            api_sections.each do |api_section|
+                              i = api_sections.index(api_section)
+                              test_output_row = [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
+                                                 academics_api_page.primary_section?(api_section), api_grade_options[i], nil, api_section_units[i],
+                                                 api_section_schedules[i], academics_api_page.wait_list_position(api_section)]
+                              UserUtils.add_csv_row(test_output, test_output_row)
                             end
 
                             class_page.back
@@ -385,14 +361,43 @@ describe 'My Academics enrollments', :testui => true do
 
                       semester_page.back
 
-                    elsif academics_api_page.current_semester(all_semesters) == semester || academics_api_page.future_semesters(all_semesters).include?(semester)
+                    else
                       logger.info "Found non-official enrollments for #{semester_name}"
                       semester_card_courses.each do |course|
                         i = semester_card_courses.index(course)
-                        CSV.open(test_output, 'a+') << [uid, semester_name, nil, api_course_codes[i], api_course_titles[i], nil, nil, api_units[i],nil, nil]
+                        test_output_row = [uid, semester_name, nil, api_course_codes[i], api_course_titles[i], nil,
+                                           nil, nil, api_grades[i], api_units[i], nil, nil]
+                        UserUtils.add_csv_row(test_output, test_output_row)
                       end
                     end
                   end
+                end
+
+                # ADDITIONAL CREDIT
+
+                unless academics_api_page.addl_credits.nil?
+
+                  my_academics.show_more if my_academics.show_more_element.visible?
+
+                  api_addl_titles = academics_api_page.addl_credits_titles
+                  api_addl_units = academics_api_page.addl_credits_units
+
+                  academics_page_addl_titles = my_academics.addl_credit_titles
+                  academics_page_addl_units = my_academics.addl_credit_units
+
+                  it "shows the Additional Credit titles for UID #{uid}" do
+                    expect(academics_page_addl_titles).to eql(api_addl_titles)
+                  end
+                  it "shows the Additional Credit units for UID #{uid}" do
+                    expect(academics_page_addl_units).to eql(api_addl_units)
+                  end
+
+                  api_addl_titles.each do |title|
+                    i = api_addl_titles.index title
+                    test_output_row = [uid, nil, nil, nil, api_addl_titles[i], nil, nil, nil, nil, api_addl_units[i], nil, nil]
+                    UserUtils.add_csv_row(test_output, test_output_row)
+                  end
+
                 end
               end
             end

@@ -9,12 +9,10 @@ describe 'My Academics teaching', :testui => true do
       driver = WebDriverUtils.launch_browser
 
       test_users = UserUtils.load_test_users
-      test_output = UserUtils.initialize_output_csv(self)
       testable_users = []
-
-      CSV.open(test_output, 'wb') do |user_info_csv|
-        user_info_csv << ['UID', 'GSI', 'Semester', 'Course Title', 'Listing']
-      end
+      test_output_heading = ['UID', 'Semester', 'Course Title', 'Listing Code', 'Cross-listings', 'Schedule Format', 'Primary?',
+                             'Schedule Building', 'Schedule Room', 'Schedule Time', 'Instructor']
+      test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
         if user['teaching']
@@ -181,10 +179,12 @@ describe 'My Academics teaching', :testui => true do
                           expect(class_page_section_instructors).to eql(api_section_instructors)
                         end
 
-                        if semester == academics_api_page.current_semester(all_semesters) || academics_api_page.future_semesters(all_semesters).include?(semester)
-                          CSV.open(test_output, 'a+') do |user_info_csv|
-                            user_info_csv << [uid, status_api_page.is_student?, semester_name, api_course_title, course_code]
-                          end
+                        api_sections.each do |section|
+                          test_output_row = [uid, semester_name, api_course_title, course_code, listing_codes * "\r",
+                                             academics_api_page.section_label(section), academics_api_page.primary_section?(section),
+                                             academics_api_page.section_buildings(section) * "\r", academics_api_page.section_rooms(section) * "\r",
+                                             academics_api_page.section_times(section) * "\r", academics_api_page.section_instructor_names(section) * "\r"]
+                          UserUtils.add_csv_row(test_output, test_output_row)
                         end
 
                         class_page.back

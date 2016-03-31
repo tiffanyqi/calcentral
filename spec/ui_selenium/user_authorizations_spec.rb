@@ -162,7 +162,7 @@ describe 'User authorization', :testui => true, :order => :defined do
             cal_net_auth_page.wait_until(timeout) { cal_net_auth_page.password.blank? }
             dashboard_page = CalCentralPages::MyDashboardPage.new(@driver)
             dashboard_page.load_page
-            dashboard_page.notifications_heading_element.when_visible
+            dashboard_page.wait_for_expected_title?
           end
         end
         context 'enters invalid re-auth credentials' do
@@ -172,7 +172,7 @@ describe 'User authorization', :testui => true, :order => :defined do
             cal_net_auth_page.wait_until(timeout) { cal_net_auth_page.password.blank? }
             dashboard_page = CalCentralPages::MyDashboardPage.new(@driver)
             dashboard_page.load_page
-            dashboard_page.notifications_heading_element.when_visible
+            dashboard_page.wait_for_expected_title?
           end
         end
       end
@@ -189,7 +189,7 @@ describe 'User authorization', :testui => true, :order => :defined do
             cal_net_auth_page = CalNetAuthPage.new(@driver)
             cal_net_auth_page.login(UserUtils.oski_username, UserUtils.oski_password)
             dashboard_page = CalCentralPages::MyDashboardPage.new(@driver)
-            dashboard_page.notifications_heading_element.when_visible
+            dashboard_page.wait_for_expected_title?
           end
         end
         context 'enters invalid re-auth credentials' do
@@ -199,7 +199,7 @@ describe 'User authorization', :testui => true, :order => :defined do
             cal_net_auth_page.wait_until(timeout) { cal_net_auth_page.password.blank? }
             dashboard_page = CalCentralPages::MyDashboardPage.new(@driver)
             dashboard_page.load_page
-            dashboard_page.notifications_heading_element.when_visible
+            dashboard_page.wait_for_expected_title?
           end
         end
       end

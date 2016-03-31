@@ -3,7 +3,7 @@ describe 'My Dashboard', :testui => true, :order => :defined do
   if ENV["UI_TEST"]
 
     # Don't run Canvas test when weekend refresh is happening in Beta environment
-    unless Settings.ui_selenium.layer == 'production' || Date.today.sunday? || Date.today.monday?
+    unless Settings.ui_selenium.layer == 'production' || Date.today.sunday?
 
       include ClassLogger
 
