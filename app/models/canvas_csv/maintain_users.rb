@@ -134,7 +134,7 @@ module CanvasCsv
       end
     end
 
-    def categorize_user_account(existing_account, campus_user_rows)
+    def categorize_user_account(existing_account, campus_user_attributes)
       # Convert from CSV::Row for easier manipulation.
       old_account_data = existing_account.to_hash
       parsed_login_id = self.class.parse_login_id old_account_data['login_id']
@@ -142,18 +142,12 @@ module CanvasCsv
       inactive_account = parsed_login_id[:inactive_account]
       if ldap_uid
         @known_uids << ldap_uid.to_s
-        campus_row = campus_user_rows.select { |r| (r['ldap_uid'].to_i == ldap_uid) && (r['person_type'] != 'Z') }.first
-        if campus_row.present?
+        campus_user = campus_user_attributes.select { |r| (r[:ldap_uid].to_i == ldap_uid) && !r[:roles][:expiredAccount] }.first
+        if campus_user.present?
           logger.warn "Reactivating account for LDAP UID #{ldap_uid}" if inactive_account
-          new_account_data = canvas_user_from_campus_row(campus_row)
+          new_account_data = canvas_user_from_campus_attributes campus_user
         else
           return unless Settings.canvas_proxy.inactivate_expired_users
-          if (ldap_result = CalnetLdap::Client.new.search_by_uid(ldap_uid)).present?
-            # Our LDAP bind does not provide enough data to fully update the Canvas account, and so
-            # all we can do is log the disconnect between LDAP and our campus DB.
-            logger.error "UID #{ldap_uid} is not in DB but LDAP reports #{ldap_result.inspect}"
-            return
-          end
           # This LDAP UID no longer appears in campus data. Mark the Canvas user account as inactive.
           logger.warn "Inactivating account for LDAP UID #{ldap_uid}" unless inactive_account
           if old_account_data['email'].present?
@@ -176,7 +170,7 @@ module CanvasCsv
     end
 
     def compare_to_campus(accounts_batch)
-      campus_user_rows = CampusOracle::Queries.get_basic_people_attributes(accounts_batch.collect do |r|
+      campus_user_rows = User::BasicAttributes.attributes_for_uids(accounts_batch.collect do |r|
           r['login_id'].to_s.gsub(/^inactive-/, '')
         end
       )

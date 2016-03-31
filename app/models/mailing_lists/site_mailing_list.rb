@@ -243,15 +243,15 @@ module MailingLists
       add_member_proxy = Calmail::AddListMember.new
 
       course_users.map{ |user| user['login_id'] }.each_slice(1000) do |uid_slice|
-        user_slice = CampusOracle::Queries.get_basic_people_attributes uid_slice
+        user_slice = User::BasicAttributes.attributes_for_uids uid_slice
         user_slice.each do |user|
-          if (user_address = user['email_address'])
+          if (user_address = user[:email_address])
             user_address.downcase!
             addresses_to_remove.delete user_address
             unless list_address_set.include? user_address
               population_results[:add][:total] += 1
               logger.debug "Adding address #{user_address}"
-              proxy_response = add_member_proxy.add_member(self.list_name, user_address, "#{user['first_name']} #{user['last_name']}")
+              proxy_response = add_member_proxy.add_member(self.list_name, user_address, "#{user[:first_name]} #{user[:last_name]}")
               if proxy_response[:response] && proxy_response[:response][:added]
                 population_results[:add][:success] += 1
               else
@@ -259,7 +259,7 @@ module MailingLists
               end
             end
           else
-            logger.warn "No email address found for UID #{user['ldap_uid']}"
+            logger.warn "No email address found for UID #{user[:ldap_uid]}"
           end
         end
       end

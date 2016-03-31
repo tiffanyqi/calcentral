@@ -193,7 +193,7 @@ module CanvasCsv
       logger.debug "Adding UID #{login_uid} to SIS Section: #{sis_section_id} as role: #{canvas_api_role}"
       @enrollments_csv_output << {
         'course_id' => @sis_course_id,
-        'user_id' => derive_sis_user_id(campus_data_row),
+        'user_id' => derive_sis_user_id(User::BasicAttributes.transform_campus_row campus_data_row),
         'role' => api_role_to_csv_role(canvas_api_role),
         'section_id' => sis_section_id,
         'status' => 'active'
@@ -214,7 +214,7 @@ module CanvasCsv
     def add_user_if_new(campus_data_row)
       uid = campus_data_row['ldap_uid']
       unless @known_users.include?(uid)
-        @users_csv_output << canvas_user_from_campus_row(campus_data_row)
+        @users_csv_output << canvas_user_from_campus_attributes(User::BasicAttributes.transform_campus_row campus_data_row)
         @known_users << uid
       end
     end
