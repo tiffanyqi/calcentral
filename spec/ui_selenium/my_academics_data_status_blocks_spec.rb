@@ -9,7 +9,7 @@ describe 'My Academics Status and Blocks', :testui => true do
 
       test_users = UserUtils.load_test_users
       testable_users = []
-      test_output_heading = ['UID', 'Student', 'Ex-Student', 'Registered', 'Resident', 'Active Block', 'Block Types', 'Block History']
+      test_output_heading = ['UID', 'Student', 'Ex-Student', 'Registered', 'Resident', 'Needs Action', 'Active Block', 'Block Types', 'Block History']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
@@ -18,6 +18,7 @@ describe 'My Academics Status and Blocks', :testui => true do
           logger.info("UID is #{uid}")
           api_reg_status = nil
           api_res_status = nil
+          api_res_needs_action = nil
           has_active_block = nil
           popover_block_count = nil
           block_types = nil
@@ -41,7 +42,7 @@ describe 'My Academics Status and Blocks', :testui => true do
 
             # Check contents of profile popover
             my_academics_page.open_profile_popover
-            has_status_heading = my_academics_page.status_popover_heading_element.visible?
+            has_status_heading = WebDriverUtils.verify_block { my_academics_page.status_popover_heading_element.when_visible 3 }
             has_reg_alert = my_academics_page.reg_status_alert?
             has_block_alert = my_academics_page.block_status_alert?
             popover_block_count = my_academics_page.block_status_alert_number if has_block_alert
@@ -171,9 +172,24 @@ describe 'My Academics Status and Blocks', :testui => true do
                   api_res_needs_action = badges_api_page.residency_needs_action
                   my_acad_res_status = my_academics_page.res_status_summary
 
-                      it "shows residency status of '#{my_acad_res_status}' for UID #{uid}" do
-                        expect(my_acad_res_status).to eql(api_res_status)
-                      end
+                  it "shows residency status of '#{my_acad_res_status}' for UID #{uid}" do
+                    expect(my_acad_res_status).to eql(api_res_status)
+                  end
+
+                  shows_residency_info_link = my_academics_page.res_info_link?
+                  if api_res_status == 'Non-Resident'
+                    it "shows a 'residency info' link for UID #{uid}" do
+                      expect(shows_residency_info_link).to be true
+                    end
+                    residency_info_link_works = WebDriverUtils.verify_external_link(driver, my_academics_page.res_info_link_element, 'Tuition, Fees, & Residency | Office of the Registrar')
+                    it "offers a valid 'residency info' link for UID #{uid}" do
+                      expect(residency_info_link_works).to be true
+                    end
+                  else
+                    it "shows no 'residency info' link for UID #{uid}" do
+                      expect(shows_residency_info_link).to be false
+                    end
+                  end
 
                   if api_res_needs_action == true
                     has_red_res_status_icon = my_academics_page.res_status_icon_red?
@@ -346,7 +362,8 @@ describe 'My Academics Status and Blocks', :testui => true do
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
           ensure
-            test_output_row = [uid, is_student, is_ex_student, api_reg_status, api_res_status, has_active_block, block_types, has_block_history]
+            test_output_row = [uid, is_student, is_ex_student, api_reg_status, api_res_status, api_res_needs_action, has_active_block,
+                               block_types, has_block_history]
             UserUtils.add_csv_row(test_output, test_output_row)
           end
         end
