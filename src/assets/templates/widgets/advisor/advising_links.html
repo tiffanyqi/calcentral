@@ -1,0 +1,48 @@
+<ul class="cc-list-links">
+  <li data-ng-if="api.user.profile.features.csAcademicProgressReport && ucAdvisingResources.ucAdvisingLinks.ucAcademicProgressReport">
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="ucAdvisingResources.ucAdvisingLinks.ucAcademicProgressReport"
+      data-text="Academic Progress Report"
+    ></div>
+  </li>
+  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.ucServiceIndicator">
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="ucAdvisingResources.ucAdvisingLinks.ucServiceIndicator"
+    ></div>
+  </li>
+  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.ucStudentAdvisor">
+    <a
+      data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.ucStudentAdvisor.url}}"
+    >Advising Assignments</a>
+  </li>
+  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.ucReportingCenter">
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="ucAdvisingResources.ucAdvisingLinks.ucReportingCenter"
+      data-text="Reporting Center"
+    ></div>
+  </li>
+  <li data-ng-if="api.user.profile.features.csAdvisingGteForms && ucAdvisingResources.ucAdvisingLinks.ucGteformsWorkcenter">
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="ucAdvisingResources.ucAdvisingLinks.ucGteformsWorkcenter"
+      data-text="GTE Forms"
+    ></div>
+  </li>
+  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.classSearch.url">
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="ucAdvisingResources.ucAdvisingLinks.classSearch"
+      data-text="Schedule of Classes - Class Search"
+    ></div>
+  </li>
+  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.scheduleClasses">
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="ucAdvisingResources.ucAdvisingLinks.scheduleClasses"
+      data-text="Schedule of Classes - Scheduler View"
+    ></div>
+  </li>
+</ul>

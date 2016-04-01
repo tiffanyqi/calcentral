@@ -3,6 +3,22 @@
     <h2>Personal Summary</h2>
   </div>
   <div class="cc-widget-text" data-cc-spinner-directive="academics.isLoading">
-    Student photo and more...
+
+    <div data-ng-bind="student.attributes.defaultName"></div>
+
+    <div data-ng-include="'widgets/academics/college_and_level.html'"></div>
+
+    <hr/>
+
+    Terms in Attendance <div data-ng-bind="student.attributes.defaultName"></div>
+
+    <hr/>
+
+    Contact Information
+
+    <hr/>
+
+    <div data-ng-include="'widgets/advisor/advising_links.html'"></div>
+
   </div>
 </div>
