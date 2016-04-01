@@ -1,12 +1,10 @@
 module EdoOracle
   module UserCourses
-
-    APP_ID = 'Campus'
-
     class Base < BaseProxy
+      include EdoOracle::QueryCaching
 
       def initialize(options = {})
-        super(Settings.campusdb, options)
+        super(Settings.edodb, options)
         @uid = @settings.fake_user_id if @fake
         # Non-legacy terms are those after Settings.terms.legacy_cutoff.
         @non_legacy_academic_terms = Berkeley::Terms.fetch.campus.values.reject &:legacy?
