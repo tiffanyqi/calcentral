@@ -168,6 +168,11 @@ module EdoOracle
     end
 
     # EDO equivalent of CampusOracle::Queries.get_sections_from_ccns
+    # Changes:
+    #   - 'course_cntl_num' is replaced with 'section_id'
+    #   - 'term_yr' and 'term_cd' replaced by 'term_id'
+    #   - 'catalog_suffix_1' and 'catalog_suffix_2' replaced by 'catalog_suffix' (combined)
+    #   - 'primary_secondary_cd' replaced by Boolean 'primary'
     def self.get_sections_by_ids(term_id, section_ids)
       result = {}
       return result if fake?
@@ -195,8 +200,6 @@ module EdoOracle
     #   - Does not provide all user profile fields ('email_address', 'student_id', 'affiliations').
     #     This will require a programmatic join at a higher level.
     #     See CLC-6239 for implementation of batch LDAP profile requests.
-    #
-    # TODO: Update CanvasCsv::SiteMembershipsMaintainer to merge user profile data into this feed.
     def self.get_section_instructors(term_id, section_id)
       results = []
       return results if fake?
@@ -256,7 +259,7 @@ module EdoOracle
       result
     end
 
-    # EDO equivalent of CampusOracle::Queries.get_section_instructors
+    # EDO equivalent of CampusOracle::Queries.get_enrolled_students
     # Changes:
     #   - 'ccn' replaced by 'section_id' argument
     #   - 'term_yr' and 'term_yr' replaced by 'term_id'

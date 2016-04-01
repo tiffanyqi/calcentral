@@ -152,7 +152,7 @@ module CanvasCsv
 
     def refresh_students_in_section(campus_section, section_id, canvas_section_enrollments)
       logger.debug "Refreshing students in section: #{section_id}"
-      campus_data_rows = CampusOracle::Queries.get_enrolled_students(campus_section[:ccn], campus_section[:term_yr], campus_section[:term_cd])
+      campus_data_rows = CanvasLti::SisAdapter.get_enrolled_students(campus_section[:ccn], campus_section[:term_yr], campus_section[:term_cd])
       logger.debug "#{campus_data_rows.count} student enrollments found for #{section_id}"
       campus_data_rows.each do |campus_data_row|
         next unless (canvas_api_role = ENROLL_STATUS_TO_CANVAS_API_ROLE[campus_data_row['enroll_status']])
@@ -163,7 +163,7 @@ module CanvasCsv
     def refresh_teachers_in_section(campus_section, section_id, teacher_role, canvas_section_enrollments)
       logger.debug "Refreshing teachers in section: #{section_id}"
       canvas_api_role = CANVAS_SIS_ROLE_TO_CANVAS_API_ROLE[teacher_role]
-      campus_data_rows = CampusOracle::Queries.get_section_instructors(campus_section[:term_yr], campus_section[:term_cd], campus_section[:ccn])
+      campus_data_rows = CanvasLti::SisAdapter.get_section_instructors(campus_section[:ccn], campus_section[:term_yr], campus_section[:term_cd])
       logger.debug "#{campus_data_rows.count} instructor enrollments found for #{section_id}"
       campus_data_rows.each do |campus_data_row|
         update_section_enrollment_from_campus(canvas_api_role, section_id, campus_data_row, canvas_section_enrollments)
@@ -262,7 +262,7 @@ module CanvasCsv
       # of term_yr/term_cd/ccn hashes.
       terms_to_sections.each do |term, sections|
         ccns = sections.collect {|sec| sec[:ccn]}
-        data_rows = CampusOracle::Queries.get_sections_from_ccns(term[:term_yr], term[:term_cd], ccns)
+        data_rows = CanvasLti::SisAdapter.get_sections_by_ids(ccns, term[:term_yr], term[:term_cd])
         data_rows.each do |row|
           sec = term.merge(ccn: row['course_cntl_num'])
           sections_map[sec] = row['primary_secondary_cd']
