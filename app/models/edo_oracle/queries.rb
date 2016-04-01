@@ -259,7 +259,7 @@ module EdoOracle
       result
     end
 
-    # EDO equivalent of CampusOracle::Queries.get_section_instructors
+    # EDO equivalent of CampusOracle::Queries.get_enrolled_students
     # Changes:
     #   - 'ccn' replaced by 'section_id' argument
     #   - 'term_yr' and 'term_yr' replaced by 'term_id'
