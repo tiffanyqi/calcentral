@@ -6,7 +6,7 @@ module EdoOracle
         # Sort to get canonical cache key.
         course_ids = course_ids.sort
         term_id = Berkeley::TermCodes.to_edo_id(term_yr, term_cd)
-        self.class.fetch_from_cache "selected_sections-#{term_id}-#{course_ids.join(',')}" do
+        cached_query "selected_sections-#{term_id}-#{course_ids.join(',')}" do
           campus_classes = {}
           sections = EdoOracle::Queries.get_sections_by_ids(term_id, course_ids)
           previous_item = {}

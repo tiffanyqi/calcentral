@@ -7,7 +7,7 @@ module EdoOracle
       def get_all_campus_courses
         # Because this data structure is used by multiple top-level feeds, it's essential
         # that it be cached efficiently.
-        self.class.fetch_from_cache @uid do
+        cached_query @uid do
           campus_classes = {}
           merge_instructing campus_classes
           merge_enrollments campus_classes
@@ -24,7 +24,7 @@ module EdoOracle
       end
 
       def get_enrollments_summary
-        self.class.fetch_from_cache "summary-#{@uid}" do
+        cached_query "summary-#{@uid}" do
           campus_classes = {}
           merge_enrollments campus_classes
           Hash[campus_classes.sort.reverse]
