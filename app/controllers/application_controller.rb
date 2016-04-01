@@ -58,7 +58,12 @@ class ApplicationController < ActionController::Base
   def allow_if_advisor_view_as?
     true
   end
+  def allow_if_classic_view_as?
+    true
+  end
   def deny_if_filtered
+    deny_view_as = !allow_if_classic_view_as? && current_user.classic_viewing_as?
+    raise Pundit::NotAuthorizedError.new("By View As user #{current_user.original_user_id}") if deny_view_as
     deny_delegate = !allow_if_delegate_view_as? && current_user.authenticated_as_delegate?
     raise Pundit::NotAuthorizedError.new("By delegate #{current_user.original_delegate_user_id}") if deny_delegate
     deny_advisor = !allow_if_advisor_view_as? && current_user.authenticated_as_advisor?

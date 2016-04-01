@@ -11,6 +11,7 @@ module UpNext
     def init
       @begin_today = Time.zone.today.in_time_zone.to_datetime
       @next_day = begin_today.advance(:days => 1)
+      self
     end
 
     def get_feed_internal

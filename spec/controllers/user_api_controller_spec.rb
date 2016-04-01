@@ -34,6 +34,8 @@ describe UserApiController do
       expect(json_response['uid']).to eq user_id
       expect(json_response['preferredName']).to be_present
       expect(json_response['features']).to be_present
+      expect(json_response['isDirectlyAuthenticated']).to be true
+      expect(json_response['canActOnFinances']).to be true
       visit = User::Visit.where(:uid => session['user_id'])[0]
       expect(visit.last_visit_at).to be_present
     end
@@ -101,6 +103,7 @@ describe UserApiController do
       end
       it 'should identify user in delegate-view-as mode' do
         expect(subject['delegateActingAsUid']).to eq original_delegate_user_id
+        expect(subject['isDirectlyAuthenticated']).to be false
       end
       it 'should remove preferred name and other sensitive during delegate-view-as mode' do
         expect(subject['delegateActingAsUid']).to eq original_delegate_user_id
@@ -133,8 +136,10 @@ describe UserApiController do
           end
         end
       end
-      it 'should identify user in delegate-view-as mode' do
+      it 'should identify user in advisor-view-as mode' do
         expect(subject['advisorActingAsUid']).to eq original_advisor_user_id
+        expect(subject['isDirectlyAuthenticated']).to be false
+        expect(subject['canActOnFinances']).to be false
       end
     end
   end
@@ -239,6 +244,18 @@ describe UserApiController do
           let(:original_user_id) { nil }
           before { session['lti_authenticated_only'] = true }
           it { should eq 403 }
+        end
+      end
+
+      context 'when viewing as' do
+        subject do
+          get :mystatus
+          JSON.parse response.body
+        end
+        let(:original_user_id) { random_id }
+        it 'does not allow changing financial data' do
+          expect(subject['isDirectlyAuthenticated']).to be false
+          expect(subject['canActOnFinances']).to be false
         end
       end
     end

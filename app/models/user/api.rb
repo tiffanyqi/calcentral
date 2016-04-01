@@ -17,6 +17,7 @@ module User
       @first_login_at ||= @calcentral_user_data ? @calcentral_user_data.first_login_at : nil
       @override_name ||= @calcentral_user_data ? @calcentral_user_data.preferred_name : nil
       @delegate_students = get_delegate_students
+      self
     end
 
     def instance_key
@@ -130,6 +131,7 @@ module User
       feed[:canViewGrades] = false unless view_as_privileges[:viewGrades]
       feed[:hasFinancialsTab] = false unless view_as_privileges[:financial]
       feed[:hasAcademicsTab] = false unless view_as_privileges[:viewEnrollments] || view_as_privileges[:viewGrades]
+      feed[:canActOnFinances] = !!view_as_privileges[:financial]
       feed
     end
 
@@ -147,6 +149,10 @@ module User
       has_instructor_history = CampusOracle::UserCourses::HasInstructorHistory.new(user_id: @uid).has_instructor_history?
       roles = @user_attributes[:roles]
       can_view_academics = has_academics_tab?(roles, has_instructor_history, has_student_history)
+      directly_authenticated = authentication_state.directly_authenticated?
+      # This tangled logic is a historical artifact of divergent approaches to View-As and LTI-based authentication.
+      acting_as_uid = directly_authenticated || authentication_state.authenticated_as_delegate? || authentication_state.authenticated_as_advisor? ?
+        false : authentication_state.real_user_id
       feed = {
         isSuperuser: current_user_policy.can_administrate?,
         isViewer: current_user_policy.can_view_as?,
@@ -180,7 +186,13 @@ module User
         campusSolutionsID: @user_attributes[:campusSolutionsId],
         isCampusSolutionsStudent: @user_attributes[:campusSolutionsStudent],
         isDelegateUser: is_delegate_user?,
-        showSisProfileUI: @user_attributes[:sisProfileVisible]
+        showSisProfileUI: @user_attributes[:sisProfileVisible],
+        isDirectlyAuthenticated: directly_authenticated,
+        actingAsUid: acting_as_uid,
+        advisorActingAsUid: !directly_authenticated && authentication_state.original_advisor_user_id,
+        delegateActingAsUid: !directly_authenticated && authentication_state.original_delegate_user_id,
+        canSeeCSLinks: directly_authenticated || authentication_state.classic_viewing_as?,
+        canActOnFinances: directly_authenticated
       }
       filter_user_api_for_delegator(feed) if authentication_state.authenticated_as_delegate?
       feed

@@ -23,22 +23,19 @@ class UserApiController < ApplicationController
 
     if (user_id = session['user_id'])
       # wrap User::Visit.record_session inside a cache lookup so that we have to write User::Visit records less often.
-      directly_authenticated = current_user.directly_authenticated?
       self.class.fetch_from_cache(Cache::KeyGenerator.per_view_as_type user_id, session) do
-        User::Visit.record user_id if directly_authenticated
+        User::Visit.record user_id if current_user.directly_authenticated?
         true
       end
-      advisor_acting_as_uid = !directly_authenticated && current_user.original_advisor_user_id
-      delegate_acting_as_uid = !directly_authenticated && current_user.original_delegate_user_id
       status.merge!({
         :isBasicAuthEnabled => Settings.developer_auth.enabled,
         :isLoggedIn => true,
         :features => features,
-        :actingAsUid => directly_authenticated || advisor_acting_as_uid || delegate_acting_as_uid ? false : current_user.real_user_id,
-        :advisorActingAsUid => advisor_acting_as_uid,
-        :delegateActingAsUid => delegate_acting_as_uid,
         :youtubeSplashId => Settings.youtube_splash_id
       })
+      # Unlike some other feeds which are filtered for View-As above the caching layer,
+      # User::Api specifies separate cache keys for every view-as user. As a result,
+      # customization can be handled within the model itself.
       status.merge! User::Api.from_session(session).get_feed
     else
       status.merge!({
