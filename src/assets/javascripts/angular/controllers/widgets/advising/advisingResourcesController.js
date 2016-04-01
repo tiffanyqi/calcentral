@@ -7,7 +7,7 @@ var angular = require('angular');
  * Advising Resources Controller
  * Show Campus Solutions links and favorite reports
  */
-angular.module('calcentral.controllers').controller('AdvisingResourcesController', function(apiService, advisingFactory, $scope) {
+angular.module('calcentral.controllers').controller('AdvisingResourcesController', function(advisingFactory, apiService, $scope) {
   var backToText = 'My Dashboard';
   $scope.advisingResources = {
     isLoading: true

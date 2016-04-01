@@ -34,22 +34,9 @@ angular.module('calcentral.controllers').controller('ProfileAddressController', 
   };
   var countryWatcher;
 
-  /**
-   * Fix the formatted addresses
-   */
-  var fixFormattedAddresses = function() {
-    if (!$scope.items.content) {
-      return;
-    }
-    $scope.items.content = $scope.items.content.map(function(element) {
-      element.formattedAddress = apiService.profile.fixFormattedAddress(element.formattedAddress);
-      return element;
-    });
-  };
-
   var parsePerson = function(data) {
     apiService.profile.parseSection($scope, data, 'addresses');
-    fixFormattedAddresses();
+    $scope.items.content = apiService.profile.fixFormattedAddresses($scope.items.content);
   };
 
   var parseTypes = function(data) {
