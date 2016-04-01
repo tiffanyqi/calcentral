@@ -9,7 +9,8 @@ module Rosters
         sections: [],
         students: []
       }
-      all_courses = CampusOracle::UserCourses::All.new({user_id: @uid}).get_all_campus_courses
+      all_courses = CampusOracle::UserCourses::All.new(user_id: @uid).get_all_campus_courses
+      all_courses.merge! EdoOracle::UserCourses::All.new({user_id: @uid}).get_all_campus_courses
 
       selected_term, selected_course = nil
       all_courses.each do |term, courses|

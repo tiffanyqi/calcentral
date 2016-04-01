@@ -102,41 +102,39 @@ describe Berkeley::CoursePolicy do
   its(:record)      { should eq course }
 
   describe '#can_view_roster_photos?' do
-    context 'when user is an instructor in the course' do
-      before do
-        allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return(instructor_courses)
-      end
-      it 'returns true' do
-        expect(subject.can_view_roster_photos?).to be true
-      end
+    before do
+      allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return campus_oracle_courses
+      allow_any_instance_of(EdoOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return edo_oracle_courses
     end
-
-    context 'when user is not an instructor in the course' do
-      before do
-        allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return(student_courses)
-      end
-      it 'returns false' do
-        expect(subject.can_view_roster_photos?).to be false
-      end
+    context 'instructor according to legacy data' do
+      let(:campus_oracle_courses) { instructor_courses }
+      let(:edo_oracle_courses) { {} }
+      its(:can_view_roster_photos?) { should eq true }
     end
-
+    context 'instructor according to EDO data' do
+      let(:campus_oracle_courses) { {} }
+      let(:edo_oracle_courses) { instructor_courses }
+      its(:can_view_roster_photos?) { should eq true }
+    end
+    context 'student according to legacy data' do
+      let(:campus_oracle_courses) { student_courses }
+      let(:edo_oracle_courses) { {} }
+      its(:can_view_roster_photos?) { should eq false }
+    end
+    context 'student according to EDO data' do
+      let(:campus_oracle_courses) { {} }
+      let(:edo_oracle_courses) { student_courses }
+      its(:can_view_roster_photos?) { should eq false }
+    end
     context 'when user is not associated with the course' do
-      before do
-        student_courses['2014-D'][0][:id] = 'chem-1a-1994-B'
-        allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return(student_courses)
-      end
-      it 'returns false' do
-        expect(subject.can_view_roster_photos?).to be false
-      end
+      let(:campus_oracle_courses) { student_courses.tap { |courses| courses['2014-D'][0][:id] = 'chem-1a-1994-B' } }
+      let(:edo_oracle_courses) { {} }
+      its(:can_view_roster_photos?) { should eq false }
     end
-
     context 'when no courses associated with the user' do
-      before do
-        allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return({})
-      end
-      it 'returns false' do
-        expect(subject.can_view_roster_photos?).to be false
-      end
+      let(:campus_oracle_courses) { {} }
+      let(:edo_oracle_courses) { {} }
+      its(:can_view_roster_photos?) { should eq false }
     end
   end
 

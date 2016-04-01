@@ -97,13 +97,19 @@ describe Rosters::Campus do
 
   context 'a course with one section' do
     before do
-      allow(CampusOracle::UserCourses::All).to receive(:new).with(user_id: user_id).and_return(double(get_all_campus_courses: fake_campus))
-      allow(CampusOracle::UserCourses::All).to receive(:new).with(user_id: student_user_id).and_return(double(get_all_campus_courses: fake_campus_student))
       expect(Berkeley::Terms).to receive(:legacy?).exactly(2).times.and_return is_legacy
+      allow(CampusOracle::UserCourses::All).to receive(:new).with(user_id: user_id).and_return(double(get_all_campus_courses: fake_oracle))
+      allow(CampusOracle::UserCourses::All).to receive(:new).with(user_id: student_user_id).and_return(double(get_all_campus_courses: fake_oracle_student))
+      allow(EdoOracle::UserCourses::All).to receive(:new).with(user_id: user_id).and_return(double(get_all_campus_courses: fake_edo))
+      allow(EdoOracle::UserCourses::All).to receive(:new).with(user_id: student_user_id).and_return(double(get_all_campus_courses: fake_edo_student))
     end
 
     context 'one-section course from legacy data' do
       let(:is_legacy) { true }
+      let(:fake_oracle) { fake_campus }
+      let(:fake_oracle_student) { fake_campus_student }
+      let(:fake_edo) { {} }
+      let(:fake_edo_student) { {} }
       before do
         expect(CampusOracle::Queries).to receive(:get_enrolled_students).with(ccn1, term_yr, term_cd).and_return(fake_students)
         expect(CampusOracle::Queries).to receive(:get_enrolled_students).with(ccn2, term_yr, term_cd).and_return(fake_students)
@@ -134,6 +140,10 @@ describe Rosters::Campus do
     context 'one-section course from Campus Solutions data' do
       let(:is_legacy) { false }
       let(:term_id) { Berkeley::TermCodes.to_edo_id(term_yr, term_cd) }
+      let(:fake_oracle) { {} }
+      let(:fake_oracle_student) { {} }
+      let(:fake_edo) { fake_campus }
+      let(:fake_edo_student) { fake_campus_student }
       before do
         expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(ccn1, term_id).and_return enrollments
         expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(ccn2, term_id).and_return enrollments
