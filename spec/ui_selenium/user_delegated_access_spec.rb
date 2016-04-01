@@ -275,7 +275,7 @@ describe 'Delegated access', :testui => true do
 
                           # Grades
                           ui_grades = @semester_card.grades(@driver, semester_name)
-                          api_grades = @academics_api.semester_grades(api_semesters, semester_courses, semester).reject { |grade| grade.empty? }
+                          api_grades = @academics_api.semester_card_grades(api_semesters, semester_courses, semester).reject { |grade| grade.empty? }
 
                           if privileges['viewGrades']
                             it "shows delegate UID #{uid} the #{semester_name} grades on My Academics for UID #{student_uid}" do

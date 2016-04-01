@@ -60,6 +60,16 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
     semester['classes']
   end
 
+  def courses_by_transcripts(semester)
+    courses = []
+    semester_courses(semester).each do |course|
+      unless course_transcripts(course).nil?
+        course_transcripts(course).each { courses << course }
+      end
+    end
+    courses
+  end
+
   # Semester cards list courses once per primary section OR once per transcript record (if transcripts exist)
   def semester_card_courses(semester, courses)
     if has_enrollment_data?(semester)
@@ -152,17 +162,15 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
     course['multiplePrimaries']
   end
 
-  # Enrollment records associate units with primary sections
   def units_by_enrollment(courses)
-    units = []
-    courses.each do |course|
-      course_primary_sections(course).each { |section| units << section['units'] }
+    units = courses.map do |course|
+      course_primary_sections(course).map { |section| section['units'] }
     end
-    units
+    units.flatten
   end
 
-  # Transcripts do not necessarily associate units with primary sections
-  def units_by_transcript(courses)
+  # Semester card shows units by primary section unless transcripts exist
+  def semester_card_units(courses)
     units = []
     courses.each do |course|
       if course_transcripts(course).nil?
@@ -179,12 +187,15 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
   end
 
   def course_grades(course)
-    grades = []
-    course_transcripts(course).each { |transcript| grades << transcript_grade(transcript) }
-    grades
+    course_transcripts(course).map { |transcript| transcript_grade(transcript) } unless course_transcripts(course).nil?
   end
 
-  def semester_grades(semesters, courses, semester)
+  def semester_grades(courses)
+    grades = courses.map { |course| course_grades(course) unless course_grades(course).nil? }
+    grades.flatten
+  end
+
+  def semester_card_grades(semesters, courses, semester)
     grades = []
     courses.each do |course|
       if past_semesters(semesters).include?(semester)

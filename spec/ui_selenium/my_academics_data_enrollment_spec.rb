@@ -73,8 +73,8 @@ describe 'My Academics enrollments', :testui => true do
 
                     api_course_codes = academics_api_page.semester_card_course_codes(all_semesters, semester)
                     api_course_titles = academics_api_page.course_titles(semester_card_courses)
-                    api_units = academics_api_page.units_by_transcript(semester_courses)
-                    api_grades = academics_api_page.semester_grades(all_semesters, semester_courses, semester)
+                    api_units = academics_api_page.semester_card_units(semester_courses)
+                    api_grades = academics_api_page.semester_card_grades(all_semesters, semester_courses, semester)
 
                     academics_page_course_codes = my_academics.prim_sec_course_codes(driver, semester_name)
                     academics_page_course_titles = my_academics.course_titles(driver, semester_name)
