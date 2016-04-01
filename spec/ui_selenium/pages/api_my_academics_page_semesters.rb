@@ -163,11 +163,10 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
   end
 
   def units_by_enrollment(courses)
-    units = []
-    courses.each do |course|
-      course_primary_sections(course).each { |section| units << section['units'] }
+    units = courses.map do |course|
+      course_primary_sections(course).map { |section| section['units'] }
     end
-    units
+    units.flatten
   end
 
   # Semester card shows units by primary section unless transcripts exist
@@ -188,17 +187,12 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
   end
 
   def course_grades(course)
-    grades = []
-    unless course_transcripts(course).nil?
-      course_transcripts(course).each { |transcript| grades << transcript_grade(transcript) }
-    end
-    grades
+    course_transcripts(course).map { |transcript| transcript_grade(transcript) } unless course_transcripts(course).nil?
   end
 
   def semester_grades(courses)
-    grades = []
-    courses.each { |course| grades.concat course_grades(course) }
-    grades
+    grades = courses.map { |course| course_grades(course) unless course_grades(course).nil? }
+    grades.flatten
   end
 
   def semester_card_grades(semesters, courses, semester)

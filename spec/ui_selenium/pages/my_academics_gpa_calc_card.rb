@@ -13,15 +13,11 @@ module CalCentralPages
     td(:cum_gpa, :xpath => '//strong[contains(@data-ng-bind,"estimatedCumulativeGpa")]')
 
     def all_classes
-      classes = []
-      course_elements.each { |course| classes << course.text }
-      classes
+      course_elements.map &:text
     end
 
     def all_units
-      units = []
-      units_elements.each { |unit| units << unit.text }
-      units
+      units_elements.map &:text
     end
 
     def all_selected_grade_options(driver)
