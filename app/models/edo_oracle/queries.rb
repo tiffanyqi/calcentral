@@ -296,8 +296,11 @@ module EdoOracle
     # EDO equivalent of CampusOracle::Queries.has_instructor_history?
     def self.has_instructor_history?(ldap_uid, instructor_terms = nil)
       result = {}
-      return result if fake?
-      terms_list = terms_query_list(instructor_terms)
+      return false if fake?
+      if instructor_terms.to_a.any?
+        terms_list = terms_query_list(instructor_terms.to_a)
+        instructor_term_clause = "AND instr.\"term-id\" IN (#{terms_list})"
+      end
       use_pooled_connection {
         sql = <<-SQL
         SELECT
@@ -306,8 +309,8 @@ module EdoOracle
           SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
         WHERE
           instr."campus-uid" = '#{ldap_uid}' AND
-          rownum < 2 AND
-          instr."term-id" IN (#{terms_list})
+          rownum < 2
+          #{instructor_term_clause}
         SQL
         result = connection.select_one(sql)
       }
@@ -317,8 +320,11 @@ module EdoOracle
 
     def self.has_student_history?(ldap_uid, student_terms = nil)
       result = {}
-      return result if fake?
-      terms_list = terms_query_list(student_terms)
+      return false if fake?
+      if student_terms.to_a.any?
+        terms_list = terms_query_list(student_terms)
+        student_term_clause = "AND enroll.\"TERM_ID\" IN (#{terms_list})"
+      end
       use_pooled_connection {
         sql = <<-SQL
         SELECT
@@ -327,8 +333,8 @@ module EdoOracle
           SISEDO.ENROLLMENTV00_VW enroll
         WHERE
           enroll."CAMPUS_UID" = '#{ldap_uid.to_i}' AND
-          rownum < 2 AND
-          enroll."TERM_ID" IN (#{terms_list})
+          rownum < 2
+          #{student_term_clause}
         SQL
         result = connection.select_one(sql)
       }

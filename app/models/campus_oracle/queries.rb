@@ -391,7 +391,7 @@ module CampusOracle
         result = connection.select_one(sql)
       }
       Rails.logger.debug "Instructor #{ldap_uid} history for terms #{instructor_terms} count = #{result}"
-      return result["course_count"].to_i > 0
+      result["course_count"].to_i > 0
     end
 
     def self.has_student_history?(ldap_uid, student_terms = nil)
@@ -408,7 +408,7 @@ module CampusOracle
         result = connection.select_one(sql)
       }
       Rails.logger.debug "Student #{ldap_uid} history for terms #{student_terms} count = #{result}"
-      return result["course_count"].to_i > 0
+      result["course_count"].to_i > 0
     end
 
     def self.terms
