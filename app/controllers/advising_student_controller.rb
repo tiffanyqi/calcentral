@@ -1,4 +1,4 @@
-class StudentOverviewController < ApplicationController
+class AdvisingStudentController < ApplicationController
   include CampusSolutions::StudentLookupFeatureFlagged
 
   before_action :api_authenticate
@@ -8,10 +8,17 @@ class StudentOverviewController < ApplicationController
   rescue_from Errors::ClientError, with: :handle_client_error
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  def academics
+  def profile
     student_uid = student_uid_param
     render json: {
       attributes: @attributes,
+      contacts: HubEdos::Contacts.new(user_id: student_uid, include_fields: %w(names addresses phones emails)).get
+    }
+  end
+
+  def academics
+    student_uid = student_uid_param
+    render json: {
       academics: MyAcademics::Merged.new(student_uid).get_feed,
       examSchedule: MyAcademics::Exams.new(student_uid).merge
     }
@@ -31,6 +38,17 @@ class StudentOverviewController < ApplicationController
     model = CampusSolutions::MyAcademicPlan.new student_uid_param
     model.term_id = params['term_id']
     render json: model.get_feed_as_json
+  end
+
+  def resources
+    json = CampusSolutions::AdvisingResources.new(user_id: session['user_id'], student_uid: student_uid_param).get
+    # Advisors get only a subset of links
+    subset = [:ucServiceIndicator, :ucStudentAdvisor]
+    if json[:feed] && json[:feed][:ucAdvisingResources] && (links = json[:feed][:ucAdvisingResources][:ucAdvisingLinks])
+      filtered_links = links.select { |key| subset.include? key }
+      json[:feed][:ucAdvisingResources][:ucAdvisingLinks] = filtered_links
+    end
+    render json: json
   end
 
   private

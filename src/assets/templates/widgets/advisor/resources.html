@@ -18,54 +18,8 @@
     <div class="cc-list-link-container">
       <h3>Other</h3>
 
-      <ul class="cc-list-links">
-        <li data-ng-if="api.user.profile.features.csAcademicProgressReport">
-          <div
-            data-cc-campus-solutions-link-item-directive
-            data-link="ucAdvisingResources.ucAdvisingLinks.ucAcademicProgressReport"
-            data-text="Academic Progress Report"
-          ></div>
-        </li>
-        <li>
-          <div
-            data-cc-campus-solutions-link-item-directive
-            data-link="ucAdvisingResources.ucAdvisingLinks.ucServiceIndicator"
-          ></div>
-        </li>
-        <li>
-          <a
-            data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.ucStudentAdvisor.url}}"
-          >Advising Assignments</a>
-        </li>
-        <li>
-          <div
-            data-cc-campus-solutions-link-item-directive
-            data-link="ucAdvisingResources.ucAdvisingLinks.ucReportingCenter"
-            data-text="Reporting Center"
-          ></div>
-        </li>
-        <li data-ng-if="api.user.profile.features.csAdvisingGteForms">
-          <div
-            data-cc-campus-solutions-link-item-directive
-            data-link="ucAdvisingResources.ucAdvisingLinks.ucGteformsWorkcenter"
-            data-text="GTE Forms"
-          ></div>
-        </li>
-        <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.classSearch.url">
-          <div
-            data-cc-campus-solutions-link-item-directive
-            data-link="ucAdvisingResources.ucAdvisingLinks.classSearch"
-            data-text="Schedule of Classes - Class Search"
-          ></div>
-        </li>
-        <li>
-          <div
-            data-cc-campus-solutions-link-item-directive
-            data-link="ucAdvisingResources.ucAdvisingLinks.scheduleClasses"
-            data-text="Schedule of Classes - Scheduler View"
-          ></div>
-        </li>
-      </ul>
+      <div data-ng-include="'widgets/advisor/advising_links.html'"></div>
+
     </div>
   </div>
 </div>

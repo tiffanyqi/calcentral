@@ -1,0 +1,69 @@
+
+<div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.majors.length">
+  <table>
+    <tbody>
+    <tr>
+      <th width="92px" data-ng-pluralize count="collegeAndLevel.majors.length" when="{'1': 'Major', 'other': 'Majors'}"></th>
+      <td>
+        <div data-ng-repeat="major in collegeAndLevel.majors">
+          <div class="cc-text-light" data-ng-if="major.college" data-ng-bind="major.college"></div>
+          <div><strong data-ng-bind="major.major"></strong></div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.minors.length">
+  <table>
+    <tbody>
+    <tr>
+      <th width="92px" data-ng-pluralize count="collegeAndLevel.minors.length" when="{'1': 'Minor', 'other': 'Minors'}"></th>
+      <td>
+        <div data-ng-repeat="minor in collegeAndLevel.minors">
+          <div class="cc-text-light" data-ng-if="minor.college" data-ng-bind="minor.college"></div>
+          <div><strong data-ng-bind="minor.minor"></strong></div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.careers.length">
+  <table>
+    <tbody>
+    <tr>
+      <th width="92px" data-ng-pluralize count="collegeAndLevel.careers.length" when="{'1': 'Academic Career', 'other': 'Academic Careers'}"></th>
+      <td>
+        <div data-ng-repeat="career in collegeAndLevel.careers"><strong data-ng-bind="career"></strong></div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="collegeAndLevel.level">
+  <table>
+    <tbody>
+    <tr>
+      <th width="92px">Level</th>
+      <th class="cc-table-subheader" scope="col" data-ng-if="collegeAndLevel.nonApLevel">Including AP</th>
+      <td data-ng-if="!collegeAndLevel.nonApLevel"><strong data-ng-bind="collegeAndLevel.level"></strong></td>
+    </tr>
+    <tr data-ng-if="collegeAndLevel.nonApLevel">
+      <td></td>
+      <td><strong data-ng-bind="collegeAndLevel.level"></strong></td>
+    </tr>
+    <tr data-ng-if="collegeAndLevel.nonApLevel">
+      <th></th>
+      <th class="cc-table-subheader" scope="col">Not Including AP</th>
+    </tr>
+    <tr data-ng-if="collegeAndLevel.nonApLevel">
+      <td></td>
+      <td><strong data-ng-bind="collegeAndLevel.nonApLevel"></strong></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
