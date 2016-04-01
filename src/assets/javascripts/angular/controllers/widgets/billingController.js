@@ -85,7 +85,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   };
 
   var parseBillingInfo = function(data) {
-    var billing = _.get(data, 'data.feed.ucSfActivity');
+    var billing = _.get(data, 'data.feed');
 
     billing.summary = _.mapValues(billing.summary, function(value) {
       value = parseAmounts(value);
@@ -133,7 +133,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
     if (_.includes($scope.filter.addedTerms, currentTermId)) {
       $scope.filter.searchTermId.itemTermId = currentTermId;
     } else {
-      $scope.filter.searchTermId.itemTermId = $scope.filter.terms[0].itemTermId;
+      $scope.filter.searchTermId.itemTermId = $scope.filter.addedTerms[0];
     }
   };
 

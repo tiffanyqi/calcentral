@@ -6,7 +6,7 @@ describe CampusSolutions::Billing do
     it_behaves_like 'a proxy that properly observes the billing feature flag'
     it_behaves_like 'a proxy that got data successfully'
     it 'returns data with the expected structure' do
-      expect(subject[:feed][:ucSfActivity][:summary]).to be
+      expect(subject[:feed][:summary]).to be
     end
   end
 
