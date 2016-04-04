@@ -1,24 +1,83 @@
-<div class="cc-widget">
+<div class="cc-widget cc-widget-profile" data-ng-controller="AdminController">
   <div class="cc-widget-title">
     <h2>Personal Summary</h2>
   </div>
-  <div class="cc-widget-text" data-cc-spinner-directive="academics.isLoading">
-
-    <div data-ng-bind="student.attributes.defaultName"></div>
+  <div class="cc-widget-text" data-cc-spinner-directive="profile.isLoading">
+    <div class="cc-table cc-table-top-border cc-clearfix">
+      <table class="cc-widget-profile-table">
+        <tbody>
+        <tr>
+          <th>
+            <div alt="{{profile.defaultName}}'s Profile Picture" data-ng-include="'widgets/delegate_student_img.html'"></div>
+          </th>
+          <td>
+            <div>
+              <strong data-ng-bind="profile.defaultName"></strong>
+              (<button type="submit" class="cc-button-link" data-ng-click="admin.updateIDField(profile.uid);admin.actAsUser()">view as</button>)
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 
     <div data-ng-include="'widgets/academics/college_and_level.html'"></div>
 
-    <hr/>
-
-    Terms in Attendance <div data-ng-bind="student.attributes.defaultName"></div>
-
-    <hr/>
-
-    Contact Information
-
-    <hr/>
-
-    <div data-ng-include="'widgets/advisor/advising_links.html'"></div>
-
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="profile.addresses || profile.phones || profile.emails">
+      <table class="cc-widget-profile-table">
+        <tbody>
+        <tr>
+          <th>Contact Information</th>
+          <td>
+            <div data-ng-repeat="address in profile.addresses">
+              <div>
+                <strong data-ng-bind-template="{{address.type.description}} Address"></strong>
+              </div>
+              <div>
+                <div class="cc-text-pre-line" data-ng-bind="address.formattedAddress"></div>
+                <div data-ng-bind="address.countryCode" data-ng-if="address.countryCode !== 'USA'"></div>
+              </div>
+            </div>
+            <br/>
+            <div data-ng-repeat="phone in profile.phones">
+              <div>
+                <strong data-ng-bind-template="{{phone.type.description}} Phone"></strong>
+                <span data-ng-if="phone.primary">(preferred)</span>
+              </div>
+              <div>
+                <span data-ng-bind="phone.number"></span>
+                <span data-ng-if="phone.extension" data-ng-bind-template="ext. {{phone.extension}}"></span>
+              </div>
+            </div>
+            <br/>
+            <div data-ng-repeat="email in profile.emails">
+              <div>
+                <strong data-ng-bind-template="{{email.type.description}} Email"></strong>
+                <span data-ng-if="email.primary">(preferred)</span>
+              </div>
+              <div data-ng-bind="email.emailAddress" class="cc-break-word"></div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="ucAdvisingResources.ucAdvisingLinks">
+      <table class="cc-widget-profile-table">
+        <tbody>
+        <tr>
+          <th>Advising Resources</th>
+          <td>
+            <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.ucServiceIndicator">
+              <div data-cc-campus-solutions-link-item-directive data-link="ucAdvisingResources.ucAdvisingLinks.ucServiceIndicator"></div>
+            </div>
+            <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.ucStudentAdvisor">
+              <a data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.ucStudentAdvisor.url}}">Advising Assignments</a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

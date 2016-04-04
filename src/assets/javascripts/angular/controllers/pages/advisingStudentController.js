@@ -12,20 +12,23 @@ angular.module('calcentral.controllers').controller('AdvisingStudentController',
     excludeLinksToRegistrar: true
   };
 
-  var loadAdvisingResources = function() {
-    advisingFactory.getAdvisingResources({
-      uid: $routeParams.uid
-    }).then(function(data) {
-      $scope.ucAdvisingResources = _.get(data, 'data.feed.ucAdvisingResources');
-    });
-  };
-
-  var loadStudent = function() {
+  var loadProfile = function() {
     advisingFactory.getStudent({
       uid: $routeParams.uid
     }).then(function(data) {
-      $scope.student = _.get(data, 'data');
-      apiService.util.setTitle($scope.student.attributes.defaultName);
+      $scope.profile = _.get(data, 'data.attributes');
+      $scope.profile.uid = $routeParams.uid;
+      $scope.profile.addresses = apiService.profile.fixFormattedAddresses(_.get(data, 'data.contacts.feed.student.addresses'));
+      $scope.profile.phones = _.get(data, 'data.contacts.feed.student.phones');
+      $scope.profile.emails = _.get(data, 'data.contacts.feed.student.emails');
+      apiService.util.setTitle($scope.profile.defaultName);
+      // Get links to advising resources
+      advisingFactory.getAdvisingResources({
+        uid: $routeParams.uid
+      }).then(function(data) {
+        $scope.ucAdvisingResources = _.get(data, 'data.feed.ucAdvisingResources');
+        $scope.profile.isLoading = false;
+      });
     });
   };
 
@@ -44,9 +47,8 @@ angular.module('calcentral.controllers').controller('AdvisingStudentController',
 
   $scope.$on('calcentral.api.user.isAuthenticated', function(event, isAuthenticated) {
     if (isAuthenticated) {
-      loadStudent();
+      loadProfile();
       loadAcademics();
-      loadAdvisingResources();
     }
   });
 });

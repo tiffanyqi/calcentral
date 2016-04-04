@@ -85,10 +85,19 @@ angular.module('calcentral.services').service('profileService', function() {
   };
 
   /**
-   * We need to replace the \\n with \n in the formattedAddress
+   * Prepare formattedAddress by replacing '\\n' with '\n'.
    */
-  var fixFormattedAddress = function(formattedAddress) {
-    return formattedAddress.replace(/\\n/g, '\n');
+  var fixFormattedAddresses = function(addresses) {
+    if (!addresses) {
+      return;
+    }
+    return addresses.map(function(element) {
+      var formattedAddress = _.get(element, 'formattedAddress');
+      if (formattedAddress) {
+        element.formattedAddress = formattedAddress.replace(/\\n/g, '\n');
+      }
+      return element;
+    });
   };
 
   /**
@@ -190,7 +199,7 @@ angular.module('calcentral.services').service('profileService', function() {
     filterTypes: filterTypes,
     findPreferred: findPreferred,
     findPrimary: findPrimary,
-    fixFormattedAddress: fixFormattedAddress,
+    fixFormattedAddresses: fixFormattedAddresses,
     matchFields: matchFields,
     parseSection: parseSection,
     removeErrorMessage: removeErrorMessage,
