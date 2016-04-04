@@ -6,16 +6,24 @@
         <TITLE>Summary Information</TITLE>
         <ITEM_GROUPS type="array">
           <ITEM>
-            <TITLE>Enrollment</TITLE><VALUES type="array"/></ITEM>
+            <TITLE>Enrollment</TITLE>
+            <VALUES type="array" />
+          </ITEM>
         </ITEM_GROUPS>
         <ITEM_GROUPS type="array">
           <ITEM>
-            <TITLE>Level</TITLE><VALUES type="array"/></ITEM>
+            <TITLE>Level</TITLE>
+            <VALUES type="array" />
+          </ITEM>
         </ITEM_GROUPS>
         <ITEM_GROUPS type="array">
           <ITEM>
-            <TITLE>Housing</TITLE><VALUES type="array"/></ITEM>
-        </ITEM_GROUPS><ITEM_GROUPS type="array"/></CATEGORY>
+            <TITLE>Housing</TITLE>
+            <VALUES type="array" />
+          </ITEM>
+        </ITEM_GROUPS>
+        <ITEM_GROUPS type="array" />
+      </CATEGORY>
     </CATEGORIES>
   </STATUS>
   <COA>
