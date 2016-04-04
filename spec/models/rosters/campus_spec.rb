@@ -147,7 +147,7 @@ describe Rosters::Campus do
       before do
         expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(ccn1, term_id).and_return enrollments
         expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(ccn2, term_id).and_return enrollments
-        expect(CalnetLdap::UserAttributes).to receive(:get_bulk_attributes)
+        expect(User::BasicAttributes).to receive(:attributes_for_uids)
           .with([enrolled_student_login_id, waitlisted_student_login_id])
           .exactly(2).times.and_return attributes
       end
