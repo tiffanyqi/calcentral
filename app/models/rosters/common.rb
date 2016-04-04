@@ -81,7 +81,7 @@ module Rosters
       else
         term_id = Berkeley::TermCodes.to_edo_id(term_yr, term_cd)
         enrollments_by_uid = EdoOracle::Queries.get_enrolled_students(course_id, term_id).group_by { |row| row['ldap_uid'] }
-        CalnetLdap::UserAttributes.get_bulk_attributes(enrollments_by_uid.keys).each do |attrs|
+        User::BasicAttributes.attributes_for_uids(enrollments_by_uid.keys).each do |attrs|
           attrs[:email] = attrs.delete :email_address
           if (enrollment_row = enrollments_by_uid[attrs[:ldap_uid]].first)
             attrs[:enroll_status] = enrollment_row['enroll_status']

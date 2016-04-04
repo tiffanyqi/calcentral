@@ -327,7 +327,7 @@ describe Rosters::Canvas do
           }
         ]
       )
-      expect(CalnetLdap::UserAttributes).to receive(:get_bulk_attributes)
+      expect(User::BasicAttributes).to receive(:attributes_for_uids)
         .with([student_in_discussion_section_login_id, student_not_in_discussion_section_login_id]).and_return(
           [
             {
@@ -346,7 +346,7 @@ describe Rosters::Canvas do
             }
           ]
         )
-      expect(CalnetLdap::UserAttributes).to receive(:get_bulk_attributes)
+      expect(User::BasicAttributes).to receive(:attributes_for_uids)
         .with([student_in_discussion_section_login_id]).and_return(
           [
             {
