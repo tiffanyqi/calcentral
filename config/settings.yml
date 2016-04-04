@@ -424,6 +424,7 @@ features:
   cs_academic_planner: false
   cs_academic_profile: true
   cs_academic_progress_report: false
+  cs_advising_class_search: false
   cs_advising_gte_forms: false
   cs_advising_show_advisors: false
   cs_advisor_student_lookup: false

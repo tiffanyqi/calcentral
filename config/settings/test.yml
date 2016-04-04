@@ -80,6 +80,7 @@ features:
   class_enrollment_summer_2016: true
   cs_academic_planner: true
   cs_academic_progress_report: true
+  cs_advising_class_search: true
   cs_advising_gte_forms: true
   cs_advising_show_advisors: true
   cs_advisor_student_lookup: true
