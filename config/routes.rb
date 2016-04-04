@@ -170,6 +170,9 @@ Calcentral::Application.routes.draw do
   get '/api/campus_solutions/language_code' => 'campus_solutions/language_code#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/translate' => 'campus_solutions/translate#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/aid_years' => 'campus_solutions/aid_years#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/campus_solutions/financial_aid_compare_awards_current' => 'campus_solutions/financial_aid_compare_awards_current#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/campus_solutions/financial_aid_compare_awards_list' => 'campus_solutions/financial_aid_compare_awards_list#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/campus_solutions/financial_aid_compare_awards_prior' => 'campus_solutions/financial_aid_compare_awards_prior#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/financial_aid_data' => 'campus_solutions/financial_aid_data#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/financial_aid_funding_sources' => 'campus_solutions/financial_aid_funding_sources#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/financial_aid_funding_sources_term' => 'campus_solutions/financial_aid_funding_sources_term#get', :via => :get, :defaults => { :format => 'json' }

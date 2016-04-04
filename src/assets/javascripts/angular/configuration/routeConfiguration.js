@@ -78,6 +78,10 @@ angular.module('calcentral.config').config(function($routeProvider) {
     templateUrl: 'finaid_awards_term.html',
     controller: 'MyFinancesController'
   }).
+  when('/finances/finaid/compare/:finaidYearId?', {
+    templateUrl: 'finaid_awards_compare.html',
+    controller: 'MyFinancesController'
+  }).
   when('/oec', {
     templateUrl: 'oec.html',
     controller: 'OecController'

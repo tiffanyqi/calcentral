@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<ROOT>
+  <STATUS>
+    <CATEGORIES type="array">
+      <CATEGORY>
+        <TITLE>Summary Information</TITLE>
+        <ITEM_GROUPS type="array">
+          <ITEM>
+            <TITLE>Enrollment</TITLE>
+            <VALUES type="array">
+              <VALUE>
+                <SUBVALUE>Fall</SUBVALUE>
+                <SUBVALUE>0</SUBVALUE>
+              </VALUE>
+              <VALUE>
+                <SUBVALUE>Spring</SUBVALUE>
+                <SUBVALUE>0</SUBVALUE>
+              </VALUE>
+            </VALUES>
+          </ITEM>
+        </ITEM_GROUPS>
+        <ITEM_GROUPS type="array">
+          <ITEM>
+            <TITLE>Dependency Status</TITLE>
+            <VALUE>Dependent</VALUE>
+          </ITEM>
+          <ITEM>
+            <TITLE>Level</TITLE>
+            <VALUES type="array">
+              <VALUE>
+                <SUBVALUE>Fall</SUBVALUE>
+                <SUBVALUE>1st Year - Never Attended</SUBVALUE>
+              </VALUE>
+              <VALUE>
+                <SUBVALUE>Spring</SUBVALUE>
+                <SUBVALUE>1st Year - Previously Attended</SUBVALUE>
+              </VALUE>
+            </VALUES>
+          </ITEM>
+        </ITEM_GROUPS>
+        <ITEM_GROUPS type="array">
+          <ITEM>
+            <TITLE>Housing</TITLE>
+            <VALUES type="array">
+              <VALUE>
+                <SUBVALUE>Fall</SUBVALUE>
+                <SUBVALUE>Room And Board - Living On Campus</SUBVALUE>
+              </VALUE>
+              <VALUE>
+                <SUBVALUE>Spring</SUBVALUE>
+                <SUBVALUE>Room And Board - Living On Campus</SUBVALUE>
+              </VALUE>
+            </VALUES>
+          </ITEM>
+        </ITEM_GROUPS>
+        <ITEM_GROUPS type="array">
+          <ITEM>
+            <TITLE>Expected Family Contribution (EFC)</TITLE>
+            <VALUE>34760</VALUE>
+          </ITEM>
+          <ITEM>
+            <TITLE>Berkeley Parent Contribution</TITLE>
+            <VALUE>To Be Determined</VALUE>
+          </ITEM>
+        </ITEM_GROUPS>
+      </CATEGORY>
+    </CATEGORIES>
+  </STATUS>
+  <COA>
+    <FULLYEAR>
+      <DATA type="array">
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Cost</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <TOTAL type="float">13432</TOTAL>
+              <TITLE>Tuition and Fees</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">12240</TOTAL>
+                  <TITLE>Tuition</TITLE>
+                </SUB_ITEM>
+                <SUB_ITEM>
+                  <TOTAL type="float">1192</TOTAL>
+                  <TITLE>Campus Fees &amp; Class Pass</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTAL type="float">1240</TOTAL>
+              <TITLE>Books and Supplies</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">1240</TOTAL>
+                  <TITLE>Books &amp; Supplies</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTAL type="float">534</TOTAL>
+              <TITLE>Transportation</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">534</TOTAL>
+                  <TITLE>Transportation - Living On Campus</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTAL type="float">2580</TOTAL>
+              <TITLE>Health Insurance</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">2580</TOTAL>
+                  <TITLE>Health Insurance</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTAL type="float">2018</TOTAL>
+              <TITLE>Personal Expenses</TITLE>
+              <SUB_ITEMS type="array">
+                <SUB_ITEM>
+                  <TOTAL type="float">2018</TOTAL>
+                  <TITLE>Personal - Living On Campus</TITLE>
+                </SUB_ITEM>
+              </SUB_ITEMS>
+            </ITEM>
+            <ITEM>
+              <TOTALS type="array">
+                <TOTAL type="float">19804</TOTAL>
+              </TOTALS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>Standard Budget Items</TITLE>
+        </DATA_ITEM>
+      </DATA>
+    </FULLYEAR>
+  </COA>
+  <AWARDS>
+    <SEMESTER>
+      <DATA type="array">
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Fall</HEADER>
+            <HEADER>Spring</HEADER>
+            <HEADER>Total</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <AMOUNTS type="array">
+                <AMOUNT type="float">4000</AMOUNT>
+                <AMOUNT type="float">4000</AMOUNT>
+              </AMOUNTS>
+              <TOTAL type="float">8000</TOTAL>
+              <TITLE>Conditional Middle Class Acces</TITLE>
+            </ITEM>
+            <ITEM>
+              <TOTALS type="array">
+                <TOTAL type="float">4000</TOTAL>
+                <TOTAL type="float">4000</TOTAL>
+                <TOTAL type="float">8000</TOTAL>
+              </TOTALS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>Gift Aid</TITLE>
+        </DATA_ITEM>
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Fall</HEADER>
+            <HEADER>Spring</HEADER>
+            <HEADER>Total</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <AMOUNTS type="array">
+                <AMOUNT type="float">2750</AMOUNT>
+                <AMOUNT type="float">2750</AMOUNT>
+              </AMOUNTS>
+              <TOTAL type="float">5500</TOTAL>
+              <TITLE>Conditional Unsubsidized Fed D</TITLE>
+            </ITEM>
+            <ITEM>
+              <TOTALS type="array">
+                <TOTAL type="float">2750</TOTAL>
+                <TOTAL type="float">2750</TOTAL>
+                <TOTAL type="float">5500</TOTAL>
+              </TOTALS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>UnSubsidized Loans</TITLE>
+        </DATA_ITEM>
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Fall</HEADER>
+            <HEADER>Spring</HEADER>
+            <HEADER>Total</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <AMOUNTS type="array">
+                <AMOUNT type="float">10863</AMOUNT>
+                <AMOUNT type="float">10863</AMOUNT>
+              </AMOUNTS>
+              <TOTAL type="float">21726</TOTAL>
+              <TITLE>Conditional Parent PLUS Loan</TITLE>
+            </ITEM>
+            <ITEM>
+              <TOTALS type="array">
+                <TOTAL type="float">10863</TOTAL>
+                <TOTAL type="float">10863</TOTAL>
+                <TOTAL type="float">21726</TOTAL>
+              </TOTALS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>Plus Loans</TITLE>
+        </DATA_ITEM>
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Fall</HEADER>
+            <HEADER>Spring</HEADER>
+            <HEADER>Total</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <AMOUNTS type="array">
+                <TOTAL type="float">17613</TOTAL>
+                <TOTAL type="float">17613</TOTAL>
+                <TOTAL type="float">35226</TOTAL>
+              </AMOUNTS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>Grand Total</TITLE>
+        </DATA_ITEM>
+      </DATA>
+    </SEMESTER>
+  </AWARDS>
+</ROOT>
