@@ -4,8 +4,8 @@ describe Berkeley::Colleges do
     expect(Berkeley::Colleges.get('engr')).to eq 'College of Engineering'
   end
 
-  it 'should return Letters & Science for Grad Div' do
-    expect(Berkeley::Colleges.get('grad div')).to eq 'College of Letters & Science'
+  it 'should return blank for Graduate Division' do
+    expect(Berkeley::Colleges.get('grad div')).to eq ''
   end
 
   it 'should return the abbreviation on a nonexistent college abbv' do
