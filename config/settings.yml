@@ -242,7 +242,6 @@ cache:
 
     MyAcademics::CollegeAndLevel: NEXT_08_00
     MyAcademics::GpaUnits: NEXT_08_00
-    MyAcademics::TransitionTerm: NEXT_08_00
 
     Berkeley::Terms: NEXT_08_00
     Finaid::TimeRange: <%= 4.hours %>
