@@ -3,8 +3,6 @@ module HubEdos
 
     include ClassLogger
     include Cache::LiveUpdatesEnabled
-    include Cache::FreshenOnWarm
-    include Cache::JsonAddedCacher
     # Needed to expire cache entries specific to Viewing-As users alongside original user's cache.
     include Cache::RelatedCacheKeyTracker
     include CampusSolutions::ProfileFeatureFlagged
