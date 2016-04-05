@@ -117,9 +117,30 @@
                         "code": "25345U",
                         "description": "English BA",
                         "fromDate": "2016-01-12"
+                      },
+                      "type": {
+                        "code": "MAJ",
+                        "description": "Major - Regular Acad/Prfnl"
                       }
                     },
-                    "primary": false
+                    "primary": true
+                  },
+                  {
+                    "academicPlan": {
+                      "academicProgram": {
+                        "program": {
+                          "code": "UCLS",
+                          "description": "Undergrad Letters & Science"
+                        }
+                      },
+                      "plan": {
+                        "description": "Art History",
+                        "fromDate": "2016-01-12"
+                      },
+                      "type": {
+                        "code": "MIN"
+                      }
+                    }
                   }
                 ],
                 "termsInAttendance": 4
