@@ -1,8 +1,6 @@
 module User
   class AggregatedAttributes < UserSpecificModel
     include CampusSolutions::ProfileFeatureFlagged
-    include Cache::CachedFeed
-    include Cache::RelatedCacheKeyTracker
 
     # Conservative merge of roles from EDO
     WHITELISTED_EDO_ROLES = [:student, :applicant, :advisor]
@@ -11,7 +9,7 @@ module User
       super(uid, options)
     end
 
-    def get_feed_internal
+    def get_feed
       @ldap_attributes = CalnetLdap::UserAttributes.new(user_id: @uid).get_feed
       @oracle_attributes = CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       @edo_attributes = HubEdos::UserAttributes.new(user_id: @uid).get if is_cs_profile_feature_enabled
