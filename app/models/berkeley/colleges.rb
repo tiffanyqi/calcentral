@@ -13,7 +13,8 @@ module Berkeley
         'CRIMOLGY' =>   'School of Criminology',
         'ENGR' =>       'College of Engineering',
         'ENV DSGN' =>   'College of Environmental Design',
-        'GRAD DIV' =>   'College of Letters & Science',
+        # Per SISRP-16818, Graduate Division affiliation from BearFacts should not be translated.
+        'GRAD DIV' =>   '',
         'JOURN' =>      'Graduate School of Journalism',
         'L & S' =>      'College of Letters & Science',
         'LAW' =>        'School of Law',
