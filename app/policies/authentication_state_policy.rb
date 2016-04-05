@@ -66,8 +66,8 @@ class AuthenticationStatePolicy
   end
 
   def can_view_as_for_all_uids?
-    # Delegate users are intentionally omitted.
-    return true if can_view_as?
+    return false unless @user.directly_authenticated? && (real_auth = @user.real_user_auth).active?
+    return true if real_auth.is_superuser? || real_auth.is_viewer?
     roles = HubEdos::UserAttributes.new(user_id: @user.real_user_id).get[:roles]
     !!roles[:advisor]
   end

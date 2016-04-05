@@ -18,6 +18,7 @@ describe AuthenticationStatePolicy do
   let(:inactive_viewer_uid) {random_id}
   let(:oec_administrator_uid) {random_id}
   let(:average_joe_uid) {random_id}
+  let(:inactive_average_joe_uid) {random_id}
   let(:inactive_superuser_uid) {random_id}
   let(:auth_map) do
     {
@@ -26,6 +27,7 @@ describe AuthenticationStatePolicy do
       viewer_uid => {uid: viewer_uid, is_superuser: false, is_author: false, is_viewer: true, active: true},
       inactive_viewer_uid => {uid: inactive_viewer_uid, is_superuser: false, is_author: false, is_viewer: true, active: false},
       average_joe_uid => {uid: average_joe_uid, is_superuser: false, is_author: false, is_viewer: false, active: true},
+      inactive_average_joe_uid => {uid: average_joe_uid, is_superuser: false, is_author: false, is_viewer: false, active: false},
       inactive_superuser_uid => {uid: inactive_superuser_uid, is_superuser: true, is_author: false, is_viewer: false, active: false},
       oec_administrator_uid => {uid: oec_administrator_uid, is_superuser: false, is_author: false, is_viewer: false, active: true}
     }
@@ -185,6 +187,52 @@ describe AuthenticationStatePolicy do
     end
   end
 
+  describe '#can_view_as_for_all_uids?' do
+    let(:advisor) { false }
+    let(:staff) { false }
+    before {
+      user_attributes = {
+        roles:
+          {
+            advisor: advisor,
+            staff: staff,
+            student: false,
+            exStudent: false,
+            faculty: false
+          }
+      }
+      allow(HubEdos::UserAttributes).to receive(:new).and_return double get: user_attributes
+    }
+    context 'average staff person' do
+      let(:staff) { true }
+      let(:user_id) {average_joe_uid}
+      its(:can_view_as_for_all_uids?) { is_expected.to be false }
+    end
+    context 'superuser' do
+      let(:user_id) {superuser_uid}
+      its(:can_view_as_for_all_uids?) { is_expected.to be true }
+    end
+    context 'inactive superuser' do
+      let(:user_id) {inactive_superuser_uid}
+      its(:can_view_as_for_all_uids?) { is_expected.to be false }
+    end
+    context 'advisor' do
+      let(:advisor) { true }
+      let(:user_id) {average_joe_uid}
+      its(:can_view_as_for_all_uids?) { is_expected.to be true }
+    end
+    context 'inactive advisor' do
+      let(:advisor) { true }
+      let(:user_id) {inactive_average_joe_uid}
+      its(:can_view_as_for_all_uids?) { is_expected.to be false }
+    end
+    context 'superuser already in view-as mode cannot view-as' do
+      let(:user_id) {superuser_uid}
+      let(:original_user_id) {random_id}
+      its(:can_view_as_for_all_uids?) { is_expected.to be false }
+    end
+  end
+
   describe '#can_create_canvas_project_site?' do
     let(:user_id) {average_joe_uid}
     subject { AuthenticationState.new(session_state).policy.can_create_canvas_project_site? }
@@ -204,7 +252,6 @@ describe AuthenticationStatePolicy do
       let(:user_id) {superuser_uid}
       it { is_expected.to be true }
     end
-
   end
 
   describe '#can_create_canvas_course_site?' do
