@@ -219,7 +219,7 @@ describe AuthenticationStatePolicy do
     context 'advisor' do
       let(:advisor) { true }
       let(:user_id) {average_joe_uid}
-      its(:can_view_as_for_all_uids?) { is_expected.to be true }
+      its(:can_view_as_for_all_uids?) { is_expected.to be false }
     end
     context 'inactive advisor' do
       let(:advisor) { true }

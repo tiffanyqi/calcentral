@@ -1,10 +1,12 @@
 class StoredUsersController < ApplicationController
+  include ViewAsAuthorization
+
   before_filter :authenticate
   before_filter :numeric_uid?, except: [:get, :delete_all_recent, :delete_all_saved]
   respond_to :json
 
   def get
-    authorize(current_user, :can_view_as_for_all_uids?)
+    authorize_query_stored_users current_user
     users_found = User::StoredUsers.get(current_user.real_user_id)
     render json: { users: users_found }.to_json
   end

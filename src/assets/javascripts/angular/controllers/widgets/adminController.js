@@ -86,6 +86,8 @@ angular.module('calcentral.controllers').controller('AdminController', function(
     var response = {};
     if (data.error) {
       response.error = data.error;
+    } else if (data.status === 403) {
+      response.error = 'You are not authorized to view the requested user data.';
     } else {
       response.error = 'There was a problem searching for that user.';
     }

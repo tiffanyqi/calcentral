@@ -1,18 +1,19 @@
 describe AdvisingStudentController do
 
   let(:session_user_id) { nil }
-  let(:student_uid) { random_id }
-  let(:can_view_as_for_all_uids) { false }
+  let(:session_user_is_advisor) { false }
+  let(:session_user_attributes) { { roles: { advisor: session_user_is_advisor } } }
   let(:student) { false }
   let(:ex_student) { false }
   let(:applicant) { false }
-  let(:user_attributes) { { roles: { student: student, exStudent: ex_student, applicant: applicant } } }
+  let(:student_uid) { random_id }
+  let(:student_attributes) { { roles: { student: student, exStudent: ex_student, applicant: applicant } } }
   let(:academics) { { requirements: { name: 'UC Entry Level Writing', status: 'met' } } }
 
   before do
     session['user_id'] = session_user_id
-    allow_any_instance_of(AuthenticationStatePolicy).to receive(:can_view_as_for_all_uids?).and_return can_view_as_for_all_uids
-    allow(User::AggregatedAttributes).to receive(:new).with(student_uid).and_return double get_feed: user_attributes
+    allow(User::AggregatedAttributes).to receive(:new).with(student_uid).and_return double get_feed: student_attributes
+    allow(User::AggregatedAttributes).to receive(:new).with(session_user_id).and_return double get_feed: session_user_attributes
   end
 
   context 'no user in session' do
@@ -36,7 +37,7 @@ describe AdvisingStudentController do
       end
     end
     context 'requested user must be a student' do
-      let(:can_view_as_for_all_uids) { true }
+      let(:session_user_is_advisor) { true }
 
       context 'feature flag false' do
         let(:student) { true }
@@ -62,10 +63,8 @@ describe AdvisingStudentController do
       end
       context 'ex-student' do
         let(:ex_student) { true }
-        it 'should succeed' do
-          expect(subject.status).to eq 200
-          feed = JSON.parse(subject.body).deep_symbolize_keys
-          expect(feed[:academics]).to eq academics
+        it 'should fail' do
+          expect(subject.status).to eq 403
         end
       end
       context 'applicant' do
@@ -87,12 +86,12 @@ describe AdvisingStudentController do
     subject { get :profile, student_uid: student_uid }
 
     context 'student' do
-      let(:can_view_as_for_all_uids) { true }
+      let(:session_user_is_advisor) { true }
       let(:student) { true }
       it 'should succeed' do
         expect(subject.status).to eq 200
         feed = JSON.parse(subject.body).deep_symbolize_keys
-        expect(feed[:attributes]).to eq user_attributes
+        expect(feed[:attributes]).to eq student_attributes
       end
     end
   end

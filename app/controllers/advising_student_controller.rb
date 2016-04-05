@@ -1,5 +1,6 @@
 class AdvisingStudentController < ApplicationController
   include CampusSolutions::StudentLookupFeatureFlagged
+  include AdvisorAuthorization
 
   before_action :api_authenticate
   before_action :authorize_student_lookup
@@ -55,11 +56,7 @@ class AdvisingStudentController < ApplicationController
 
   def authorize_student_lookup
     raise NotAuthorizedError.new('The student lookup feature is disabled') unless is_feature_enabled
-    authorize current_user, :can_view_as_for_all_uids?
-    @attributes = User::AggregatedAttributes.new(student_uid = student_uid_param).get_feed
-    unless @attributes[:roles][:student] || @attributes[:roles][:exStudent] || @attributes[:roles][:applicant]
-      raise Pundit::NotAuthorizedError.new "#{current_user.user_id} is forbidden to view #{student_uid} because #{student_uid} is neither student, ex-student nor applicant"
-    end
+    authorize_advisor_view_as current_user.real_user_id, student_uid_param
   end
 
   def student_uid_param
