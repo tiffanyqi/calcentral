@@ -37,8 +37,8 @@ module MyAcademics
       if (status = parse_hub_academic_status response)
         response[:careers] = parse_hub_careers status
         response[:level] = parse_hub_level status
-        response[:majors] = parse_hub_majors status
         response[:termName] = parse_hub_term_name status
+        response.merge! parse_hub_plans status
       else
         response[:empty] = true
         response[:termName] = Berkeley::Terms.fetch.current.to_english
@@ -58,17 +58,31 @@ module MyAcademics
       status['currentRegistration'].try(:[], 'academicLevel').try(:[], 'level').try(:[], 'description')
     end
 
-    def parse_hub_majors(status)
-      [].tap do |majors|
-        status['studentPlans'].each do |student_plan|
-          if (academic_plan = student_plan['academicPlan'])
-            majors << {
-              college: academic_plan['academicProgram'].try(:[], 'program').try(:[], 'description'),
-              major: academic_plan['plan'].try(:[], 'description')
-            }
+    def parse_hub_plans(status)
+      majors = []
+      minors = []
+      status['studentPlans'].each do |student_plan|
+        if (academic_plan = student_plan['academicPlan'])
+          college = academic_plan['academicProgram'].try(:[], 'program').try(:[], 'description')
+          plan = academic_plan['plan'].try(:[], 'description')
+          case academic_plan['type'].try(:[], 'code')
+            when 'MAJ'
+              majors << {
+                college: college,
+                major: plan
+              }
+            when 'MIN'
+              minors << {
+                college: college,
+                minor: plan
+              }
           end
         end
       end
+      {
+        majors: majors,
+        minors: minors
+      }
     end
 
     def parse_hub_term_name(status)

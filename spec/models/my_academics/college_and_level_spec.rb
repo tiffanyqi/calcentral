@@ -34,6 +34,13 @@ describe 'MyAcademics::CollegeAndLevel' do
       })
     end
 
+    it 'translates minors' do
+      expect(feed[:collegeAndLevel][:minors].first).to eq({
+        college: 'Undergrad Letters & Science',
+        minor: 'Art History'
+      })
+    end
+
     it 'specifies term name' do
       expect(feed[:collegeAndLevel][:termName]).to eq '2017 Spring'
     end
