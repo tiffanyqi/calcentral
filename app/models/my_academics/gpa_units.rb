@@ -1,20 +1,16 @@
 module MyAcademics
   class GpaUnits
-    extend Cache::Cacheable
     include AcademicsModule
     include ClassLogger
-    include Cache::UserCacheExpiry
     include User::Student
 
     def merge(data)
-      data[:gpaUnits] = self.class.fetch_from_cache @uid do
-        if legacy_user?
-          oracle_gpa_units
-        elsif Settings.features.cs_academic_profile
-          hub_gpa_units
-        else
-          {empty: true}
-        end
+      data[:gpaUnits] = if legacy_user?
+        oracle_gpa_units
+      elsif Settings.features.cs_academic_profile
+        hub_gpa_units
+      else
+        {empty: true}
       end
     end
 

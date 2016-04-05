@@ -7,8 +7,8 @@ module MyAcademics
     include MergedModel
 
     def self.providers
-      # Provider ordering is significant! In particular, Semesters/Teaching must
-      # be merged before course sites.
+      # Provider ordering is significant! Semesters/Teaching must be merged before course sites.
+      # CollegeAndLevel must be merged before TransitionTerm.
       [
         CollegeAndLevel,
         TransitionTerm,
