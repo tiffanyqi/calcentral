@@ -16,18 +16,20 @@ angular.module('calcentral.controllers').controller('AdvisingStudentController',
     advisingFactory.getStudent({
       uid: $routeParams.uid
     }).then(function(data) {
-      $scope.profile = _.get(data, 'data.attributes');
-      $scope.profile.uid = $routeParams.uid;
-      $scope.profile.addresses = apiService.profile.fixFormattedAddresses(_.get(data, 'data.contacts.feed.student.addresses'));
-      $scope.profile.phones = _.get(data, 'data.contacts.feed.student.phones');
-      $scope.profile.emails = _.get(data, 'data.contacts.feed.student.emails');
-      apiService.util.setTitle($scope.profile.defaultName);
+      $scope.student = _.get(data, 'data.attributes');
+      $scope.student.uid = $routeParams.uid;
+      $scope.student.addresses = apiService.profile.fixFormattedAddresses(_.get(data, 'data.contacts.feed.student.addresses'));
+      $scope.student.phones = _.get(data, 'data.contacts.feed.student.phones');
+      $scope.student.emails = _.get(data, 'data.contacts.feed.student.emails');
+      // 'student.fullName' is expected by shared code (e.g., photo unavailable widget)
+      $scope.student.fullName = $scope.student.defaultName;
+      apiService.util.setTitle($scope.student.defaultName);
       // Get links to advising resources
       advisingFactory.getAdvisingResources({
         uid: $routeParams.uid
       }).then(function(data) {
         $scope.ucAdvisingResources = _.get(data, 'data.feed.ucAdvisingResources');
-        $scope.profile.isLoading = false;
+        $scope.student.isLoading = false;
       });
     });
   };
