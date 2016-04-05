@@ -26,7 +26,6 @@ describe AdvisingStudentController do
     let(:session_user_id) { random_id }
     before do
       allow(MyAcademics::Merged).to receive(:new).with(student_uid).and_return double get_feed: academics
-      allow(MyAcademics::Exams).to receive(:new).with(student_uid).and_return double merge: double
     end
     subject { get :academics, student_uid: student_uid }
 

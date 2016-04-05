@@ -40,7 +40,7 @@ angular.module('calcentral.controllers').controller('AdvisingStudentController',
     }).then(function(data) {
       $scope.academics = _.get(data, 'data.academics');
       $scope.collegeAndLevel = $scope.academics.collegeAndLevel;
-      $scope.examSchedule = _.get(data, 'data.examSchedule');
+      $scope.examSchedule = $scope.academics.examSchedule;
       // The university_requirements widget is also used on My Academics.
       $scope.academics.universityRequirements = $scope.academics.requirements;
       $scope.academics.isLoading = false;
