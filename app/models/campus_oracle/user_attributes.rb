@@ -25,12 +25,10 @@ module CampusOracle
         result[:roles] = roles_from_campus_row result
         result.merge! Berkeley::SpecialRegistrationProgram.attributes_from_code(result['reg_special_pgm_cd'])
 
-        if term_transition?
-          result[:california_residency] = nil
-          result[:reg_status][:transitionTerm] = true
-        else
-          result[:california_residency] = Berkeley::CalResidency.california_residency_from_campus_row result
-        end
+        result[:reg_status][:transitionTerm] = true if term_transition?
+
+        # SISRP-17479 CampusOracle residency information is no longer current and must be suppressed.
+        result[:california_residency] = nil
 
         result
       else

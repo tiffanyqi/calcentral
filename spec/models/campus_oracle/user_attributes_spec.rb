@@ -28,8 +28,8 @@ describe CampusOracle::UserAttributes do
           it 'does not report term transition' do
             expect(subject[:reg_status]).not_to include(:transitionTerm)
           end
-          it 'includes residency status' do
-            expect(subject[:california_residency][:summary]).to eq 'Non-Resident'
+          it 'suppresses residency status' do
+            expect(subject[:california_residency]).to eq nil
           end
         end
         context 'term transition' do

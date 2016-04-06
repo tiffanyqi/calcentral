@@ -37,7 +37,7 @@
                 <span data-ng-bind="studentInfo.californiaResidency.summary"></span>
               </td>
             </tr>
-            <tr>
+            <tr data-ng-if="studentInfo.californiaResidency">
               <td colspan="2" data-cc-compile-directive="studentInfo.californiaResidency.explanation"></td>
             </tr>
           </tbody>
