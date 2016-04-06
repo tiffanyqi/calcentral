@@ -34,6 +34,7 @@ module MyAcademics
         response[:careers] = parse_hub_careers status
         response[:level] = parse_hub_level status
         response[:termName] = parse_hub_term_name status
+        response[:termsInAttendance] = status['termsInAttendance'].to_s
         response.merge! parse_hub_plans status
       else
         response[:empty] = true
