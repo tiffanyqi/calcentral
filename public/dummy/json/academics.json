@@ -28,7 +28,8 @@
     ],
     "nonApLevel": "Junior",
     "noStudentId": false,
-    "termName": "Fall 2013"
+    "termName": "Fall 2013",
+    "termsInAttendance": "4"
   },
   "gpaUnits": {
     "cumulativeGpa": 2.4,

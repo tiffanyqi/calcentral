@@ -27,6 +27,10 @@ describe 'MyAcademics::CollegeAndLevel' do
       expect(feed[:collegeAndLevel][:level]).to eq 'Junior'
     end
 
+    it 'translates terms in attendance' do
+      expect(feed[:collegeAndLevel][:termsInAttendance]).to eq '4'
+    end
+
     it 'translates majors' do
       expect(feed[:collegeAndLevel][:majors].first).to eq({
         college: 'Undergrad Letters & Science',
