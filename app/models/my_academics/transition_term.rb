@@ -1,17 +1,12 @@
 module MyAcademics
   class TransitionTerm
-    extend Cache::Cacheable
     include AcademicsModule
     include ClassLogger
-    include Cache::UserCacheExpiry
 
     def merge(data)
       college_and_level = data[:collegeAndLevel]
       if college_and_level && !college_and_level[:empty] && !college_and_level[:noStudentId]
-        term = self.class.fetch_from_cache @uid do
-          transition_term college_and_level
-        end
-        data[:transitionTerm] = term
+        data[:transitionTerm] = transition_term college_and_level
       end
     end
 

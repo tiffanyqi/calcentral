@@ -230,7 +230,6 @@ cache:
     MyTasks::Merged: <%= 10.minutes %>
     UpNext::MyUpNext: NEXT_00_00
     User::Api: NEXT_08_00
-    User::Photo: <%= 24.hours %>
     User::AuthenticationValidator: <%= 8.hours %>
     User::AuthenticationValidator::short: <%= 5.minutes %>
     UserApiController: <%= 4.hours %>
@@ -243,7 +242,6 @@ cache:
 
     MyAcademics::CollegeAndLevel: NEXT_08_00
     MyAcademics::GpaUnits: NEXT_08_00
-    MyAcademics::TransitionTerm: NEXT_08_00
 
     Berkeley::Terms: NEXT_08_00
     Finaid::TimeRange: <%= 4.hours %>

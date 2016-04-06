@@ -41,15 +41,19 @@ module HubEdos
           get_internal
         end
         internal_response = wrapped_response ? wrapped_response[:response] : {}
-        if internal_response[:noStudentId] || internal_response[:studentNotFound] || internal_response[:statusCode] < 400
-          internal_response
-        else
-          internal_response.merge({
-            errored: true
-          })
-        end
+        decorate_internal_response internal_response
       else
         {}
+      end
+    end
+
+    def decorate_internal_response(internal_response)
+      if internal_response[:noStudentId] || internal_response[:studentNotFound] || internal_response[:statusCode] < 400
+        internal_response
+      else
+        internal_response.merge({
+          errored: true
+        })
       end
     end
 

@@ -1,20 +1,16 @@
 module MyAcademics
   class CollegeAndLevel
-    extend Cache::Cacheable
     include AcademicsModule
     include ClassLogger
-    include Cache::UserCacheExpiry
     include User::Student
 
     def merge(data)
-      data[:collegeAndLevel] = self.class.fetch_from_cache @uid do
-        if legacy_user?
-          bearfacts_college_and_level
-        elsif Settings.features.cs_academic_profile
-          hub_college_and_level
-        else
-          {empty: true}
-        end
+      data[:collegeAndLevel] = if legacy_user?
+        bearfacts_college_and_level
+      elsif Settings.features.cs_academic_profile
+        hub_college_and_level
+      else
+        {empty: true}
       end
     end
 

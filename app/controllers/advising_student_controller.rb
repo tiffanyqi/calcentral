@@ -19,8 +19,7 @@ class AdvisingStudentController < ApplicationController
   def academics
     student_uid = student_uid_param
     render json: {
-      academics: MyAcademics::Merged.new(student_uid).get_feed,
-      examSchedule: MyAcademics::Exams.new(student_uid).merge
+      academics: MyAcademics::Merged.new(student_uid).get_feed
     }
   end
 
