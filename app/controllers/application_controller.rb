@@ -113,6 +113,11 @@ class ApplicationController < ActionController::Base
 
   def user_not_authorized(error)
     Rails.logger.warn "Unauthorized request made by UID: #{session['user_id']} to #{controller_name}\##{action_name}: #{error.message}"
+    render_403 error
+  end
+
+  def render_403(error)
+    # Subclasses might render JSON including error message.
     render :nothing => true, :status => 403
   end
 
