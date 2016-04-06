@@ -3,6 +3,7 @@ module User
     extend self
 
     def attributes_for_uids(uids)
+      return [] if uids.blank?
       uid_set = uids.to_set
       attrs = CampusOracle::Queries.get_basic_people_attributes(uids).map do |result|
         uid_set.delete result['ldap_uid']
