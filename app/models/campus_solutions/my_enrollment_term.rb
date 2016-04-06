@@ -1,8 +1,9 @@
 module CampusSolutions
   class MyEnrollmentTerm < UserSpecificModel
 
-    include Cache::LiveUpdatesEnabled
-    include Cache::JsonAddedCacher
+    include Cache::CachedFeed
+    include Cache::JsonifiedFeed
+    include Cache::UserCacheExpiry
     include Cache::RelatedCacheKeyTracker
     include EnrollmentCardFeatureFlagged
 

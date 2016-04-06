@@ -2,7 +2,7 @@ module CampusSolutions
   class MyEnrollmentTerms < UserSpecificModel
 
     include Cache::CachedFeed
-    include Cache::JsonAddedCacher
+    include Cache::UserCacheExpiry
     include EnrollmentCardFeatureFlagged
 
     def get_feed_internal

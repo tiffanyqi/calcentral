@@ -1,8 +1,9 @@
 module CampusSolutions
   class MyAcademicPlan < UserSpecificModel
 
-    include Cache::LiveUpdatesEnabled
-    include Cache::JsonAddedCacher
+    include Cache::CachedFeed
+    include Cache::JsonifiedFeed
+    include Cache::UserCacheExpiry
     include EnrollmentCardFeatureFlagged
 
     attr_accessor :term_id

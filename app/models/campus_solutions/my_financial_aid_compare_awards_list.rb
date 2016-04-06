@@ -2,8 +2,8 @@ module CampusSolutions
   class MyFinancialAidCompareAwardsList < UserSpecificModel
 
     include ClassLogger
-    include Cache::LiveUpdatesEnabled
-    include Cache::FreshenOnWarm
+    include Cache::CachedFeed
+    include Cache::UserCacheExpiry
     include Cache::JsonAddedCacher
     include Cache::RelatedCacheKeyTracker
     include CampusSolutions::FinancialAidCompareAwardsFeatureFlagged

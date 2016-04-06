@@ -1,9 +1,9 @@
 module CampusSolutions
   class MyAidYears < UserSpecificModel
 
-    include Cache::LiveUpdatesEnabled
-    include Cache::FreshenOnWarm
+    include Cache::CachedFeed
     include Cache::JsonAddedCacher
+    include Cache::UserCacheExpiry
     include CampusSolutions::FinaidFeatureFlagged
 
     def get_feed_internal
