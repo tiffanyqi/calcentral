@@ -2,6 +2,7 @@
 'use strict';
 
 var angular = require('angular');
+var _ = require('lodash');
 
 /**
  * Admin controller
@@ -84,8 +85,9 @@ angular.module('calcentral.controllers').controller('AdminController', function(
 
   var handleLookupUserError = function(data) {
     var response = {};
-    if (data.error) {
-      response.error = data.error;
+    var errorMessage = data.error || _.get(data, 'data.error');
+    if (errorMessage) {
+      response.error = errorMessage;
     } else if (data.status === 403) {
       response.error = 'You are not authorized to view the requested user data.';
     } else {

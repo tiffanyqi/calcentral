@@ -1,5 +1,5 @@
 class ActAsController < ApplicationController
-
+  include ViewAsAuthorization
   include ClassLogger
 
   skip_before_filter :check_reauthentication, :only => [:stop_act_as]
