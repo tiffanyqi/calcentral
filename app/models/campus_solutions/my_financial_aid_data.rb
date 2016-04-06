@@ -2,9 +2,9 @@ module CampusSolutions
   class MyFinancialAidData < UserSpecificModel
 
     include ClassLogger
-    include Cache::LiveUpdatesEnabled
-    include Cache::FreshenOnWarm
-    include Cache::JsonAddedCacher
+    include Cache::CachedFeed
+    include Cache::JsonifiedFeed
+    include Cache::UserCacheExpiry
     include Cache::RelatedCacheKeyTracker
     include CampusSolutions::FinaidFeatureFlagged
 
