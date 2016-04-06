@@ -81,4 +81,9 @@ describe User::BasicAttributes do
     expect(aethelred[:email_address]).to eq 'inactive@berkeley.edu'
     expect(aethelred[:roles][:expiredAccount]).to eq true
   end
+
+  it 'handles empty arguments' do
+    expect(User::BasicAttributes.attributes_for_uids nil).to eq []
+    expect(User::BasicAttributes.attributes_for_uids []).to eq []
+  end
 end
