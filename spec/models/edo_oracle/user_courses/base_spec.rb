@@ -226,12 +226,25 @@ describe EdoOracle::UserCourses::Base do
       subject.find { |course| course[:course_code] == course_code }[:sections]
     end
 
-    it 'sorts out sections based on course code' do
-      expect(subject).to have(4).items
-      expect(get_sections 'MUSIC 74').to have(4).items
-      expect(get_sections 'MUSIC 99C').to have(1).items
-      expect(get_sections 'MUSIC C105').to have(1).items
-      expect(get_sections 'MEC ENG C112').to have(1).items
+    shared_examples 'proper section sorting' do
+      it 'sorts out sections based on course code' do
+        expect(subject).to have(4).items
+        expect(get_sections 'MUSIC 74').to have(4).items
+        expect(get_sections 'MUSIC 99C').to have(1).items
+        expect(get_sections 'MUSIC C105').to have(1).items
+        expect(get_sections 'MEC ENG C112').to have(1).items
+      end
+    end
+    include_examples 'proper section sorting'
+
+    context 'when dept_name and catalog_id are unavailable' do
+      before do
+        instructing_query_results[1].delete 'dept_name'
+        instructing_query_results[1].delete 'catalog_id'
+        instructing_query_results[3].delete 'dept_name'
+        instructing_query_results[3].delete 'catalog_id'
+      end
+      include_examples 'proper section sorting'
     end
 
     it 'adds de-duplicated secondaries to the right course' do
