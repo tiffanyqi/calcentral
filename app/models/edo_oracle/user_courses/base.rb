@@ -164,12 +164,24 @@ module EdoOracle
       end
 
       def merge_detailed_section_data(campus_classes)
+        # Track instructors as we go to allow an efficient final overwrite with directory attributes.
+        instructors_by_uid = {}
         campus_classes.each_value do |semester|
           semester.each do |course|
             course[:sections].uniq!
             course[:sections].each do |section|
-              section.merge! EdoOracle::CourseSections.new(course[:term_id], section[:ccn]).get_section_data
+              section_data = EdoOracle::CourseSections.new(course[:term_id], section[:ccn]).get_section_data
+              section_data[:instructors].each do |instructor_data|
+                instructors_by_uid[instructor_data[:uid]] ||= []
+                instructors_by_uid[instructor_data[:uid]] << instructor_data
+              end
+              section.merge! section_data
             end
+          end
+        end
+        User::BasicAttributes.attributes_for_uids(instructors_by_uid.keys).each do |instructor_attributes|
+          if (instructor_entries = instructors_by_uid[instructor_attributes[:ldap_uid]])
+            instructor_entries.each { |entry| entry[:name] = instructor_attributes.values_at(:first_name, :last_name).join(' ') }
           end
         end
       end
