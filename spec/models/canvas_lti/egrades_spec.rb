@@ -180,14 +180,14 @@ describe CanvasLti::Egrades do
   context 'when providing canvas course student grades' do
     let(:course_users_array) do
       [
-        ['4000123', 58, 'F'],
-        ['4000309', 93.75, 'A-'],
-        ['4000199', 81.25, 'B-']
+        ['4000123', 58, 58, 'F', 'F'],
+        ['4000309', 93.75, 93.75, 'A-', 'A-'],
+        ['4000199', 81.25, 87.5, 'B-', 'B+']
       ].collect do |u|
         {
           'sis_login_id' => u[0],
           'enrollments' => [
-            { 'type' => 'StudentEnrollment', 'grades' => {'current_score' => u[1], 'current_grade' => u[2], 'final_score' => u[1], 'final_grade' => u[2]} }
+            { 'type' => 'StudentEnrollment', 'grades' => {'current_score' => u[1], 'current_grade' => u[3], 'final_score' => u[2], 'final_grade' => u[4]} }
           ]
         }
       end
@@ -212,7 +212,7 @@ describe CanvasLti::Egrades do
       expect(result[1][:current_grade]).to eq 'A-'
 
       expect(result[2][:sis_login_id]).to eq '4000199'
-      expect(result[2][:final_grade]).to eq 'B-'
+      expect(result[2][:final_grade]).to eq 'B+'
       expect(result[2][:current_grade]).to eq 'B-'
     end
 
