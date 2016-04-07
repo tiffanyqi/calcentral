@@ -161,7 +161,7 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   var loadEnrollmentData = function() {
     return enrollmentFactory.getEnrollmentTerms()
       .then(parseEnrollmentTerms)
-      .then(stopMainSpinner);
+      .finally(stopMainSpinner);
   };
 
   /**
