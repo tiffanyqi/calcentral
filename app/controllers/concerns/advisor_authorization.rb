@@ -10,7 +10,7 @@ module AdvisorAuthorization
 
   def authorize_advisor_view_as(uid, student_uid)
     require_advisor uid
-    unless student_or_applicant? student_uid
+    unless qualifies_as_student? student_uid
       raise Pundit::NotAuthorizedError.new "#{student_uid} does not appear to be a current, recent, or incoming student."
     end
   end
@@ -23,9 +23,9 @@ module AdvisorAuthorization
 
   private
 
-  def student_or_applicant?(uid)
+  def qualifies_as_student?(uid)
     @attributes = User::AggregatedAttributes.new(student_uid = uid).get_feed
-    @attributes[:roles][:student] || @attributes[:roles][:applicant]
+    @attributes[:roles][:applicant] || @attributes[:roles][:student] || @attributes[:roles][:recentStudent]
   end
 
 end

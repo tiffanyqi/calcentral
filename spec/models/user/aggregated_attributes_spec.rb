@@ -19,7 +19,13 @@ describe User::AggregatedAttributes do
       }
     }
   end
-  let(:ldap_attributes) { {} }
+  let(:ldap_attributes) do
+    {
+      roles: {
+        recentStudent: true
+      }
+    }
+  end
 
   subject { User::AggregatedAttributes.new(uid).get_feed }
 
@@ -37,6 +43,7 @@ describe User::AggregatedAttributes do
         expect(subject[:officialBmailAddress]).to eq bmail_from_edo
         expect(subject[:campusSolutionsId]).to eq campus_solutions_id
         expect(subject[:studentId]).to eq student_id
+        expect(subject[:roles][:recentStudent]).to be true
       end
     end
   end
@@ -49,6 +56,7 @@ describe User::AggregatedAttributes do
         roles: {
           student: is_active_student,
           exStudent: !is_active_student,
+          recentStudent: !is_active_student,
           faculty: false,
           staff: true
         }
@@ -58,12 +66,14 @@ describe User::AggregatedAttributes do
       let(:is_active_student) { true }
       it 'should prefer EDO' do
         expect(subject[:officialBmailAddress]).to eq bmail_from_edo
+        expect(subject[:roles][:recentStudent]).to be false
       end
     end
     context 'former student' do
       let(:is_active_student) { false }
       it 'should fall back to LDAP' do
         expect(subject[:officialBmailAddress]).to eq bmail_from_ldap
+        expect(subject[:roles][:recentStudent]).to be true
       end
     end
     context 'applicant' do
@@ -85,6 +95,7 @@ describe User::AggregatedAttributes do
       let(:is_active_student) { false }
       it 'should prefer EDO' do
         expect(subject[:officialBmailAddress]).to eq bmail_from_edo
+        expect(subject[:roles][:recentStudent]).to be true
       end
     end
     context 'broken Hub API' do
@@ -97,6 +108,7 @@ describe User::AggregatedAttributes do
       end
       it 'relies on LDAP and Oracle' do
         expect(subject[:officialBmailAddress]).to eq bmail_from_ldap
+        expect(subject[:roles][:recentStudent]).to be false
       end
     end
   end
