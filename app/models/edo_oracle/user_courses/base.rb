@@ -90,6 +90,12 @@ module EdoOracle
         end
       end
 
+      def sort_courses(campus_classes)
+        campus_classes.each_value do |semester_classes|
+          semester_classes.sort_by! { |c| Berkeley::CourseCodes.comparable_course_code c }
+        end
+      end
+
       # Create IDs for a given course item:
       #   "id" : unique for the UserCourses feed across terms; used by Classes
       #   "slug" : URL-friendly ID without term information; used by Academics

@@ -126,20 +126,6 @@ describe EdoOracle::UserCourses::Base do
     let(:instructing_query_results) do
       [
         base_course_data.merge({
-          'cs_course_id' => '10001',
-          'instruction_format' => 'LEC',
-          'primary' => 'true',
-          'section_id' => '44206',
-          'section_num' => '001'
-        }),
-        base_course_data.merge({
-          'cs_course_id' => '10001',
-          'instruction_format' => 'LEC',
-          'primary' => 'true',
-          'section_id' => '44207',
-          'section_num' => '002'
-        }),
-        base_course_data.merge({
           'cs_course_id' => '20001',
           'catalog_id' => '99C',
           'catalog_prefix' => nil,
@@ -184,6 +170,20 @@ describe EdoOracle::UserCourses::Base do
           'section_id' => '54807',
           'section_num' => '001'
         }),
+        base_course_data.merge({
+          'cs_course_id' => '10001',
+          'instruction_format' => 'LEC',
+          'primary' => 'true',
+          'section_id' => '44206',
+          'section_num' => '001'
+        }),
+        base_course_data.merge({
+          'cs_course_id' => '10001',
+          'instruction_format' => 'LEC',
+          'primary' => 'true',
+          'section_id' => '44207',
+          'section_num' => '002'
+        })
       ]
     end
     let(:secondary_query_results) do
@@ -267,6 +267,13 @@ describe EdoOracle::UserCourses::Base do
       expect(get_sections('MUSIC 74').first).not_to include(:cross_listing_hash)
       expect(get_sections('MUSIC 99C').first).not_to include(:cross_listing_hash)
       expect(get_sections('MUSIC C105').first[:cross_listing_hash]).to eq get_sections('MEC ENG C112').first[:cross_listing_hash]
+    end
+
+    describe 'canonical course ordering' do
+      before { EdoOracle::UserCourses::Base.new(user_id: random_id).sort_courses feed }
+      it 'should order courses by code' do
+        expect(subject.map { |c| c[:course_code] }).to eq ['MEC ENG C112', 'MUSIC 74', 'MUSIC 99C', 'MUSIC C105']
+      end
     end
   end
 

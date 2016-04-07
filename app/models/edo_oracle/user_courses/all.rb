@@ -11,6 +11,7 @@ module EdoOracle
           campus_classes = {}
           merge_instructing campus_classes
           merge_enrollments campus_classes
+          sort_courses campus_classes
 
           # Sort the hash in descending order of semester.
           campus_classes = Hash[campus_classes.sort.reverse]
@@ -27,6 +28,7 @@ module EdoOracle
         cached_query "summary-#{@uid}" do
           campus_classes = {}
           merge_enrollments campus_classes
+          sort_courses campus_classes
           Hash[campus_classes.sort.reverse]
         end
       end
