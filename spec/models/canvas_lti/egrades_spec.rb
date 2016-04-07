@@ -178,41 +178,42 @@ describe CanvasLti::Egrades do
   end
 
   context 'when providing canvas course student grades' do
-    before { subject.background_job_initialize }
+    let(:course_users_array) do
+      [
+        ['4000123', 58, 'F'],
+        ['4000309', 93.75, 'A-'],
+        ['4000199', 81.25, 'B-']
+      ].collect do |u|
+        {
+          'sis_login_id' => u[0],
+          'enrollments' => [
+            { 'type' => 'StudentEnrollment', 'grades' => {'current_score' => u[1], 'current_grade' => u[2], 'final_score' => u[1], 'final_grade' => u[2]} }
+          ]
+        }
+      end
+    end
+    let(:course_users_response) { { :statusCode => 200, :body => course_users_array } }
+
+    before do
+      allow_any_instance_of(Canvas::CourseUsers).to receive(:course_users).and_return(course_users_response)
+      subject.background_job_initialize
+    end
     it 'returns canvas course student grades' do
       result = subject.canvas_course_student_grades
       expect(result).to be_an_instance_of Array
-      expect(result.count).to eq 11
+      expect(result.count).to eq 3
 
-      # Student with Grade
       expect(result[0][:sis_login_id]).to eq '4000123'
       expect(result[0][:final_grade]).to eq 'F'
       expect(result[0][:current_grade]).to eq 'F'
 
-      # Teacher Enrollment
-      expect(result[1][:sis_login_id]).to eq '4000169'
-      expect(result[1][:final_grade]).to eq nil
-      expect(result[1][:current_grade]).to eq nil
+      expect(result[1][:sis_login_id]).to eq '4000309'
+      expect(result[1][:final_grade]).to eq 'A-'
+      expect(result[1][:current_grade]).to eq 'A-'
 
-      # Student with No Grade
-      expect(result[2][:sis_login_id]).to eq '4000309'
-      expect(result[2][:final_grade]).to eq nil
-      expect(result[2][:current_grade]).to eq nil
-
-      # Student with Grade
-      expect(result[3][:sis_login_id]).to eq '4000189'
-      expect(result[3][:final_grade]).to eq 'B+'
-      expect(result[3][:current_grade]).to eq 'B+'
-
-      # Student with Grade
-      expect(result[4][:sis_login_id]).to eq '4000199'
-      expect(result[4][:final_grade]).to eq 'D-'
-      expect(result[4][:current_grade]).to eq 'C'
-
-      # Student with Grade
-      expect(result[5][:sis_login_id]).to eq '4000272'
-      expect(result[5][:final_grade]).to eq 'F-'
-      expect(result[5][:current_grade]).to eq 'F-'
+      expect(result[2][:sis_login_id]).to eq '4000199'
+      expect(result[2][:final_grade]).to eq 'B-'
+      expect(result[2][:current_grade]).to eq 'B-'
     end
 
     it 'should not source data from cache' do
