@@ -1,5 +1,6 @@
 module EdoOracle
   class CourseSections < BaseProxy
+    include ClassLogger
     include QueryCaching
 
     def initialize(term_id, course_id)
@@ -44,19 +45,16 @@ module EdoOracle
     end
 
     def translate_location(meeting)
-      return {} unless meeting['location']
-      location_chunks = meeting['location'].rpartition /\s+/
-      if location_chunks.first.present?
-        {
-          buildingName: location_chunks.first,
-          roomNumber: strip_leading_zeros(location_chunks.last)
-        }
+      return {} if meeting['location'].blank?
+      if meeting['location'] == 'REQGA'
+        building_name = 'Room not yet assigned'
       else
-        {
-          buildingName: location_chunks.last,
-          roomNumber: ''
-        }
+        building_name, room_number = meeting['location'].rpartition(/\s+/).reject &:blank?
       end
+      {
+        buildingName: building_name,
+        roomNumber: strip_leading_zeros(room_number)
+      }
     end
 
     def translate_schedule(meeting)
@@ -76,12 +74,20 @@ module EdoOracle
         end
       end
       if meeting['meeting_start_time'].present?
-        schedule << " #{meeting['meeting_start_time']}"
-        schedule << "-#{meeting['meeting_end_time']}" unless meeting['meeting_end_time'].blank?
+        schedule << " #{translate_time meeting['meeting_start_time']}"
+        schedule << "-#{translate_time meeting['meeting_end_time']}" unless meeting['meeting_end_time'].blank?
       end
       {
         schedule: schedule
       }
+    end
+
+    def translate_time(time)
+      # 9:00A, 11:30A, 3:14P
+      Time.parse(time).strftime('%-l:%M%p').sub(/M\Z/, '')
+    rescue ArgumentError
+      logger.error "Bad time value for course #{@course_id}, term #{@term_id}: #{time}"
+      ''
     end
 
   end

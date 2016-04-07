@@ -28,6 +28,12 @@ describe EdoOracle::CourseSections do
             'meeting_end_time' => '10:59'
           },
           {
+            'location' => 'REQGA',
+            'meeting_days' => 'TUTH',
+            'meeting_start_time' => '14:00',
+            'meeting_end_time' => '14:59'
+          },
+          {
             'location' => nil,
             'meeting_days' => nil,
             'meeting_start_time' => nil,
@@ -36,14 +42,17 @@ describe EdoOracle::CourseSections do
         ]
       end
       it 'ignores empty rows' do
-        expect(subject[:schedules]).to have(1).item
+        expect(subject[:schedules]).to have(2).items
       end
       it 'translates time' do
-        expect(subject[:schedules].first[:schedule]).to eq 'MWF 09:30-10:59'
+        expect(subject[:schedules][0][:schedule]).to eq 'MWF 9:30A-10:59A'
+        expect(subject[:schedules][1][:schedule]).to eq 'TuTh 2:00P-2:59P'
       end
       it 'translates space' do
-        expect(subject[:schedules].first[:buildingName]).to eq 'WHEELER'
-        expect(subject[:schedules].first[:roomNumber]).to eq '233'
+        expect(subject[:schedules][0][:buildingName]).to eq 'WHEELER'
+        expect(subject[:schedules][0][:roomNumber]).to eq '233'
+        expect(subject[:schedules][1][:buildingName]).to eq 'Room not yet assigned'
+        expect(subject[:schedules][1][:roomNumber]).to be_blank
       end
     end
 
