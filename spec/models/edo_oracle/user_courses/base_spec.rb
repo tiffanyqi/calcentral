@@ -275,6 +275,41 @@ describe EdoOracle::UserCourses::Base do
         expect(subject.map { |c| c[:course_code] }).to eq ['MEC ENG C112', 'MUSIC 74', 'MUSIC 99C', 'MUSIC C105']
       end
     end
+
+    describe 'detailed section data merge' do
+      let(:instructor_assignments) do
+        {
+          '44206' => [{uid: '61889', name: 'Majuscule Bear'}],
+          '44207' => [{uid: '61889', name: 'Majuscule Bear'}, {uid: '2040', name: 'John Montagu'}],
+          '44210' => [{uid: '242881', name: 'Professor Plum'}],
+          '44211' => [{uid: '61889', name: 'Majuscule Bear'}],
+          '44807' => [{uid: '2040', name: 'John Montagu'}],
+          '45807' => [{uid: '2040', name: 'John Montagu'}],
+          '54807' => [{uid: '242881', name: 'Professor Plum'}]
+        }
+      end
+      let(:instructor_attributes) do
+        [
+          {ldap_uid: '61889', first_name: 'minuscule', last_name: 'bear'},
+          {ldap_uid: '2040', first_name: 'Earl', last_name: 'of Sandwich'}
+        ]
+      end
+      before do
+        instructor_assignments.each do |course_id, instructors|
+          allow(EdoOracle::CourseSections).to receive(:new).with('2168', course_id).and_return double(get_section_data: {instructors: instructors})
+        end
+        expect(User::BasicAttributes).to receive(:attributes_for_uids).with(array_including('2040', '61889', '242881')).and_return instructor_attributes
+        EdoOracle::UserCourses::Base.new(user_id: random_id).merge_detailed_section_data feed
+      end
+      it 'overrides instructor names from directory when available' do
+        expect(get_sections('MUSIC 99C').first[:instructors].first[:name]).to eq 'Earl of Sandwich'
+        expect(get_sections('MUSIC C105').first[:instructors].first[:name]).to eq 'Earl of Sandwich'
+        expect(get_sections('MUSIC 74').first[:instructors].first[:name]).to eq 'minuscule bear'
+      end
+      it 'uses name from database when no directory entry found' do
+        expect(get_sections('MEC ENG C112').first[:instructors].first[:name]).to eq 'Professor Plum'
+      end
+    end
   end
 
   describe '#course_ids_from_row' do
