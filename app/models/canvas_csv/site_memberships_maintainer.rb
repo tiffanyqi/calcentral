@@ -187,17 +187,12 @@ module CanvasCsv
           # membership stickiness from manual to SIS import.
         end
       else
-        logger.debug "Adding UID #{login_uid} as new user"
-        add_user_if_new campus_data_row
+        add_user_if_new login_uid
       end
       logger.debug "Adding UID #{login_uid} to SIS Section: #{sis_section_id} as role: #{canvas_api_role}"
-      @enrollments_csv_output << {
-        'course_id' => @sis_course_id,
-        'user_id' => derive_sis_user_id(User::BasicAttributes.transform_campus_row campus_data_row),
-        'role' => api_role_to_csv_role(canvas_api_role),
-        'section_id' => sis_section_id,
-        'status' => 'active'
-      }
+
+      sis_user_id = get_sis_user_id(login_uid)
+      append_enrollment_update(sis_section_id, canvas_api_role, sis_user_id)
     end
 
     def handle_missing_enrollments(uid, section_id, remaining_enrollments)
@@ -211,12 +206,22 @@ module CanvasCsv
       end
     end
 
-    def add_user_if_new(campus_data_row)
-      uid = campus_data_row['ldap_uid']
-      unless @known_users.include?(uid)
-        @users_csv_output << canvas_user_from_campus_attributes(User::BasicAttributes.transform_campus_row campus_data_row)
-        @known_users << uid
+    def add_user_if_new(uid)
+      unless @known_users[uid].present?
+        logger.debug "Adding UID #{uid} as new user"
+        user_attributes = User::BasicAttributes.attributes_for_uids([uid]).first
+        canvas_user = canvas_user_from_campus_attributes(user_attributes)
+        @users_csv_output << canvas_user
+        @known_users[uid] = canvas_user['user_id']
       end
+    end
+
+    def get_sis_user_id(ldap_uid)
+      if @known_users[ldap_uid].blank?
+        user_attributes = User::BasicAttributes.attributes_for_uids([ldap_uid]).first
+        @known_users[ldap_uid] = derive_sis_user_id(user_attributes)
+      end
+      @known_users[ldap_uid]
     end
 
     # For certain built-in enrollment roles, the Canvas enrollments API shows the
@@ -226,6 +231,16 @@ module CanvasCsv
     # in CSV imports.
     def api_role_to_csv_role(canvas_role)
       CANVAS_API_ROLE_TO_CANVAS_SIS_ROLE[canvas_role] || canvas_role
+    end
+
+    def append_enrollment_update(section_id, api_role, sis_user_id)
+      @enrollments_csv_output << {
+        'course_id' => @sis_course_id,
+        'user_id' => sis_user_id,
+        'role' => api_role_to_csv_role(api_role),
+        'section_id' => section_id,
+        'status' => 'active'
+      }
     end
 
     # Appends enrollment record for deletion

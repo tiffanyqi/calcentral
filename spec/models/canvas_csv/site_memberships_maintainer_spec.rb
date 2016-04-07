@@ -3,7 +3,7 @@ describe CanvasCsv::SiteMembershipsMaintainer do
   let(:sis_course_id) { random_ccn }
   let(:enrollments_csv)  { [] }
   let(:users_csv)  { [] }
-  let(:known_users) { [] }
+  let(:known_users) { {} }
   let(:uid) { random_id }
   let(:sis_section_id) {"SEC:2014-B-#{sis_course_id}"}
   let(:sis_section_ids) { [sis_section_id, '2014-D-04124', 'bababooey'] }
@@ -18,6 +18,16 @@ describe CanvasCsv::SiteMembershipsMaintainer do
     worker.refresh_sections_in_course
     enrollments_csv
   }
+  before do
+    allow(CampusOracle::Queries).to receive(:get_basic_people_attributes) do |uids|
+      uid = uids.first
+      [{
+        'ldap_uid' => uid,
+        'student_id' => uid,
+        'affiliations' => 'STUDENT-STATUS-EXPIRED'
+      }]
+    end
+  end
 
   def enrollments_for(user_id)
     subject.select {|e| e['user_id'] == "UID:#{user_id}"}
@@ -46,19 +56,18 @@ describe CanvasCsv::SiteMembershipsMaintainer do
         it 'adds the expected CSV row' do
           expect(subject.length).to eq(1)
           expect(subject[0]).to eq(invariable_enrollment_data.merge('role' => canvas_role))
-          expect(known_users).to eq [uid]
+          expect(known_users).to eq({uid.to_s => "UID:#{uid}"})
           expect(users_csv.length).to eq 1
         end
       end
       let(:invariable_campus_row) { {
         'ldap_uid' => uid,
-        'student_id' => uid,
-        'affiliations' => 'STUDENT-TYPE-REGISTERED'
+        'student_id' => uid
       } }
 
       let(:invariable_enrollment_data) { {
         'course_id' => sis_course_id,
-        'user_id' => uid,
+        'user_id' => "UID:#{uid}",
         'section_id' => sis_section_id,
         'status' => 'active'
       } }
@@ -90,7 +99,7 @@ describe CanvasCsv::SiteMembershipsMaintainer do
         let(:canvas_role) { 'student' }
         it_behaves_like 'an enrollments and users appender'
         context 'when user is already known' do
-          let(:known_users) { [uid] }
+          let(:known_users) { {uid => "UID:#{uid}"} }
           it 'does not re-import the user' do
             expect(subject.length).to eq(1)
             expect(users_csv.length).to eq 0

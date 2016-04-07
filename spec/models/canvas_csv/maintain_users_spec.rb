@@ -1,8 +1,8 @@
 describe CanvasCsv::MaintainUsers do
 
-  let(:known_uids) { [] }
+  let(:known_users) { {} }
   let(:account_changes) { [] }
-  subject { CanvasCsv::MaintainUsers.new(known_uids, account_changes) }
+  subject { CanvasCsv::MaintainUsers.new(known_users, account_changes) }
 
   describe '#categorize_user_accounts' do
     before { subject.categorize_user_account(existing_account, campus_rows) }
@@ -33,7 +33,7 @@ describe CanvasCsv::MaintainUsers do
       it 'finds email change' do
         expect(account_changes.length).to eq(1)
         expect(subject.sis_user_id_changes.length).to eq(0)
-        expect(known_uids.length).to eq(1)
+        expect(known_users.length).to eq(1)
         new_account = account_changes[0]
         expect(new_account['email']).to eq('new@example.edu')
       end
@@ -68,7 +68,7 @@ describe CanvasCsv::MaintainUsers do
       it 'finds SIS ID change' do
         expect(account_changes.length).to eq 0
         expect(subject.sis_user_id_changes.length).to eq 1
-        expect(known_uids.length).to eq 1
+        expect(known_users.length).to eq 1
         expect(subject.sis_user_id_changes["sis_login_id:#{changed_sis_id_uid}"]).to eq changed_sis_id_student_id
       end
     end
@@ -100,7 +100,8 @@ describe CanvasCsv::MaintainUsers do
       it 'just notes the UID' do
         expect(account_changes.length).to eq(0)
         expect(subject.sis_user_id_changes.length).to eq(0)
-        expect(known_uids.length).to eq(1)
+        expect(known_users.length).to eq(1)
+        expect(known_users[uid.to_s]).to eq "UID:#{uid}"
       end
     end
 
@@ -131,7 +132,10 @@ describe CanvasCsv::MaintainUsers do
       it 'considers the account to be unchanged' do
         expect(account_changes.length).to eq(0)
         expect(subject.sis_user_id_changes.length).to eq(0)
-        expect(known_uids.length).to eq(1)
+      end
+      it 'updates known users hash' do
+        expect(known_users.length).to eq(1)
+        expect(known_users[uid.to_s]).to eq "UID:#{uid}"
       end
     end
 
@@ -162,7 +166,7 @@ describe CanvasCsv::MaintainUsers do
       it 'skips the record' do
         expect(account_changes.length).to eq(0)
         expect(subject.sis_user_id_changes.length).to eq(0)
-        expect(known_uids.length).to eq(0)
+        expect(known_users.length).to eq(0)
       end
     end
 
@@ -198,8 +202,11 @@ describe CanvasCsv::MaintainUsers do
         expect(account_changes[0]['user_id']).to eq student_id
         expect(account_changes[0]['email']).to eq "#{uid}@example.edu"
         expect(subject.sis_user_id_changes).to eq({"sis_login_id:inactive-#{uid}" => student_id})
-        expect(known_uids.length).to eq(1)
         expect(subject.user_email_deletions).to be_blank
+      end
+      it 'updates known users hash' do
+        expect(known_users.length).to eq(1)
+        expect(known_users[uid.to_s]).to eq student_id
       end
     end
   end
@@ -240,34 +247,39 @@ describe CanvasCsv::MaintainUsers do
       ] }
       let(:inactivate_expired_users) { true }
       it 'deactivates the user account' do
-        expect(account_changes.length).to eq(1)
+        expect(account_changes.length).to eq 1
         expect(account_changes[0]['login_id']).to eq "inactive-#{uid}"
         expect(account_changes[0]['user_id']).to eq "UID:#{uid}"
         expect(account_changes[0]['email']).to be_blank
         expect(subject.sis_user_id_changes).to eq({"sis_login_id:#{uid}" => "UID:#{uid}"})
-        expect(known_uids.length).to eq(1)
+        expect(known_users.length).to eq 1
         expect(subject.user_email_deletions).to eq [canvas_user_id]
+      end
+      it 'updates known users hash' do
+        expect(known_users[uid.to_s]).to eq "UID:#{uid}"
       end
     end
     context 'when we can trust campus data sources' do
       let(:inactivate_expired_users) { true }
       it 'deactivates the user account' do
-        expect(account_changes.length).to eq(1)
+        expect(account_changes.length).to eq 1
         expect(account_changes[0]['login_id']).to eq "inactive-#{uid}"
         expect(account_changes[0]['user_id']).to eq "UID:#{uid}"
         expect(account_changes[0]['email']).to be_blank
         expect(subject.sis_user_id_changes).to eq({"sis_login_id:#{uid}" => "UID:#{uid}"})
-        expect(known_uids.length).to eq(1)
+        expect(known_users.length).to eq 1
         expect(subject.user_email_deletions).to eq [canvas_user_id]
       end
     end
     context 'when we cannot trust campus data sources' do
       let(:inactivate_expired_users) { false }
       it 'does nothing' do
-        expect(account_changes.length).to eq(0)
+        expect(account_changes.length).to eq 0
         expect(subject.sis_user_id_changes).to eq({})
-        expect(known_uids.length).to eq(1)
         expect(subject.user_email_deletions).to eq []
+      end
+      it 'updates known users hash with existing login id' do
+        expect(known_users[uid.to_s]).to eq student_id
       end
     end
   end

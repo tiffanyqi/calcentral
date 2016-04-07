@@ -27,22 +27,22 @@ module CanvasCsv
 
     def make_csv_files
       users_csv = make_users_csv(@users_csv_filename)
-      known_uids = []
-      user_maintainer = MaintainUsers.new(known_uids, users_csv)
+      known_users = {}
+      user_maintainer = MaintainUsers.new(known_users, users_csv)
       user_maintainer.refresh_existing_user_accounts
-      original_user_count = known_uids.length
+      original_user_count = known_users.length
       unless @accounts_only
         cached_enrollments_provider = CanvasCsv::TermEnrollments.new
         @term_to_memberships_csv_filename.each do |term, csv_filename|
           enrollments_csv = make_enrollments_csv(csv_filename)
-          refresh_existing_term_sections(term, enrollments_csv, known_uids, users_csv, cached_enrollments_provider, user_maintainer.sis_user_id_changes)
+          refresh_existing_term_sections(term, enrollments_csv, known_users, users_csv, cached_enrollments_provider, user_maintainer.sis_user_id_changes)
           enrollments_csv.close
           enrollments_count = csv_count(csv_filename)
           logger.warn "Will upload #{enrollments_count} Canvas enrollment records for #{term}"
           @term_to_memberships_csv_filename[term] = nil if enrollments_count == 0
         end
       end
-      new_user_count = known_uids.length - original_user_count
+      new_user_count = known_users.length - original_user_count
       users_csv.close
       updated_user_count = csv_count(@users_csv_filename) - new_user_count
       logger.warn "Will upload #{updated_user_count} changed accounts for #{original_user_count} existing users"
@@ -50,7 +50,7 @@ module CanvasCsv
       @users_csv_filename = nil if (updated_user_count + new_user_count) == 0
     end
 
-    def refresh_existing_term_sections(term, enrollments_csv, known_uids, users_csv, cached_enrollments_provider, sis_user_id_changes)
+    def refresh_existing_term_sections(term, enrollments_csv, known_users, users_csv, cached_enrollments_provider, sis_user_id_changes)
       canvas_sections_csv = Canvas::Report::Sections.new.get_csv(term)
       return if canvas_sections_csv.empty?
       # Instructure doesn't guarantee anything about sections-CSV ordering, but we need to group sections
@@ -62,7 +62,7 @@ module CanvasCsv
           sis_section_ids = csv_rows.collect { |row| row['section_id'] }
           sis_section_ids.delete_if {|section| section.blank? }
           # Process using cached enrollment data. See CanvasCsv::TermEnrollments
-          CanvasCsv::SiteMembershipsMaintainer.process(course_id, sis_section_ids, enrollments_csv, users_csv, known_uids, @batch_mode, cached_enrollments_provider, sis_user_id_changes)
+          CanvasCsv::SiteMembershipsMaintainer.process(course_id, sis_section_ids, enrollments_csv, users_csv, known_users, @batch_mode, cached_enrollments_provider, sis_user_id_changes)
         end
         logger.debug "Finished processing refresh for Course ID #{course_id}"
       end
