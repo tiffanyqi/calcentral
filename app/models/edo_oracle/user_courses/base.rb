@@ -67,7 +67,8 @@ module EdoOracle
       end
 
       def row_to_feed_item(row, previous_item, cross_listing_tracker=nil)
-        unless (course_item = new_course_item(row, previous_item))
+        course_item = course_ids_from_row row
+        if course_item[:id] == previous_item[:id]
           previous_item[:sections] << row_to_section_data(row, cross_listing_tracker)
           nil
         else
@@ -86,12 +87,6 @@ module EdoOracle
             ]
           }
           course_item.merge(term_data).merge(course_data)
-        end
-      end
-
-      def new_course_item(row, previous_item)
-        if row.values_at('dept_name', 'catalog_id', 'term_id') != previous_item.values_at(:dept, :catid, :term_id)
-          course_ids_from_row row
         end
       end
 
