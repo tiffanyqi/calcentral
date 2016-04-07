@@ -55,9 +55,9 @@ module CanvasCsv
       }
     end
 
-    def initialize(known_uids, sis_user_import_csv)
+    def initialize(known_users, sis_user_import_csv)
       super()
-      @known_uids = known_uids
+      @known_users = known_users
       @user_import_csv = sis_user_import_csv
       @sis_user_id_changes = {}
       @user_email_deletions = []
@@ -141,23 +141,28 @@ module CanvasCsv
       ldap_uid = parsed_login_id[:ldap_uid]
       inactive_account = parsed_login_id[:inactive_account]
       if ldap_uid
-        @known_uids << ldap_uid.to_s
         campus_user = campus_user_attributes.select { |r| (r[:ldap_uid].to_i == ldap_uid) && !r[:roles][:expiredAccount] }.first
         if campus_user.present?
           logger.warn "Reactivating account for LDAP UID #{ldap_uid}" if inactive_account
           new_account_data = canvas_user_from_campus_attributes campus_user
+          @known_users[ldap_uid.to_s] = new_account_data['user_id']
         else
-          return unless Settings.canvas_proxy.inactivate_expired_users
-          # This LDAP UID no longer appears in campus data. Mark the Canvas user account as inactive.
-          logger.warn "Inactivating account for LDAP UID #{ldap_uid}" unless inactive_account
-          if old_account_data['email'].present?
-            @user_email_deletions << old_account_data['canvas_user_id']
+          if Settings.canvas_proxy.inactivate_expired_users
+            # This LDAP UID no longer appears in campus data. Mark the Canvas user account as inactive.
+            logger.warn "Inactivating account for LDAP UID #{ldap_uid}" unless inactive_account
+            if old_account_data['email'].present?
+              @user_email_deletions << old_account_data['canvas_user_id']
+            end
+            new_account_data = old_account_data.merge(
+              'login_id' => "inactive-#{ldap_uid}",
+              'user_id' => "UID:#{ldap_uid}",
+              'email' => nil
+            )
+            @known_users[ldap_uid.to_s] = new_account_data['user_id']
+          else
+            @known_users[ldap_uid.to_s] = old_account_data['user_id']
+            return
           end
-          new_account_data = old_account_data.merge(
-            'login_id' => "inactive-#{ldap_uid}",
-            'user_id' => "UID:#{ldap_uid}",
-            'email' => nil
-          )
         end
         if old_account_data['user_id'] != new_account_data['user_id']
           logger.warn "Will change SIS ID for user sis_login_id:#{old_account_data['login_id']} from #{old_account_data['user_id']} to #{new_account_data['user_id']}"

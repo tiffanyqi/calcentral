@@ -41,10 +41,10 @@ describe CanvasLti::SisAdapter do
     describe '#get_section_instructors' do
       let(:dummy_instructors) {
         [
-          {'role_code' => 'PI'},    # Primary Instructor / Teaching and In Charge
-          {'role_code' => 'TNIC'},  # Teaching but Not in Charge
-          {'role_code' => 'ICNT'},  # In charge but not teaching
-          {'role_code' => 'INVT'},  # Teaching with Invalid Title
+          {'ldap_uid' => '1234', 'role_code' => 'PI'},    # Primary Instructor / Teaching and In Charge
+          {'ldap_uid' => '1235', 'role_code' => 'TNIC'},  # Teaching but Not in Charge
+          {'ldap_uid' => '1236', 'role_code' => 'ICNT'},  # In charge but not teaching
+          {'ldap_uid' => '1237', 'role_code' => 'INVT'},  # Teaching with Invalid Title
         ]
       }
       before { allow(EdoOracle::Queries).to receive(:get_section_instructors).and_return(dummy_instructors) }

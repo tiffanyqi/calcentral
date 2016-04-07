@@ -6,7 +6,6 @@ module CanvasLti
       if Berkeley::Terms.legacy?(term_year, term_code)
         CampusOracle::Queries.get_enrolled_students(section_id, term_year, term_code)
       else
-        # TODO: Join results with user profile data (first_name, last_name, student_email_address, affiliations) from HubEdos or CalNet LDAP
         EdoOracle::Queries.get_enrolled_students(section_id, term_id(term_year, term_code))
       end
     end
@@ -15,9 +14,8 @@ module CanvasLti
       if Berkeley::Terms.legacy?(term_year, term_code)
         CampusOracle::Queries.get_section_instructors(term_year, term_code, section_id)
       else
-        # TODO: Join results with user profile data ('email_address', 'student_id', 'affiliations') from HubEdos or CalNet LDAP
         instructors = EdoOracle::Queries.get_section_instructors(term_id(term_year, term_code), section_id)
-        instructors = add_legacy_instructor_func(instructors)
+        add_legacy_instructor_func(instructors)
       end
     end
 
