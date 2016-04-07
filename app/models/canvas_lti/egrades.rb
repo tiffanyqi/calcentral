@@ -32,7 +32,7 @@ module CanvasLti
     end
 
     def official_student_grades(term_cd, term_yr, ccn)
-      enrolled_students = CampusOracle::Queries.get_enrolled_students(ccn, term_yr, term_cd)
+      enrolled_students = CanvasLti::SisAdapter.get_enrolled_students(ccn, term_yr, term_cd)
       campus_attributes = enrolled_students.index_by {|s| s['ldap_uid']}
       official_students = canvas_course_student_grades.select {|student| campus_attributes[student[:sis_login_id]] }
       official_students.each do |student|
@@ -93,7 +93,7 @@ module CanvasLti
       # A course site can only be provisioned to include sections from a specific term, so all terms should be the same for each section
       term = { :term_yr => sec_ids[0][:term_yr], :term_cd => sec_ids[0][:term_cd] }
       ccns = sec_ids.collect {|sec_id| sec_id[:ccn] }
-      sections = CampusOracle::Queries.get_sections_from_ccns(term[:term_yr], term[:term_cd], ccns)
+      sections = CanvasLti::SisAdapter.get_sections_by_ids(ccns, term[:term_yr], term[:term_cd])
       retained_keys = ['dept_name', 'catalog_id', 'instruction_format', 'primary_secondary_cd', 'section_num', 'term_yr', 'term_cd', 'course_cntl_num']
       sections.collect do |sec|
         filtered_sec = sec.reject {|key, value| !retained_keys.include?(key) }

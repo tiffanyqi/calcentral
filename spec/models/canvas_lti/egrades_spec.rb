@@ -114,7 +114,7 @@ describe CanvasLti::Egrades do
     end
 
     before do
-      allow(CampusOracle::Queries).to receive(:get_enrolled_students).with('7309', '2014', 'C').and_return(primary_section_enrollees)
+      allow(CanvasLti::SisAdapter).to receive(:get_enrolled_students).with('7309', '2014', 'C').and_return(primary_section_enrollees)
       allow(subject).to receive(:canvas_course_student_grades).and_return(canvas_course_student_grades_list)
     end
     it 'only provides grades for official enrollees in section specified' do
@@ -333,7 +333,7 @@ describe CanvasLti::Egrades do
 
     before do
       allow_any_instance_of(CanvasLti::OfficialCourse).to receive(:official_section_identifiers).and_return(section_identifiers)
-      allow(CampusOracle::Queries).to receive(:get_sections_from_ccns).with('2014', 'C', ['22280','22345']).and_return(sections)
+      allow(CanvasLti::SisAdapter).to receive(:get_sections_by_ids).with(['22280','22345'], '2014', 'C').and_return(sections)
     end
     context 'when official sections are not identified in course site' do
       let(:section_identifiers) { [] }
