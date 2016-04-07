@@ -29,8 +29,8 @@ module CalnetLdap
     end
 
     def self.parse_result(result)
-      affiliation_roles = Berkeley::UserRoles.roles_from_ldap_affiliations(result)
-      group_roles = Berkeley::UserRoles.roles_from_ldap_groups(result)
+      affiliation_roles = Berkeley::UserRoles.roles_from_ldap_affiliations result
+      group_roles = Berkeley::UserRoles.roles_from_ldap_groups(result[:berkeleyeduismemberof], !!affiliation_roles[:exStudent])
       roles = group_roles.merge affiliation_roles
       {
         email_address: string_attribute(result, :mail),
