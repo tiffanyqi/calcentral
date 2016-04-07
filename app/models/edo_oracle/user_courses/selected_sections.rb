@@ -16,7 +16,8 @@ module EdoOracle
               previous_item = item
             end
           end
-          merge_detailed_section_data(campus_classes)
+          sort_courses campus_classes
+          merge_detailed_section_data campus_classes
           campus_classes
         end
       end
