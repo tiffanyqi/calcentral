@@ -7,7 +7,7 @@
       <div data-ng-include="'widgets/advisor/student_profile.html'"></div>
     </div>
     <div class="medium-4 columns">
-      <div data-ng-include="'widgets/student_university_requirements.html'" data-ng-if="student.roles.undergrad"></div>
+      <div data-ng-include="'widgets/student_university_requirements.html'" data-ng-if="!student.campusSolutionsStudent && student.roles.undergrad"></div>
     </div>
     <div class="medium-4 columns cc-column-last">
       <div data-ng-include="'widgets/final_exam_schedule.html'" data-ng-if="examSchedule.length"></div>
