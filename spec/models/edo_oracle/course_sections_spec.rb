@@ -28,7 +28,7 @@ describe EdoOracle::CourseSections do
             'meeting_end_time' => '10:59'
           },
           {
-            'location' => 'REQGA',
+            'location' => 'Requested General Assignment',
             'meeting_days' => 'TUTH',
             'meeting_start_time' => '14:00',
             'meeting_end_time' => '14:59'
