@@ -381,7 +381,7 @@ describe Berkeley::UserRoles do
     context 'ex-student in LDAP grace period' do
       let(:affiliations) { ['STUDENT-STATUS-EXPIRED', 'STUDENT-TYPE-REGISTERED'] }
       let(:student_exp_dates) { ['20140901145959Z'] }
-      it_behaves_like 'a parser for roles', [:exStudent]
+      it_behaves_like 'a parser for roles', [:student, :registered]
     end
     context 'returned ex-student with future expiration' do
       let(:affiliations) { ['STUDENT-STATUS-EXPIRED', 'STUDENT-TYPE-REGISTERED'] }

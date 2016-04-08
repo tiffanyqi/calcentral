@@ -97,9 +97,9 @@ describe CalnetLdap::UserAttributes do
         }
       end
       it 'chooses one' do
-        expect(feed[:roles][:exStudent]).to eq true
-        expect(feed[:roles][:registered]).to be_falsey
-        expect(feed[:roles][:student]).to be_falsey
+        expect(feed[:roles][:student]).to eq true
+        expect(feed[:roles][:registered]).to eq true
+        expect(feed[:roles][:exStudent]).to be_falsey
         expect(feed[:roles][:staff]).to eq true
       end
     end
