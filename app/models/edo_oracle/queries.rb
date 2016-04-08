@@ -141,7 +141,7 @@ module EdoOracle
           sec."printInScheduleOfClasses" AS print_in_schedule_of_classes,
           mtg."term-id" AS term_id,
           mtg."session-id" AS session_id,
-          mtg."location-code" AS location,
+          mtg."location-descr" AS location,
           mtg."meetsDays" AS meeting_days,
           mtg."startTime" AS meeting_start_time,
           mtg."endTime" AS meeting_end_time

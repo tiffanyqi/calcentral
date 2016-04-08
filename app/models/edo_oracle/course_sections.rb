@@ -46,7 +46,7 @@ module EdoOracle
 
     def translate_location(meeting)
       return {} if meeting['location'].blank?
-      if meeting['location'] == 'REQGA'
+      if meeting['location'] == 'Requested General Assignment'
         building_name = 'Room not yet assigned'
       else
         building_name, room_number = meeting['location'].rpartition(/\s+/).reject &:blank?
