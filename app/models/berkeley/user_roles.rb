@@ -30,11 +30,17 @@ module Berkeley
         active_aff = affiliations.select {|aff| aff.start_with? "#{aff_substring}-TYPE-"}
         expired_aff = affiliations.select {|aff| aff.start_with? "#{aff_substring}-STATUS-"}
         if active_aff.present? && expired_aff.present?
-          exp_date = ldap_record["berkeleyedu#{expdate_substring}expdate".to_sym].first
-          if exp_date.blank? || DateTime.parse(exp_date) > DateTime.now
+          # During the SIS transition, we've been asked to skip the usual expiry date approach to
+          # conflict resolution for the special case of STUDENT affiliations.
+          if aff_substring == 'STUDENT'
             affiliations = affiliations - expired_aff
           else
-            affiliations = affiliations -  active_aff
+            exp_date = ldap_record["berkeleyedu#{expdate_substring}expdate".to_sym].first
+            if exp_date.blank? || DateTime.parse(exp_date) > DateTime.now
+              affiliations = affiliations - expired_aff
+            else
+              affiliations = affiliations -  active_aff
+            end
           end
         end
       end
