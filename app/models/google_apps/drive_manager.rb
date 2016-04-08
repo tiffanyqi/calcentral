@@ -113,7 +113,7 @@ module GoogleApps
       api_method = opts[:permanently_delete] ? drive.files.delete : drive.files.trash
       result = client.execute(:api_method => api_method, :parameters => { :fileId => item.id })
       log_response result
-      raise Errors::ProxyError, "Error in trash_item(#{id}): #{result.data['error']['message']}" if result.error?
+      raise Errors::ProxyError, "Error in trash_item(#{item.id}): #{result.data['error']['message']}" if result.error?
       result.data
     end
 
