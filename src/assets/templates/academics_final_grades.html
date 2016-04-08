@@ -31,16 +31,11 @@
       </div>
       <div class="row collapse cc-academics-calculator-disclaimer" data-ng-if="selectedCourses.length">
         <div class="small-12 columns">
-          <p>This unofficial list of grades is based on available data<span data-ng-show="!showDisclaimer">...</span>
-            <span data-ng-show="showDisclaimer">
-              and may not reflect your full transcript.
-              Current students can view an unofficial transcript on <a href="https://sis.berkeley.edu/bearfacts/student/studentMain.do?bfaction=welcome">Bear Facts</a> by selecting <em>All Grades</em>.
-              <span data-ng-if="api.user.profile.roles.exStudent">
-                Students who have graduated may request transcripts online through an <a href="https://www.credentials-inc.com/CGI-BIN/dvcgitp.pgm?ALUMTRO001312">alumni service</a>.
-              </span>
+          <p>
+            This unofficial list of grades is based on available data and may not reflect your full transcript.
+            <span data-ng-if="api.user.profile.roles.exStudent">
+              Students who have graduated may request transcripts online through an <a href="https://www.credentials-inc.com/CGI-BIN/dvcgitp.pgm?ALUMTRO001312">alumni service</a>.
             </span>
-            <button class="cc-button-link" data-ng-show="!showDisclaimer" data-ng-click="showDisclaimer = !showDisclaimer">Show more</button>
-            <button class="cc-button-link" data-ng-show="showDisclaimer" data-ng-click="showDisclaimer = !showDisclaimer">Show less</button>
           </p>
         </div>
       </div>
