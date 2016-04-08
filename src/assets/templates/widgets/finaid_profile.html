@@ -16,21 +16,27 @@
             <button class="cc-button-link cc-widget-finaid-profile-button-toggle" data-ng-click="api.widget.toggleShow($event, finaidProfile.categories, category, 'Financial Aid - Profile')">
               <span data-ng-if="!category.show">Show</span>
               <span data-ng-if="category.show">Hide</span>
+              <span class="cc-visuallyhidden" data-ng-bind="category.title"></span>
             </button>
           </div>
           <div data-ng-if="category.show" data-ng-repeat="items in category.itemGroups" class="cc-widget-finaid-profile-itemgroup">
             <div data-ng-repeat="item in items" class="cc-clearfix-container">
               <div class="cc-left">
                 <strong data-ng-bind="item.title"></strong>
-                <a data-ng-if="item.title === 'Title IV' && api.user.profile.actAsOptions.canSeeCSLinks" href="/profile/title4">Update</a>
+                <a data-ng-if="item.title === 'Title IV' && api.user.profile.actAsOptions.canSeeCSLinks" href="/profile/title4">
+                  Update
+                  <span class="cc-visuallyhidden" data-ng-bind="item.title"></span>
+                </a>
                 <a data-ng-if="item.link.url && api.user.profile.actAsOptions.canSeeCSLinks"
                    data-cc-campus-solutions-link-directive="item.link.url"
                    data-cc-campus-solutions-link-directive-cache="'finaid'"
                    data-cc-campus-solutions-link-directive-enabled="{{item.link.isCsLink}}"
                    data-cc-campus-solutions-link-directive-text="finaid.backToText"
                    data-cc-outbound-enabled="{{!item.link.isCsLink}}"
-                   data-ng-bind="item.link.title"
-                ></a>
+                >
+                  <span data-ng-bind="item.link.title"></span>
+                  <span class="cc-visuallyhidden" data-ng-bind="category.title"></span>
+                </a>
               </div>
               <div class="cc-right" data-ng-bind="item.value" data-ng-if="item.value"></div>
               <div class="cc-right" data-ng-if="item.values">
