@@ -15,7 +15,7 @@ module EdoOracle
       sec."term-id" AS term_id,
       TRIM(crs."title") AS course_title,
       TRIM(crs."transcriptTitle") AS course_title_short,
-      crs."academicDepartment-code" AS dept_name,
+      crs."subjectArea" AS dept_name,
       sec."primary" AS primary,
       sec."sectionNumber" AS section_num,
       sec."component-code" as instruction_format,
@@ -136,7 +136,7 @@ module EdoOracle
       return results if fake?
       use_pooled_connection {
         sql = <<-SQL
-        SELECT
+        SELECT DISTINCT
           sec."id" AS section_id,
           sec."printInScheduleOfClasses" AS print_in_schedule_of_classes,
           mtg."term-id" AS term_id,
@@ -159,8 +159,6 @@ module EdoOracle
           sec."term-id" = '#{term_id}' AND
           sec."id" = '#{section_id}' AND
           mtg."location-code" IS NOT NULL
-        ORDER BY
-          mtg."sectionNumber" ASC
         SQL
         results = connection.select_all(sql)
       }
@@ -205,7 +203,7 @@ module EdoOracle
       return results if fake?
       use_pooled_connection {
         sql = <<-SQL
-          SELECT
+          SELECT DISTINCT
             TRIM(instr."formattedName") AS person_name,
             TRIM(instr."givenName") AS first_name,
             TRIM(instr."familyName") AS last_name,

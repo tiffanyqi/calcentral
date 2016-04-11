@@ -69,7 +69,17 @@ module EdoOracle
       def row_to_feed_item(row, previous_item, cross_listing_tracker=nil)
         course_item = course_ids_from_row row
         if course_item[:id] == previous_item[:id]
-          previous_item[:sections] << row_to_section_data(row, cross_listing_tracker)
+          previous_section = previous_item[:sections].last
+          # Duplicate CCNs indicate duplicate section listings. The only possibly useful information in these repeated
+          # listings is a more relevant associated-primary ID for secondary sections.
+          if (row['section_id'].to_s == previous_section[:ccn]) && !to_boolean(row['primary'])
+            primary_ids = previous_item[:sections].map{ |sec| sec[:ccn] if sec[:is_primary_section] }.compact
+            if !primary_ids.include?(previous_section[:associated_primary_id]) && primary_ids.include?(row['primary_associated_section_id'])
+              previous_section[:associated_primary_id] = row['primary_associated_section_id']
+            end
+          else
+            previous_item[:sections] << row_to_section_data(row, cross_listing_tracker)
+          end
           nil
         else
           term_data = Berkeley::TermCodes.from_edo_id(row['term_id']).merge({
@@ -77,9 +87,6 @@ module EdoOracle
           })
           course_name = row['course_title'].present? ? row['course_title'] : row['course_title_short']
           course_data = {
-            catid: row['catalog_id'],
-            course_catalog: row['catalog_id'],
-            dept: row['dept_name'],
             emitter: 'Campus',
             name: course_name,
             sections: [
@@ -103,14 +110,15 @@ module EdoOracle
       def course_ids_from_row(row)
         dept_name, catalog_id = row.values_at('dept_name', 'catalog_id')
         unless dept_name && catalog_id
-          name_components = row['display_name'].split
-          catalog_id = name_components.pop
-          dept_name = name_components.join '_'
+          dept_name, catalog_id = row['display_name'].rpartition(/\s+/).reject &:blank?
         end
         slug = [dept_name, catalog_id].map { |str| normalize_to_slug str }.join '-'
         term_code = Berkeley::TermCodes.edo_id_to_code row['term_id']
         {
+          catid: catalog_id,
+          course_catalog: catalog_id,
           course_code: row['display_name'],
+          dept: dept_name,
           id: "#{slug}-#{term_code}",
           slug: slug
         }
