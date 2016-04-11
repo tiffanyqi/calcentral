@@ -111,6 +111,16 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     return data;
   };
 
+  var groupByCareer = function(data) {
+    var sections = ['enrolledClasses', 'waitlistedClasses'];
+    for (var i = 0; i < sections.length; i++) {
+      var section = sections[i];
+      data[section + 'Grouped'] = _.groupBy(data[section], 'acadCareerDescr');
+    }
+
+    return data;
+  };
+
   /**
    * Parse a certain enrollment term
    */
@@ -121,8 +131,9 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     }
 
     termData = mapLinks(termData);
-    termData = setTermData(termData, termData.term);
-    setSections(termData);
+    termData = setSections(termData);
+    termData = groupByCareer(termData);
+    setTermData(termData, termData.term);
   };
 
   /**
