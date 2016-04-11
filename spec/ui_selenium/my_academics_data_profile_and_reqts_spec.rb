@@ -154,7 +154,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 else
                   writing = 'incomplete'
                   my_academics_writing_unmet = reqts_card.writing_reqt_unmet?
-                  writing_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.writing_reqt_unmet_element, 'Undergraduate Degree Requirements - Office Of The Registrar')
+                  writing_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.writing_reqt_unmet_element, 'Home | Office of the Registrar')
                   it "show 'UC Entry Level Writing' 'Incomplete' for UID #{uid}" do
                     expect(my_academics_writing_unmet).to be true
                   end
@@ -172,7 +172,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 else
                   history = 'incomplete'
                   my_academics_history_unmet = reqts_card.history_reqt_unmet?
-                  history_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.history_reqt_unmet_element, 'Undergraduate Degree Requirements - Office Of The Registrar')
+                  history_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.history_reqt_unmet_element, 'Home | Office of the Registrar')
                   it "show 'American History' 'Incomplete' for UID #{uid}" do
                     expect(my_academics_history_unmet).to be true
                   end
@@ -190,7 +190,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 else
                   institutions = 'incomplete'
                   my_academics_institutions_unmet = reqts_card.institutions_reqt_unmet?
-                  institutions_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.institutions_reqt_unmet_element, 'Undergraduate Degree Requirements - Office Of The Registrar')
+                  institutions_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.institutions_reqt_unmet_element, 'Home | Office of the Registrar')
                   it "show 'American Institutions' 'Incomplete' for UID #{uid}" do
                     expect(my_academics_institutions_unmet).to be true
                   end
@@ -208,7 +208,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 else
                   cultures = 'incomplete'
                   my_academics_cultures_unmet = reqts_card.cultures_reqt_unmet?
-                  cultures_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.cultures_reqt_unmet_element, 'Undergraduate Degree Requirements - Office Of The Registrar')
+                  cultures_unmet_link_works = WebDriverUtils.verify_external_link(driver, reqts_card.cultures_reqt_unmet_element, 'Home | Office of the Registrar')
                   it "show 'American Cultures' 'Incomplete' for UID #{uid}" do
                     expect(my_academics_cultures_unmet).to be true
                   end
