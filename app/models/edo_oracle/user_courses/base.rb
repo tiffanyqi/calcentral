@@ -69,7 +69,17 @@ module EdoOracle
       def row_to_feed_item(row, previous_item, cross_listing_tracker=nil)
         course_item = course_ids_from_row row
         if course_item[:id] == previous_item[:id]
-          previous_item[:sections] << row_to_section_data(row, cross_listing_tracker)
+          previous_section = previous_item[:sections].last
+          # Duplicate CCNs indicate duplicate section listings. The only possibly useful information in these repeated
+          # listings is a more relevant associated-primary ID for secondary sections.
+          if (row['section_id'].to_s == previous_section[:ccn]) && !to_boolean(row['primary'])
+            primary_ids = previous_item[:sections].map{ |sec| sec[:ccn] if sec[:is_primary_section] }.compact
+            if !primary_ids.include?(previous_section[:associated_primary_id]) && primary_ids.include?(row['primary_associated_section_id'])
+              previous_section[:associated_primary_id] = row['primary_associated_section_id']
+            end
+          else
+            previous_item[:sections] << row_to_section_data(row, cross_listing_tracker)
+          end
           nil
         else
           term_data = Berkeley::TermCodes.from_edo_id(row['term_id']).merge({
