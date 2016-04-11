@@ -77,9 +77,6 @@ module EdoOracle
           })
           course_name = row['course_title'].present? ? row['course_title'] : row['course_title_short']
           course_data = {
-            catid: row['catalog_id'],
-            course_catalog: row['catalog_id'],
-            dept: row['dept_name'],
             emitter: 'Campus',
             name: course_name,
             sections: [
@@ -103,14 +100,15 @@ module EdoOracle
       def course_ids_from_row(row)
         dept_name, catalog_id = row.values_at('dept_name', 'catalog_id')
         unless dept_name && catalog_id
-          name_components = row['display_name'].split
-          catalog_id = name_components.pop
-          dept_name = name_components.join '_'
+          dept_name, catalog_id = row['display_name'].rpartition(/\s+/).reject &:blank?
         end
         slug = [dept_name, catalog_id].map { |str| normalize_to_slug str }.join '-'
         term_code = Berkeley::TermCodes.edo_id_to_code row['term_id']
         {
+          catid: catalog_id,
+          course_catalog: catalog_id,
           course_code: row['display_name'],
+          dept: dept_name,
           id: "#{slug}-#{term_code}",
           slug: slug
         }

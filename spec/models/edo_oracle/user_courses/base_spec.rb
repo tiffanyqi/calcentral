@@ -245,6 +245,13 @@ describe EdoOracle::UserCourses::Base do
         instructing_query_results[3].delete 'catalog_id'
       end
       include_examples 'proper section sorting'
+      it 'deduces dept_name and catalog_id from display name' do
+        subject.each do |course|
+          expect(course[:catid]).to be_present
+          expect(course[:course_catalog]).to be_present
+          expect(course[:dept]).to be_present
+        end
+      end
     end
 
     it 'adds de-duplicated secondaries to the right course' do
