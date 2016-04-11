@@ -117,7 +117,7 @@ module EdoOracle
         {
           catid: catalog_id,
           course_catalog: catalog_id,
-          course_code: row['display_name'],
+          course_code: "#{dept_name} #{catalog_id}",
           dept: dept_name,
           id: "#{slug}-#{term_code}",
           slug: slug

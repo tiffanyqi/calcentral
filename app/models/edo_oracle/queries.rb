@@ -27,6 +27,14 @@ module EdoOracle
       crs."catalogNumber-suffix" AS catalog_suffix
     SQL
 
+    JOIN_SECTION_TO_COURSE = <<-SQL
+      LEFT OUTER JOIN SISEDO.DISPLAYNAMEXLAT_VW xlat ON (
+        xlat."classDisplayName" = sec."displayName")
+      LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (
+        xlat."courseDisplayName" = crs."displayName" AND
+        crs."status-code" = 'ACTIVE')
+    SQL
+
     # EDO equivalent of CampusOracle::Queries.get_enrolled_sections
     # Changes:
     #   - 'wait_list_seq_num' replaced by 'waitlist_position'
@@ -51,9 +59,8 @@ module EdoOracle
           enr."TERM_ID" = sec."term-id" AND
           enr."SESSION_ID" = sec."session-id" AND
           enr."CLASS_SECTION_ID" = sec."id")
-        LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (sec."displayName" = crs."displayName")
-        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."status-code" = 'A'
+        #{JOIN_SECTION_TO_COURSE}
+        WHERE sec."status-code" = 'A'
           AND sec."term-id" IN (#{terms_list})
           AND enr."CAMPUS_UID" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
@@ -82,9 +89,8 @@ module EdoOracle
           instr."cs-course-id" = sec."cs-course-id" AND
           instr."offeringNumber" = sec."offeringNumber" AND
           instr."number" = sec."sectionNumber")
-        LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (sec."displayName" = crs."displayName")
-        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."status-code" = 'A'
+        #{JOIN_SECTION_TO_COURSE}
+        WHERE sec."status-code" = 'A'
           AND instr."term-id" IN (#{terms_list})
           AND instr."campus-uid" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
@@ -108,9 +114,8 @@ module EdoOracle
           #{SECTION_COLUMNS},
           sec."cs-course-id" AS cs_course_id
         FROM SISEDO.CLASSSECTIONV00_VW sec
-        LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (sec."displayName" = crs."displayName")
-        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."status-code" = 'A'
+        #{JOIN_SECTION_TO_COURSE}
+        WHERE sec."status-code" = 'A'
           AND sec."primary" = 'false'
           AND sec."term-id" = '#{term_id}'
           AND sec."primaryAssociatedSectionId" = '#{section_id}'
@@ -147,13 +152,13 @@ module EdoOracle
           mtg."endTime" AS meeting_end_time
         FROM
           SISEDO.MEETINGV00_VW mtg
-        LEFT OUTER JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
-            mtg."cs-course-id" = sec."cs-course-id" AND
-            mtg."term-id" = sec."term-id" AND
-            mtg."session-id" = sec."session-id" AND
-            mtg."offeringNumber" = sec."offeringNumber" AND
-            mtg."sectionNumber" = sec."sectionNumber"
-          )
+        JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+          mtg."cs-course-id" = sec."cs-course-id" AND
+          mtg."term-id" = sec."term-id" AND
+          mtg."session-id" = sec."session-id" AND
+          mtg."offeringNumber" = sec."offeringNumber" AND
+          mtg."sectionNumber" = sec."sectionNumber"
+        )
         WHERE
           sec."printInScheduleOfClasses" = 'Y' AND
           sec."term-id" = '#{term_id}' AND
@@ -179,9 +184,8 @@ module EdoOracle
         SELECT
           #{SECTION_COLUMNS}
         FROM SISEDO.CLASSSECTIONV00_VW sec
-        LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (sec."displayName" = crs."displayName")
-        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."term-id" = '#{term_id}'
+        #{JOIN_SECTION_TO_COURSE}
+        WHERE sec."term-id" = '#{term_id}'
           AND sec."id" IN (#{section_ids.collect { |id| id.to_i }.join(', ')})
         ORDER BY #{CANONICAL_SECTION_ORDERING}
         SQL
@@ -212,7 +216,7 @@ module EdoOracle
             instr."role-descr" AS role_description
           FROM
             SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
-          LEFT OUTER JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+          JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
             instr."cs-course-id" = sec."cs-course-id" AND
             instr."term-id" = sec."term-id" AND
             instr."session-id" = sec."session-id" AND
@@ -275,7 +279,7 @@ module EdoOracle
           enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
           trim(enroll."GRADING_BASIS_CODE") AS pnp_flag
         FROM SISEDO.ENROLLMENTV00_VW enroll
-        LEFT OUTER JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+        JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
           enroll."CLASS_SECTION_ID" = sec."id" AND
           enroll."CS_COURSE_ID" = sec."cs-course-id" AND
           enroll."STDNT_ENRL_STATUS_CODE" != 'D' AND
