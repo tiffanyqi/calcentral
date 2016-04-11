@@ -37,6 +37,7 @@ describe EdoOracle::UserCourses::Base do
           'grading_basis' => 'GRD',
           'instruction_format' => 'LEC',
           'primary' => 'true',
+          'primary_associated_section_id' => '44203',
           'section_id' => '44203',
           'section_num' => '001',
           'units' => '4',
@@ -49,6 +50,7 @@ describe EdoOracle::UserCourses::Base do
           'grading_basis' => 'PNP',
           'instruction_format' => 'LEC',
           'primary' => 'true',
+          'primary_associated_section_id' => '44206',
           'section_id' => '44206',
           'section_num' => '002',
           'units' => '3',
@@ -61,6 +63,20 @@ describe EdoOracle::UserCourses::Base do
           'grading_basis' => nil,
           'instruction_format' => 'DIS',
           'primary' => 'false',
+          'primary_associated_section_id' => '44201',
+          'section_id' => '44214',
+          'section_num' => '201',
+          'units' => nil,
+          'wait_list_seq_num' => nil
+        }),
+        base_course_data.merge({
+          'enroll_limit' => '40',
+          'enroll_status' => 'E',
+          'grade' => nil,
+          'grading_basis' => nil,
+          'instruction_format' => 'DIS',
+          'primary' => 'false',
+          'primary_associated_section_id' => '44203',
           'section_id' => '44214',
           'section_num' => '201',
           'units' => nil,
@@ -75,8 +91,8 @@ describe EdoOracle::UserCourses::Base do
     let(:feed) { {}.tap { |feed| EdoOracle::UserCourses::Base.new(user_id: random_id).merge_enrollments feed } }
     subject { feed['2016-D'] }
     its(:size) { should eq 1 }
+    let(:course) { subject.first }
     it 'includes only course info at the course level' do
-      course = subject.first
       expect(course[:catid]).to eq '74'
       expect(course[:course_catalog]).to eq '74'
       expect(course[:course_code]).to eq 'MUSIC 74'
@@ -90,10 +106,15 @@ describe EdoOracle::UserCourses::Base do
       expect(course[:term_id]).to eq '2168'
       expect(course[:term_yr]).to eq '2016'
     end
+    it 'de-duplicates sections differing only by primary_associated_section_id' do
+      expect(course[:sections].size).to eq 3
+    end
+    it 'prefers a primary_associated_section_id matching a section in the result set' do
+      expect(course[:sections][2][:associated_primary_id]).to eq '44203'
+    end
     it 'includes per-section information' do
       course = subject.first
-      expect(course[:sections].size).to eq 3
-      [course[:sections], enrollment_query_results].transpose.each do |section, enrollment|
+      [course[:sections], enrollment_query_results[0..2]].transpose.each do |section, enrollment|
         expect(section[:ccn]).to eq enrollment['section_id']
         expect(section[:instruction_format]).to eq enrollment['instruction_format']
         expect(section[:section_label]).to eq "#{enrollment['instruction_format']} #{enrollment['section_num']}"
