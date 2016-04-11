@@ -35,7 +35,9 @@
             <span data-ng-bind="class.ssrComponent"></span>
           </td>
           <td data-ng-bind="class.position"></td>
-          <td data-ng-bind="class.units | number:1" class="cc-table-right"></td>
+          <td class="cc-table-right">
+            <span data-ng-if="class.units > 0" data-ng-bind="class.units | number:1"></span>
+          </td>
         </tr>
       </tbody>
     </table>
