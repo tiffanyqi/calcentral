@@ -131,7 +131,7 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
   end
 
   def course_title(course)
-    (course['title'].gsub('  ', ' ')).strip
+    course['title'].nil? ? '' : (course['title'].gsub(/\s+/, ' ')).strip
   end
 
   def course_titles(courses)
