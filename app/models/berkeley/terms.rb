@@ -97,7 +97,8 @@ module Berkeley
       @campus = terms
     end
 
-    def self.legacy_group(terms)
+    def self.legacy_group(terms=nil)
+      terms ||= self.fetch.campus.values
       terms = terms.to_a
       sisedo_terms, legacy_terms = [], []
       if terms.count > 0

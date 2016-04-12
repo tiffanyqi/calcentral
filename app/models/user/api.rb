@@ -144,8 +144,8 @@ module User
       is_google_reminder_dismissed = User::Oauth2Data.is_google_reminder_dismissed(@uid)
       is_google_reminder_dismissed = is_google_reminder_dismissed && is_google_reminder_dismissed.present?
       is_calendar_opted_in = Calendar::User.where(:uid => @uid).first.present?
-      has_student_history = CampusOracle::UserCourses::HasStudentHistory.new(user_id: @uid).has_student_history?
-      has_instructor_history = CampusOracle::UserCourses::HasInstructorHistory.new(user_id: @uid).has_instructor_history?
+      has_student_history = User::HasStudentHistory.new(@uid).has_student_history?
+      has_instructor_history = User::HasInstructorHistory.new(@uid).has_instructor_history?
       roles = @user_attributes[:roles]
       can_view_academics = has_academics_tab?(roles, has_instructor_history, has_student_history)
       directly_authenticated = authentication_state.directly_authenticated?

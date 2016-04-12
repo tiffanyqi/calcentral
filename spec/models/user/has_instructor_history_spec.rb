@@ -1,6 +1,5 @@
-describe User::AcademicHistory do
+describe User::HasInstructorHistory do
   let(:uid) { '2050' }
-  subject { User::AcademicHistory.new(uid) }
 
   describe 'has_instructor_history?' do
     let(:legacy_term) { double(:term, :legacy? => true) }
@@ -12,7 +11,7 @@ describe User::AcademicHistory do
       allow(CampusOracle::Queries).to receive(:has_instructor_history?).and_return(is_legacy_instructor)
       allow(EdoOracle::Queries).to receive(:has_instructor_history?).and_return(is_sisedo_instructor)
     end
-    subject { User::AcademicHistory.new(uid).has_instructor_history?(current_terms) }
+    subject { described_class.new(uid).has_instructor_history?(current_terms) }
 
     context 'when user is not an instructor in legacy or sisedo systems' do
       it {should eq false}
