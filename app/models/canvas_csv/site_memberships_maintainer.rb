@@ -27,7 +27,7 @@ module CanvasCsv
     def self.import_memberships(sis_course_id, sis_section_ids, enrollments_csv_filename, into_canvas_course_id = nil)
       enrollments_rows = []
       users_rows = []
-      known_users = []
+      known_users = {}
       worker = self.new(sis_course_id, sis_section_ids, enrollments_rows, users_rows, known_users,
         :batch_mode => true, :into_canvas_course_id => into_canvas_course_id)
       worker.refresh_sections_in_course
