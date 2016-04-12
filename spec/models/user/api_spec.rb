@@ -284,8 +284,8 @@ describe User::Api do
         }
       end
       before do
-        allow(CampusOracle::UserCourses::HasInstructorHistory).to receive(:new).and_return double(has_instructor_history?: false)
-        allow(CampusOracle::UserCourses::HasStudentHistory).to receive(:new).and_return double(has_student_history?: false)
+        allow(User::HasInstructorHistory).to receive(:new).and_return double(has_instructor_history?: false)
+        allow(User::HasStudentHistory).to receive(:new).and_return double(has_student_history?: false)
       end
       it 'should deny academics tab' do
         api = User::Api.new(uid).get_feed
