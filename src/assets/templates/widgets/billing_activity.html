@@ -7,177 +7,189 @@
       </button>
     </div>
 
-    <form name="cc_page_myfinances_account_filter" class="cc-page-myfinances-account-filter" action="/" role="search" aria-label="Finances">
-      <div class="row">
-        <div class="cc-page-myfinances-filter-label">
-          <div class="cc-left cc-page-myfinances-filter-element">
-            <label for="cc-page-myfinances-account-choices">
-              <strong>Filter: </strong>
-            </label>
-          </div>
-        </div>
-        <div class="cc-left cc-page-myfinances-filter-form">
-          <div class="cc-page-myfinances-filter-content">
-            <div class="cc-left cc-select cc-page-myfinances-filter-element">
-              <select id="cc-page-myfinances-account-choices" data-ng-model="filter.choice" data-ng-options="c.value as c.label for c in filter.choices" data-ng-change="choiceChange()">
-              </select>
-            </div>
-            <div class="cc-left cc-select cc-page-myfinances-filter-element" data-ng-if="filter.choice === 'term'">
-              <label for="cc-page-myfinances-select-term" class="cc-visuallyhidden">
-                Term
+    <div data-cc-spinner-directive="billing.isLoading">
+      <form name="cc_page_myfinances_account_filter" class="cc-page-myfinances-account-filter" action="/" role="search" aria-label="Finances">
+        <div class="row">
+          <div class="cc-page-myfinances-filter-label">
+            <div class="cc-left cc-page-myfinances-filter-element">
+              <label for="cc-page-myfinances-account-choices">
+                <strong>Filter: </strong>
               </label>
-              <select id="cc-page-myfinances-select-term" data-ng-model="filter.searchTermId.itemTermId" data-ng-options="item.itemTermId as item.itemTermDescription for item in filter.terms">
-              </select>
-            </div>
-            <div class="cc-left cc-page-myfinances-filter-element" data-ng-show="filter.choice === 'daterange'">
-              <label for="cc-page-myfinances-date-start" class="cc-visuallyhidden">
-                Start date
-              </label>
-              <input type="text"
-                class="cc-page-myfinances-date-input"
-                data-ng-change="parseStartDt(filter.searchDates.startDt)"
-                data-ng-model="filter.searchDates.startDt"
-                name="cc_page_myfinances_date_start"
-                id="cc-page-myfinances-date-start"
-                placeholder="mm/dd/yyyy - Start"
-                data-cc-date-validator-directive />
-              <button class="cc-button-transparent cc-widget-tasks-addtask-calendar-icon" data-ng-click="api.util.preventBubble($event)" tabindex="-1" data-cc-datepicker-directive="cc-page-myfinances-date-start">
-                <i class="fa fa-calendar"></i>
-              </button>
-            </div>
-            <div class="cc-left cc-page-myfinances-filter-element" data-ng-show="filter.choice === 'daterange'">
-              <label for="cc-page-myfinances-date-end" class="cc-visuallyhidden">
-                End date
-              </label>
-              <input type="text"
-                class="cc-page-myfinances-date-input"
-                data-ng-change="parseEndDt(filter.searchDates.endDt)"
-                data-ng-model="filter.searchDates.endDt"
-                name="cc_page_myfinances_date_end"
-                id="cc-page-myfinances-date-end"
-                placeholder="mm/dd/yyyy - End"
-                data-cc-date-validator-directive />
-              <button class="cc-button-transparent cc-widget-tasks-addtask-calendar-icon" data-ng-click="api.util.preventBubble($event)" tabindex="-1" data-cc-datepicker-directive="cc-page-myfinances-date-end">
-                <i class="fa fa-calendar"></i>
-              </button>
-            </div>
-            <div class="cc-left cc-page-myfinances-account-activity-search cc-page-myfinances-filter-element" data-ng-class="{'cc-print-hide':(!search.$)}">
-              <label class="cc-hidden cc-page-myfinances-print-label cc-print-show cc-left">
-                <strong>Search: </strong>
-              </label>
-              <input type="text" placeholder="Search..." data-ng-model="search.$" aria-label="Search" name="search">
-            </div>
-            <div class="cc-clearfix">
-              <p class="cc-alert cc-alert-text" role="alert" data-ng-show="cc_page_myfinances_account_filter.cc_page_myfinances_date_start.$error.ccDateValidator">
-                Please use mm/dd/yyyy date format for the start date.
-              </p>
-              <p class="cc-alert cc-alert-text" role="alert" data-ng-show="cc_page_myfinances_account_filter.cc_page_myfinances_date_end.$error.ccDateValidator">
-                Please use mm/dd/yyyy date format for the end date.
-              </p>
             </div>
           </div>
+          <div class="cc-left cc-page-myfinances-filter-form">
+            <div class="cc-page-myfinances-filter-content">
+              <div class="cc-left cc-select cc-page-myfinances-filter-element">
+                <select id="cc-page-myfinances-account-choices" data-ng-model="filter.choice" data-ng-options="c.value as c.label for c in filter.choices" data-ng-change="choiceChange()">
+                </select>
+              </div>
+              <div class="cc-left cc-select cc-page-myfinances-filter-element" data-ng-if="filter.choice === 'term'">
+                <label for="cc-page-myfinances-select-term" class="cc-visuallyhidden">
+                  Term
+                </label>
+                <select id="cc-page-myfinances-select-term" data-ng-model="filter.searchTermId.itemTermId" data-ng-options="item.itemTermId as item.itemTermDescription for item in filter.terms">
+                </select>
+              </div>
+              <div class="cc-left cc-page-myfinances-filter-element" data-ng-show="filter.choice === 'daterange'">
+                <label for="cc-page-myfinances-date-start" class="cc-visuallyhidden">
+                  Start date
+                </label>
+                <input type="text"
+                  class="cc-page-myfinances-date-input"
+                  data-ng-change="parseStartDt(filter.searchDates.startDt)"
+                  data-ng-model="filter.searchDates.startDt"
+                  name="cc_page_myfinances_date_start"
+                  id="cc-page-myfinances-date-start"
+                  placeholder="mm/dd/yyyy - Start"
+                  data-cc-date-validator-directive />
+                <button class="cc-button-transparent cc-widget-tasks-addtask-calendar-icon" data-ng-click="api.util.preventBubble($event)" tabindex="-1" data-cc-datepicker-directive="cc-page-myfinances-date-start">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </div>
+              <div class="cc-left cc-page-myfinances-filter-element" data-ng-show="filter.choice === 'daterange'">
+                <label for="cc-page-myfinances-date-end" class="cc-visuallyhidden">
+                  End date
+                </label>
+                <input type="text"
+                  class="cc-page-myfinances-date-input"
+                  data-ng-change="parseEndDt(filter.searchDates.endDt)"
+                  data-ng-model="filter.searchDates.endDt"
+                  name="cc_page_myfinances_date_end"
+                  id="cc-page-myfinances-date-end"
+                  placeholder="mm/dd/yyyy - End"
+                  data-cc-date-validator-directive />
+                <button class="cc-button-transparent cc-widget-tasks-addtask-calendar-icon" data-ng-click="api.util.preventBubble($event)" tabindex="-1" data-cc-datepicker-directive="cc-page-myfinances-date-end">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </div>
+              <div class="cc-left cc-page-myfinances-account-activity-search cc-page-myfinances-filter-element" data-ng-class="{'cc-print-hide':(!search.$)}">
+                <label class="cc-hidden cc-page-myfinances-print-label cc-print-show cc-left">
+                  <strong>Search: </strong>
+                </label>
+                <input type="text" placeholder="Search..." data-ng-model="search.$" aria-label="Search" name="search">
+              </div>
+              <div class="cc-clearfix">
+                <p class="cc-alert cc-alert-text" role="alert" data-ng-show="cc_page_myfinances_account_filter.cc_page_myfinances_date_start.$error.ccDateValidator">
+                  Please use mm/dd/yyyy date format for the start date.
+                </p>
+                <p class="cc-alert cc-alert-text" role="alert" data-ng-show="cc_page_myfinances_account_filter.cc_page_myfinances_date_end.$error.ccDateValidator">
+                  Please use mm/dd/yyyy date format for the end date.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+      </form>
+      <div class="cc-table cc-table-sortable cc-page-myfinances-table cc-table-finances">
+        <table>
+          <thead>
+            <tr>
+              <th data-ng-click="changeSorting('itemEffectiveDate')" width="15%" scope="col">
+                Date <i data-ng-class="getSortClass('itemEffectiveDate')"></i>
+              </th>
+              <th data-ng-click="changeSorting('itemDescription')" width="35%" scope="col">
+                Description <i data-ng-class="getSortClass('itemDescription')"></i>
+              </th>
+              <th data-ng-click="changeSorting('itemBalance')" width="30%" class="cc-table-right cc-table-right-spacing" scope="col">
+                Amount <i data-ng-class="getSortClass('itemBalance')"></i>
+              </th>
+              <th data-ng-click="changeSorting('itemType')" width="10%" scope="col">
+                Type <i data-ng-class="getSortClass('itemType')"></i>
+              </th>
+              <th data-ng-click="changeSorting('itemDueFlag')" width="15%" class="cc-table-center" scope="col">
+                Due <i data-ng-class="getSortClass('itemDueFlag')"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="cc-widget-table-hover"
+            data-cc-accessible-focus-directive
+            data-ng-class="{'cc-widget-table-hover-opened cc-widget-list-selected':(item.show)}"
+            data-ng-click="api.widget.toggleShow($event, billing.data.activity, item, 'Billing - Transaction')"
+            data-ng-repeat="item in (billing.data.activity | filter:dateFilter | filter:search | filter:filter.searchTermId | filter:statusFilter | orderBy:billing.sort.column:billing.sort.descending) | limitTo:activityLimit">
+            <tr data-ng-class="{'cc-page-myfinances-red':(item.itemDueFlag === OVER_DUE), 'cc-page-myfinances-green':(item.itemBalance < 0)}">
+              <td>
+                <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd/yy'" class="hide-for-small"></span>
+                <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd'" class="hide-for-medium-up"></span>
+              </td>
+              <td>
+                <div data-ng-bind="item.itemDescription" data-ng-class="{'cc-ellipsis':(!item.show)}"></div>
+              </td>
+              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-cc-amount-directive="item.itemBalance"></td>
+              <td class="cc-page-myfinances-type">
+                <span class="hide-for-small cc-print-show" data-ng-bind="item.itemType"></span>
+                <div class="hide-for-medium-up cc-print-hide">
+                  <i class="fa" data-ng-attr-title="{{item.itemType}}"
+                     data-ng-class="{'fa-plus':(item.itemBalance > 0),'fa-minus':(item.itemBalance < 0)}"></i>
+                </div>
+              </td>
+              <td class="cc-table-center">
+                <i class="fa" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.itemDueFlag === 'OVER_DUE'),'fa-exclamation':(item.itemDueFlag === 'DUE_NOW'),'fa-arrow-right':(item.itemDueFlag === 'FUTURE_DUE')}" data-ng-if="item.itemDueFlag">
+              </td>
+            </tr>
+            <tr data-ng-if="item.show">
+              <td></td>
+              <td colspan="4">
+                <div class="row collapse">
+                  <div data-ng-if="item.itemReferenceDescription">
+                    <strong>Transaction
+                      <span aria-hidden="true"> #</span>
+                      <span class="cc-visuallyhidden">Number</span>:
+                    </strong>
+                    <span data-ng-bind="item.itemReferenceDescription"></span>
+                  </div>
+                  <div data-ng-if="item.itemLineAmount">
+                    <strong>Original Amount:</strong>
+                    <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemLineAmount"></span>
+                  </div>
+                  <div data-ng-if="item.itemStatus">
+                    <strong>Status:</strong>
+                    <span data-ng-bind="item.itemStatus"></span>
+                  </div>
+                  <div data-ng-if="item.itemDueDate && item.itemStatus === 'Unpaid'">
+                    <strong>Due Date:</strong>
+                    <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'"></span>
+                  </div>
+                  <div data-ng-if="item.itemEffectiveDate">
+                    <strong>Effective Date:</strong>
+                    <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd/yy'"></span>
+                  </div>
+                  <div data-ng-if="item.itemTermDescription">
+                    <strong>Term:</strong>
+                    <span data-ng-bind="item.itemTermDescription"></span>
+                  </div>
+                  <div data-ng-if="item.itemType">
+                    <strong>Type:</strong>
+                    <span data-ng-bind="item.itemType"></span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </form>
-    <div class="cc-table cc-table-sortable cc-page-myfinances-table cc-table-finances">
-      <table>
-        <thead>
-          <tr>
-            <th width="15%" scope="col">Date</th>
-            <th width="35%" scope="col">Description</th>
-            <th width="30%" class="cc-table-right cc-table-right-spacing" scope="col">Amount</th>
-            <th width="10%" scope="col">Type</th>
-            <th width="15%" class="cc-table-center" scope="col">Due</th>
-          </tr>
-        </thead>
-        <tbody
-          class="cc-widget-table-hover"
-          data-cc-accessible-focus-directive
-          data-ng-class="{'cc-widget-table-hover-opened cc-widget-list-selected':(item.show)}"
-          data-ng-click="api.widget.toggleShow($event, billing.data.activity, item, 'Billing - Transaction')"
-           data-ng-repeat="item in (billing.data.activity | filter:dateFilter | filter:search | filter:filter.searchTermId | filter:statusFilter | orderBy:billing.sort.column:billing.sort.descending) | limitTo:activityLimit">
-          <tr data-ng-class="{'cc-page-myfinances-red':(item.itemDueFlag === OVER_DUE), 'cc-page-myfinances-green':(item.itemBalance < 0)}">
-            <td>
-              <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd/yy'" class="hide-for-small"></span>
-              <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd'" class="hide-for-medium-up"></span>
-            </td>
-            <td>
-              <div data-ng-bind="item.itemDescription" data-ng-class="{'cc-ellipsis':(!item.show)}"></div>
-            </td>
-            <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-cc-amount-directive="item.itemBalance"></td>
-            <td class="cc-page-myfinances-type">
-              <span class="hide-for-small cc-print-show" data-ng-bind="item.itemType"></span>
-              <div class="hide-for-medium-up cc-print-hide">
-                <i class="fa" data-ng-attr-title="{{item.itemType}}"
-                   data-ng-class="{'fa-plus':(item.itemBalance > 0),'fa-minus':(item.itemBalance < 0)}"></i>
-              </div>
-            </td>
-            <td class="cc-table-center">
-              <i class="fa" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.itemDueFlag === 'OVER_DUE'),'fa-exclamation':(item.itemDueFlag === 'DUE_NOW'),'fa-arrow-right':(item.itemDueFlag === 'FUTURE_DUE')}" data-ng-if="item.itemDueFlag">
-            </td>
-          </tr>
-          <tr data-ng-if="item.show">
-            <td></td>
-            <td colspan="4">
-              <div class="row collapse">
-                <div data-ng-if="item.itemReferenceDescription">
-                  <strong>Transaction
-                    <span aria-hidden="true"> #</span>
-                    <span class="cc-visuallyhidden">Number</span>:
-                  </strong>
-                  <span data-ng-bind="item.itemReferenceDescription"></span>
-                </div>
-                <div data-ng-if="item.itemLineAmount">
-                  <strong>Original Amount:</strong>
-                  <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemLineAmount"></span>
-                </div>
-                <div data-ng-if="item.itemStatus">
-                  <strong>Status:</strong>
-                  <span data-ng-bind="item.itemStatus"></span>
-                </div>
-                <div data-ng-if="item.itemDueDate && item.itemStatus === 'Unpaid'">
-                  <strong>Due Date:</strong>
-                  <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'"></span>
-                </div>
-                <div data-ng-if="item.itemEffectiveDate">
-                  <strong>Effective Date:</strong>
-                  <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd/yy'"></span>
-                </div>
-                <div data-ng-if="item.itemTermDescription">
-                  <strong>Term:</strong>
-                  <span data-ng-bind="item.itemTermDescription"></span>
-                </div>
-                <div data-ng-if="item.itemType">
-                  <strong>Type:</strong>
-                  <span data-ng-bind="item.itemType"></span>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
 
-    <div class="cc-clearfix-container">
-      <div class="cc-hidden cc-print-show cc-text-center">
-        Displaying <span data-ng-bind="activityLimit <= billing.data.activity.length ? activityLimit : billing.data.activity.length"></span> of <span data-ng-bind="billing.data.activity.length"></span> transactions
+      <div class="cc-clearfix-container">
+        <div class="cc-hidden cc-print-show cc-text-center">
+          Displaying <span data-ng-bind="activityLimit <= billing.data.activity.length ? activityLimit : billing.data.activity.length"></span> of <span data-ng-bind="billing.data.activity.length"></span> transactions
+        </div>
+        <div data-cc-show-more-directive data-cc-show-more-list="billing.data.activity" data-cc-show-more-increment="activityIncrement" data-cc-show-more-watch="billing.data.activity.length" data-cc-show-more-limit="activityLimit"></div>
       </div>
-      <div data-cc-show-more-directive data-cc-show-more-list="billing.data.activity" data-cc-show-more-increment="activityIncrement" data-cc-show-more-watch="billing.data.activity.length" data-cc-show-more-limit="activityLimit"></div>
-    </div>
 
-    <div class="cc-page-myfinances-footer cc-clearfix-container">
-      <div class="medium-12 columns">
-        <ul>
-          <li>
-            <i class="fa fa-exclamation"></i> Due now
-          </li>
-          <li>
-            <i class="fa fa-exclamation-circle cc-icon-red"></i> Overdue
-          </li>
-          <li>
-            <i class="fa fa-arrow-right"></i> Due in the future
-          </li>
-        </ul>
+      <div class="cc-page-myfinances-footer cc-clearfix-container">
+        <div class="medium-12 columns">
+          <ul>
+            <li>
+              <i class="fa fa-exclamation"></i> Due now
+            </li>
+            <li>
+              <i class="fa fa-exclamation-circle cc-icon-red"></i> Overdue
+            </li>
+            <li>
+              <i class="fa fa-arrow-right"></i> Due in the future
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

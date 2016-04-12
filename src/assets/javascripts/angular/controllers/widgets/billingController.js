@@ -145,6 +145,15 @@ angular.module('calcentral.controllers').controller('BillingController', functio
       });
   };
 
+  $scope.changeSorting = function(column) {
+    if (_.isEqual($scope.billing.sort.column, column)) {
+      $scope.billing.sort.descending = !$scope.billing.sort.descending;
+    } else {
+      $scope.billing.sort.column = column;
+      $scope.billing.sort.descending = false;
+    }
+  };
+
   $scope.choiceChange = function() {
     resetSearch();
     if ($scope.filter.choice === 'balance') {
@@ -169,6 +178,11 @@ angular.module('calcentral.controllers').controller('BillingController', functio
       return _.lte(billingItem.itemEffectiveDate, $scope.filter.parsedDates.endDt);
     }
     return true;
+  };
+
+  $scope.getSortClass = function(column) {
+    var sortUpDown = $scope.billing.sort.descending ? 'down' : 'up';
+    return _.isEqual($scope.billing.sort.column, column) && 'fa fa-chevron-' + sortUpDown;
   };
 
   $scope.parseEndDt = function(date) {
