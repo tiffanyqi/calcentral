@@ -156,7 +156,11 @@ module CanvasCsv
       logger.debug "#{campus_data_rows.count} student enrollments found for #{section_id}"
       campus_data_rows.each do |campus_data_row|
         next unless (canvas_api_role = ENROLL_STATUS_TO_CANVAS_API_ROLE[campus_data_row['enroll_status']])
-        update_section_enrollment_from_campus(canvas_api_role, section_id, campus_data_row, canvas_section_enrollments)
+        if campus_data_row['ldap_uid'].present?
+          update_section_enrollment_from_campus(canvas_api_role, section_id, campus_data_row, canvas_section_enrollments)
+        else
+          logger.error "Student LDAP UID not present in campus data: #{campus_data_row.inspect}"
+        end
       end
     end
 
@@ -166,7 +170,11 @@ module CanvasCsv
       campus_data_rows = CanvasLti::SisAdapter.get_section_instructors(campus_section[:ccn], campus_section[:term_yr], campus_section[:term_cd])
       logger.debug "#{campus_data_rows.count} instructor enrollments found for #{section_id}"
       campus_data_rows.each do |campus_data_row|
-        update_section_enrollment_from_campus(canvas_api_role, section_id, campus_data_row, canvas_section_enrollments)
+        if campus_data_row['ldap_uid'].present?
+          update_section_enrollment_from_campus(canvas_api_role, section_id, campus_data_row, canvas_section_enrollments)
+        else
+          logger.error "Instructor LDAP UID not present in campus data: #{campus_data_row.inspect}"
+        end
       end
     end
 
@@ -234,13 +242,15 @@ module CanvasCsv
     end
 
     def append_enrollment_update(section_id, api_role, sis_user_id)
-      @enrollments_csv_output << {
+      enrollment = {
         'course_id' => @sis_course_id,
         'user_id' => sis_user_id,
         'role' => api_role_to_csv_role(api_role),
         'section_id' => section_id,
         'status' => 'active'
       }
+      logger.debug "Appending enrollment: #{enrollment.inspect}"
+      @enrollments_csv_output << enrollment
     end
 
     # Appends enrollment record for deletion
