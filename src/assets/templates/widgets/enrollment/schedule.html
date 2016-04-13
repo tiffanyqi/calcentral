@@ -7,12 +7,18 @@
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
   <div data-ng-if="enrollmentTerm.isClassScheduleAvailable && !isAdvisingStudentLookup && api.user.profile.isDirectlyAuthenticated">
-    <a
-      data-cc-outbound-enabled="true"
-      data-ng-href="/college_scheduler/{{enrollmentTerm.acadCareer}}/{{enrollmentTerm.term}}">
-      Organize and preview your upcoming semester
-    </a>
-    based on your scheduling needs.
+    <p>
+      <a data-cc-outbound-enabled="true"
+        data-ng-href="/college_scheduler/{{enrollmentTerm.acadCareer}}/{{enrollmentTerm.term}}">
+        Organize and preview your upcoming semester
+      </a>
+      based on your scheduling needs.
+    </p>
+    <p>
+      <a href="http://schedule.berkeley.edu/examf.html">
+        Final Exam Schedule
+      </a>
+    </p>
   </div>
 
   <div
