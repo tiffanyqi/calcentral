@@ -115,12 +115,12 @@
               <td>
                 <div data-ng-bind="item.itemDescription" data-ng-class="{'cc-ellipsis':(!item.show)}"></div>
               </td>
-              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-cc-amount-directive="item.itemBalance"></td>
+              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-cc-amount-directive="item.itemLineAmount"></td>
               <td class="cc-page-myfinances-type">
                 <span class="hide-for-small cc-print-show" data-ng-bind="item.itemType"></span>
                 <div class="hide-for-medium-up cc-print-hide">
                   <i class="fa" data-ng-attr-title="{{item.itemType}}"
-                     data-ng-class="{'fa-plus':(item.itemBalance > 0),'fa-minus':(item.itemBalance < 0)}"></i>
+                     data-ng-class="{'fa-plus':(item.itemLineAmount > 0),'fa-minus':(item.itemLineAmount < 0)}"></i>
                 </div>
               </td>
               <td class="cc-table-center">
@@ -138,9 +138,9 @@
                     </strong>
                     <span data-ng-bind="item.itemReferenceDescription"></span>
                   </div>
-                  <div data-ng-if="item.itemLineAmount">
+                  <div data-ng-if="item.itemBalance">
                     <strong>Original Amount:</strong>
-                    <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemLineAmount"></span>
+                    <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemBalance"></span>
                   </div>
                   <div data-ng-if="item.itemStatus">
                     <strong>Status:</strong>
