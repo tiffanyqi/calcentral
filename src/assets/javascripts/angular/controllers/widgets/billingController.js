@@ -45,9 +45,9 @@ angular.module('calcentral.controllers').controller('BillingController', functio
     searchTermId: {
       itemTermId: ''
     },
-    searchStatus: 'Unpaid',
+    searchStatus: '0.00',
     statuses: {
-      unpaid: 'Unpaid',
+      balance: '0.00',
       allTransactions: ['Unpaid', 'Paid']
     }
   };
@@ -123,6 +123,8 @@ angular.module('calcentral.controllers').controller('BillingController', functio
     $scope.filter.searchTermId.itemTermId = '';
     $scope.filter.searchDates.startDt = '';
     $scope.filter.searchDates.endDt = '';
+    $scope.filter.parsedDates.startDt = '';
+    $scope.filter.parsedDates.endDt = '';
     $scope.filter.searchStatus = '';
   };
 
@@ -157,7 +159,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   $scope.choiceChange = function() {
     resetSearch();
     if ($scope.filter.choice === 'balance') {
-      $scope.filter.searchStatus = $scope.filter.statuses.unpaid;
+      $scope.filter.searchStatus = $scope.filter.statuses.balance;
     } else if ($scope.filter.choice === 'transactions' || $scope.filter.choice === 'daterange') {
       // On default, we want to see all items, not just unpaid ones
       $scope.filter.searchStatus = $scope.filter.statuses.allTransactions;
@@ -201,7 +203,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
     if (_.isArray($scope.filter.searchStatus)) {
       return (_.includes($scope.filter.searchStatus, billingItem.itemStatus));
     }
-    return (_.isEqual($scope.filter.searchStatus, billingItem.itemStatus));
+    return (!_.isEqual($scope.filter.searchStatus, billingItem.itemBalance));
   };
 
   loadBillingInfo();
