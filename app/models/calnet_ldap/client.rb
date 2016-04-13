@@ -30,6 +30,18 @@ module CalnetLdap
       search(base: GUEST_DN, filter: modified_timestamp_filter)
     end
 
+    def search_by_name(name, include_guest_users=false)
+      results = []
+      if (tokens = tokenize_for_search_by_name name).any?
+        tokens.permutation.to_a.each do |args|
+          search_by = Net::LDAP::Filter.eq 'displayname', "#{args.join '* '}*"
+          results.concat search(base: PEOPLE_DN, filter: search_by)
+          results.concat search(base: GUEST_DN, filter: search_by) if include_guest_users
+        end
+      end
+      results
+    end
+
     def search_by_uid(uid)
       filter = uids_filter([uid])
       results = search(base: PEOPLE_DN, filter: filter)
@@ -69,6 +81,13 @@ module CalnetLdap
           response
         end
       end
+    end
+
+    def tokenize_for_search_by_name(phrase)
+      return [] if phrase.blank?
+      tokens = phrase.strip.downcase.gsub(/[;,\s]+/, ' ').split /[\s,]/
+      # Discard middle initials, generational designations (e.g., Jr.) and academic suffixes (e.g., M.A.)
+      tokens.select { |token| !token.end_with? '.' }
     end
 
   end
