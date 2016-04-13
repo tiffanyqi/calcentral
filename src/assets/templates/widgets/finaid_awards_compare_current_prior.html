@@ -10,25 +10,8 @@
 </div>
 
 <div class="cc-widget-text" data-cc-spinner-directive="finaidAwardsCompare.isLoadingCurrentAndPrior">
-  <div class="cc-flex cc-flex-space-between-horizontal-5 cc-flex-align-base">
-    <div>
-      <h3>Summary Information</h3>
-    </div>
-    <div>
-      <button
-        class="cc-button-link"
-        data-ng-click="api.widget.toggleShow($event, null, finaidAwardsCompare.toggle.summary, 'Compare Award Packages - Summary')"
-      >
-        <span data-ng-if="finaidAwardsCompare.toggle.summary.show">Hide</span>
-        <span data-ng-if="!finaidAwardsCompare.toggle.summary.show">Show</span>
-      </button>
-    </div>
-  </div>
-
-  <div data-ng-if="finaidAwardsCompare.toggle.summary.show" class="cc-flex cc-finaid-compare-awards-current-prior-columns">
-    <div
-      data-ng-repeat="type in finaidAwardsCompare.types"
-      data-ng-include="'widgets/finaid_awards_compare_summary.html'"
-    ></div>
-  </div>
+  <div
+    data-ng-repeat="section in finaidAwardsCompare.sections"
+    data-ng-include="'widgets/finaid_awards_compare_section.html'"
+  ></div>
 </div>

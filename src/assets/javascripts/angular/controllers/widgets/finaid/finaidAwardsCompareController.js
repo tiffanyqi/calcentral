@@ -23,16 +23,26 @@ angular.module('calcentral.controllers').controller('FinaidAwardsCompareControll
       list: {},
       prior: {}
     },
+    sections: [
+      {
+        id: 'summary',
+        title: 'Summary Information'
+      },
+      {
+        id: 'netcost',
+        title: 'Net Cost'
+      },
+      {
+        id: 'packages',
+        title: 'Packages'
+      }
+    ],
     selected: {
       aidYear: '',
       package: ''
     },
     showCurrentAndPrior: false,
-    toggle: {
-      summary: {
-        show: true
-      }
-    },
+    toggle: {},
     types: [
       {
         title: 'Prior',
@@ -132,6 +142,17 @@ angular.module('calcentral.controllers').controller('FinaidAwardsCompareControll
   };
 
   /**
+   * By default, show all the different sections (e.g. "Summary Information", "Net Cost")
+   */
+  var showSectionsByDefault = function() {
+    _.forEach($scope.finaidAwardsCompare.sections, function(section) {
+      $scope.finaidAwardsCompare.toggle[section.id] = {
+        show: true
+      };
+    });
+  };
+
+  /**
    * Load the compare list
    */
   var loadFinaidAwardsCompareList = function() {
@@ -144,4 +165,5 @@ angular.module('calcentral.controllers').controller('FinaidAwardsCompareControll
 
   $scope.$on('calcentral.custom.api.finaid.finaidYear', loadFinaidAwardsCompareList);
   $scope.$watch('finaidAwardsCompare.selected.package', loadCurrentAndPrior);
+  showSectionsByDefault();
 });
