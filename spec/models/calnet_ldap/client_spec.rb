@@ -126,11 +126,6 @@ describe CalnetLdap::Client do
       expect(results_with_comma).to_not be_empty
       expect(subject.search_by_name 'Jo  MAN M.A.').to have(results_with_comma.length).items
     end
-
-    it 'should limit number of search results' do
-      results = subject.search_by_name 'Joe', limit: 3
-      expect(results).to have(3).item
-    end
   end
 
 end
