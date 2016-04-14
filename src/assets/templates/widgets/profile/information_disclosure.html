@@ -2,7 +2,7 @@
   <p>
     The university's directory information includes personal information such as your address, email, name, phone, and portions of your academic record.
   </p>
-  <div data-cc-spinner-directive="ferpa.isLoading">
+  <div data-cc-spinner-directive="ferpa.isLoading" data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks">
     <p>
       You may restrict your directory information from being disclosed to third parties by <a data-cc-campus-solutions-link-directive="ferpa.deeplink.url"
       data-cc-campus-solutions-link-directive-enabled="{{ferpa.deeplink.isCsLink}}"
@@ -17,7 +17,7 @@
   <p>
     To learn more, view <a href="http://registrar.berkeley.edu/GeneralInfo/ferpa.html">UC Berkeley's policy governing disclosure of information from student records</a>.
   </p>
-  <p>
+  <p data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks">
     Public directory information can be updated at <a href="https://calnet.berkeley.edu/directory/update/index.pl">https://calnet.berkeley.edu/directory/update/index.pl</a>.
   </p>
 </div>
