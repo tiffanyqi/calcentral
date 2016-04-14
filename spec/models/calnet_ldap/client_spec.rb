@@ -91,4 +91,46 @@ describe CalnetLdap::Client do
     results = subject.search_by_uid random_id
     expect(results).to eq nil
   end
+
+  context 'search by name with mock LDAP' do
+    let(:expected_ldap_searches) { nil }
+    before do
+      allow(Net::LDAP::Filter).to receive(:eq).with('displayname', 'john* doe*')
+      allow(Net::LDAP::Filter).to receive(:eq).with('displayname', 'doe* john*')
+      expect(Net::LDAP).to receive(:new).and_return (ldap = double)
+      expect(ldap).to receive(:search).exactly(expected_ldap_searches).times.and_return [ double ]
+    end
+    context 'do not include guest user search' do
+      let(:expected_ldap_searches) { 2 }
+      it 'should only ' do
+        expect(subject.search_by_name('John Doe', false)).to_not be_empty
+      end
+    end
+    context 'include guest user search' do
+      let(:expected_ldap_searches) { 4 }
+      it 'should only ' do
+        expect(subject.search_by_name('John Doe', true)).to_not be_empty
+      end
+    end
+  end
+
+  context 'search by name', testext: true do
+    it 'should skip search when input is blank or incomplete' do
+      expect(subject.search_by_name nil).to be_empty
+      expect(subject.search_by_name '  ').to be_empty
+      expect(subject.search_by_name ' Mr. ').to be_empty
+    end
+
+    it 'should get same result count when actual name fragments' do
+      results_with_comma = subject.search_by_name ' man Jr., jo'
+      expect(results_with_comma).to_not be_empty
+      expect(subject.search_by_name 'Jo  MAN M.A.').to have(results_with_comma.length).items
+    end
+
+    it 'should limit number of search results' do
+      results = subject.search_by_name 'Joe', limit: 3
+      expect(results).to have(3).item
+    end
+  end
+
 end
