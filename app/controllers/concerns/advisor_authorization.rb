@@ -16,16 +16,18 @@ module AdvisorAuthorization
   end
 
   def require_advisor(uid)
-    user_attributes = User::AggregatedAttributes.new(uid).get_feed
-    authorized = user_attributes && user_attributes[:roles] && user_attributes[:roles][:advisor]
+    authorized = (roles = user_roles uid) && roles[:advisor]
     raise Pundit::NotAuthorizedError.new("User #{uid} is not an Advisor") unless authorized
   end
 
   private
 
   def qualifies_as_student?(uid)
-    @attributes = User::AggregatedAttributes.new(student_uid = uid).get_feed
-    @attributes[:roles][:applicant] || @attributes[:roles][:student] || @attributes[:roles][:recentStudent]
+    (roles = user_roles uid) && (roles[:applicant] || roles[:student] || roles[:recentStudent])
+  end
+
+  def user_roles(uid)
+    User::AggregatedAttributes.new(uid).get_feed[:roles]
   end
 
 end

@@ -130,6 +130,7 @@ Calcentral::Application.routes.draw do
 
   # View-as endpoints
   get '/stored_users' => 'stored_users#get', :via => :get, :defaults => { :format => 'json' }
+  post '/api/search/students/by_name/:name' => 'search_students#by_name', :defaults => { :format => 'json' }
   post '/act_as' => 'act_as#start'
   post '/stop_act_as' => 'act_as#stop'
   post '/store_user/saved' => 'stored_users#store_saved_uid', via: :post, defaults: { format: 'json' }
