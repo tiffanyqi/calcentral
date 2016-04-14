@@ -1,7 +1,7 @@
 module CalnetLdap
   class UserAttributes < BaseProxy
+    extend Parser
 
-    include Parser
     include Cache::UserCacheExpiry
 
     def initialize(options = {})
@@ -16,7 +16,7 @@ module CalnetLdap
 
     def get_feed_internal
       if (result = CalnetLdap::Client.new.search_by_uid @uid)
-        parse result
+        self.class.parse result
       else
         {}
       end
