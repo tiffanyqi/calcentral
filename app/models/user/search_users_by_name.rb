@@ -18,7 +18,8 @@ module User
     end
 
     def matching_role?(user, roles=[])
-      !!((user_roles = user[:roles]) && roles.detect { |role| user_roles[role] })
+      return false unless (user_roles = user[:roles])
+      !!roles.find { |role| user_roles[role] }
     end
 
   end
