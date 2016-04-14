@@ -115,7 +115,8 @@
               <td>
                 <div data-ng-bind="item.itemDescription" data-ng-class="{'cc-ellipsis':(!item.show)}"></div>
               </td>
-              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-cc-amount-directive="item.itemLineAmount"></td>
+              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-ng-if="filter.choice !== 'balance'" data-cc-amount-directive="item.itemLineAmount"></td>
+              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-ng-if="filter.choice === 'balance'" data-cc-amount-directive="item.itemBalance"></td>
               <td class="cc-page-myfinances-type">
                 <span class="hide-for-small cc-print-show" data-ng-bind="item.itemType"></span>
                 <div class="hide-for-medium-up cc-print-hide">
@@ -138,21 +139,17 @@
                     </strong>
                     <span data-ng-bind="item.itemReferenceDescription"></span>
                   </div>
-                  <div data-ng-if="item.itemBalance">
+                  <div data-ng-if="item.itemLineAmount && filter.choice === 'balance'">
                     <strong>Original Amount:</strong>
-                    <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemBalance"></span>
+                    <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemLineAmount"></span>
                   </div>
-                  <div data-ng-if="item.itemStatus">
+                  <div data-ng-if="item.itemStatus && (item.itemType === 'Charge' || item.itemType === 'Refund')">
                     <strong>Status:</strong>
                     <span data-ng-bind="item.itemStatus"></span>
                   </div>
                   <div data-ng-if="item.itemDueDate && item.itemStatus === 'Unpaid'">
                     <strong>Due Date:</strong>
                     <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'"></span>
-                  </div>
-                  <div data-ng-if="item.itemEffectiveDate">
-                    <strong>Effective Date:</strong>
-                    <span data-ng-bind="item.itemEffectiveDate | date:'MM/dd/yy'"></span>
                   </div>
                   <div data-ng-if="item.itemTermDescription">
                     <strong>Term:</strong>
