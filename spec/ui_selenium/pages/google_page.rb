@@ -45,19 +45,20 @@ class GooglePage
   div(:event_title_displayed, :xpath => '//div[@class="ui-sch-schmedit"]')
 
   # TASKS
-  button(:toggle_tasks_visibility, :xpath => '//div[@title="Tasks"]')
-  h2(:tasks_heading, :xpath => '//h2[contains(.,"Tasks")]')
-  link(:add_task, :xpath => '//div[@title="Add task"]')
+  div(:gmail_dropdown, :xpath => '//span[text()="Gmail"]/following-sibling::div')
+  div(:tasks_button, :xpath => '//div[text()="Tasks"]')
+  image(:close_tasks_button, :xpath => '//img[@alt="Close"]')
+  div(:add_task, :xpath => '//div[@title="Add task"]')
   text_area(:task_one_title_input, :xpath => '//tr//div[@contenteditable]')
   link(:edit_task_details, :xpath => '//td[@title="Edit Details"]')
   link(:back_to_tasks, :xpath => '//span[contains(.,"Back to list")]')
 
   def connect_calcentral_to_google(gmail_user, gmail_pass)
-    logger.info('Connecting Google account to CalCentral')
+    logger.info 'Connecting Google account to CalCentral'
     navigate_to "#{WebDriverUtils.base_url}#{WebDriverUtils.google_auth_url}"
     log_into_google(gmail_user, gmail_pass)
     if current_url.include? 'oauth2'
-      logger.info('Google permissions page loaded as expected')
+      logger.info 'Google permissions page loaded as expected'
       sleep 3
       WebDriverUtils.wait_for_element_and_click approve_access_button_element
     else
@@ -66,17 +67,20 @@ class GooglePage
   end
 
   def load_gmail
-    logger.info('Loading Gmail')
+    logger.info 'Loading Gmail'
     navigate_to 'https://mail.google.com'
+    # get rid of tasks iframe if it's left over from a previous test
+    sleep 3
+    close_tasks_button_element.click if close_tasks_button?
   end
 
   def load_calendar
-    logger.info('Loading Google calendar')
+    logger.info 'Loading Google calendar'
     navigate_to 'https://calendar.google.com'
   end
 
   def log_into_google(gmail_user, gmail_pass)
-    logger.info('Logging into Google')
+    logger.info 'Logging into Google'
     remove_account_link if remove_account_link_element.visible?
     WebDriverUtils.wait_for_element_and_type(username_input_element, gmail_user)
     next_button if next_button?
@@ -86,14 +90,14 @@ class GooglePage
   end
 
   def log_out_google(gmail_user)
-    logger.info('Logging out of Google')
+    logger.info 'Logging out of Google'
     link_element(:xpath, "//a[contains(@title,#{gmail_user})]").click
     WebDriverUtils.wait_for_element_and_click sign_out_link_element
   end
 
   def send_email(recipient, subject, body)
-    logger.info("Sending an email with the subject #{subject}")
-    sleep 3
+    logger.info "Sending an email with the subject #{subject}"
+    load_gmail
     WebDriverUtils.wait_for_page_and_click compose_email_button_element
     WebDriverUtils.wait_for_element_and_click new_message_heading_element
     new_message_heading
@@ -103,11 +107,12 @@ class GooglePage
     self.body_element.value = body
     sleep 3
     send_email_button
-    mail_sent_link_element.when_present(timeout=WebDriverUtils.page_event_timeout)
+    mail_sent_link_element.when_present WebDriverUtils.page_event_timeout
   end
 
   def send_invite(event_name, location)
-    logger.info("Creating event with the subject #{event_name}")
+    logger.info "Creating event with the subject #{event_name}"
+    load_calendar
     WebDriverUtils.wait_for_page_and_click create_event_button_element
     WebDriverUtils.wait_for_element_and_click event_title_element
     self.event_title_element.value = event_name
@@ -120,27 +125,24 @@ class GooglePage
     start_time = Time.strptime(event_start_time, "%l:%M%P")
     end_time = Time.strptime(event_end_time, "%l:%M%P")
     save_event
-    event_added_element.when_visible(timeout=WebDriverUtils.page_event_timeout)
+    event_added_element.when_visible WebDriverUtils.page_event_timeout
     [start_time, end_time]
   end
 
   def create_unsched_task(driver, title)
-    logger.info("Creating task with title #{title}")
-    toggle_tasks_visibility_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
-    unless tasks_heading_element.visible?
-      toggle_tasks_visibility
-      tasks_heading_element.when_visible(timeout=WebDriverUtils.page_event_timeout)
-    end
+    logger.info "Creating task with title #{title}"
+    load_gmail
+    WebDriverUtils.wait_for_page_and_click gmail_dropdown_element
+    WebDriverUtils.wait_for_element_and_click tasks_button_element
     wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.page_event_timeout)
-    wait.until { driver.find_element(:xpath, '//h2[contains(.,"Tasks")]/following-sibling::div//iframe') }
-    driver.switch_to.frame driver.find_element(:xpath, '//h2[contains(.,"Tasks")]/following-sibling::div//iframe')
+    wait.until { driver.find_element(:id, 'tasksiframe') }
+    driver.switch_to.frame driver.find_element(:id, 'tasksiframe')
     WebDriverUtils.wait_for_element_and_click add_task_element
-    wait_until(timeout=WebDriverUtils.page_event_timeout, nil) { task_one_title_input == nil }
+    wait_until(WebDriverUtils.page_event_timeout) { task_one_title_input == nil }
     self.task_one_title_input_element.value = title
     edit_task_details
     sleep 3
     back_to_tasks
     driver.switch_to.default_content
-    toggle_tasks_visibility
   end
 end

@@ -48,7 +48,6 @@ describe 'My Dashboard Up Next card', :testui => true do
       logger.info("#{@initial_event_organizers}")
 
       # Put a new event on Google calendar
-      @google.load_calendar
       @event_title = "Event #{id}"
       @event_location = "#{id} DWINELLE"
       event = @google.send_invite(@event_title, @event_location)

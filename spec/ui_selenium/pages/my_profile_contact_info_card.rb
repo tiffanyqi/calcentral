@@ -180,9 +180,7 @@ module CalCentralPages
     span(:email_validation_error, :xpath => '//div[@data-ng-controller="ProfileEmailController"]//span[@data-ng-bind="errorMessage"]')
 
     def email_types
-      types = []
-      email_type_elements.each { |type| types << type.text.sub(' Email', '') }
-      types
+      email_type_elements.map { |email| email.text.delete ' Email' }
     end
 
     def email_primary?(index)

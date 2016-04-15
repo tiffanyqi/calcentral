@@ -6,10 +6,7 @@ class ApiCSAidYearsPage
   def get_json(driver)
     logger.info('Parsing aid years from CS')
     navigate_to "#{WebDriverUtils.base_url}/api/campus_solutions/aid_years"
-    wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.page_load_timeout)
-    wait.until { driver.find_element(:xpath => '//pre[contains(.,"CampusSolutions::MyAidYears")]') }
-    body = driver.find_element(:xpath, '//pre').text
-    @parsed = JSON.parse(body)
+    @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
   end
 
   def feed

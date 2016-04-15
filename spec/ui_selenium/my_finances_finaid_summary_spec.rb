@@ -40,9 +40,9 @@ describe 'My Finances Financial Aid summary card', :testui => true do
             @splash_page.basic_auth uid
             @api_aid_years.get_json @driver
 
-            @finances_page.load_fin_aid_summary
-
             unless @api_aid_years.feed.nil?
+
+              @finances_page.load_fin_aid_summary
 
               api_aid_years = @api_aid_years.fin_aid_years
               api_aid_years.each { |year| aid_years << year['id'] }
@@ -163,12 +163,12 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                         it ("shows the right Gift Aid total for UID #{uid}") { expect(ui_gift_aid).to eql(api_gift_aid) }
                       end
 
-                      # Net Cost
-                      api_net_cost = @api_fin_aid_data.net_cost_amt
-                      if api_net_cost.nil?
+                      # Net Cost - don't show if net cost is 0.00
+                      if @api_fin_aid_data.net_cost_ttl.nil? || @api_fin_aid_data.net_cost_amt.nil?
                         has_ui_net_cost = page.finaid_net_cost?
                         it ("shows no Net Cost to UID #{uid}") { expect(has_ui_net_cost).to be false }
                       else
+                        api_net_cost = @api_fin_aid_data.net_cost_amt
                         ui_net_cost = WebDriverUtils.currency_to_f page.finaid_net_cost
                         it ("shows the right Net Cost for UID #{uid}") { expect(ui_net_cost).to eql(api_net_cost) }
                       end
@@ -180,7 +180,6 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                         has_ui_funding_offered_ttl = page.finaid_funding_offered_ttl?
                         it ("shows no Funding Offered total to UID #{uid}") { expect(has_ui_funding_offered_ttl).to be false }
                       else
-                        WebDriverUtils.wait_for_element_and_click page.finaid_funding_offered_toggle_element
                         ui_funding_offered_ttl = WebDriverUtils.currency_to_f page.finaid_funding_offered_ttl
                         it ("shows the right Funding Offered total for UID #{uid}") { expect(ui_funding_offered_ttl).to eql(api_funding_offered_ttl) }
                       end
@@ -267,14 +266,6 @@ describe 'My Finances Financial Aid summary card', :testui => true do
 
                     end
 
-                    # Links - only test external link for one of the test users
-
-                    unless links_tested
-                      has_faso_link = WebDriverUtils.verify_external_link(@driver, page.learn_more_link_element, 'Financial Aid and Scholarships | UC Berkeley')
-                      it ("offers a link to FASO for UID #{uid}") { expect(has_faso_link).to be true }
-                      links_tested = true
-                    end
-
                     has_details_link = page.finaid_details_link?
                     has_awards_link = page.awards_link?
                     has_shopping_sheet_link = page.shopping_sheet_link?
@@ -318,11 +309,17 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                 has_details_link = @finances_page.finaid_details_link?
                 it ("offers no 'Details' link to UID #{uid}") { expect(has_details_link).to be false }
 
-                has_myfinaid_link = WebDriverUtils.verify_external_link(@driver, @finances_page.faso_link_element, 'Financial Aid and Scholarships | UC Berkeley')
-                it ("shows a link to MyFinAid to UID #{uid}") { expect(has_myfinaid_link).to be true }
+                # Links - only test external link for one of the test users
 
-                has_csu_link = WebDriverUtils.verify_external_link(@driver, @finances_page.csu_link_element, 'Cal Student Central')
-                it ("shows a link to Cal Student Central to UID #{uid}") { expect(has_csu_link).to be true }
+                unless links_tested
+                  has_myfinaid_link = WebDriverUtils.verify_external_link(@driver, @finances_page.faso_link_element, 'Financial Aid and Scholarships | UC Berkeley')
+                  it ("shows a link to MyFinAid to UID #{uid}") { expect(has_myfinaid_link).to be true }
+
+                  has_csu_link = WebDriverUtils.verify_external_link(@driver, @finances_page.csu_link_element, 'Cal Student Central')
+                  it ("shows a link to Cal Student Central to UID #{uid}") { expect(has_csu_link).to be true }
+
+                  links_tested = true
+                end
 
               end
             end

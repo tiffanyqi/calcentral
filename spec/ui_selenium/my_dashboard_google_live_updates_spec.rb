@@ -40,12 +40,10 @@ describe 'My Dashboard bConnected live updates', :testui => true do
       logger.info("Unread email count is #{@initial_mail_count.to_s}")
 
       # Send email to self and create new unscheduled task.
-      @google.load_gmail
       @email_subject = "Test email #{id}"
       @email_summary = "This is the subject of test email #{id}"
-      @google.send_email(UserUtils.qa_gmail_username, @email_subject, @email_summary)
       @task_title = "Test task #{id}"
-      @google.load_calendar
+      @google.send_email(UserUtils.qa_gmail_username, @email_subject, @email_summary)
       @google.create_unsched_task(@driver, @task_title)
 
       # On the Dashboard, wait for the live update to occur

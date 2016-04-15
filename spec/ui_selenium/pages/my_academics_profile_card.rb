@@ -15,7 +15,7 @@ module CalCentralPages
     td(:units, :xpath => '//td/strong[@data-ng-bind="gpaUnits.totalUnits"]')
     td(:level, :xpath => '//td/strong[@data-ng-bind="collegeAndLevel.level"]')
     td(:level_non_ap, :xpath => '//td/strong[@data-ng-bind="collegeAndLevel.nonApLevel"]')
-    div(:non_reg_student_msg, :xpath => '//div[contains(text(), "You are not currently registered as a student.")]')
+    div(:non_reg_student_msg, :xpath => '//div[contains(text(), "You are not registered as a student")]')
     div(:ex_student_msg, :xpath => '//div[contains(text(),"You are not currently considered an active student.")]')
     div(:reg_no_standing_msg, :xpath => '//div[contains(text(),"You are registered as a student, but complete profile information is not available.")]')
     span(:new_student_msg, :xpath => '//span[contains(text(),"More information will display here when your academic status changes.")]')

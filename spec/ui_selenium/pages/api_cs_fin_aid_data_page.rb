@@ -6,10 +6,7 @@ class ApiCSFinAidDataPage
   def get_json(driver, year)
     logger.info "Parsing FinAid data from CS for aid year #{year}"
     navigate_to "#{WebDriverUtils.base_url}/api/campus_solutions/financial_aid_data?aid_year=#{year}"
-    wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.page_load_timeout)
-    wait.until { driver.find_element(:xpath => '//pre[contains(.,"CampusSolutions::MyFinancialAidData")]') }
-    body = driver.find_element(:xpath, '//pre').text
-    @parsed = JSON.parse(body)
+    @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
   end
 
   def feed
@@ -26,8 +23,12 @@ class ApiCSFinAidDataPage
     fin_aid_summary['netCost'] unless fin_aid_summary.nil?
   end
 
+  def net_cost_ttl
+    net_cost['total']
+  end
+
   def net_cost_amt
-    net_cost['total']['amount'] unless net_cost.nil?
+    net_cost_ttl['amount'] unless net_cost_ttl.nil?
   end
 
   def funding_offered

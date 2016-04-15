@@ -256,11 +256,7 @@ class ApiMyAcademicsPage
   end
 
   def has_exam_schedules
-    if exam_schedules.nil? || exam_schedules.length == 0
-      false
-    elsif exam_schedules.length > 0
-      true
-    end
+    (exam_schedules.nil? || exam_schedules.empty?) ? false : true
   end
 
   def exam_epochs
