@@ -276,7 +276,7 @@ module EdoOracle
       return result if fake?
       use_pooled_connection {
         sql = <<-SQL
-        SELECT
+        SELECT DISTINCT
           enroll."CAMPUS_UID" AS ldap_uid,
           enroll."STUDENT_ID" AS student_id,
           enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
@@ -289,7 +289,7 @@ module EdoOracle
           enroll."TERM_ID" = sec."term-id" AND
           enroll."SESSION_ID" = sec."session-id" AND
           enroll."OFFERINGNUMBER" = sec."offeringNumber" AND
-          enroll."CLASS_SECTIONNUMBER" = sec."number"
+          enroll."CLASS_SECTIONNUMBER" = sec."sectionNumber"
         )
         WHERE
           enroll."CLASS_SECTION_ID" = '#{section_id}' AND
