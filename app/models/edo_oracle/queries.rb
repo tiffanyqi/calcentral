@@ -282,20 +282,10 @@ module EdoOracle
           enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
           trim(enroll."GRADING_BASIS_CODE") AS pnp_flag
         FROM SISEDO.ENROLLMENTV00_VW enroll
-        JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
-          enroll."CLASS_SECTION_ID" = sec."id" AND
-          enroll."CS_COURSE_ID" = sec."cs-course-id" AND
-          enroll."STDNT_ENRL_STATUS_CODE" != 'D' AND
-          enroll."TERM_ID" = sec."term-id" AND
-          enroll."SESSION_ID" = sec."session-id" AND
-          enroll."OFFERINGNUMBER" = sec."offeringNumber" AND
-          enroll."CLASS_SECTIONNUMBER" = sec."sectionNumber"
-        )
         WHERE
           enroll."CLASS_SECTION_ID" = '#{section_id}' AND
           enroll."TERM_ID" = '#{term_id}'
         SQL
-        puts "SQL query: #{sql.inspect}"
         result = connection.select_all(sql)
       }
       stringify_ints! result
