@@ -256,7 +256,7 @@ class ApiMyAcademicsPage
   end
 
   def has_exam_schedules
-    (exam_schedules.nil? || !exam_schedules.any?) ? false : true
+    (exam_schedules.nil? || exam_schedules.empty?) ? false : true
   end
 
   def exam_epochs
