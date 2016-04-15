@@ -9,7 +9,7 @@ class CanvasPage
   button(:accept_course_invite, :name => 'accept')
   li(:user_name, :class => 'user_name')
   paragraph(:not_available, :xpath => '//p[contains(.,"This course has not been published by the instructor yet.")]')
-  h2(:recent_activity_heading, :xpath => '//h2[contains(text(),"Recent Activity")]')
+  link(:dashboard_link, :id => 'global_nav_dashboard_link')
   link(:logout_link, :text => 'Logout')
   text_area(:logout_confirm, :xpath => '//input[@value="Log Out"]')
 
@@ -74,7 +74,7 @@ class CanvasPage
     tries ||= 2
     load_homepage
     cal_net_page.login(username, password)
-    recent_activity_heading_element.when_visible timeout=WebDriverUtils.page_load_timeout
+    dashboard_link_element.when_visible timeout=WebDriverUtils.page_load_timeout
   rescue
     retry unless (tries -= 1).zero?
   end
@@ -88,7 +88,7 @@ class CanvasPage
       check_terms_cbx
       submit_button
     end
-    recent_activity_heading_element.when_visible timeout=WebDriverUtils.page_load_timeout
+    dashboard_link_element.when_visible timeout=WebDriverUtils.page_load_timeout
     sleep 1
     if accept_course_invite?
       logger.info 'Accepting course invite'
@@ -160,15 +160,14 @@ class CanvasPage
         # Canvas add-user function is often flaky in test envs, so retry if it fails
         tries ||= 3
         load_users_page course_id
-        user_role = user['canvasRole']
+        user_role = user['canvasIntegration']['role']
         logger.info "Adding UID #{user['uid']} as a course site member with role #{user_role}"
         WebDriverUtils.wait_for_page_and_click add_people_button_element
-        user_list_element.when_visible timeout=WebDriverUtils.page_event_timeout
-        self.user_list = user['uid']
+        WebDriverUtils.wait_for_element_and_type(user_list_element, user['uid'])
         self.user_role = user_role
         next_button
         WebDriverUtils.wait_for_page_and_click add_button_element
-        add_users_success_element.when_visible timeout
+        add_users_success_element.when_visible WebDriverUtils.page_event_timeout
         done_button
       rescue
         logger.warn 'Add User failed, retrying'

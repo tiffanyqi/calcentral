@@ -3,7 +3,7 @@ describe 'My Dashboard', :testui => true, :order => :defined do
   if ENV["UI_TEST"]
 
     # Don't run Canvas test when weekend refresh is happening in Beta environment
-    unless Settings.ui_selenium.layer == 'production' || Date.today.sunday? || Date.today.monday?
+    unless Settings.ui_selenium.layer == 'local'
 
       include ClassLogger
 
@@ -12,8 +12,8 @@ describe 'My Dashboard', :testui => true, :order => :defined do
       site_name = "QA WebDriver Test - Canvas Course Site - #{test_id}"
       site_descrip = "QA #{test_id} LEC001"
       course_site_members = UserUtils.load_test_users.select { |user| user['canvasIntegration'] }
-      teacher = course_site_members.find { |user| user['canvasRole'] == 'Teacher' }
-      student = course_site_members.find { |user| user['canvasRole'] == 'Student' }
+      teacher = course_site_members.find { |user| user['canvasIntegration']['role'] == 'Teacher' }
+      student = course_site_members.find { |user| user['canvasIntegration']['role'] == 'Student' }
 
       before(:all) { @driver = WebDriverUtils.launch_browser }
 

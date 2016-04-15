@@ -82,14 +82,6 @@ describe 'My Academics transcripts', :testui => true do
 
                   it ("show a Final Grades card on the #{semester_name} page for UID #{uid}") { expect(shows_final_grades_card).to be true }
 
-                  caption_expanded = final_grades_card.bear_facts_link_element.visible?
-                  it ("show a collapsed caption by default on the #{semester_name} Final Grades card for UID #{uid}") { expect(caption_expanded).to be false }
-
-                  final_grades_card.show_more
-
-                  shows_more = final_grades_card.bear_facts_link_element.visible?
-                  it ("show an expanded caption when 'show more' is clicked on the #{semester_name} page for UID #{uid}") { expect(shows_more).to be true }
-
                   courses = academics_api_page.courses_by_transcripts semester
                   course_codes = academics_api_page.course_codes courses
                   units = academics_api_page.semester_card_units semester_courses

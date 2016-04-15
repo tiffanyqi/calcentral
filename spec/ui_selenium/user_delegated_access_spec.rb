@@ -115,22 +115,22 @@ describe 'Delegated access', :testui => true do
               calparents_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.cal_parents_element, 'UC Berkeley Cal Parents')
               it ("shows delegate UID #{uid} a link to 'CalParents'") { expect(calparents_link).to be true }
 
-              important_dates_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.important_dates_element, 'Cal Parents - Important Dates for Parents')
+              important_dates_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.important_dates_element, 'Cal Parents Calendar')
               it ("shows delegate UID #{uid} a link to 'Important Dates for Parents'") { expect(important_dates_link).to be true }
 
-              visiting_campus_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.visiting_campus_element, 'Cal Parents -Visiting the Campus')
+              visiting_campus_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.visiting_campus_element, 'Visitor Services')
               it ("shows delegate UID #{uid} a link to 'Visiting the Campus'") { expect(visiting_campus_link).to be true }
 
-              jobs_and_careers_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.jobs_and_careers_element, 'UC Berkeley - Cal Parents')
+              jobs_and_careers_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.jobs_and_careers_element, 'Job Listing Sites | Career Center')
               it ("shows delegate UID #{uid} a link to 'Jobs & Careers'") { expect(jobs_and_careers_link).to be true }
 
-              housing_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.housing_element, 'Cal Parents - Housing')
+              housing_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.housing_element, 'Housing & dining | University of California, Berkeley')
               it ("shows delegate UID #{uid} a link to 'Housing'") { expect(housing_link).to be true }
 
-              financial_info_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.financial_info_element, 'Cal Parents - Financial Information')
+              financial_info_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.financial_info_element, 'Cost of Attendance | Financial Aid and Scholarships | UC Berkeley')
               it ("shows delegate UID #{uid} a link to 'Financial Information'") { expect(financial_info_link).to be true }
 
-              academics_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academics_element, 'UC Berkeley - Cal Parents')
+              academics_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academics_element, 'Schools & colleges | University of California, Berkeley')
               it ("shows delegate UID #{uid} a link to 'Academics'") { expect(academics_link).to be true }
 
               academic_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.academic_calendar_element, 'Calendar | Office of the Registrar')
