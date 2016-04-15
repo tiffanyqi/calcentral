@@ -12,7 +12,6 @@
   "disallowMultipleSpaces": true,
   "disallowNewlineBeforeBlockStatements": true,
   "disallowNestedTernaries": true,
-  "disallowPaddingNewlinesInBlocks": true,
   "disallowSpaceAfterObjectKeys": true,
   "disallowSpaceAfterPrefixUnaryOperators": [
     "++",
@@ -70,7 +69,6 @@
     "checkRedundantReturns": true,
     "checkReturnTypes": true,
     "checkTypes": true,
-    "disallowNewlineAfterDescription": true,
     "requireParamDescription": true,
     "requireParamTypes": true,
     "requireReturnDescription": true

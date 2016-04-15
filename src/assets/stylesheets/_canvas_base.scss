@@ -61,6 +61,31 @@ $bc-base-font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 }
 
+// Canvas-specific overrides
+.bc-main {
+  a {
+    color: $bc-color-link;
+    &:hover, &:focus {
+      color: $bc-color-link-hover;
+    }
+  }
+
+  h1 {
+    font-size: 30px;
+    font-weight: 300;
+  }
+
+  h2 {
+    font-size: 25px;
+    font-weight: 300;
+  }
+
+  h3 {
+    font-size: 19px;
+    font-weight: 400;
+  }
+}
+
 button.bc-button-link {
   color: $bc-color-link;
   &, &:hover, &:focus, &:visited {
@@ -116,10 +141,9 @@ button.bc-button-link {
 }
 
 // Note: Canvas style guide calls for 'Cancel' buttons before action buttons.
-// Web accessibility asks for action buttons before cancel. See CLC-5440. 
+// Web accessibility asks for action buttons before cancel. See CLC-5440.
 .bc-form-actions {
-  background: $bc-color-container-grey-background;
-  border: 1px solid $bc-color-container-grey-border;
+  border-top: 1px solid $bc-color-container-grey-border;
   display: flex;
   flex-direction: row-reverse;
   margin: 5px 0;
@@ -405,7 +429,7 @@ button.bc-button-link {
 // Alerts / Notices
 .bc-alert {
   background-color: $bc-color-alert-background;
-  border: 1px solid $bc-color-alert-border;
+  border: 0;
   border-radius: 3px;
   color: $bc-color-alert-foreground;
   font-size: 14px;
@@ -417,19 +441,16 @@ button.bc-button-link {
 
 .bc-alert-info {
   background-color: $bc-color-alert-info-background;
-  border-color: $bc-color-alert-info-border;
   color: $bc-color-alert-info-foreground;
 }
 
 .bc-alert-success {
   background-color: $bc-color-alert-success-background;
-  border: 1px solid $bc-color-alert-success-border;
   color: $bc-color-alert-success-foreground;
 }
 
 .bc-alert-error {
   background-color: $bc-color-alert-error-background;
-  border: 1px solid $bc-color-alert-error-border;
   color: $bc-color-alert-error-foreground;
 }
 

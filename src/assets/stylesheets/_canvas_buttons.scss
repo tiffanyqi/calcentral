@@ -1,40 +1,29 @@
-// Canvas Button Colors
-$bc-canvas-button-border: #d1d1d1;
-$bc-canvas-button-primary-background: #0099e0;
-$bc-canvas-button-primary-border: #006594;
-$bc-canvas-button-primary-hover-background: #007db7;
-$bc-canvas-button-primary-hover-border: #525252;
-$bc-canvas-button-hover-background: #e8e8e8;
-$bc-canvas-button-hover-border: #d1d1d1;
-$bc-canvas-off-black: #555;
-$bc-canvas-button-selected-background: #6b6b6b;
-$bc-canvas-button-selected-border: #525252;
-$bc-canvas-button-selected-color: #fff;
-
 // Canvas Button Styles
 .bc-canvas-button,
 .bc-main .cc-widget-webcast .cc-button,
 .bc-canvas-embedded .cc-page-roster .cc-roster-search .cc-button {
-  background: $bc-color-feature-icon-box-background;
-  border: 1px solid $bc-canvas-button-border;
+  background: $bc-color-button-background;
+  border: 1px solid $bc-color-button-border;
   border-radius: 3px;
-  color: $bc-color-off-black;
+  color: $bc-color-button-color;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 14px;
-  font-weight: normal;
+  font-weight: 300;
   line-height: 20px;
   margin: 0 2px;
   overflow: hidden;
   padding: 8px 14px;
-  transition: background-color .2s ease-in-out;
+  text-shadow: none;
+  transition: background-color .2s ease-in-out 0s;
+  vertical-align: middle;
   &:hover, &:active, &:focus {
-    background: $bc-canvas-button-hover-background;
-    border-color: $bc-canvas-button-hover-border;
-    color: $bc-color-off-black;
+    background: $bc-color-button-hover-background;
+    border-color: $bc-color-button-border;
+    color: $bc-color-button-color;
     text-decoration: none;
   }
   &[disabled] {
-    color: $bc-color-off-black;
+    color: $bc-color-button-color;
     cursor: not-allowed;
     opacity: .5;
     pointer-events: none;
@@ -48,17 +37,17 @@ a.bc-canvas-button {
 
 .bc-canvas-button-primary,
 .bc-canvas-embedded .cc-page-roster .cc-roster-search .cc-button-blue {
-  background: $bc-canvas-button-primary-background;
-  border: 1px solid $bc-canvas-button-primary-border;
-  color: $bc-color-white;
+  background: $bc-color-button-primary-background;
+  border: 1px solid $bc-color-button-primary-border;
+  color: $bc-color-button-primary-color;
   &:hover, &:active, &:focus {
-    background: $bc-canvas-button-primary-hover-background;
-    border-color: $bc-canvas-button-primary-hover-border;
+    background: $bc-color-button-primary-hover-background;
+    border-color: $bc-color-button-primary-border;
     box-shadow: none;
-    color: $bc-color-white;
+    color: $bc-color-button-primary-color;
   }
   &[disabled] {
-    color: $bc-color-white;
+    color: $bc-color-button-primary-color;
   }
 }
 
@@ -68,9 +57,9 @@ a.bc-canvas-button {
 }
 
 .bc-canvas-button-selected, .bc-main .cc-widget-webcast .cc-button-selected {
-  background: $bc-canvas-button-selected-background;
-  border-color: $bc-canvas-button-selected-border;
-  color: $bc-canvas-button-selected-color;
+  background: $bc-color-button-selected-background;
+  border-color: $bc-color-button-selected-border;
+  color: $bc-color-button-selected-color;
 }
 
 .bc-canvas-form {
@@ -80,7 +69,7 @@ a.bc-canvas-button {
   input[type="text"] {
     border: 1px solid $bc-color-grey;
     border-radius: 3px;
-    color: $bc-canvas-off-black;
+    color: $bc-color-off-black;
     display: inline-block;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 14px;
