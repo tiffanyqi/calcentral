@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ROOT>
+  <UC_SR_SLR_RESOURCES>
+    <UC_SLR_LINKS>
+      <UC_SLR_LINK>
+        <NAME>SLR_LINK</NAME>
+        <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/UC_SR_SLR.UC_SLR_STDNT.GBL</URL>
+        <IS_CS_LINK type="boolean">true</IS_CS_LINK>
+      </UC_SLR_LINK>
+    </UC_SLR_LINKS>
+  </UC_SR_SLR_RESOURCES>
+</ROOT>
