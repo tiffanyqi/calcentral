@@ -12,7 +12,7 @@ class AdvisingStudentController < ApplicationController
   def profile
     student_uid = student_uid_param
     render json: {
-      attributes: @attributes,
+      attributes: User::AggregatedAttributes.new(student_uid).get_feed,
       contacts: HubEdos::Contacts.new(user_id: student_uid, include_fields: %w(names addresses phones emails)).get
     }
   end
