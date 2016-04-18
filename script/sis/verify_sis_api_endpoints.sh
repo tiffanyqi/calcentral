@@ -22,14 +22,6 @@ echo_usage() {
 
 [[ $# -gt 0 ]] || { echo_usage; exit 1; }
 
-# Parse YAML
-yaml_file="${1}"
-if [[ ! -f "${yaml_file}" ]] ; then
-  echo; echo "[ERROR]"
-  echo "    YAML file not found: ${yaml_file}"; echo
-  exit 1
-fi
-
 LOG_RELATIVE_PATH="log/sis_api_test_$(date +"%Y-%m-%d_%H%M%S")"
 LOG_DIRECTORY="${PWD}/${LOG_RELATIVE_PATH}"
 CURL_STDOUT_LOG_FILE="${LOG_DIRECTORY}/curl_stdout.log"
@@ -149,7 +141,27 @@ verify_sis_endpoints() {
 # cd to 'calcentral' directory
 cd $( dirname "${BASH_SOURCE[0]}" )/../..
 
-eval $(parse_yaml ${PWD}/config/settings.yml 'yml_')
+# Find and load the default YAML settings.
+default_settings_yaml="${PWD}/config/settings.yml"
+if [[ ! -f "${default_settings_yaml}" ]] ; then
+  default_settings_yaml="${HOME}/calcentral/config/settings.yml"
+fi
+
+if [[ ! -f "${default_settings_yaml}" ]] ; then
+  echo; echo "[ERROR]"
+  echo "    The default YAML file was not found: ${default_settings_yaml}"; echo
+  exit 1
+fi
+eval $(parse_yaml ${default_settings_yaml} 'yml_')
+
+# Next, load the environment-specific YAML. It has precedence so it loads after default YAML.
+yaml_file="${1}"
+if [[ ! -f "${yaml_file}" ]] ; then
+  echo; echo "[ERROR]"
+  echo "    YAML file not found: ${yaml_file}"; echo
+  exit 1
+fi
+
 eval $(parse_yaml ${yaml_file} 'yml_')
 
 # --------------------
@@ -215,34 +227,6 @@ CS_SIR=(
 )
 verify_sis_endpoints "Campus Solutions" CS_SIR "cs_sir" "${yml_features_cs_sir}"
 
-CS_TRANSITIVE_DEPENDENCIES=(
-  "/UC_CC_INTERNTNL_STDNTS_R.v1/Students/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_CC_STDNT_CONTACTS_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_CC_STDNT_DEMOGRAPHIC_R.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_CC_WORK_EXPERIENCES_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_CM_UID_CROSSWALK.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_PER_ADDR_GET.v1/person/address/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_PERSON_DOB_R.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_SR_STDNT_REGSTRTN_R.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcApiEmergencyContactGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcCitizenshpIRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcConftlStdntRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcEmailAddressesRGet.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcEthnicityIGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcGenderRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcIdentifiersRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcLanguagesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcMilitaryStatusRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcNamesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcPassportsRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcPersonsFullLoadRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcPersPhonesRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcSccAflPersonRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcUrlRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UcVisasRGet.v1?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-)
-verify_sis_endpoints "Campus Solutions" CS_TRANSITIVE_DEPENDENCIES "cs_transitive_dependencies" "${TRANSITIVE_DEPENDENCIES:-false}"
-
 CS_FIN_AID=(
   "/UC_FA_FINANCIAL_AID_DATA.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016"
   "/UC_FA_FUNDING_SOURCES.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016"
@@ -266,8 +250,15 @@ CS_ENROLLMENT_CARD=(
 )
 verify_sis_endpoints "Campus Solutions" CS_ENROLLMENT_CARD "cs_enrollment_card" "${yml_features_cs_enrollment_card}"
 
+CS_FIN_AID_AWARD_COMPARE=(
+  "/UC_FA_AWARD_COMPARE_CURRNT.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016"
+  "/UC_FA_AWARD_COMPARE_PARMS.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016"
+  "/UC_FA_AWARD_COMPARE_PRIOR.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016"
+)
+verify_sis_endpoints "Campus Solutions" CS_FIN_AID_AWARD_COMPARE "cs_fin_aid_award_compare" "${yml_features_cs_fin_aid_award_compare}"
+
 CS_BILLING=(
-  "/BILLING_API/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01"
+  "/UC_SF_BILLING_DETAILS.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 )
 verify_sis_endpoints "Campus Solutions" CS_BILLING "cs_billing" "${yml_features_cs_billing}"
 
