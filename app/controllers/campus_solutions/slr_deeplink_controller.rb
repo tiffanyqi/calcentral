@@ -1,8 +1,11 @@
 module CampusSolutions
-  class SLRDeeplinkController < CampusSolutionsController
+  class SlrDeeplinkController < CampusSolutionsController
+
+    include DisallowAdvisorViewAs
+    include DisallowClassicViewAs
 
     def get
-      json_passthrough CampusSolutions::SLRDeeplink, user_id: session['user_id']
+      json_passthrough CampusSolutions::SlrDeeplink
     end
 
   end
