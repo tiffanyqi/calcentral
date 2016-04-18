@@ -1,83 +1,124 @@
 describe SearchUsersController do
+
+  let(:users_found) { [ { 'student_id' => '24680', 'ldap_uid' => '13579' } ] }
+  let(:users_not_found) { [] }
   before do
-    session['user_id'] = "1234"
-    User::Auth.stub(:where).and_return([User::Auth.new(uid: "1234", is_superuser: true, active: true)])
+    session['user_id'] = random_id
+    auth = User::Auth.new uid: session['user_id'], is_superuser: is_superuser, active: true
+    allow(User::Auth).to receive(:where).and_return [ auth ]
   end
 
-  let(:users_found) do
-    [
-      { 'student_id' => '24680', 'ldap_uid' => '13579' },
-    ]
-  end
+  describe '#search_users' do
+    let(:is_superuser) { true }
+    before do
+      expect(User::SearchUsers).to receive(:new).with(id: id).and_return (search = double)
+      expect(search).to receive(:search_users).and_return search_results
+    end
 
-  let(:users_not_found) do
-    []
-  end
+    context 'valid id' do
+      let(:id) { '13579' }
+      let(:search_results) { users_found }
 
-  describe "#search_users" do
-
-    it "returns valid records for valid uid or sid" do
-      stub_model = double
-      User::SearchUsers.should_receive(:new).with({id: '13579'}).and_return(stub_model)
-      stub_model.should_receive(:search_users).and_return(users_found)
-
-      get :search_users, id: '13579'
-      expect(response.status).to eq(200)
-      json_response = JSON.parse(response.body)
-      expect(json_response['users']).to be_an_instance_of Array
-      expect(json_response['users'].count).to eq 1
-      expect(json_response['users'][0]['student_id']).to eq '24680'
-      expect(json_response['users'][0]['ldap_uid']).to eq '13579'
-      json_response['users'].each do |user|
-        expect(user).to be_an_instance_of Hash
+      it 'finds one matching user' do
+        get :search_users, id: id
+        expect(response).to be_success
+        users = JSON.parse(response.body)['users']
+        expect(users).to have(1).item
+        expect(users[0]['student_id']).to eq '24680'
+        expect(users[0]['ldap_uid']).to eq '13579'
+        users.each { |user| expect(user).to be_a Hash }
       end
     end
+    context 'invalid id' do
+      let(:id) { '12345' }
+      let(:search_results) { users_not_found }
 
-    it "returns no record for invalid uid and sid" do
-      stub_model = double
-      User::SearchUsers.should_receive(:new).with({id: '12345'}).and_return(stub_model)
-      stub_model.should_receive(:search_users).and_return(users_not_found)
-
-      get :search_users, id: '12345'
-      expect(response.status).to eq(200)
-      json_response = JSON.parse(response.body)
-      expect(json_response['users']).to be_an_instance_of Array
-      expect(json_response['users'].count).to eq 0
-    end
-
-  end
-
-  describe "#search_users_by_uid" do
-
-    it "returns valid records for valid uid" do
-      stub_model = double
-      User::SearchUsersByUid.should_receive(:new).with({id: '13579'}).and_return(stub_model)
-      stub_model.should_receive(:search_users_by_uid).and_return(users_found)
-
-      get :search_users_by_uid, id: '13579'
-      expect(response.status).to eq(200)
-      json_response = JSON.parse(response.body)
-      expect(json_response['users']).to be_an_instance_of Array
-      expect(json_response['users'].count).to eq 1
-      expect(json_response['users'][0]['student_id']).to eq '24680'
-      expect(json_response['users'][0]['ldap_uid']).to eq '13579'
-      json_response['users'].each do |user|
-        expect(user).to be_an_instance_of Hash
+      it 'returns empty set' do
+        get :search_users, id: id
+        expect(response).to be_success
+        users = JSON.parse(response.body)['users']
+        expect(users).to be_empty
       end
     end
+  end
 
-    it "returns no record for invalid uid" do
-      stub_model = double
-      User::SearchUsersByUid.should_receive(:new).with({id: '12345'}).and_return(stub_model)
-      stub_model.should_receive(:search_users_by_uid).and_return(users_not_found)
-
-      get :search_users_by_uid, id: '12345'
-      expect(response.status).to eq(200)
-      json_response = JSON.parse(response.body)
-      expect(json_response['users']).to be_an_instance_of Array
-      expect(json_response['users'].count).to eq 0
+  describe '#search_users by advisor' do
+    let(:is_superuser) { false }
+    let(:id) { '13579' }
+    let(:search_results) { users_found }
+    before do
+      expect(User::SearchUsers).to receive(:new).with(id: id).and_return (search = double)
+      expect(search).to receive(:search_users).and_return search_results
+      # Advisor
+      expect(User::AggregatedAttributes).to receive(:new).with(session['user_id']).and_return (advisor_proxy = double)
+      expect(advisor_proxy).to receive(:get_feed).and_return({ roles: { advisor: is_advisor } })
+      # Student
+      allow(User::AggregatedAttributes).to receive(:new).with(id).and_return (student_proxy = double)
+      allow(student_proxy).to receive(:get_feed).and_return({ roles: { student: is_student } })
     end
 
+    context 'not an advisor' do
+      let(:is_advisor) { false }
+      let(:is_student) { true }
+      it 'should raise exception' do
+        get :search_users, id: id
+        expect(response.status).to eq 403
+        expect(JSON.parse(response.body)['users']).to be_nil
+      end
+    end
+    context 'advisor' do
+      let(:is_advisor) { true }
+      context 'advisor finds a student' do
+        let(:is_student) { true }
+        it 'finds one matching user' do
+          get :search_users, id: id
+          users = JSON.parse(response.body)['users']
+          expect(users).to have(1).item
+        end
+      end
+      context 'advisor finds a non-student' do
+        let(:is_student) { false }
+        it 'should raise exception' do
+          get :search_users, id: id
+          expect(response.status).to eq 403
+          expect(JSON.parse(response.body)['users']).to be_nil
+        end
+      end
+    end
+  end
+
+  describe '#search_users_by_uid' do
+    let(:is_superuser) { true }
+    before do
+      expect(User::SearchUsersByUid).to receive(:new).with(id: id).and_return (search = double)
+      expect(search).to receive(:search_users_by_uid).and_return search_results
+    end
+
+    context 'valid uid' do
+      let(:id) { '13579' }
+      let(:search_results) { users_found }
+
+      it 'returns one matching user' do
+        get :search_users_by_uid, id: id
+        expect(response).to be_success
+        users = JSON.parse(response.body)['users']
+        expect(users).to have(1).item
+        expect(users[0]['student_id']).to eq '24680'
+        expect(users[0]['ldap_uid']).to eq '13579'
+        users.each { |user| expect(user).to be_a Hash }
+      end
+    end
+    context 'invalid uid' do
+      let(:id) { '12345' }
+      let(:search_results) { users_not_found }
+
+      it 'returns no record for invalid uid' do
+        get :search_users_by_uid, id: id
+        expect(response).to be_success
+        users = JSON.parse(response.body)['users']
+        expect(users).to be_empty
+      end
+    end
   end
 
 end
