@@ -228,7 +228,8 @@ module EdoOracle
           )
           WHERE
             sec."id" = '#{section_id.to_s}' AND
-            sec."term-id" = '#{term_id.to_s}'
+            sec."term-id" = '#{term_id.to_s}' AND
+            TRIM(instr."instructor-id") IS NOT NULL
           ORDER BY
             role_code
         SQL
