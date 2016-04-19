@@ -144,7 +144,7 @@ angular.module('calcentral.factories').factory('activityFactory', function(apiSe
        */
       var spliceMultiSourceElements = function(originalSource) {
         return originalSource.filter(function(value, index, arr) {
-          // the multiElementArray stores arrays of multiElementSource for
+          // The multiElementArray stores arrays of multiElementSource for
           // items captured by the filter below.
           if (!value.date) {
             return false;

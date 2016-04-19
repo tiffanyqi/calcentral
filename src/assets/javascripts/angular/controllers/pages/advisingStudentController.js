@@ -16,9 +16,11 @@ angular.module('calcentral.controllers').controller('AdvisingStudentController',
   };
 
   var defaultErrorDescription = function(status) {
-    return status === 403 ?
-      'You are not authorized to view this user\'s data.' :
-      'Sorry, there was a problem fetching this user\'s data. Contact CalCentral support if the error persists.';
+    if (status === 403) {
+      return 'You are not authorized to view this user\'s data.';
+    } else {
+      return 'Sorry, there was a problem fetching this user\'s data. Contact CalCentral support if the error persists.';
+    }
   };
 
   var errorReport = function(status, errorDescription) {

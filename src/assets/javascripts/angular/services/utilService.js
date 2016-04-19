@@ -123,14 +123,13 @@ angular.module('calcentral.services').service('utilService', function($cacheFact
    * Canvas 5000px limit, in which case our own listener handles it.
    *
    * See bc-iframe-resize directive for easy application to Canvas embedded LTI Tools
-   *
-   * @param  {Object}    alternativeElement         DOM element that provides scrollHeight used to resize iframe
+   * @param {Object} alternativeElement DOM element that provides scrollHeight used to resize iframe
    */
   var iframeUpdateHeight = function(alternativeElement) {
     if (isInIframe) {
       $window.setInterval(function updateHeight() {
         var heightElement = document.body;
-        // use element argument to provide scrollHeight rather than body
+        // Use element argument to provide scrollHeight rather than body
         if (alternativeElement !== undefined && alternativeElement[0] !== undefined) {
           heightElement = alternativeElement[0];
         }
@@ -187,13 +186,13 @@ angular.module('calcentral.services').service('utilService', function($cacheFact
   var uidPattern = /^[0-9]{1,10}$/;
 
   var accessibilityAnnounce = function(message) {
-    // remove existing announcer
+    // Remove existing announcer
     var existingAnnouncer = $window.document.getElementById('cc-sr-announcer');
     if (document.body.contains(existingAnnouncer)) {
       existingAnnouncer.parentNode.removeChild(existingAnnouncer);
     }
 
-    // add new announcer
+    // Add new announcer
     var announcer = $window.document.createElement('div');
     var announcerAlert = $window.document.createElement('p');
     var announcerHeader = $window.document.createElement('h1');

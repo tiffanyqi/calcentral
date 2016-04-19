@@ -4,7 +4,8 @@ var angular = require('angular');
 
 angular.module('calcentral.directives').directive('ccAccessibleFocusDirective', function() {
   return {
-    restrict: 'A', // Restrict it to attributes.
+    // Restrict it to attributes.
+    restrict: 'A',
     link: function(scope, elm, attrs) {
       var enableFocusDirective = scope.$eval(attrs.ccAccessibleFocusDirective);
 

@@ -25,8 +25,10 @@ angular.module('calcentral.directives').directive('ccDatepickerDirective', funct
          */
         var Pikaday = require('pikaday');
         var picker = new Pikaday({
-          bound: false, // We're not bounding directly to a field since otherwise it opens when you tab through (not accessible)
-          field: inputElement, // The element that should open when we hit the datepicker button.
+          // We're not bounding directly to a field since otherwise it opens when you tab through (not accessible)
+          bound: false,
+          // The element that should open when we hit the datepicker button.
+          field: inputElement,
           format: 'MM/DD/YYYY',
           onSelect: function() {
             // We need to set the view value

@@ -3,21 +3,21 @@
 var angular = require('angular');
 
 angular.module('calcentral.services').service('apiService', function(
-    analyticsService,
-    authService,
-    apiEventService,
-    dateService,
-    delegateService,
-    errorService,
-    finaidService,
-    financialsService,
-    httpService,
-    popoverService,
-    profileService,
-    updatedFeedsService,
-    userService,
-    utilService,
-    widgetService) {
+  analyticsService,
+  authService,
+  apiEventService,
+  dateService,
+  delegateService,
+  errorService,
+  finaidService,
+  financialsService,
+  httpService,
+  popoverService,
+  profileService,
+  updatedFeedsService,
+  userService,
+  utilService,
+  widgetService) {
   // API
   var api = {
     analytics: analyticsService,

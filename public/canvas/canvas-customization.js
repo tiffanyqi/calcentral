@@ -186,7 +186,6 @@
   /**
    * Adds 'Create a Site' button to Dashboard and Course Index page
    * if the user is authorized to do so
-   * @return {Boolean}
    */
   var authorizeViewAddSiteButton = function() {
     // run only on dashboard and course index pages
@@ -418,7 +417,6 @@
    *       scrollToBottom: <currentHeightBelowFold>
    *     }
    *    ```
-   *
    * @param  {Object}    ev         Event that is sent over from the iframe
    * @param  {String}    ev.data    The message sent with the event. Note that this is expected to be a stringified JSON object
    */

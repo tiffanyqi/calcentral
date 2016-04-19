@@ -31,7 +31,6 @@ angular.module('calcentral.services').service('apiEventService', function($rootS
 
   /**
    * Fire the events for the API
-   * @return {Object} api Contains all the api modules
    */
   var fireApiEvents = function(api) {
     for (var i in api) {
