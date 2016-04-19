@@ -226,10 +226,6 @@
 
     // Minify options
     var minifyOptions = {
-      // Collapse white space that contributes to text nodes in a document tree
-      collapseWhitespace: true,
-      // Always collapse to 1 space (never remove it entirely)
-      conservativeCollapse: true,
       // Strip HTML comments
       removeComments: true
     };
