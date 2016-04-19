@@ -96,7 +96,7 @@ angular.module('calcentral.services').service('updatedFeedsService', function($h
   /**
    * Increment though the defined pollIntervals and return the last one
    * when the end has been reached.
-   * @return {Integer}
+   * @return {Integer} The interval number
    */
   var getPollInterval = function() {
     return (pollIntervals.length > 1) ? pollIntervals.shift() : pollIntervals[0];

@@ -24,7 +24,7 @@ angular.module('calcentral.services').factory('httpErrorInterceptorService', fun
       if (status >= 400) {
         errorService.send('httpErrorInterceptorService - ' + response.status + ' - ' + response.config.url);
       }
-      // otherwise
+
       return $q.reject(response);
     }
   };

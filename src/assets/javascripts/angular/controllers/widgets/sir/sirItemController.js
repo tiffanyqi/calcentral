@@ -46,7 +46,6 @@ angular.module('calcentral.controllers').controller('SirItemController', functio
 
   /**
    * Submit the SIR response from the student
-   * @return {[type]} [description]
    */
   $scope.submitSirReponse = function() {
     $scope.sirItem.isSubmitting = true;

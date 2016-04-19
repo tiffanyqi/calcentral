@@ -10,7 +10,8 @@ angular.module('calcentral.controllers').controller('TaskEditorController', func
 
   $scope.enableEditor = function() {
     $scope.editorEnabled = true;
-    $scope.task.show = false; // Otherwise the form is on blue "show" background.
+    // Otherwise the form is on blue "show" background.
+    $scope.task.show = false;
     // Shift the scope to match scope of the add_task form
     $scope.addEditTask = {
       'title': $scope.task.title,
@@ -48,7 +49,8 @@ angular.module('calcentral.controllers').controller('TaskEditorController', func
   };
 
   $scope.editTask = function(task) {
-    var changedTask = angular.copy(task); // Start with a copy of the task (with ID, etc.) and override these props
+    // Start with a copy of the task (with ID, etc.) and override these props
+    var changedTask = angular.copy(task);
     changedTask.title = $scope.addEditTask.title;
     changedTask.notes = $scope.addEditTask.notes;
 

@@ -56,7 +56,8 @@ angular.module('calcentral.directives').directive('ccCampusSolutionsLinkDirectiv
   };
 
   return {
-    priority: 99, // it needs to run after the attributes are interpolated
+    // It needs to run after the attributes are interpolated
+    priority: 99,
     restrict: 'A',
     link: function(scope, element, attrs) {
       scope.$watch(attrs.ccCampusSolutionsLinkDirective, function(value) {

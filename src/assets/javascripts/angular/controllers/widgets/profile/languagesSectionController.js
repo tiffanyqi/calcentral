@@ -59,7 +59,7 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
   /**
    * Function maps a language level (native, teach, translate) boolean value to
    * either 'Y' or 'N', the only values accepted by the POST endpoint.
-   * @param {Boolean} Value indicating that student has this language level.
+   * @param {Boolean} hasLevel Value indicating that student has this language level.
    * @return {String} The value to be sent to the POST endpoint.
    */
   var normalizeLanguageLevel = function(hasLevel) {
@@ -72,7 +72,7 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
    * Function guards against a proficiency object or its code field being null
    * or undefined. It returns a code if present; otherwise a blank string as a
    * safe default.
-   * @param {Object} Proficiency object containing code and description fields.
+   * @param {Object} proficiency Proficiency object containing code and description fields.
    * @return {String} Proficiency's code value; otherwise, a blank string.
    */
   var normalizeProficiencyCode = function(proficiency) {
@@ -91,7 +91,7 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
    * Function insures each student language contains a `levels` with key-values
    * from `levelMapping`. It also checks any `proficiency` in the language and
    * normalizes its `code` field.
-   * @param {Array} The student's languages field.
+   * @param {Array} languages The student's languages field.
    * @return {Array} The populated and normalized languages.
    */
   var parseLanguages = function(languages) {
@@ -136,7 +136,7 @@ angular.module('calcentral.controllers').controller('LanguagesSectionController'
    * language name (such as "Yiddish") in ascending order, and moving the entry
    * with `accomplishment` field set to `LOT` (representing `Other`) to the end
    * of the array. The sorted array is meant for display in a select element.
-   * @param {Array} List of language code objects with `descr` and `accomplishment`
+   * @param {Array} codes List of language code objects with `descr` and `accomplishment`
    * properties.
    * @return {Array} List of languages codes sorted by `descr` property.
    */

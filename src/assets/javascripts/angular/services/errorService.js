@@ -15,7 +15,7 @@ angular.module('calcentral.services').service('errorService', function(calcentra
 
   /**
    * Send an error exception
-   * @param {String} exception, tags The exception label to send,
+   * @param {String} exception The exception label to send,
    * followed by a hash of tags we want to capture in Sentry.
    */
   var send = function(exception) {

@@ -5,7 +5,6 @@ var angular = require('angular');
 /**
  * Parse a request and location URL and determine whether this is a same-domain request.
  * This function has been copied over from AngularJS since they don't expose this function
- *
  * @param {string} requestUrl The url of the request.
  * @param {string} locationUrl The current browser location url.
  * @returns {boolean} Whether the request is for the same domain.
@@ -20,7 +19,7 @@ var isSameDomain = function(requestUrl, locationUrl) {
   var URL_MATCH = /^([^:]+):\/\/(\w+:{0,1}\w*@)?([\w\.-]*)(:([0-9]+))?(\/[^\?#]*)?(\?([^#]*))?(#(.*))?$/;
 
   var match = IS_SAME_DOMAIN_URL_MATCH.exec(requestUrl);
-  // if requestUrl is relative, the regex does not match.
+  // If requestUrl is relative, the regex does not match.
   if (match === null) {
     return true;
   }
@@ -53,7 +52,8 @@ var isSameDomain = function(requestUrl, locationUrl) {
 angular.module('calcentral.directives').directive('a', function() {
   return {
     restrict: 'E',
-    priority: 200, // We need to run this after ngHref has changed
+    // We need to run this after ngHref has changed
+    priority: 200,
     link: function(scope, element, attr) {
       /**
        * We update the anchor tag

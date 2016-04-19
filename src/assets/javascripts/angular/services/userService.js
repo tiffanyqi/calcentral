@@ -189,7 +189,7 @@ angular.module('calcentral.services').service('userService', function($http, $lo
       }
     }).error(function(data, responseCode) {
       if (responseCode && responseCode === 401) {
-        // user is already logged out
+        // User is already logged out
         window.location = '/';
       }
     });
