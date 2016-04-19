@@ -14,5 +14,6 @@ matrix:
 
 env:
   - JRUBY_OPTS="--dev" DISPLAY=:99.0 LOGGER_LEVEL=WARN
+  - TRAVIS_NODE_VERSION="4"
 
 before_script: "./script/front-end-test.sh"
