@@ -1,5 +1,5 @@
 module CampusSolutions
-  class SLRDeeplink < Proxy
+  class SlrDeeplink < GlobalCachedProxy
 
     def initialize(options = {})
       super options

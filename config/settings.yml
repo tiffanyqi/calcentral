@@ -288,7 +288,7 @@ cache:
     CampusSolutions::NameType: <%= 29.days %>
     CampusSolutions::SirConfig: <%= 24.hours %>
     CampusSolutions::State: <%= 29.days %>
-    CampusSolutions::SLRDeeplink: <%= 24.hours %>
+    CampusSolutions::SlrDeeplink: <%= 24.hours %>
     CampusSolutions::Translate: <%= 24.hours %>
     CampusSolutions::DashboardUrl: <%= 29.days %>
 

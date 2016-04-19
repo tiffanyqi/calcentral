@@ -1,4 +1,4 @@
-describe CampusSolutions::SLRDeeplinkController do
+describe CampusSolutions::SlrDeeplinkController do
 
   let(:user_id) { '12345' }
 
