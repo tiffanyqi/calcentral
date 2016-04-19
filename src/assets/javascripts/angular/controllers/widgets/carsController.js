@@ -30,6 +30,12 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
   $scope.activityIncrement = 50;
   $scope.activityLimit = 100;
 
+  $scope.csActivity = {
+    currentTerm: '',
+    hasCsActivity: false,
+    isLoadingCs: true
+  };
+
   var startDate = '';
   var endDate = '';
 
@@ -250,6 +256,7 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
     // Data contains all the financial information for the current student
     financesFactory.getFinances().success(function(data) {
       angular.extend($scope, data);
+      loadCsInfo();
 
       if (data && data.summary && data.activity) {
         parseData(data);
@@ -264,6 +271,16 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
       }
     }).error(function(data) {
       angular.extend($scope, data);
+    });
+  };
+
+  var loadCsInfo = function() {
+    financesFactory.getCsFinances().success(function(data) {
+      if (data.feed.activity && data.feed.activity.length) {
+        $scope.csActivity.hasCsActivity = true;
+      }
+      $scope.csActivity.currentTerm = data.feed.summary.currentTerm;
+      $scope.csActivity.isLoadingCs = false;
     });
   };
 
