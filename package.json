@@ -23,6 +23,9 @@
     "build": "gulp build",
     "build-production": "gulp build --env production"
   },
+  "engines": {
+    "node" : ">=4.0.0"
+  },
   "license": "ECL-2.0",
   "devDependencies": {
     "add-stream": "^1.0.0",
