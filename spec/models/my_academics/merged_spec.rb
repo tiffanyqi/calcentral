@@ -62,4 +62,19 @@ describe MyAcademics::Merged do
       expect(feed[:errors]).to eq ['MyAcademics::Telebears']
     end
   end
+
+  describe '#filter_course_sites' do
+    let(:full_feed) {HashConverter.symbolize JSON.parse(File.read(Rails.root.join('public/dummy/json/academics.json')))}
+    it 'includes bCourses sites in a full feed' do
+      expect(full_feed[:semesters][1][:classes][2][:class_sites].index {|c| c[:emitter] == 'bCourses'}).to_not be_nil
+      expect(full_feed[:teachingSemesters][0][:classes][0][:class_sites].index {|c| c[:emitter] == 'bCourses'}).to_not be_nil
+      expect(full_feed[:otherSiteMemberships][0][:sites].index {|c| c[:emitter] == 'bCourses'}).to_not be_nil
+    end
+    it 'removes course sites from the full feed' do
+      feed = described_class.new(uid).filter_course_sites full_feed
+      expect(feed[:semesters][1][:classes][2][:class_sites]).to be_blank
+      expect(feed[:teachingSemesters][0][:classes][0][:class_sites]).to be_blank
+      expect(feed[:otherSiteMemberships]).to be_blank
+    end
+  end
 end

@@ -1,8 +1,6 @@
 describe MyGroupsController do
 
-  before(:each) do
-    @user_id = rand(99999).to_s
-  end
+  let(:uid) {random_id}
 
   it "should be an empty course sites feed on non-authenticated user" do
     get :get_feed
@@ -12,8 +10,7 @@ describe MyGroupsController do
   end
 
   it "should check for valid fields on the my groups feed" do
-    #needs to be updated afterwards
-    session['user_id'] = @user_id
+    session['user_id'] = uid
     get :get_feed
     json_response = JSON.parse(response.body)
     json_response["groups"].is_a?(Array).should == true
@@ -28,4 +25,26 @@ describe MyGroupsController do
   it_should_behave_like 'a user authenticated api endpoint'
   it_behaves_like 'an unauthorized endpoint for delegates'
 
+  context 'using test data' do
+    subject do
+      get :get_feed
+      JSON.parse(response.body)
+    end
+    before do
+      allow(Settings.canvas_proxy).to receive(:fake).at_least(:once).and_return(true)
+      allow(Settings.cal_link_proxy).to receive(:fake).at_least(:once).and_return(true)
+    end
+    it 'returns a varied feed' do
+      session['user_id'] = uid
+      expect(subject['groups'].index {|c| c['emitter'] == 'CalLink'}).to_not be_nil
+      expect(subject['groups'].index {|c| c['emitter'] == 'bCourses'}).to_not be_nil
+    end
+    context 'advisor view-as' do
+      include_context 'advisor view-as'
+      it 'filters bCourses groups' do
+        expect(subject['groups'].index {|c| c['emitter'] == 'CalLink'}).to_not be_nil
+        expect(subject['groups'].index {|c| c['emitter'] == 'bCourses'}).to be_nil
+      end
+    end
+  end
 end

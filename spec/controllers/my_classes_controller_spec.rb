@@ -27,4 +27,27 @@ describe MyClassesController do
   it_should_behave_like 'a user authenticated api endpoint'
   it_behaves_like 'an unauthorized endpoint for delegates'
 
+  context 'student in test data', if: CampusOracle::Queries.test_data? do
+    let(:uid) {'300939'}
+    subject do
+      get :get_feed
+      JSON.parse(response.body)
+    end
+    before do
+      allow(Settings.canvas_proxy).to receive(:fake).at_least(:once).and_return(true)
+    end
+    it 'returns varied data' do
+      session['user_id'] = uid
+      expect(subject['classes'].index {|c| c['emitter'] == 'Campus'}).to_not be_nil
+      expect(subject['classes'].index {|c| c['emitter'] == 'bCourses'}).to_not be_nil
+    end
+    context 'advisor view-as' do
+      include_context 'advisor view-as'
+      it 'filters bCourses sites' do
+        expect(subject['classes'].index {|c| c['emitter'] == 'Campus'}).to_not be_nil
+        expect(subject['classes'].index {|c| c['emitter'] == 'bCourses'}).to be_nil
+      end
+    end
+  end
+
 end

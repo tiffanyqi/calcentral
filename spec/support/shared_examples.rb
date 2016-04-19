@@ -113,3 +113,11 @@ shared_context 'delegated access' do
     allow(Settings.features).to receive(:cs_delegated_access).and_return true
   end
 end
+
+shared_context 'advisor view-as' do
+  before do
+    allow(Settings.features).to receive(:reauthentication).and_return false
+    session['user_id'] = uid
+    session[SessionKey.original_advisor_user_id] = random_id
+  end
+end

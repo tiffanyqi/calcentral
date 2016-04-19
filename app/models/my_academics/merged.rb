@@ -4,6 +4,7 @@ module MyAcademics
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
+    include Cache::FilteredViewAsFeed
     include MergedModel
 
     def self.providers
@@ -30,5 +31,34 @@ module MyAcademics
       end
       feed
     end
+
+    def filter_for_view_as(feed)
+      if authentication_state.authenticated_as_advisor?
+        filter_course_sites feed
+      else
+        feed
+      end
+    end
+
+    def filter_course_sites(feed)
+      # Course sites can appear in three different parts of the Academics feed:
+      #  - semesters/classes/class_sites
+      #  - teachingSemesters/classes/class_sites
+      #  - otherSiteMemberships/sites
+      [:semesters, :teachingSemesters].each do |semesters_key|
+        if feed[semesters_key].present?
+          feed[semesters_key].each do |term|
+            if term[:classes].present?
+              term[:classes].each do |course|
+                course.delete :class_sites
+              end
+            end
+          end
+        end
+      end
+      feed.delete :otherSiteMemberships
+      feed
+    end
+
   end
 end

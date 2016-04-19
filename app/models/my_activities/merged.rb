@@ -56,6 +56,8 @@ module MyActivities
         else
           feed[:activities] = []
         end
+      elsif authentication_state.authenticated_as_advisor?
+        feed[:activities].delete_if {|t| t[:emitter] == 'bCourses'}
       end
       feed
     end
