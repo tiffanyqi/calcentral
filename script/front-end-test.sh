@@ -1,3 +1,4 @@
+nvm install node
 node_version=`node --version`
 echo "Node version: $node_version"
 npm config set strict-ssl false
