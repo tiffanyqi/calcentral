@@ -66,10 +66,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   };
 
   var hasCarsActivity = function(data) {
-    var carsActivity = _.get(data, 'data.activity');
-    if (carsActivity && carsActivity.length) {
-      $scope.billing.hasCarsActivity = true;
-    }
+    $scope.billing.hasCarsActivity = !!_.get(data, 'data.activity.length');
   };
 
   var loadCarsInfo = function() {

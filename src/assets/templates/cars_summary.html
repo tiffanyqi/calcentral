@@ -101,8 +101,10 @@
     <p data-ng-if="!myfinancesError && !myfinances.activity" class="cc-widget-text cc-page-myfinances-account-summary-error">
       You are seeing this message because CalCentral does not have CARS billing data for your account. If you are a new student, your account may not have been assessed charges yet. Please try again later. Current or former students should contact us for further assistance using the Feedback link below.
     </p>
-    <div class="cc-page-myfinances-billing-summary-footnote cc-text-center" data-cc-spinner-directive="csActivity.isLoadingCs" data-ng-if="carsDetails && csActivity.hasCsActivity">
-      <a href="/billing/details">View <span data-ng-bind="csActivity.currentTerm"></span> activity.</a>
+    <div data-cc-spinner-directive="csActivity.isLoadingCs">
+      <div class="cc-page-myfinances-billing-summary-footnote cc-text-center" data-ng-if="carsDetails && csActivity.hasCsActivity">
+        <a href="/billing/details">View <span data-ng-bind="csActivity.currentTerm"></span> activity.</a>
+      </div>
     </div>
   </div>
 </div>

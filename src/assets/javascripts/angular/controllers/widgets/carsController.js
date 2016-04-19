@@ -5,7 +5,7 @@ var angular = require('angular');
 /**
  * CARS controller
  */
-angular.module('calcentral.controllers').controller('CarsController', function(apiService, financesFactory, $filter, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('CarsController', function(apiService, financesFactory, userService, $filter, $routeParams, $scope) {
   var sortTermsIndex = {
     'Fall': 0,
     'Summer': 1,
@@ -256,7 +256,9 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
     // Data contains all the financial information for the current student
     financesFactory.getFinances().success(function(data) {
       angular.extend($scope, data);
-      loadCsInfo();
+      if (userService.profile.features.csBilling) {
+        loadCsInfo();
+      }
 
       if (data && data.summary && data.activity) {
         parseData(data);
