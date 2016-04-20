@@ -1,0 +1,68 @@
+<div class="cc-widget cc-user-search">
+  <div class="cc-widget-title">
+    <h2 data-ng-bind="search.title"></h2>
+  </div>
+  <div class="cc-widget-text" data-cc-spinner-directive="search.isLoading">
+    <div data-ng-switch data-on="search.currentTab">
+      <div class="row collapse">
+        <div class="medium-10 medium-centered columns">
+          <ul class="cc-button-group cc-even-3" role="tablist">
+            <li data-ng-repeat="tab in search.tabs">
+              <button class="cc-button"
+                      data-ng-click="search.goToTab(tab)"
+                      data-ng-class="{'cc-button-selected':(search.currentTab == tab)}"
+                      aria-selected="{{search.currentTab == tab}}"
+                      role="tab"
+                      data-ng-bind="tab">
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div data-ng-switch-when="Search" role="tabpanel" aria-live="polite">
+        <form data-ng-submit="search.by_id_or_name()">
+          <div>
+            <label for="cc-user-search-input">Enter name, UID or SID</label>
+            <div class="cc-flex cc-flex-align-center">
+              <input id="cc-user-search-input" data-ng-model="search.id_or_name" type="text"/>
+              <button class="cc-button cc-button-blue" data-ng-disabled="!search.id_or_name" type="submit">Search</button>
+            </div>
+          </div>
+          <div data-ng-if="search.error && !search.queryInProgress">
+            <h3 data-ng-bind="search.error.summary"></h3>
+            <div data-ng-bind="search.error.description"></div>
+          </div>
+
+          <p data-ng-bind="search.message"></p>
+
+          <div data-cc-spinner-directive="search.queryInProgress">
+            <ul class="cc-widget-list">
+              <li data-ng-repeat="user in search.users" data-ng-class="{'cc-widget-list-selected': user.show}">
+                <span class="cc-visuallyhidden" data-ng-bind-template="Show {{user.show ? 'less' : 'more'}} information about {{user.person_name}}"></span>
+                <div
+                  class="cc-widget-list-hover"
+                  data-ng-class="{'cc-widget-list-hover-opened':(user.show)}"
+                  data-cc-accessible-focus-directive
+                  data-ng-click="api.widget.toggleShow($event, search.users, user, 'Up Next')">
+                  <div class="cc-flex cc-flex-space-between">
+                    <div data-ng-bind="user.student_id"></div>
+                    <div data-ng-bind="user.person_name"></div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </form>
+      </div>
+
+      <div data-ng-switch-when="Saved" role="tabpanel" aria-live="polite">
+        TODO: Saved users
+      </div>
+
+      <div data-ng-switch-when="Recent" role="tabpanel" aria-live="polite">
+        TODO: Recent users
+      </div>
+    </div>
+  </div>
+</div>
