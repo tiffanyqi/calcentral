@@ -56,6 +56,20 @@ describe MyAcademicsController do
         expect(subject['transitionTerm']).to be_present
       end
     end
+    context 'user with teaching assignments' do
+      let(:uid) {'904715'}
+      context 'logged in directly' do
+        it 'includes teaching-related data' do
+          expect(subject['teachingSemesters']).to be_present
+        end
+      end
+      context 'advisor view-as' do
+        include_context 'advisor view-as'
+        it 'excludes teaching-related data' do
+          expect(subject['teachingSemesters']).to be_blank
+        end
+      end
+    end
     context 'delegate view' do
       include_context 'delegated access'
       let(:campus_solutions_id) {'24363318'}

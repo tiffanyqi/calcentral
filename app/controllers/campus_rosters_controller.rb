@@ -1,5 +1,6 @@
 class CampusRostersController < RostersController
   include ClassLogger
+  include DisallowAdvisorViewAs
 
   before_filter :api_authenticate
   before_filter :authorize_viewing_rosters
