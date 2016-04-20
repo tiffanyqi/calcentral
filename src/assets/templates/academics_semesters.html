@@ -5,12 +5,14 @@
       <strong>Request Transcripts</strong>
     </a>
   </div>
-  <div class="cc-widget-section">
-    <a data-ng-href="{{enrollmentVerificationLink}}" data-ng-if="enrollmentVerificationLink">
-      Request your enrollment verification
-    </a>
-  </div>
-  <div class="cc-widget-padding">
+
+  <div class="cc-widget-padding cc-flex-space-between-vertical-15">
+    <div data-ng-if="enrollmentVerificationLink">
+      <a data-ng-href="{{enrollmentVerificationLink}}">
+        Request your enrollment verification
+      </a>
+    </div>
+
     <div class="cc-table cc-academics-semester cc-academics-semester-{{semester.timeBucket}}" data-ng-repeat="semester in semesters | limitTo:pastSemestersLimit">
       <div>
         <h3 data-ng-if="semester.hasEnrollmentData && semester.slug"><a class="cc-left" data-ng-href="/academics/semester/{{semester.slug}}" data-ng-bind="semester.name"></a></h3>
@@ -75,6 +77,6 @@
         </table>
       </div>
     </div>
+    <div data-ng-if="pastSemestersCount > 1" data-cc-show-infinite-directive data-cc-show-infinite-limit="pastSemestersLimit"></div>
   </div>
-  <div data-ng-if="pastSemestersCount > 1" data-cc-show-infinite-directive data-cc-show-infinite-limit="pastSemestersLimit"></div>
 </div>
