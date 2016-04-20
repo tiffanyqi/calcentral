@@ -41,7 +41,7 @@ gem 'faraday_middleware', '~> 0.9.1'
 gem 'httparty', '~> 0.13.3'
 
 # OAuth2 support
-gem 'signet', '~> 0.6.0'
+gem 'signet', '~> 0.7.2'
 gem 'google-api-client', '~> 0.8.6'
 gem 'google_drive', '~> 1.0.1'
 

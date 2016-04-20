@@ -3,6 +3,7 @@ module MyClasses
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
+    include Cache::FilteredViewAsFeed
     include MergedModel
 
     def self.providers
@@ -30,6 +31,13 @@ module MyClasses
         provider.new(@uid).merge_sites(courses, term, sites)
       end
       sites
+    end
+
+    def filter_for_view_as(feed)
+      if authentication_state.authenticated_as_advisor?
+        feed[:classes].delete_if {|t| t[:emitter] == 'bCourses'}
+      end
+      feed
     end
   end
 end

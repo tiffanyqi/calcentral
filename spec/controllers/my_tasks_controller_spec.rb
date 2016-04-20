@@ -157,4 +157,17 @@ describe MyTasksController do
     end
   end
 
+  context 'advisor view-as' do
+    let(:uid) {random_id}
+    include_context 'advisor view-as'
+    before do
+      allow(Settings.canvas_proxy).to receive(:fake).at_least(:once).and_return(true)
+    end
+    it 'filters bCourses tasks' do
+      get :get_feed
+      feed = JSON.parse(response.body)
+      expect(feed['tasks'].index {|t| t['emitter'] == 'bCourses'}).to be_nil
+    end
+  end
+
 end

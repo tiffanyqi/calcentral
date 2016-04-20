@@ -4,6 +4,7 @@ module MyGroups
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
+    include Cache::FilteredViewAsFeed
     include MergedModel
 
     def self.providers
@@ -21,6 +22,13 @@ module MyGroups
         feed[:groups].concat provider.new(@uid).fetch
       end
       feed[:groups].sort! { |x, y| x[:name].casecmp y[:name] }
+      feed
+    end
+
+    def filter_for_view_as(feed)
+      if authentication_state.authenticated_as_advisor?
+        feed[:groups].delete_if {|t| t[:emitter] == 'bCourses'}
+      end
       feed
     end
 

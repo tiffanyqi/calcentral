@@ -52,6 +52,8 @@ module MyTasks
         else
           feed[:tasks] = []
         end
+      elsif authentication_state.authenticated_as_advisor?
+        feed[:tasks].delete_if {|t| t[:emitter] == 'bCourses'}
       end
       feed
     end
