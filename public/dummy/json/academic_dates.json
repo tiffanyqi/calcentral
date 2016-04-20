@@ -2,60 +2,143 @@
   "feed": {
     "academicDates": [
       {
-        "date": "Mar 21-25",
-        "title": "Spring Recess"
-      },
-      {
-        "date": "Mar 25",
-        "title": "Academic and Administrative Holiday"
-      },
-      {
-        "date": "Apr 16",
-        "title": "Cal Day"
-      },
-      {
-        "date": "Apr 29",
-        "title": "Formal Classes End"
-      },
-      {
-        "date": "May 2-6",
-        "title": "Reading/Review/Recitation Week"
-      },
-      {
-        "date": "May 6",
-        "title": "Last Day of Instruction"
-      },
-      {
-        "date": "May 9-13",
-        "title": "Final Examinations"
-      },
-      {
-        "date": "May 13",
-        "title": "SPRING SEMESTER ENDS"
-      },
-      {
-        "date": "May 14",
-        "title": "Commencement"
-      },
-      {
         "date": "May 23 - Aug 12",
         "title": "Summer Sessions"
       },
       {
         "date": "May 23",
-        "title": "First Six-Week Session begins"
+        "title": "Summer 2016 - 6 Week Session begins"
       },
       {
         "date": "May 30",
-        "title": "Academic and Administrative Holiday"
+        "title": "Academic/Administrative Holiday"
       },
       {
         "date": "Jun 6",
-        "title": "Ten-Week Session begins"
+        "title": "Summer 2016 - 10 Week Session begins"
       },
       {
         "date": "Jun 20",
-        "title": "Eight-Week Session begins"
+        "title": "Summer 2016 - 8 Week Session begins"
+      },
+      {
+        "date": "Jul 1",
+        "title": "Summer 2016 - 6 Week Session begins"
+      },
+      {
+        "date": "Jul 4",
+        "title": "Academic/Administrative Holiday"
+      },
+      {
+        "date": "Jul 25",
+        "title": "Summer 2016 - 3 Week Session begins"
+      },
+      {
+        "date": "Aug 12",
+        "title": [
+          "Summer 2016 - 10 Week Session ends",
+          "Summer 2016 - 3 Week Session ends",
+          "Summer 2016 - 6 Week Session ends",
+          "Summer 2016 - 8 Week Session ends"
+        ]
+      },
+      {
+        "date": "Aug 17",
+        "title": "Fall 2016 Semester Begins"
+      },
+      {
+        "date": "Aug 22",
+        "title": "Fall 2016 - Convocation"
+      },
+      {
+        "date": "Aug 24",
+        "title": "Fall 2016 - Instruction Begins"
+      },
+      {
+        "date": "Sep 5",
+        "title": "Academic/Administrative Holiday"
+      },
+      {
+        "date": "Nov 11",
+        "title": "Academic/Administrative Holiday"
+      },
+      {
+        "date": "Nov 23",
+        "title": "Fall 2016 - Non-Instructional Day"
+      },
+      {
+        "date": "Nov 24",
+        "title": "Academic/Administrative Holiday"
+      },
+      {
+        "date": "Nov 25",
+        "title": "Academic/Administrative Holiday"
+      },
+      {
+        "date": "Dec 2",
+        "title": "Fall 2016 - Formal Classes End"
+      },
+      {
+        "date": "Dec 5",
+        "title": "Fall 2016 - RRR Week"
+      },
+      {
+        "date": "Dec 6",
+        "title": "Fall 2016 - RRR Week"
+      },
+      {
+        "date": "Dec 7",
+        "title": "Fall 2016 - RRR Week"
+      },
+      {
+        "date": "Dec 8",
+        "title": "Fall 2016 - RRR Week"
+      },
+      {
+        "date": "Dec 9",
+        "title": [
+          "Fall 2016 - RRR Week",
+          "Fall 2016 - Last Day of Instruction"
+        ]
+      },
+      {
+        "date": "Dec 12",
+        "title": "Fall 2016 - Final Examinations"
+      },
+      {
+        "date": "Dec 13",
+        "title": "Fall 2016 - Final Examinations"
+      },
+      {
+        "date": "Dec 14",
+        "title": "Fall 2016 - Final Examinations"
+      },
+      {
+        "date": "Dec 15",
+        "title": "Fall 2016 - Final Examinations"
+      },
+      {
+        "date": "Dec 16",
+        "title": [
+          "Fall 2016 - Final Examinations",
+          "Fall 2016 - Semester Ends"
+        ]
+      },
+      {
+        "date": "Dec 26",
+        "title": "Academic/Administrative Holiday"
+      },
+      {
+        "date": "Dec 27",
+        "title": "Academic/Administrative Holiday"
+      },
+      {
+        "date": "Dec 30",
+        "title": "Academic/Administrative Holiday"
+      },
+      {
+        "date": "Jan 2, 2017",
+        "title": "Academic/Administrative Holiday"
       }
     ]
   }

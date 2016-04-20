@@ -14,10 +14,18 @@ angular.module('calcentral.controllers').controller('AcademicDatesController', f
     }
   });
 
+  var formatItemTitles = function(items) {
+    var formattedItems = _.map(items, function(item) {
+      item.title.isArray = _.isArray(item.title);
+      return item;
+    });
+    return formattedItems;
+  };
+
   var getAcademicDates = function() {
     academicDatesFactory.getAcademicDates().then(function(data) {
-      var dates = _.get(data, 'data.feed.academicDates');
-      $scope.academicDates.items = dates;
+      var items = _.get(data, 'data.feed.academicDates');
+      $scope.academicDates.items = formatItemTitles(items);
       $scope.academicDates.isLoading = false;
     });
   };

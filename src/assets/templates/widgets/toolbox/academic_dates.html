@@ -8,7 +8,12 @@
         <strong class="cc-nowrap">
           <span data-ng-bind="item.date | dateInYearFilter:'Mmm dd'"></span>:
         </strong>
-        <span data-ng-bind="item.title"></span>
+        <span data-ng-bind="item.title" data-ng-if="!item.title.isArray"></span>
+        <ul class="cc-list-bullets" data-ng-if="item.title.isArray">
+          <li data-ng-repeat="title in item.title">
+            <span data-ng-bind="title"></span>
+          </li>
+        </ul>
       </li>
     </ul>
   </div>
