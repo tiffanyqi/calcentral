@@ -34,6 +34,7 @@ module MyAcademics
 
     def filter_for_view_as(feed)
       if authentication_state.authenticated_as_advisor?
+        feed.delete :teachingSemesters
         filter_course_sites feed
       else
         feed
