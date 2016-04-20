@@ -163,7 +163,7 @@
     margin-bottom: 5px;
   }
   .cc-academics-semester {
-    padding: 0 15px 15px 0;
+    padding: 5px 0;
     width: 100%;
     > div {
       border: 1px solid $cc-color-list-border;
@@ -198,9 +198,6 @@
     > div {
       background: $cc-color-widget-more-background;
     }
-  }
-  .cc-academics-semesters {
-    padding: 15px 0 0 15px;
   }
   .cc-academics-semester-title-link {
     margin-top: 7px;
