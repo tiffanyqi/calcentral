@@ -123,7 +123,7 @@ class WebDriverUtils
   end
 
   def self.wait_for_element_and_type(element, text)
-    wait_for_element_and_click element
+    wait_for_page_and_click element
     element.clear
     element.send_keys text
   end
