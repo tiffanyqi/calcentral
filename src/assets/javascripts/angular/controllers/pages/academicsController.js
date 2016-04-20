@@ -177,10 +177,11 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.showAdvising = !$scope.filteredForDelegate && $scope.api.user.profile.features.advising && $scope.isLSStudent;
 
     if (!$scope.filteredForDelegate) {
+      $scope.transcriptLink = 'http://registrar.berkeley.edu/academic-records/transcripts-diplomas';
       if ($scope.studentInfo.isLawStudent) {
-        $scope.transcriptLink = 'http://www.law.berkeley.edu/php-programs/registrar/forms/transcriptrequestform.php';
+        $scope.enrollmentVerificationLink = 'https://www.law.berkeley.edu/academics/registrar/verification-of-attendance/';
       } else {
-        $scope.transcriptLink = 'https://telebears.berkeley.edu/tranreq/';
+        $scope.enrollmentVerificationLink = 'http://registrar.berkeley.edu/academic-records/verification-enrollment-degrees';
       }
     }
   };
