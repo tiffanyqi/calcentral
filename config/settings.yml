@@ -227,7 +227,6 @@ cache:
     MyBadges::Merged: NEXT_00_00
     MyCampusLinksController: NEXT_08_00
     MyClasses::Merged: NEXT_08_00
-    Finaid::MyFinAid: NEXT_08_00
     MyGroups::Merged: NEXT_08_00
     MyTasks::Merged: <%= 10.minutes %>
     UpNext::MyUpNext: NEXT_00_00

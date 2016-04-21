@@ -11,7 +11,6 @@ describe Cal1card::MyCal1card do
   it_behaves_like 'a polite HTTP client'
 
   context 'happy path with fake data' do
-    include_context 'Live Updates cache'
     it 'feeds back correct information' do
       expect(subject).to be_truthy
       expect(subject[:cal1cardStatus]).to eq 'OK'
@@ -23,17 +22,16 @@ describe Cal1card::MyCal1card do
   end
 
   context 'capture a disabled feature flag' do
-    include_context 'Live Updates cache'
     before do
       Settings.features.stub(:cal1card).and_return(false)
     end
     it 'respect the disabled feature flag'do
-      expect(subject.length).to eq 2
+      expect(subject.length).to eq 0
     end
   end
 
   context 'server errors' do
-    include_context 'short-lived Live Updates cache'
+    include_context 'short-lived cache write of Hash on failures'
     let (:cal1card_uri) { URI.parse(Settings.cal1card_proxy.base_url) }
     before do
       Cal1card::MyCal1card.stub(:new).and_return(real_oski_proxy)

@@ -1,7 +1,8 @@
 module CampusSolutions
   class MyChecklist < UserSpecificModel
 
-    include Cache::LiveUpdatesEnabled
+    include Cache::CachedFeed
+    include Cache::UserCacheExpiry
     include Cache::JsonAddedCacher
     include CampusSolutions::SirFeatureFlagged
 

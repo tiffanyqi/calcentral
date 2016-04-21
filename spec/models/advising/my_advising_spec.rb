@@ -12,7 +12,6 @@ describe Advising::MyAdvising do
 
     context 'on success' do
       subject { fake_oski_model }
-      include_context 'Live Updates cache'
       it 'should write to cache' do
         subject.get_feed
       end
@@ -20,7 +19,6 @@ describe Advising::MyAdvising do
 
     context 'server 404s' do
       subject { real_oski_model }
-      include_context 'Live Updates cache'
       before do
         stub_request(:any, /.*#{advising_uri.hostname}.*/).to_return(status: 404)
       end
@@ -32,7 +30,7 @@ describe Advising::MyAdvising do
 
     context 'server errors' do
       subject { real_oski_model }
-      include_context 'short-lived Live Updates cache'
+      include_context 'short-lived cache write of Hash on failures'
       after(:each) { WebMock.reset! }
 
       context 'unreachable remote server (connection errors)' do
@@ -73,7 +71,6 @@ describe Advising::MyAdvising do
 
     context 'disabled feature flag' do
       subject { real_oski_model }
-      include_context 'Live Updates cache'
       before do
         Settings.features.stub(:advising).and_return(false)
       end

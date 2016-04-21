@@ -18,16 +18,6 @@ describe Financials::MyFinancials do
     JSON.parse(feed)
   }
 
-  shared_examples 'a feed with the common live-updates fields' do
-    it 'should have a lastModified field' do
-      expect(subject['lastModified']).to be
-      expect(@cached_count).to eq 1
-    end
-    it 'should have a feedName field' do
-      expect(subject['feedName']).to eq 'Financials::MyFinancials'
-    end
-  end
-
   # We combine expectations in one larger test so as to reduce proxy load
   # when running in the testext environment.
   context 'when following a happy path for #get_feed' do
@@ -37,7 +27,6 @@ describe Financials::MyFinancials do
       expect(subject['currentTerm']).to eq Berkeley::Terms.fetch.current.to_english
       expect(subject['apiVersion'].gsub('.', '').to_i).to be >= 106
     end
-    it_behaves_like 'a feed with the common live-updates fields'
   end
 
   context 'error on remote server' do
@@ -76,7 +65,6 @@ describe Financials::MyFinancials do
         expect(subject['statusCode']).to eq(404)
         expect(@expires_in).to_not eq Settings.cache.expiration.failure
       end
-      it_behaves_like 'a feed with the common live-updates fields'
     end
 
     context 'when a non-student calls the proxy' do
@@ -89,7 +77,6 @@ describe Financials::MyFinancials do
         expect(subject['statusCode']).to eq(404)
         expect(@expires_in).to_not eq Settings.cache.expiration.failure
       end
-      it_behaves_like 'a feed with the common live-updates fields'
     end
   end
 

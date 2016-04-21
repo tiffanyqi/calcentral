@@ -1,8 +1,8 @@
 module Finaid
   class Merged < UserSpecificModel
 
-    include Cache::LiveUpdatesEnabled
-    include Cache::FreshenOnWarm
+    include Cache::CachedFeed
+    include Cache::UserCacheExpiry
     include Cache::JsonAddedCacher
 
     attr_accessor :proxies
