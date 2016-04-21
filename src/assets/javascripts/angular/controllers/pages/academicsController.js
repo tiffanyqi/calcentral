@@ -173,7 +173,7 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.showStatusAndBlocks = !$scope.filteredForDelegate &&
                                  ($scope.hasRegStatus ||
                                  ($scope.regblocks && !$scope.regblocks.noStudentId) ||
-                                 ($scope.studentInfo && ($scope.studentInfo.californiaResidency)));
+                                 ($scope.residency));
     $scope.showAdvising = !$scope.filteredForDelegate && $scope.api.user.profile.features.advising && $scope.isLSStudent;
 
     if (!$scope.filteredForDelegate) {

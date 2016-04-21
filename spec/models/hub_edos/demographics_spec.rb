@@ -11,6 +11,7 @@ describe HubEdos::Demographics do
       expect(subject[:feed]['student']).to be
       expect(subject[:feed]['student']['ethnicities'][0]['group']['code']).to eq '2'
       expect(subject[:feed]['student']['usaCountry']).to be
+      expect(subject[:feed]['student']['residency']).to be
     end
   end
 
@@ -23,6 +24,7 @@ describe HubEdos::Demographics do
     it 'returns data with the expected structure' do
       expect(subject[:feed]['student']).to be
       expect(subject[:feed]['student']['ethnicities'][0]).to be
+      expect(subject[:feed]['student']['residency']).to be
     end
 
   end

@@ -10,7 +10,6 @@ module MyBadges
     def get
       campus_attributes = CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       result = {
-        californiaResidency: campus_attributes[:california_residency],
         isLawStudent: law_student?,
         regBlock: get_reg_blocks
       }

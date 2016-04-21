@@ -3,7 +3,7 @@ module HubEdos
 
     def initialize(options = {})
       super(options)
-      @include_fields = options[:include_fields] || %w(ethnicities languages usaCountry foreignCountries birth gender)
+      @include_fields = options[:include_fields] || %w(ethnicities languages usaCountry foreignCountries birth gender residency)
       @instance_key = Cache::KeyGenerator.per_view_as_type @uid, options
     end
 

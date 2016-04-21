@@ -36,7 +36,6 @@ module HubEdos
           extract_total_units(edo, result)
           extract_special_program_code(edo, result)
           extract_reg_status(edo, result)
-          extract_residency(edo, result)
           result[:statusCode] = 200
         else
           logger.error "Could not get Student EDO data for UID #{@uid}"
@@ -156,27 +155,6 @@ module HubEdos
       return # TODO this data only supported in GoLive5
       # TODO populate based on SISRP-7581 explanation. Incorporate full structure from RegStatusTranslator.
       result[:reg_status] = {}
-    end
-
-    def extract_residency(edo, result)
-      return # TODO this data only supported in GoLive5
-      if edo[:residency].present?
-        if edo[:residency][:official][:code] == 'RES'
-          result[:cal_residency_flag] = 'Y'
-        else
-          result[:cal_residency_flag] = 'N'
-        end
-        # TODO The term-transition check in CampusOracle::UserAttributes had to do with residency information
-        # from Oracle being unavailable during term transitions. Revisit whether this next code is necessary
-        # in the GoLive5 era.
-        if term_transition?
-          result[:california_residency] = nil
-          result[:reg_status][:transitionTerm] = true
-        else
-          # TODO get full status from CalResidencyTranslator
-          #result[:california_residency] = cal_residency_translator.translate result[:cal_residency_flag]
-        end
-      end
     end
 
     def term_transition?

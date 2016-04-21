@@ -25,7 +25,6 @@ describe 'MyBadges::StudentInfo' do
 
   it 'should create a well-formed response with correct keys for a random user' do
     result = MyBadges::StudentInfo.new(random_uid).get
-    result.has_key?(:californiaResidency).should be_truthy
     result.has_key?(:regStatus).should be_truthy
     result.has_key?(:regBlock).should be_truthy
     result.has_key?(:isLawStudent).should be_truthy
