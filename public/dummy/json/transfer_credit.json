@@ -1,0 +1,57 @@
+{
+  "statusCode": 200,
+  "feed": {
+    "transferCredit": {
+      "creditTypes": [
+         {
+          "credits": [
+            {
+              "description": "Universidad Nacional Autónoma de México",
+              "units": 16.0
+            },
+            {
+              "description": "London School of Hygiene & Tropical Medicine",
+              "units": 5.0
+            }
+          ],
+          "title": "Transfer Units",
+          "unitsAdjusted": 18.5,
+          "unitsNonAdjusted": 21.0
+        },
+        {
+          "credits": [
+            {
+              "description": "Advanced Placement (AP)",
+              "units": 3.1
+            },
+            {
+              "description": "International Baccalaureate (IB)",
+              "units": 3.0
+            },
+            {
+              "description": "GCE Advanced-Level (A-Level)",
+              "units": 2.0
+            }
+          ],
+          "title": "Test Units",
+          "unitsAdjusted": 8.1,
+          "unitsNonAdjusted": 8.1
+        },
+        {
+          "title": "Other Units",
+          "unitsAdjusted": 10.5
+        }
+      ],
+      "ucTransferCreditLink": {
+        "name": "Submit Transfer Credit",
+        "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/???.GBL?EMPLID=&ACAD_CAREER=",
+        "isCsLink": true
+      },
+      "ucTransferCreditReportLink": {
+        "name": "View Transfer Credit Report",
+        "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SS_TRCR_RPT.GBL?Page=SS_TRCR_RPT&Action=U&ForceSearch=Y&EMPLID=3032345122&TargetFrameName=None",
+        "isCsLink": true
+      }
+    }
+  }
+}
