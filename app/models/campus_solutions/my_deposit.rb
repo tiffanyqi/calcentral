@@ -2,8 +2,9 @@ module CampusSolutions
   class MyDeposit < UserSpecificModel
 
     include ClassLogger
-    include Cache::LiveUpdatesEnabled
-    include Cache::JsonAddedCacher
+    include Cache::CachedFeed
+    include Cache::UserCacheExpiry
+    include Cache::JsonifiedFeed
     include Cache::RelatedCacheKeyTracker
     include CampusSolutions::SirFeatureFlagged
 

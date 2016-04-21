@@ -1,7 +1,9 @@
 module Cal1card
   class MyCal1card < UserSpecificModel
-    include Cache::LiveUpdatesEnabled
+    include Cache::CachedFeed
     include Cache::FeedExceptionsHandled
+    include Cache::JsonAddedCacher
+    include Cache::UserCacheExpiry
     include Proxies::HttpClient
     include Proxies::MockableXml
 

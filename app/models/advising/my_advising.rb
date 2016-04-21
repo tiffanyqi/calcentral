@@ -1,7 +1,8 @@
 module Advising
   class MyAdvising < UserSpecificModel
-    include Cache::LiveUpdatesEnabled
+    include Cache::CachedFeed
     include Cache::FeedExceptionsHandled
+    include Cache::UserCacheExpiry
     include Proxies::HttpClient
     include Proxies::Mockable
     include User::Student
