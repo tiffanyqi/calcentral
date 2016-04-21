@@ -23,10 +23,12 @@ module CanvasLti
       if Berkeley::Terms.legacy?(term_year, term_code)
         CampusOracle::Queries.get_sections_from_ccns(term_year, term_code, section_ids)
       else
-        sections = EdoOracle::Queries.get_sections_by_ids(term_id(term_year, term_code), section_ids)
-        sections = add_legacy_ccns(sections)
-        sections = add_legacy_term_fields(sections)
-        sections = add_legacy_primary_secondary_cd(sections)
+        EdoOracle::Queries.get_sections_by_ids(term_id(term_year, term_code), section_ids).tap do |sections|
+          add_legacy_ccns sections
+          add_legacy_term_fields sections
+          add_legacy_primary_secondary_cd sections
+          normalize_course_codes sections
+        end
       end
     end
 
@@ -49,18 +51,25 @@ module CanvasLti
     end
 
     def add_legacy_ccns(sections)
-      sections.collect {|sec| sec.merge({'course_cntl_num' => sec['section_id']}) }
+      sections.each {|sec| sec['course_cntl_num'] = sec['section_id']}
     end
 
     def add_legacy_term_fields(sections)
-      sections.collect do |sec|
+      sections.each do |sec|
         legacy_term = Berkeley::TermCodes.from_edo_id(sec['term_id'])
-        sec.merge({'term_yr' => legacy_term[:term_yr], 'term_cd' => legacy_term[:term_cd]})
+        sec.merge!({'term_yr' => legacy_term[:term_yr], 'term_cd' => legacy_term[:term_cd]})
       end
     end
 
     def add_legacy_primary_secondary_cd(sections)
-      sections.collect {|sec| sec.merge({'primary_secondary_cd' => sec['primary'] == 'true' ? 'P' : 'S'}) }
+      sections.each {|sec| sec['primary_secondary_cd'] = sec['primary'] == 'true' ? 'P' : 'S'}
+    end
+
+    def normalize_course_codes(sections)
+      sections.each do |sec|
+        dept_name, catalog_id = EdoOracle::UserCourses::Base.parse_course_code sec
+        sec.merge!({'dept_name' => dept_name, 'catalog_id' => catalog_id})
+      end
     end
 
   end

@@ -19,12 +19,18 @@ describe EdoOracle::UserCourses::Base do
       'catalog_prefix' => nil,
       'catalog_root' => '74',
       'catalog_suffix' => nil,
+      'course_display_name' => 'MUSIC 74',
       'course_title' => 'Introduction to Selected Musics of the World',
       'course_title_short' => 'INTR MUSICS WORLD',
       'dept_name' => 'MUSIC',
-      'display_name' => 'MUSIC 74',
+      'section_display_name' => 'MUSIC 74',
       'term_id' => '2168',
     }
+  end
+
+  let(:subject_areas) { ['MEC ENG', 'MUSIC'] }
+  before do
+    allow(EdoOracle::Queries).to receive(:get_subject_areas).and_return subject_areas.map { |area| {'subjectarea' => area} }
   end
 
   describe 'enrolled sections merge' do
@@ -152,12 +158,13 @@ describe EdoOracle::UserCourses::Base do
           'catalog_prefix' => nil,
           'catalog_root' => '99',
           'catalog_suffix' => 'C',
+          'course_display_name' => 'MUSIC 99C',
           'course_title' => 'The Stooges in Context',
           'course_title_short' => 'STGS CNTXT',
           'dept_name' => 'MUSIC',
-          'display_name' => 'MUSIC 99C',
           'instruction_format' => 'LEC',
           'primary' => 'true',
+          'section_display_name' => 'MUSIC 99C',
           'section_id' => '44807',
           'section_num' => '001'
         }),
@@ -167,12 +174,13 @@ describe EdoOracle::UserCourses::Base do
           'catalog_prefix' => 'C',
           'catalog_root' => '99',
           'catalog_suffix' => nil,
+          'course_display_name' => 'MUSIC C105',
           'course_title' => 'Einstuerzende Neubauten and Structural Failure',
           'course_title_short' => 'KOLLAPS',
           'dept_name' => 'MUSIC',
-          'display_name' => 'MUSIC C105',
           'instruction_format' => 'LEC',
           'primary' => 'true',
+          'section_display_name' => 'MUSIC C105',
           'section_id' => '45807',
           'section_num' => '001'
         }),
@@ -182,12 +190,13 @@ describe EdoOracle::UserCourses::Base do
           'catalog_prefix' => 'C',
           'catalog_root' => '112',
           'catalog_suffix' => nil,
+          'course_display_name' => 'MEC ENG C112',
           'course_title' => 'Einstuerzende Neubauten and Structural Failure',
           'course_title_short' => 'KOLLAPS',
           'dept_name' => 'MEC ENG',
-          'display_name' => 'MEC ENG C112',
           'instruction_format' => 'LEC',
           'primary' => 'true',
+          'section_display_name' => 'MEC ENG C112',
           'section_id' => '54807',
           'section_num' => '001'
         }),
@@ -258,20 +267,34 @@ describe EdoOracle::UserCourses::Base do
     end
     include_examples 'proper section sorting'
 
-    context 'when dept_name and catalog_id are unavailable' do
-      before do
-        instructing_query_results[1].delete 'dept_name'
-        instructing_query_results[1].delete 'catalog_id'
-        instructing_query_results[3].delete 'dept_name'
-        instructing_query_results[3].delete 'catalog_id'
-      end
-      include_examples 'proper section sorting'
-      it 'deduces dept_name and catalog_id from display name' do
-        subject.each do |course|
-          expect(course[:catid]).to be_present
-          expect(course[:course_catalog]).to be_present
-          expect(course[:dept]).to be_present
+    context 'when course codes have bad formatting' do
+      let(:mec_eng_result) { instructing_query_results[2] }
+      before { mec_eng_result['section_display_name'] = 'MECENG C112' }
+      shared_examples 'compensation for bad formatting' do
+        include_examples 'proper section sorting'
+        it 'deduces correct course codes' do
+          mec_eng_course = subject.find { |course| course[:course_code] == 'MEC ENG C112' }
+          expect(mec_eng_course).to include({
+            catid: 'C112',
+            course_catalog: 'C112',
+            dept: 'MEC ENG'
+          })
         end
+      end
+      context 'CMS-derived data unavailable' do
+        before { %w(catalog_id course_display_name dept_name).each { |key| mec_eng_result.delete key } }
+        include_examples 'compensation for bad formatting'
+      end
+      context 'CMS-derived data partially available' do
+        before { %w(catalog_id dept_name).each { |key| mec_eng_result.delete key } }
+        include_examples 'compensation for bad formatting'
+      end
+      context 'CMS-derived data present but compressed' do
+        before do
+          mec_eng_result['course_display_name'] = 'MECENG C112'
+          mec_eng_result['dept_name'] = 'MECENG'
+        end
+        include_examples 'compensation for bad formatting'
       end
     end
 
@@ -347,11 +370,13 @@ describe EdoOracle::UserCourses::Base do
       its([:id])  {should eq 'mec_eng_i_res-0109al-2016-D' }
       its([:course_code]) { should eq 'MEC ENG/I,RES 0109AL' }
     end
+    let(:subject_areas) { ['MEC ENG/I,RES', 'MUSIC'] }
     context 'dept_name and catalog_id available' do
       let(:row) {{
         'catalog_id' => '0109AL',
+        'course_display_name' => 'MEC ENG/I,RES 0109AL',
         'dept_name' => 'MEC ENG/I,RES',
-        'display_name' => 'MEC ENG/I,RES 0109AL',
+        'section_display_name' => 'MECENGIRES 0109AL',
         'term_id' => '2168'
       }}
       it_should_behave_like 'a well-parsed id set'
@@ -359,8 +384,29 @@ describe EdoOracle::UserCourses::Base do
     context 'dept_name and catalog_id unavailable' do
       let(:row) {{
         'catalog_id' => nil,
+        'course_display_name' => 'MEC ENG/I,RES 0109AL',
         'dept_name' => nil,
-        'display_name' => 'MEC ENG/I,RES 0109AL',
+        'section_display_name' => 'MECENGIRES 0109AL',
+        'term_id' => '2168'
+      }}
+      it_should_behave_like 'a well-parsed id set'
+    end
+    context 'dept_name, catalog_id and course_display_name unavailable' do
+      let(:row) {{
+        'catalog_id' => nil,
+        'course_display_name' => nil,
+        'dept_name' => nil,
+        'section_display_name' => 'MECENGIRES 0109AL',
+        'term_id' => '2168'
+      }}
+      it_should_behave_like 'a well-parsed id set'
+    end
+    context 'dept_name and course_display_name present but compressed' do
+      let(:row) {{
+        'catalog_id' => '0109AL',
+        'course_display_name' => 'MECENGIRES 0109AL',
+        'dept_name' => 'MECENGIRES',
+        'section_display_name' => 'MECENGIRES 0109AL',
         'term_id' => '2168'
       }}
       it_should_behave_like 'a well-parsed id set'

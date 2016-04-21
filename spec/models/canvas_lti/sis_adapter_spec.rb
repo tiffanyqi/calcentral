@@ -67,20 +67,28 @@ describe CanvasLti::SisAdapter do
     describe '#get_sections_by_ids' do
       let(:dummy_sections) {
         [
-          {'section_id' => '12345', 'term_id' => '2168', 'primary' => 'true'},
-          {'section_id' => '12346', 'term_id' => '2168', 'primary' => 'false'}
+          {'section_id' => '12345', 'term_id' => '2168', 'primary' => 'true', 'course_display_name' => 'ENERES 210'},
+          {'section_id' => '12346', 'term_id' => '2168', 'primary' => 'false', 'course_display_name' => 'LS C70'}
         ]
       }
-      before { allow(EdoOracle::Queries).to receive(:get_sections_by_ids).and_return(dummy_sections) }
+      before do
+        allow(EdoOracle::Queries).to receive(:get_sections_by_ids).and_return(dummy_sections)
+        allow(EdoOracle::Queries).to receive(:get_subject_areas).and_return([
+          {'subjectarea' => 'ENE,RES'},
+          {'subjectarea' => 'L & S'},
+          {'subjectarea' => 'L&S'},
+          {'subjectarea' => 'MEC ENG'}
+        ])
+      end
+      let(:results) { CanvasLti::SisAdapter.get_sections_by_ids(section_ids, term_year, term_code) }
 
       it 'provides sections for section id list' do
         expect(EdoOracle::Queries).to receive(:get_sections_by_ids).with(expected_term_id, section_ids)
         expect(CampusOracle::Queries).to_not receive(:get_sections_from_ccns)
-        CanvasLti::SisAdapter.get_sections_by_ids(section_ids, term_year, term_code)
+        results
       end
 
       it 'adds course_cntl_num to each section' do
-        results = CanvasLti::SisAdapter.get_sections_by_ids(section_ids, term_year, term_code)
         expect(results.count).to eq 2
         expect(results[0]['section_id']).to eq '12345'
         expect(results[1]['section_id']).to eq '12346'
@@ -89,7 +97,6 @@ describe CanvasLti::SisAdapter do
       end
 
       it 'adds term_yr and term_cd to each section' do
-        results = CanvasLti::SisAdapter.get_sections_by_ids(section_ids, term_year, term_code)
         expect(results.count).to eq 2
         expect(results[0]['term_id']).to eq '2168'
         expect(results[1]['term_id']).to eq '2168'
@@ -100,12 +107,16 @@ describe CanvasLti::SisAdapter do
       end
 
       it 'adds primary_secondary_cd to each section' do
-        results = CanvasLti::SisAdapter.get_sections_by_ids(section_ids, term_year, term_code)
         expect(results.count).to eq 2
         expect(results[0]['primary']).to eq 'true'
         expect(results[1]['primary']).to eq 'false'
         expect(results[0]['primary_secondary_cd']).to eq 'P'
         expect(results[1]['primary_secondary_cd']).to eq 'S'
+      end
+
+      it 'decompresses subject areas' do
+        expect(results[0]['dept_name']).to eq 'ENE,RES'
+        expect(results[1]['dept_name']).to eq 'L & S'
       end
     end
   end
