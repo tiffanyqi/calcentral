@@ -35,8 +35,6 @@ Calcentral::Application.routes.draw do
   get '/api/my/campuslinks/refresh' => 'my_campus_links#refresh', :defaults => { :format => 'json' }
   get '/api/my/updated_feeds' => 'is_updated#list', :defaults => {:format => 'json'}
   get '/api/service_alerts' => 'service_alerts#get_feed', :as => :service_alerts, :defaults => { :format => 'json' }
-  get '/api/search_users/:id' => 'search_users#search_users', :via => :get, :defaults => { :format => 'json' }
-  get '/api/search_users/uid/:id' => 'search_users#search_users_by_uid', :via => :get, :defaults => { :format => 'json' }
   get '/api/media/:year/:term_code/:dept/:catalog_id' => 'mediacasts#get_media', :defaults => { :format => 'json' }
 
   # Google API writing endpoints
@@ -128,9 +126,13 @@ Calcentral::Application.routes.draw do
     post '/logout' => 'sessions#destroy', :as => :logout, :via => :post
   end
 
+  # Search for users
+  get '/api/search_users/:id' => 'search_users#search_users', :via => :get, :defaults => { :format => 'json' }
+  get '/api/search_users/uid/:id' => 'search_users#search_users_by_uid', :via => :get, :defaults => { :format => 'json' }
+  get '/api/search_users/id_or_name/:input' => 'search_users#by_id_or_name', :defaults => { :format => 'json' }
+
   # View-as endpoints
   get '/stored_users' => 'stored_users#get', :via => :get, :defaults => { :format => 'json' }
-  post '/api/search/students/by_name/:name' => 'search_students#by_name', :defaults => { :format => 'json' }
   post '/act_as' => 'act_as#start'
   post '/stop_act_as' => 'act_as#stop'
   post '/store_user/saved' => 'stored_users#store_saved_uid', via: :post, defaults: { format: 'json' }

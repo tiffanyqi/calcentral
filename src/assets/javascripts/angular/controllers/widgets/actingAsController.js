@@ -15,6 +15,10 @@ angular.module('calcentral.controllers').controller('ActingAsController', functi
     adminFactory.stopActAs().then(apiService.util.redirectToToolbox);
   };
 
+  $scope.admin.stopAdvisorActAs = function() {
+    adminFactory.stopAdvisorActAs().then(apiService.util.redirectToHome);
+  };
+
   /**
    * Delegate is done acting-as
    */

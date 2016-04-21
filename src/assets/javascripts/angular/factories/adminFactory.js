@@ -9,8 +9,9 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
   var actAsUrl = '/act_as';
   var advisorActAsUrl = '/advisor_act_as';
   var delegateActAsUrl = '/delegate_act_as';
-  var searchUsersUrl = '/api/search_users/';
-  var searchUsersByUidUrl = '/api/search_users/uid/';
+  var userByAnyIdUrl = '/api/search_users/';
+  var userByUidUrl = '/api/search_users/uid/';
+  var searchUsersURL = '/api/search_users/id_or_name/';
   var stopActAsUrl = '/stop_act_as';
   var stopAdvisorActAsUrl = '/stop_advisor_act_as';
   var stopDelegateActAsUrl = '/stop_delegate_act_as';
@@ -29,22 +30,31 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
   };
 
   var actAs = function(user) {
-    var isAdvisorOnly = apiService.user.profile.roles.advisor && !apiService.user.profile.isSuperuser && !apiService.user.profile.isViewer;
-    var url = isAdvisorOnly ? advisorActAsUrl : actAsUrl;
-    return $http.post(url, user);
+    return $http.post(actAsUrl, user);
   };
 
   var stopActAs = function() {
-    var url = apiService.user.profile.advisorActingAsUid ? stopAdvisorActAsUrl : stopActAsUrl;
-    return $http.post(url);
+    return $http.post(stopActAsUrl);
+  };
+
+  var advisorActAs = function(user) {
+    return $http.post(advisorActAsUrl, user);
+  };
+
+  var stopAdvisorActAs = function() {
+    return $http.post(stopAdvisorActAsUrl);
   };
 
   var userLookup = function(options) {
-    return apiService.http.request(options, searchUsersUrl + options.id);
+    return apiService.http.request(options, userByAnyIdUrl + options.id);
   };
 
   var userLookupByUid = function(options) {
-    return apiService.http.request(options, searchUsersByUidUrl + options.id);
+    return apiService.http.request(options, userByUidUrl + options.id);
+  };
+
+  var searchUsers = function(input) {
+    return $http.get(searchUsersURL + input);
   };
 
   var getStoredUsers = function(options) {
@@ -69,15 +79,18 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
 
   return {
     actAs: actAs,
+    advisorActAs: advisorActAs,
     delegateActAs: delegateActAs,
     deleteAllRecentUsers: deleteAllRecentUsers,
     deleteAllSavedUsers: deleteAllSavedUsers,
     deleteUser: deleteUser,
     getStoredUsers: getStoredUsers,
     stopActAs: stopActAs,
+    stopAdvisorActAs: stopAdvisorActAs,
     stopDelegateActAs: stopDelegateActAs,
     storeUser: storeUser,
     userLookup: userLookup,
+    searchUsers: searchUsers,
     userLookupByUid: userLookupByUid
   };
 });

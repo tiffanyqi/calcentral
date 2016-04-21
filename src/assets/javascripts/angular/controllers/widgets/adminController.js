@@ -114,7 +114,11 @@ angular.module('calcentral.controllers').controller('AdminController', function(
    * If 'user' is given, directly act as user.ldap_uid, else act as $scope.admin.actAs.id
    */
   var actAsUser = function(user) {
-    return adminFactory.actAs({
+    var isAdvisorOnly = apiService.user.profile.roles.advisor &&
+      !apiService.user.profile.isSuperuser &&
+      !apiService.user.profile.isViewer;
+    var actAs = isAdvisorOnly ? adminFactory.advisorActAs : adminFactory.actAs;
+    return actAs({
       uid: user.ldap_uid
     }).success(apiService.util.redirectToHome);
   };
@@ -124,7 +128,7 @@ angular.module('calcentral.controllers').controller('AdminController', function(
     $scope.admin.userPool = [];
 
     if (user && user.ldap_uid) {
-      return actAsUser();
+      return actAsUser(user);
     }
 
     if (!$scope.admin.actAs || !$scope.admin.actAs.id) {
