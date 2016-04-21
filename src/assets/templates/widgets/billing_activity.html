@@ -143,7 +143,7 @@
                     <strong>Original Amount:</strong>
                     <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemLineAmount"></span>
                   </div>
-                  <div data-ng-if="item.itemStatus && (item.itemType === 'Charge' || item.itemType === 'Refund')">
+                  <div data-ng-if="item.itemStatus && (item.itemType === 'Charge' || item.itemType === 'Refund') && filter.choice !== 'balance'">
                     <strong>Status:</strong>
                     <span data-ng-bind="item.itemStatus"></span>
                   </div>
