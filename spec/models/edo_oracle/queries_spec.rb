@@ -71,7 +71,7 @@ describe EdoOracle::Queries, :ignore => true do
     it 'fetches expected data' do
       results = EdoOracle::Queries.get_enrolled_sections(uid, [term])
       expect(results.count).to eq 5
-      expected_keys = ['section_id', 'term_id', 'course_title', 'course_title_short', 'dept_name', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'display_name', 'catalog_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix', 'enroll_limit', 'enroll_status', 'waitlist_position', 'units', 'grade', 'grading_basis']
+      expected_keys = ['section_id', 'term_id', 'course_title', 'course_title_short', 'dept_name', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'course_display_name', 'section_display_name', 'catalog_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix', 'enroll_limit', 'enroll_status', 'waitlist_position', 'units', 'grade', 'grading_basis']
       results.each do |result|
         expect(result['term_id']).to eq '2102'
         expect(result).to have_keys(expected_keys)
@@ -102,7 +102,7 @@ describe EdoOracle::Queries, :ignore => true do
       expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
       results.each do |result|
         expect(result).to have_keys(expected_keys)
-        expect(result['display_name']).to eq 'ESPM 155AC'
+        expect(result['section_display_name']).to eq 'ESPM 155AC'
         expect(result['instruction_format']).to eq 'DIS'
         expect(result['primary']).to eq 'false'
         expect(result['term_id']).to eq fall_term_id
@@ -144,6 +144,15 @@ describe EdoOracle::Queries, :ignore => true do
       result_codes = results.collect { |result| result['term_code'] }
       # check for Spring 2015 - Summer 2017 terms
       expect(result_codes).to include('2152', '2155', '2158', '2162', '2165', '2168', '2172', '2175')
+    end
+  end
+
+  describe '.get_subject_areas', :testext => true do
+    it 'returns subject areas' do
+      results = EdoOracle::Queries.get_subject_areas
+      subject_areas = results.map { |result| result['subjectarea'] }
+      expect(subject_areas).to all(be_present)
+      expect(subject_areas).to include('DES INV', 'DEV ENG', 'ENE,RES', 'EL ENG', 'L & S', 'MEC ENG', 'XL&S')
     end
   end
 

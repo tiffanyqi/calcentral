@@ -2,14 +2,14 @@ module EdoOracle
   class Queries < Connection
     include ActiveRecordHelper
 
-    CANONICAL_SECTION_ORDERING = 'dept_name, catalog_root, catalog_prefix nulls first, catalog_suffix nulls first, primary DESC, instruction_format, display_name, section_num'
+    CANONICAL_SECTION_ORDERING = 'dept_name, catalog_root, catalog_prefix nulls first, catalog_suffix nulls first, primary DESC, instruction_format, section_display_name, section_num'
 
     # Changes from CampusOracle::Queries section columns:
     #   - 'course_cntl_num' now 'section_id'
     #   - 'term_yr' and 'term_cd' replaced by 'term_id'
     #   - 'catalog_suffix_1' and 'catalog_suffix_2' replaced by 'catalog_suffix' (combined)
     #   - 'primary_secondary_cd' replaced by Boolean 'primary'
-    #   - 'display_name' added
+    #   - 'course_display_name' and 'section_display_name' added
     SECTION_COLUMNS = <<-SQL
       sec."id" AS section_id,
       sec."term-id" AS term_id,
@@ -20,7 +20,8 @@ module EdoOracle
       sec."sectionNumber" AS section_num,
       sec."component-code" as instruction_format,
       sec."primaryAssociatedSectionId" as primary_associated_section_id,
-      sec."displayName" AS display_name,
+      sec."displayName" AS section_display_name,
+      xlat."courseDisplayName" AS course_display_name,
       crs."catalogNumber-formatted" AS catalog_id,
       crs."catalogNumber-number" AS catalog_root,
       crs."catalogNumber-prefix" AS catalog_prefix,
@@ -259,6 +260,18 @@ module EdoOracle
           SISEDO.TERM_TBL_VW term
         ORDER BY
           term_start_date desc
+        SQL
+        result = connection.select_all(sql)
+      }
+      result
+    end
+
+    def self.get_subject_areas
+      result = []
+      return result if fake?
+      use_pooled_connection {
+        sql = <<-SQL
+          SELECT DISTINCT "subjectArea" FROM SISEDO.API_COURSEIDENTIFIERSV00_VW
         SQL
         result = connection.select_all(sql)
       }
