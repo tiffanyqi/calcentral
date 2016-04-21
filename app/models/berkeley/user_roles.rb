@@ -68,6 +68,7 @@ module Berkeley
       # is an ex_student and (2) the user was not identified as an active student in the logic above.
       if expired_student && [:student, :undergrad, :graduate].none? { |s| roles[s] }
         roles.merge! find_matching_roles(ldap_groups, {
+          "#{group_prefix}:students-grad-grace,#{group_suffix}" => :recentStudent,
           "#{group_prefix}:students-ug-grace,#{group_suffix}" => :recentStudent,
           "#{group_prefix}:summer-grace,#{group_suffix}" => :recentStudent
         })
