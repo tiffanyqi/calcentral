@@ -8,7 +8,9 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   $scope.activityLimit = 100;
   $scope.billing = {
     data: {},
+    hasCarsActivity: false,
     isLoading: true,
+    isLoadingCars: true,
     sort: {
       column: 'itemEffectiveDate',
       descending: true
@@ -61,6 +63,18 @@ angular.module('calcentral.controllers').controller('BillingController', functio
         itemTermId: billingItem.itemTermId
       });
     }
+  };
+
+  var hasCarsActivity = function(data) {
+    $scope.billing.hasCarsActivity = !!_.get(data, 'data.activity.length');
+  };
+
+  var loadCarsInfo = function() {
+    financesFactory.getFinances()
+      .then(hasCarsActivity)
+      .then(function() {
+        $scope.billing.isLoadingCars = false;
+      });
   };
 
   /**
@@ -142,6 +156,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   var loadBillingInfo = function() {
     financesFactory.getCsFinances()
       .then(parseBillingInfo)
+      .then(loadCarsInfo)
       .then(function() {
         $scope.billing.isLoading = false;
       });
