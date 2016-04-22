@@ -21,6 +21,14 @@
     margin-right: 5px;
   }
 }
+.cc-flex-space-between-vertical-15 > div {
+  &:not(:first-child) {
+    margin-top: 15px;
+  }
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+}
 .cc-flex-wrap {
   flex-wrap: wrap;
 }
