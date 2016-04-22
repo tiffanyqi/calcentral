@@ -14,7 +14,15 @@ angular.module('calcentral.services').service('adminService', function(adminFact
     }).success(apiService.util.redirectToHome);
   };
 
+  var getLdapUid = function(user) {
+    if (user === null) {
+      return null;
+    }
+    return ('ldap_uid' in user) ? user.ldap_uid : user.ldapUid;
+  };
+
   return {
-    actAs: actAs
+    actAs: actAs,
+    getLdapUid: getLdapUid
   };
 });

@@ -1,4 +1,3 @@
-/* jshint camelcase: false */
 'use strict';
 
 var angular = require('angular');
@@ -36,7 +35,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       uid: $routeParams.uid
     }).success(function(data) {
       angular.extend($scope.targetUser, _.get(data, 'attributes'));
-      $scope.targetUser.ldap_uid = $routeParams.uid;
+      $scope.targetUser.ldapUid = $routeParams.uid;
       $scope.targetUser.addresses = apiService.profile.fixFormattedAddresses(_.get(data, 'contacts.feed.student.addresses'));
       $scope.targetUser.phones = _.get(data, 'contacts.feed.student.phones');
       $scope.targetUser.emails = _.get(data, 'contacts.feed.student.emails');

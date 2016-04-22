@@ -1,4 +1,3 @@
-/* jshint camelcase: false */
 'use strict';
 
 var angular = require('angular');
@@ -19,13 +18,13 @@ angular.module('calcentral.controllers').controller('AdminController', function(
 
   $scope.admin.storeSavedUser = function(user) {
     return adminFactory.storeUser({
-      uid: user.ldap_uid
+      uid: adminService.getLdapUid(user)
     }).success(getStoredUsersUncached);
   };
 
   $scope.admin.deleteSavedUser = function(user) {
     return adminFactory.deleteUser({
-      uid: user.ldap_uid
+      uid: adminService.getLdapUid(user)
     }).success(getStoredUsersUncached);
   };
 
@@ -113,7 +112,7 @@ angular.module('calcentral.controllers').controller('AdminController', function(
     $scope.admin.actAsErrorStatus = '';
     $scope.admin.userPool = [];
 
-    if (user && user.ldap_uid) {
+    if (adminService.getLdapUid(user)) {
       return adminService.actAs(user);
     }
 
@@ -144,7 +143,7 @@ angular.module('calcentral.controllers').controller('AdminController', function(
 
     var lastUser = $scope.admin.storedUsers.recent[0];
     // Display the last acted as UID in the "View as" input box
-    $scope.admin.actAs.id = parseInt(lastUser && lastUser.ldap_uid, 10) || '';
+    $scope.admin.actAs.id = parseInt(adminService.getLdapUid(lastUser), 10) || '';
   };
 
   /**

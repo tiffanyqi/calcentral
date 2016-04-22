@@ -30,8 +30,8 @@
             </div>
           </div>
           <p data-ng-bind="userSearch.tabs.search.message"></p>
-          <div data-cc-spinner-directive="userSearch.tabs.search.inProgress">
-            <div data-ng-if="userSearch.currentTab.error && !userSearch.tabs.search.inProgress">
+          <div data-cc-spinner-directive="userSearch.tabs.search.queryRunning">
+            <div data-ng-if="userSearch.currentTab.error && !userSearch.tabs.search.queryRunning">
               <h3 data-ng-bind="userSearch.currentTab.error.summary"></h3>
               <div data-ng-bind="userSearch.currentTab.error.description"></div>
             </div>

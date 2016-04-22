@@ -16,6 +16,13 @@
           </a>
         </div>
         <div>(<span data-ng-bind="user.student_id"></span>)</div>
+        <div>
+          <button class="cc-button-link" data-ng-click="user.delete()" data-ng-if="user.saved">Delete</button>
+          <button class="cc-button-link" data-ng-click="user.save()" data-ng-if="!user.saved">Save</button>
+        </div>
+        <div>
+          <button class="cc-button-link" data-ng-click="user.actAs()">view as</button>
+        </div>
       </div>
     </div>
   </li>
