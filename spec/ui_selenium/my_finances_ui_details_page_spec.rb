@@ -111,6 +111,7 @@ describe 'My Finances details page', :testui => true do
         end
         it 'filter transactions by balance due by default' do
           @my_finances_details_page.load_page
+          @my_finances_details_page.wait_until(WebDriverUtils.page_event_timeout) { @my_finances_details_page.activity_filter_select_element.options.any? }
           @my_finances_details_page.activity_filter_select.should eql('Balance')
         end
         it 'show no results when filtered by a string that does not exist' do
