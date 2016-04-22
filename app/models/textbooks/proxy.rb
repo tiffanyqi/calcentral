@@ -22,6 +22,7 @@ module Textbooks
     def google_book(isbn)
       google_book_url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn
       google_response = {}
+      return google_response if @fake
       response = get_response(google_book_url).parsed_response
 
       if response['totalItems'] > 0
