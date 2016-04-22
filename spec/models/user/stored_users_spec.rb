@@ -70,8 +70,8 @@ describe User::StoredUsers do
 
       users = User::StoredUsers.get(owner_uid)
 
-      expect(users[:saved][0]['ldap_uid']).to eq stored_uid
-      expect(users[:recent][0]['ldap_uid']).to eq stored_uid
+      expect(users[:saved][0][:ldap_uid]).to eq stored_uid
+      expect(users[:recent][0][:ldap_uid]).to eq stored_uid
     end
 
     it 'should report whether recent uids are saved' do
@@ -88,8 +88,8 @@ describe User::StoredUsers do
       User::StoredUsers.store_recent_uid(owner_uid, unsaved_uid)
 
       users = User::StoredUsers.get(owner_uid)
-      expect(users[:recent]).to include({'ldap_uid' => saved_uid, 'saved' => true})
-      expect(users[:recent]).to include({'ldap_uid' => unsaved_uid, 'saved' => false})
+      expect(users[:recent]).to include({ldap_uid: saved_uid, saved: true})
+      expect(users[:recent]).to include({ldap_uid: unsaved_uid, saved: false})
     end
 
   end

@@ -29,7 +29,8 @@ module User
       uid_hash = {}
 
       users_found.each do |user|
-        uid_hash[user['ldap_uid']] = user
+        user.symbolize_keys!
+        uid_hash[user[:ldap_uid]] = user
       end
 
       saved_uid_set = Set.new
@@ -38,14 +39,16 @@ module User
         user = uid_hash[entry[:stored_uid]]
         if user.present?
           saved_uid_set.add entry[:stored_uid]
+          user[:saved] = true
           users[:saved] << user
         end
       end
 
       uid_entries[:recent].each do |entry|
-        user = uid_hash[entry[:stored_uid]]
+        uid = entry[:stored_uid]
+        user = uid_hash[uid]
         if user.present?
-          users[:recent] << user.merge('saved' => saved_uid_set.include?(entry[:stored_uid]))
+          users[:recent] << user.merge(saved: saved_uid_set.include?(uid))
         end
       end
 
