@@ -7,7 +7,7 @@ var _ = require('lodash');
 /**
  * Admin controller
  */
-angular.module('calcentral.controllers').controller('AdminController', function(adminFactory, apiService, $scope) {
+angular.module('calcentral.controllers').controller('AdminController', function(adminFactory, adminService, apiService, $scope) {
   $scope.admin = {
     actAs: {
       id: ''
@@ -109,26 +109,12 @@ angular.module('calcentral.controllers').controller('AdminController', function(
     });
   };
 
-  /**
-   * Act as another user
-   * If 'user' is given, directly act as user.ldap_uid, else act as $scope.admin.actAs.id
-   */
-  var actAsUser = function(user) {
-    var isAdvisorOnly = apiService.user.profile.roles.advisor &&
-      !apiService.user.profile.isSuperuser &&
-      !apiService.user.profile.isViewer;
-    var actAs = isAdvisorOnly ? adminFactory.advisorActAs : adminFactory.actAs;
-    return actAs({
-      uid: user.ldap_uid
-    }).success(apiService.util.redirectToHome);
-  };
-
   $scope.admin.actAsUser = function(user) {
     $scope.admin.actAsErrorStatus = '';
     $scope.admin.userPool = [];
 
     if (user && user.ldap_uid) {
-      return actAsUser(user);
+      return adminService.actAs(user);
     }
 
     if (!$scope.admin.actAs || !$scope.admin.actAs.id) {
@@ -145,7 +131,7 @@ angular.module('calcentral.controllers').controller('AdminController', function(
         $scope.admin.userPool = response.users;
         return;
       }
-      return actAsUser(response.users[0]);
+      return adminService.actAs(response.users[0]);
     });
   };
 

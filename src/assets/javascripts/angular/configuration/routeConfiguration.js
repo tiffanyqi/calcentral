@@ -90,9 +90,9 @@ angular.module('calcentral.config').config(function($routeProvider) {
     templateUrl: 'profile.html',
     controller: 'ProfileController'
   }).
-  when('/advising/student/:uid', {
-    templateUrl: 'advising_student.html',
-    controller: 'AdvisingStudentController',
+  when('/user/overview/:uid', {
+    templateUrl: 'user_overview.html',
+    controller: 'UserOverviewController',
     isAdvisingStudentLookup: true
   }).
   when('/toolbox', {

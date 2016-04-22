@@ -1,17 +1,18 @@
+/* jshint camelcase: false */
 'use strict';
 
 var angular = require('angular');
 var _ = require('lodash');
 
 /**
- * Advisor student overview controller
+ * Preview of user profile prior to viewing-as
  */
-angular.module('calcentral.controllers').controller('AdvisingStudentController', function(advisingFactory, apiService, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('UserOverviewController', function(adminService, advisingFactory, apiService, $routeParams, $scope) {
   $scope.academics = {
     isLoading: true,
     excludeLinksToRegistrar: true
   };
-  $scope.student = {
+  $scope.targetUser = {
     isLoading: true
   };
 
@@ -34,14 +35,14 @@ angular.module('calcentral.controllers').controller('AdvisingStudentController',
     advisingFactory.getStudent({
       uid: $routeParams.uid
     }).success(function(data) {
-      angular.extend($scope.student, _.get(data, 'attributes'));
-      $scope.student.uid = $routeParams.uid;
-      $scope.student.addresses = apiService.profile.fixFormattedAddresses(_.get(data, 'contacts.feed.student.addresses'));
-      $scope.student.phones = _.get(data, 'contacts.feed.student.phones');
-      $scope.student.emails = _.get(data, 'contacts.feed.student.emails');
+      angular.extend($scope.targetUser, _.get(data, 'attributes'));
+      $scope.targetUser.ldap_uid = $routeParams.uid;
+      $scope.targetUser.addresses = apiService.profile.fixFormattedAddresses(_.get(data, 'contacts.feed.student.addresses'));
+      $scope.targetUser.phones = _.get(data, 'contacts.feed.student.phones');
+      $scope.targetUser.emails = _.get(data, 'contacts.feed.student.emails');
       // 'student.fullName' is expected by shared code (e.g., photo unavailable widget)
-      $scope.student.fullName = $scope.student.defaultName;
-      apiService.util.setTitle($scope.student.defaultName);
+      $scope.targetUser.fullName = $scope.targetUser.defaultName;
+      apiService.util.setTitle($scope.targetUser.defaultName);
       // Get links to advising resources
       advisingFactory.getAdvisingResources({
         uid: $routeParams.uid
@@ -49,9 +50,9 @@ angular.module('calcentral.controllers').controller('AdvisingStudentController',
         $scope.ucAdvisingResources = _.get(data, 'data.feed.ucAdvisingResources');
       });
     }).error(function(data, status) {
-      $scope.student.error = errorReport(status, data.error);
+      $scope.targetUser.error = errorReport(status, data.error);
     }).finally(function() {
-      $scope.student.isLoading = false;
+      $scope.targetUser.isLoading = false;
     });
   };
 
@@ -69,6 +70,10 @@ angular.module('calcentral.controllers').controller('AdvisingStudentController',
     }).finally(function() {
       $scope.academics.isLoading = false;
     });
+  };
+
+  $scope.targetUser.actAs = function() {
+    adminService.actAs($scope.targetUser);
   };
 
   $scope.$on('calcentral.api.user.isAuthenticated', function(event, isAuthenticated) {

@@ -1,0 +1,22 @@
+<ul class="cc-widget-list" data-ng-if="userSearch.selectedTab.users && userSearch.selectedTab.users.length > 0">
+  <li data-ng-repeat="user in userSearch.selectedTab.users" data-ng-class="{'cc-widget-list-selected': user.show}">
+    <span class="cc-visuallyhidden" data-ng-bind-template="Show {{user.show ? 'less' : 'more'}} information about {{user.person_name}}"></span>
+    <div
+      data-ng-class="{'cc-widget-list-hover-opened':(user.show)}"
+      data-cc-accessible-focus-directive
+      data-ng-click="api.widget.toggleShow($event, search.users, user, 'Up Next')">
+      <div class="cc-flex cc-flex-space-between-horizontal-5">
+        <div>
+          <a href="/user/overview/{{user.ldap_uid}}">
+            <span data-ng-bind="user.person_name" data-ng-bind="user.person_name"></span>
+            <div data-ng-if="!user.person_name">
+              <span data-ng-bind="user.first_name"></span>
+              <span data-ng-bind="user.last_name"></span>
+            </div>
+          </a>
+        </div>
+        <div>(<span data-ng-bind="user.student_id"></span>)</div>
+      </div>
+    </div>
+  </li>
+</ul>

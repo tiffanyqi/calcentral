@@ -13,6 +13,7 @@
 
   <div class="medium-4 columns cc-column-last">
     <div data-ng-include="'widgets/activity.html'"></div>
+    <div data-ng-include="'widgets/toolbox/user_search.html'" data-ng-if="api.user.profile.features.csAdvisorStudentLookup && api.user.profile.roles.advisor"></div>
     <div data-ng-include="'widgets/advisor/resources.html'" data-ng-if="api.user.profile.roles.advisor"></div>
     <div data-ng-include="'faculty-resources.html'" data-ng-if="api.user.profile.roles.faculty || api.user.profile.hasInstructorHistory"></div>
   </div>
