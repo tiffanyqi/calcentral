@@ -258,6 +258,8 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
       angular.extend($scope, data);
       if (userService.profile.features.csBilling) {
         loadCsInfo();
+      } else {
+        $scope.csActivity.isLoadingCs = false;
       }
 
       if (data && data.summary && data.activity) {
@@ -273,6 +275,7 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
       }
     }).error(function(data) {
       angular.extend($scope, data);
+      $scope.csActivity.isLoadingCs = false;
     });
   };
 
