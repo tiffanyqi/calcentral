@@ -31,13 +31,13 @@ describe MyAcademics::Teaching do
       expect(bio1a[:url]).to eq '/academics/teaching-semester/fall-2013/class/biology-1a'
     end
     it 'should properly translate sample COG SCI course' do
-      cogsci = teaching[0][:classes].select {|course| course[:listings].first[:course_code] == 'COG SCI C147'}[0]
+      cogsci = teaching[0][:classes].find {|course| course[:listings].find {|listing| listing[:course_code] == 'COG SCI C147'}}
       expect(cogsci).not_to be_empty
       expect(cogsci).to include({
         title: 'Language Disorders',
         url: '/academics/teaching-semester/fall-2013/class/cog_sci-c147'
       })
-      expect(cogsci[:listings].first[:dept]).to eq 'COG SCI'
+      expect(cogsci[:listings].map {|listing| listing[:dept]}).to include 'COG SCI'
     end
     it 'should properly translate section-level data' do
       bio1a = teaching[0][:classes].find { |course| course[:listings].first[:course_code] == 'BIOLOGY 1A' }
@@ -132,6 +132,30 @@ describe MyAcademics::Teaching do
             role: 'Instructor'
           },
           {
+            id: 'sumerian-c147-2013-D',
+            slug: 'sumerian-c147',
+            course_code: 'SUMERIAN C147',
+            term_yr: '2013',
+            term_cd: 'D',
+            term_id: '2138',
+            dept: 'SUMERIAN',
+            catid: 'C147',
+            course_catalog: 'C147',
+            emitter: 'Campus',
+            name: nil,
+            sections: [
+              {
+                ccn: '10171',
+                instruction_format: 'LEC',
+                is_primary_section: true,
+                section_label: 'LEC 001',
+                section_number: '001',
+                cross_listing_hash: '2138-12345-LEC-001'
+              }
+            ],
+            role: 'Instructor'
+          },
+          {
             id: 'cog_sci-c147-2013-D',
             slug: 'cog_sci-c147',
             course_code: 'COG SCI C147',
@@ -149,7 +173,8 @@ describe MyAcademics::Teaching do
                 instruction_format: 'LEC',
                 is_primary_section: true,
                 section_label: 'LEC 001',
-                section_number: '001'
+                section_number: '001',
+                cross_listing_hash: '2138-12345-LEC-001'
               }
             ],
             role: 'Instructor'
@@ -206,6 +231,11 @@ describe MyAcademics::Teaching do
       }
     end
     it_should_behave_like 'a properly translated feed'
+    it 'merges cross-listings preserving course title' do
+      language_disorders = teaching[0][:classes].find { |course| course[:title] == 'Language Disorders' }
+      expect(language_disorders[:listings].map { |listing| listing[:dept]}).to match_array ['COG SCI', 'SUMERIAN']
+      expect(language_disorders[:sections].map { |section| section[:ccn]}).to match_array %w(10171 16171)
+    end
   end
 
   describe '#courses_list_from_ccns' do
