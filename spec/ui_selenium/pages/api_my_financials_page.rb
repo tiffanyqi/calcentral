@@ -4,12 +4,9 @@ class ApiMyFinancialsPage
   include ClassLogger
 
   def get_json(driver)
-    logger.info('Parsing JSON from /api/my/financials')
+    logger.info 'Parsing JSON from /api/my/financials'
     navigate_to "#{WebDriverUtils.base_url}/api/my/financials"
-    wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.page_load_timeout)
-    wait.until { driver.find_element(:xpath => '//pre[contains(.,"Financials::MyFinancials")]') }
-    body = driver.find_element(:xpath, '//pre').text
-    @parsed = JSON.parse(body)
+    @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
   end
 
   def has_cars_data?
