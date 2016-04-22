@@ -10,7 +10,7 @@ module MyActivities
     def self.append!(uid, activities)
       result = []
       use_pooled_connection {
-        result = Notifications::Notification.where(:uid => uid, :occurred_at => Time.at(MyActivities::Merged.cutoff_date)..Time.now) || []
+        result = Notifications::Notification.where(:uid => uid.to_s, :occurred_at => Time.at(MyActivities::Merged.cutoff_date)..Time.now) || []
       }
       result.each do |notification|
         translator = (self.translators[notification.translator] ||= "Notifications::#{notification.translator}".constantize.new)
