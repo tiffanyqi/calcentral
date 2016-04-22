@@ -15,10 +15,7 @@ angular.module('calcentral.services').service('adminService', function(adminFact
   };
 
   var getLdapUid = function(user) {
-    if (user === null) {
-      return null;
-    }
-    return ('ldap_uid' in user) ? user.ldap_uid : user.ldapUid;
+    return user && (user.ldap_uid || user.ldapUid);
   };
 
   return {
