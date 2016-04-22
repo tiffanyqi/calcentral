@@ -113,11 +113,13 @@ module MyAcademics
         if (existing_cross_listed_course = term.find { |course| course[:crossListingHash] == cross_listing_hash })
           existing_cross_listed_course[:listings].concat working_course[:listings]
           concat_sections_flagging_crosslistings(working_course, existing_cross_listed_course)
-          #Since courses have only one slug and URL, keep consistent by using the first alphabetically.
+          # Since courses have only one slug and URL, keep consistent by using the first alphabetically.
           if working_course[:slug] < existing_cross_listed_course[:slug]
             existing_cross_listed_course[:slug] = working_course[:slug]
             existing_cross_listed_course[:url] = working_course[:url]
           end
+          # Prefer present to absent course title.
+          existing_cross_listed_course[:title] ||= working_course[:title]
         else
           working_course[:crossListingHash] = cross_listing_hash
           append_with_scheduled_section_count(term, working_course)
