@@ -1,13 +1,13 @@
-<div class="cc-widget cc-widget-profile" data-ng-controller="AdminController">
+<div class="cc-widget cc-widget-profile">
   <div class="cc-widget-title">
     <h2>Personal Summary</h2>
   </div>
-  <div class="cc-widget-text" data-cc-spinner-directive="student.isLoading">
-    <div data-ng-if="student.error">
-      <h3 data-ng-bind="student.error.summary"></h3>
-      <div data-ng-bind="student.error.description"></div>
+  <div class="cc-widget-text" data-cc-spinner-directive="targetUser.isLoading">
+    <div data-ng-if="targetUser.error">
+      <h3 data-ng-bind="targetUser.error.summary"></h3>
+      <div data-ng-bind="targetUser.error.description"></div>
     </div>
-    <div data-ng-if="!student.error">
+    <div data-ng-if="!targetUser.error">
       <div class="cc-table cc-table-top-border cc-clearfix">
         <table class="cc-widget-profile-table">
           <tbody>
@@ -17,8 +17,8 @@
             </th>
             <td>
               <div>
-                <strong data-ng-bind="student.defaultName"></strong>
-                (<button type="submit" class="cc-button-link" data-ng-click="admin.updateIDField(student.uid);admin.actAsUser()">view as</button>)
+                <strong data-ng-bind="targetUser.defaultName"></strong>
+                (<button class="cc-button-link" data-ng-click="targetUser.actAs()">view as</button>)
               </div>
             </td>
           </tr>
@@ -28,13 +28,13 @@
 
       <div data-ng-include="'widgets/academics/college_and_level.html'"></div>
 
-      <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="student.addresses || student.phones || student.emails">
+      <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="targetUser.addresses || targetUser.phones || targetUser.emails">
         <table class="cc-widget-profile-table">
           <tbody>
           <tr>
             <th>Contact Information</th>
             <td>
-              <div data-ng-repeat="address in student.addresses">
+              <div data-ng-repeat="address in targetUser.addresses">
                 <div>
                   <strong data-ng-bind-template="{{address.type.description}} Address"></strong>
                 </div>
@@ -44,7 +44,7 @@
                 </div>
               </div>
               <br/>
-              <div data-ng-repeat="phone in student.phones">
+              <div data-ng-repeat="phone in targetUser.phones">
                 <div>
                   <strong data-ng-bind-template="{{phone.type.description}} Phone"></strong>
                   <span data-ng-if="phone.primary">(preferred)</span>
@@ -55,7 +55,7 @@
                 </div>
               </div>
               <br/>
-              <div data-ng-repeat="email in student.emails">
+              <div data-ng-repeat="email in targetUser.emails">
                 <div>
                   <strong data-ng-bind-template="{{email.type.description}} Email"></strong>
                   <span data-ng-if="email.primary">(preferred)</span>

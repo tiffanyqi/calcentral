@@ -24,10 +24,10 @@ class SearchUsersController < ApplicationController
       require_advisor current_user.real_user_id
       filter = { roles: [:applicant, :student, :recentStudent] }
     end
-    input = params.require 'input'
-    users = input =~ /\A\d+\z/ ?
-      User::SearchUsers.new(id: input).search_users :
-      User::SearchUsersByName.new.search_by(input, filter)
+    id_or_name = params.require 'input'
+    users = id_or_name =~ /\A\d+\z/ ?
+      User::SearchUsers.new(id: id_or_name).search_users :
+      User::SearchUsersByName.new.search_by(id_or_name, filter)
     render json: { users: users.take(limit) }.to_json
   end
 
