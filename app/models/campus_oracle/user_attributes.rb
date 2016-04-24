@@ -27,9 +27,6 @@ module CampusOracle
 
         result[:reg_status][:transitionTerm] = true if term_transition?
 
-        # SISRP-17479 CampusOracle residency information is no longer current and must be suppressed.
-        result[:california_residency] = nil
-
         result
       else
         {}

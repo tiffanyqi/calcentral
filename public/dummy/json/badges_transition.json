@@ -531,11 +531,6 @@
     }
   },
   "studentInfo": {
-    "californiaResidency": {
-      "summary": "Non-Resident",
-      "explanation": "<a href=\"http://registrar.berkeley.edu/establish.html\">Establishing California residency</a>",
-      "needsAction": false
-    },
     "regStatus": {
       "code": " ",
       "summary": "Not registered for Summer 2015",
