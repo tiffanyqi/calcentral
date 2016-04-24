@@ -48,7 +48,7 @@ describe CacheController do
     end
 
     it 'should allow superusers users to warmup a single users cache' do
-      HotPlate.should_receive(:request_warmup).once.with(1234)
+      HotPlate.should_receive(:request_warmup).once.with('1234')
       get :warm, {:uid => '1234', :format => 'json'}
       expect(response.status).to eq(200)
       expect(response.body).to be
