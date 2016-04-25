@@ -13,6 +13,7 @@ describe 'My Academics enrollments', :testui => true do
       test_output_heading = ['UID', 'Semester', 'CCN', 'Course Code', 'Course Title', 'Section', 'Primary?',
                             'Grade Option', 'Grade', 'Units', 'Schedule', 'Wait List Position']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
+      links_tested = false
 
       test_users.each do |user|
         if user['enrollments']
@@ -62,6 +63,31 @@ describe 'My Academics enrollments', :testui => true do
                   it "offers no 'Show More' button for UID #{uid}" do
                     expect(show_more_button_visible).to be false
                   end
+                end
+
+                transcript_link = my_academics.request_transcripts_link?
+                it "offers a 'Request Transcripts' link for UID #{uid}" do
+                  expect(transcript_link).to be true
+                end
+
+                enroll_verif_link = my_academics.enroll_verif_link?
+                it "offers a 'Request your enrollment verification' link for UID #{uid}" do
+                  expect(enroll_verif_link).to be true
+                end
+
+                unless links_tested
+                  transcript_link_works = WebDriverUtils.verify_external_link(driver, my_academics.request_transcripts_link_element, 'Academic Records | Office of the Registrar')
+                  it "offers a valid 'Transcripts' link for UID #{uid}" do
+                    expect(transcript_link_works).to be true
+                  end
+
+                  enroll_verification_works = WebDriverUtils.verify_external_link(driver, my_academics.enroll_verif_link_element, 'Academic Records | Office of the Registrar')
+                  it "offers a valid 'Enrollment Verification' link for UID #{uid}" do
+                    expect(enroll_verification_works).to be true
+                  end
+
+                  links_tested = true
+
                 end
 
                 all_semesters.each do |semester|

@@ -4,12 +4,9 @@ class ApiMyFinAidPage
   include ClassLogger
 
   def get_json(driver)
-    logger.info('Parsing JSON from /api/my/finaid')
+    logger.info 'Parsing JSON from /api/my/finaid'
     navigate_to "#{WebDriverUtils.base_url}/api/my/finaid"
-    wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.page_load_timeout)
-    wait.until { driver.find_element(:xpath => '//pre[contains(.,"Finaid::Merged")]') }
-    body = driver.find_element(:xpath, '//pre').text
-    @parsed = JSON.parse(body)
+    @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
   end
 
   def title(item)
@@ -68,65 +65,46 @@ class ApiMyFinAidPage
   end
 
   def all_message_titles_sorted
-    titles = []
-    all_messages_sorted.each { |message| titles << title(message).gsub(/\s+/, ' ') }
-    titles
+    all_messages_sorted.map { |message| title(message).gsub(/\s+/, ' ') }
   end
 
   def all_message_summaries_sorted
-    summaries = []
-    all_messages_sorted.each { |message| summaries << summary(message).gsub(/\s+/, '') }
-    summaries
+    all_messages_sorted.map { |message| summary(message).gsub(/\s+/, '') }
   end
 
   def all_message_sources_sorted
-    sources = []
-    all_messages_sorted.each { |message| sources << source(message) }
-    sources
+    all_messages_sorted.map { |message| source message }
   end
 
   def all_message_dates_sorted
-    dates = []
-    all_messages_sorted.each do |message|
+    all_messages_sorted.map do |message|
       unless date(message).blank?
         date = date_epoch(message)
         ui_date = date.strftime('%b %-d')
         # Include the year in the visible date if it does not match the current year
         ui_date << date.strftime(' %Y') if date.strftime('%Y') != Date.today.strftime('%Y')
-        dates << ui_date
       end
     end
-    dates
   end
 
   def all_message_source_urls_sorted
-    urls = []
-    all_messages_sorted.each { |message| urls << source_url(message).gsub(/\/\s*\z/, '') }
-    urls
+    all_messages_sorted.map { |message| source_url(message).gsub(/\/\s*\z/, '') }
   end
 
   def all_message_types_sorted
-    types = []
-    all_messages_sorted.each { |message| types << type(message) }
-    types
+    all_messages_sorted.map { |message| type message }
   end
 
   def all_undated_alert_messages
-    undated_alerts = []
-    undated_messages.each { |message| undated_alerts << message if type(message) == 'alert' }
-    undated_alerts
+    undated_messages.map { |message| message if type(message) == 'alert' }
   end
 
   def all_message_years_sorted
-    years = []
-    all_messages_sorted.each { |message| years << term_year(message) }
-    years
+    all_messages_sorted.map { |message| term_year message }
   end
 
   def all_message_statuses_sorted
-    statuses = []
-    all_messages_sorted.each { |message| statuses << status(message) }
-    statuses
+    all_messages_sorted.map { |message| status message }
   end
 
 end
