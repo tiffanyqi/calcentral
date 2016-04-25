@@ -9,6 +9,7 @@ describe 'My Dashboard My Classes card', :testui => true do
       driver = WebDriverUtils.launch_browser
       test_users = UserUtils.load_test_users
       testable_users = []
+      faculty_links_tested = false
       test_output_heading = ['UID', 'Enrolled', 'Course Sites', 'Teaching', 'Teaching Sites', 'Other Sites']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
@@ -329,6 +330,79 @@ describe 'My Dashboard My Classes card', :testui => true do
               end
             end
 
+            # FACULTY RESOURCES CARD
+
+            faculty_resources = CalCentralPages::MyDashboardFacultyResourcesCard.new driver
+            faculty_resources.load_page
+
+            sched_classes_link = faculty_resources.schedule_of_classes?
+            class_catalog_link = faculty_resources.class_catalog?
+            assist_tech_link = faculty_resources.assistive_tech?
+            bcourses_link = faculty_resources.bcourses?
+            clickers_link = faculty_resources.clickers?
+            course_capt_link = faculty_resources.course_capture?
+            course_evals_link = faculty_resources.course_evals?
+            diy_media_link = faculty_resources.diy_media?
+            acad_innov_link = faculty_resources.acad_innov_studio?
+
+            if status_api.is_faculty? || status_api.has_instructor_history?
+
+              it ("offers a link to Schedule of Classes for UID #{uid}") { expect(sched_classes_link).to be true }
+              it ("offers a link to Class Catalog for UID #{uid}") { expect(class_catalog_link).to be true }
+              it ("offers a link to Assistive Technology for UID #{uid}") { expect(assist_tech_link).to be true }
+              it ("offers a link to bCourses for UID #{uid}") { expect(bcourses_link).to be true }
+              it ("offers a link to Clickers for UID #{uid}") { expect(clickers_link).to be true }
+              it ("offers a link to Course Capture for UID #{uid}") { expect(course_capt_link).to be true }
+              it ("offers a link to Course Evaluations for UID #{uid}") { expect(course_evals_link).to be true }
+              it ("offers a link to DIY Media for UID #{uid}") { expect(diy_media_link).to be true }
+              it ("offers a link to Academic Innovation Studio for UID #{uid}") { expect(acad_innov_link).to be true }
+
+              unless faculty_links_tested
+
+                sched_classes_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.schedule_of_classes_element, 'Home Page - Online Schedule Of Classes')
+                it ("offers a valid link to Schedule of Classes for UID #{uid}") { expect(sched_classes_link_works).to be true }
+
+                class_catalog_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.class_catalog_element, '2015-2016 Berkeley Academic Guide < University of California, Berkeley')
+                it ("offers a valid link to Class Catalog for UID #{uid}") { expect(class_catalog_link_works).to be true }
+
+                assist_tech_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.assistive_tech_element, 'Assistive Technology | Educational Technology Services')
+                it ("offers a valid link to Assistive Technology for UID #{uid}") { expect(assist_tech_link_works).to be true }
+
+                bcourses_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.bcourses_element, 'bCourses | Educational Technology Services')
+                it ("offers a valid link to bCourses for UID #{uid}") { expect(bcourses_link_works).to be true }
+
+                clickers_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.clickers_element, 'Clickers | Educational Technology Services')
+                it ("offers a valid link to Clickers for UID #{uid}") { expect(clickers_link_works).to be true }
+
+                course_capt_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.course_capture_element, 'Course Capture | Educational Technology Services')
+                it ("offers a valid link to Course Capture for UID #{uid}") { expect(course_capt_link_works).to be true }
+
+                course_evals_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.course_evals_element, 'Course Evaluations | Educational Technology Services')
+                it ("offers a valid link to Course Evaluations for UID #{uid}") { expect(course_evals_link_works).to be true }
+
+                diy_media_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.diy_media_element, 'DIY Media | Educational Technology Services')
+                it ("offers a valid link to DIY Media for UID #{uid}") { expect(diy_media_link_works).to be true }
+
+                acad_innov_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.acad_innov_studio_element, 'Academic Innovation Studio')
+                it ("offers a valid link to Academic Innovation Studio for UID #{uid}") { expect(acad_innov_link_works).to be true }
+
+                faculty_links_tested = true
+              end
+
+            else
+
+              it ("offers no link to Schedule of Classes for UID #{uid}") { expect(sched_classes_link).to be false }
+              it ("offers no link to Class Catalog for UID #{uid}") { expect(class_catalog_link).to be false }
+              it ("offers no link to Assistive Technology for UID #{uid}") { expect(assist_tech_link).to be false }
+              it ("offers no link to bCourses for UID #{uid}") { expect(bcourses_link).to be false }
+              it ("offers no link to Clickers for UID #{uid}") { expect(clickers_link).to be false }
+              it ("offers no link to Course Capture for UID #{uid}") { expect(course_capt_link).to be false }
+              it ("offers no link to Course Evaluations for UID #{uid}") { expect(course_evals_link).to be false }
+              it ("offers no link to DIY Media for UID #{uid}") { expect(diy_media_link).to be false }
+              it ("offers no link to Academic Innovation Studio for UID #{uid}") { expect(acad_innov_link).to be false }
+
+            end
+
           rescue => e
             logger.error e.message + "\n" + e.backtrace.join("\n")
           ensure
@@ -339,6 +413,9 @@ describe 'My Dashboard My Classes card', :testui => true do
       end
       it 'has student or teaching classes for at least one of the test users' do
         expect(testable_users.any?).to be true
+      end
+      it 'has Faculty Resources links for at least one of the test users' do
+        expect(faculty_links_tested).to be true
       end
     rescue => e
       logger.error e.message + "\n" + e.backtrace.join("\n ")
