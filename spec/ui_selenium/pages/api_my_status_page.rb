@@ -66,6 +66,10 @@ class ApiMyStatusPage
     @parsed['hasStudentHistory']
   end
 
+  def has_instructor_history?
+    @parsed['hasInstructorHistory']
+  end
+
   def has_academics_tab?
     @parsed['hasAcademicsTab']
   end
