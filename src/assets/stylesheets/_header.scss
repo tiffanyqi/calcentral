@@ -346,28 +346,28 @@ body {
   }
 }
 
-@media #{$small-only} {
-
-  @mixin cc-badges-small-screen($cc-badge-difference) {
-    .cc-badgepopover-bcal {
-      margin-left: -172px + $cc-badge-difference;
-      &::after, &::before {
-        right: 92px + $cc-badge-difference;
-      }
-    }
-    .cc-badgepopover-bmail {
-      margin-left: -113px + $cc-badge-difference;
-      &::after, &::before {
-        right: 152px + $cc-badge-difference;
-      }
-    }
-    .cc-badgepopover-bdrive {
-      margin-left: -231px + $cc-badge-difference;
-      &::after, &::before {
-        right: 43px + $cc-badge-difference;
-      }
+@mixin cc-badges-small-screen($cc-badge-difference) {
+  .cc-badgepopover-bcal {
+    margin-left: -172px + $cc-badge-difference;
+    &::after, &::before {
+      right: 92px + $cc-badge-difference;
     }
   }
+  .cc-badgepopover-bmail {
+    margin-left: -113px + $cc-badge-difference;
+    &::after, &::before {
+      right: 152px + $cc-badge-difference;
+    }
+  }
+  .cc-badgepopover-bdrive {
+    margin-left: -231px + $cc-badge-difference;
+    &::after, &::before {
+      right: 43px + $cc-badge-difference;
+    }
+  }
+}
+
+@media #{$small-only} {
   .cc-header-icons .cc-popover-status {
     @include cc-badges-small-screen(0);
   }
