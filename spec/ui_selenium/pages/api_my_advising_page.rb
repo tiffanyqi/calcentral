@@ -4,20 +4,13 @@ class ApiMyAdvisingPage
   include ClassLogger
 
   def get_json(driver)
-    logger.info('Parsing JSON from /api/my/advising')
+    logger.info 'Parsing JSON from /api/my/advising'
     navigate_to "#{WebDriverUtils.base_url}/api/my/advising"
-    wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.academics_timeout)
-    wait.until { driver.find_element(:xpath => '//pre[contains(.,"Advising::MyAdvising")]') }
-    body = driver.find_element(:xpath, '//pre').text
-    @parsed = JSON.parse(body)
+    @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
   end
 
   def college_advisor
-    if @parsed['caseloadAdvisor'] == ''
-      nil
-    else
-      @parsed['caseloadAdvisor']['firstName'].to_s + ' ' + @parsed['caseloadAdvisor']['lastName'].to_s
-    end
+    @parsed['caseloadAdvisor'].empty? ? nil : "#{@parsed['caseloadAdvisor']['firstName']} #{@parsed['caseloadAdvisor']['lastName']}"
   end
 
   def all_future_appts
@@ -25,20 +18,16 @@ class ApiMyAdvisingPage
   end
 
   def all_future_appt_epochs
-    epochs = []
-    all_future_appts.each { |appt| epochs.push((appt['dateTime'] / 1000).to_s) }
-    epochs
+    all_future_appts.map { |appt| (appt['dateTime'] / 1000).to_s }
   end
 
   def all_future_appt_dates
-    dates = []
-    all_future_appt_epochs.each { |epoch| dates.push(WebDriverUtils.ui_numeric_date_format(Time.strptime(epoch, '%s'))) }
-    dates
+    all_future_appt_epochs.map { |epoch| WebDriverUtils.ui_numeric_date_format Time.strptime(epoch, '%s') }
   end
 
   def all_future_appt_times
     times = []
-    all_future_appt_epochs.each do |epoch|
+    all_future_appt_epochs.map do |epoch|
       time_format = (Time.strptime(epoch, '%s')).strftime("%-l:%M %p")
       if time_format == '12:00 PM'
         time = 'Noon'
@@ -51,21 +40,15 @@ class ApiMyAdvisingPage
   end
 
   def all_future_appt_advisors
-    advisors = []
-    all_future_appts.each { |appt| advisors.push(appt['staff']['name']) }
-    advisors
+    all_future_appts.map { |appt| appt['staff']['name'] }
   end
 
   def all_future_appt_methods
-    methods = []
-    all_future_appts.each { |appt| methods.push(appt['method'].upcase) }
-    methods
+    all_future_appts.map { |appt| appt['method'].upcase }
   end
 
   def all_future_appt_locations
-    locations = []
-    all_future_appts.each { |appt| locations.push(appt['location'].gsub("  ", " ").upcase) }
-    locations
+    all_future_appts.map { |appt| appt['location'].gsub(/\s+/, ' ').upcase }
   end
 
   def all_prev_appts
@@ -73,15 +56,11 @@ class ApiMyAdvisingPage
   end
 
   def all_prev_appt_dates
-    dates = []
-    all_prev_appts.each { |appt| dates.push((Time.strptime((appt['dateTime'] / 1000).to_s, '%s')).strftime("%m/%d/%y")) }
-    dates
+    all_prev_appts.map { |appt| (Time.strptime((appt['dateTime'] / 1000).to_s, '%s')).strftime("%m/%d/%y") }
   end
 
   def all_prev_appt_advisors
-    names = []
-    all_prev_appts.each { |name| names.push(name['staff']['name']) }
-    names
+    all_prev_appts.map { |name| name['staff']['name'] }
   end
 
 end

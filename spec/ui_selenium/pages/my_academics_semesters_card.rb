@@ -9,7 +9,8 @@ module CalCentralPages
     elements(:semester_card, :div, :class => 'cc-academics-semester')
     elements(:semester_links, :link, :xpath => '//h2[text()="Semesters"]/../following-sibling::div//a[@data-ng-bind="semester.name"]')
     elements(:no_enrollment_semester_h3, :h3, :xpath => '//h2[text()="Semesters"]/../following-sibling::div//h3[@data-ng-if="!semester.hasEnrollmentData || !semester.slug"]')
-    link(:order_transcripts_link, :xpath => '//h2[text()="Semesters"]/following-sibling::a[contains(.,"Order Transcripts")]')
+    link(:request_transcripts_link, :xpath => '//a[contains(.,"Request Transcripts")]')
+    link(:enroll_verif_link, :xpath => '//a[contains(.,"Request your enrollment verification")]')
     button(:show_more, :xpath => '//button[@data-ng-if="pastSemestersCount > 1"]/span[text()="Show More"]')
     button(:show_less, :xpath => '//button[@data-ng-if="pastSemestersCount > 1"]/span[text()="Show Less"]')
 
