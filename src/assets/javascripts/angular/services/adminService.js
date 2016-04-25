@@ -10,7 +10,7 @@ angular.module('calcentral.services').service('adminService', function(adminFact
       !apiService.user.profile.isViewer;
     var actAs = isAdvisorOnly ? adminFactory.advisorActAs : adminFactory.actAs;
     return actAs({
-      uid: user.ldap_uid
+      uid: getLdapUid(user)
     }).success(apiService.util.redirectToHome);
   };
 
