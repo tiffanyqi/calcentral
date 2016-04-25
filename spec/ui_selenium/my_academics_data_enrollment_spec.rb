@@ -14,6 +14,8 @@ describe 'My Academics enrollments', :testui => true do
                             'Grade Option', 'Grade', 'Units', 'Schedule', 'Wait List Position']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
       links_tested = false
+      non_law_tested = false
+      law_tested = false
 
       test_users.each do |user|
         if user['enrollments']
@@ -29,6 +31,8 @@ describe 'My Academics enrollments', :testui => true do
             if status_api_page.has_student_history? && status_api_page.has_academics_tab?
               academics_api_page = ApiMyAcademicsPageSemesters.new(driver)
               academics_api_page.get_json(driver)
+              badges_api_page = ApiMyBadgesPage.new driver
+              badges_api_page.get_json driver
               all_semesters = academics_api_page.all_student_semesters
 
               my_academics = CalCentralPages::MyAcademicsSemestersCard.new(driver)
@@ -81,12 +85,21 @@ describe 'My Academics enrollments', :testui => true do
                     expect(transcript_link_works).to be true
                   end
 
-                  enroll_verification_works = WebDriverUtils.verify_external_link(driver, my_academics.enroll_verif_link_element, 'Academic Records | Office of the Registrar')
-                  it "offers a valid 'Enrollment Verification' link for UID #{uid}" do
-                    expect(enroll_verification_works).to be true
+                  if badges_api_page.law_student?
+                    enroll_verification_works = WebDriverUtils.verify_external_link(driver, my_academics.enroll_verif_link_element, 'Verification of Attendance | Berkeley Law')
+                    it "offers a valid non-law 'Enrollment Verification' link for UID #{uid}" do
+                      expect(enroll_verification_works).to be true
+                    end
+                    non_law_tested = true
+                  else
+                    enroll_verification_works = WebDriverUtils.verify_external_link(driver, my_academics.enroll_verif_link_element, 'Academic Records | Office of the Registrar')
+                    it "offers a valid non-law 'Enrollment Verification' link for UID #{uid}" do
+                      expect(enroll_verification_works).to be true
+                    end
+                    law_tested = true
                   end
 
-                  links_tested = true
+                  links_tested = true if non_law_tested && law_tested
 
                 end
 

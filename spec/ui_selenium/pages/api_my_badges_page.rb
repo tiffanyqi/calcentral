@@ -4,10 +4,9 @@ class ApiMyBadgesPage
   include ClassLogger
 
   def get_json(driver)
-    logger.info('Parsing JSON from /api/my/badges')
+    logger.info 'Parsing JSON from /api/my/badges'
     navigate_to "#{WebDriverUtils.base_url}/api/my/badges"
-    body = driver.find_element(:xpath, '//pre').text
-    @parsed = JSON.parse(body)
+    @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
   end
 
   def student_info
@@ -28,6 +27,10 @@ class ApiMyBadgesPage
 
   def residency_needs_action
     residency['needsAction']
+  end
+
+  def law_student?
+    student_info['isLawStudent']
   end
 
   def reg_status
