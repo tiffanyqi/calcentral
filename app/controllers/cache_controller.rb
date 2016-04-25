@@ -24,7 +24,7 @@ class CacheController < ApplicationController
       HotPlate.request_warmups_for_all
     else
       begin
-        uid = Integer(who, 10)
+        uid = Integer(who, 10).to_s
       rescue ArgumentError
         raise Errors::BadRequestError, "Bad UID parameter '#{who}'"
       end
