@@ -141,5 +141,14 @@ module CalnetCrosswalk
       end
     end
 
+    def self.expire(uid=nil)
+      super(uid)
+      ['CAMPUS_SOLUTIONS_ID', 'LEGACY_SIS_STUDENT_ID', 'DELEGATE_USER_ID'].each do |id_type|
+        key = cache_key "#{uid}/#{id_type}"
+        Rails.cache.delete key
+        Rails.logger.debug "Expired cache_key #{key}"
+      end
+    end
+
   end
 end
