@@ -1,5 +1,6 @@
 module CalnetCrosswalk
   class ByUid < Proxy
+    include Cache::UserCacheExpiry
 
     def url
       "#{@settings.base_url}/UID/#{@uid}"
