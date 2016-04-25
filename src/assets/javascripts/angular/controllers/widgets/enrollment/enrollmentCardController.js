@@ -12,24 +12,24 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   var sections = [
     {
       id: 'plan',
-      title: 'Plan'
+      title: 'Multi-year Planner'
     },
     {
       id: 'explore',
-      title: 'Explore'
+      title: 'Schedule of Classes'
     },
     {
       id: 'schedule',
-      title: 'Schedule'
+      title: 'Schedule Planner'
     },
     {
       id: 'decide',
-      title: 'Decide',
+      title: 'Class Enrollment',
       show: true
     },
     {
       id: 'adjust',
-      title: 'Adjust',
+      title: 'Class Adjustment',
       show: true
     }
   ];

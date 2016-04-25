@@ -1,55 +1,54 @@
-<div class="cc-flex cc-flex-space-between cc-flex-space-between-horizontal-5">
-  <div>
-    <strong>Enrolled Classes</strong>
-  </div>
-  <div
-    data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
-    class="cc-flex cc-flex-wrap cc-enrollment-card-enrolled-links"
-  >
-    <div
-      data-cc-campus-solutions-link-item-directive
-      data-link="enrollmentTerm.links.addEnrolledClasses"
-      data-text="Add"
-      data-cache="enrollment"
-      data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
-    ></div>
-    <div
-      data-cc-campus-solutions-link-item-directive
-      data-link="enrollmentTerm.links.dropEnrolledClasses"
-      data-text="Drop"
-      data-cache="enrollment"
-      data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
-    ></div>
-    <div
-      data-cc-campus-solutions-link-item-directive
-      data-link="enrollmentTerm.links.swapEnrolledClasses"
-      data-text="Swap"
-      data-cache="enrollment"
-      data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
-    ></div>
-    <div
-      data-cc-campus-solutions-link-item-directive
-      data-link="enrollmentTerm.links.gradeBase"
-      data-text="Edit"
-      data-cache="enrollment"
-      data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
-    ></div>
-    <div
-      data-cc-campus-solutions-link-item-directive
-      data-link="enrollmentTerm.links.gradeBase"
-      data-text="Change Grade Base"
-      data-cache="enrollment"
-      data-ng-if="enrollmentTerm.isGradeBaseAvailable && !enrollment.isLawStudent"
-    ></div>
-    <div
-      data-cc-campus-solutions-link-item-directive
-      data-link="enrollmentTerm.links.withdrawFromSemester"
-      data-text="Withdraw"
-      data-ng-if="enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent"
-      data-cache="enrollment"
-    ></div>
-  </div>
+<div>
+  <strong>Enrolled Classes</strong>
 </div>
+<div
+  data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks"
+  class="cc-flex cc-flex-wrap cc-enrollment-card-enrolled-links"
+>
+  <div
+    data-cc-campus-solutions-link-item-directive
+    data-link="enrollmentTerm.links.addEnrolledClasses"
+    data-text="Add"
+    data-cache="enrollment"
+    data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
+  ></div>
+  <div
+    data-cc-campus-solutions-link-item-directive
+    data-link="enrollmentTerm.links.dropEnrolledClasses"
+    data-text="Drop"
+    data-cache="enrollment"
+    data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
+  ></div>
+  <div
+    data-cc-campus-solutions-link-item-directive
+    data-link="enrollmentTerm.links.swapEnrolledClasses"
+    data-text="Swap"
+    data-cache="enrollment"
+    data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
+  ></div>
+  <div
+    data-cc-campus-solutions-link-item-directive
+    data-link="enrollmentTerm.links.gradeBase"
+    data-text="Options"
+    data-cache="enrollment"
+    data-ng-if="enrollmentTerm.isClassScheduleAvailable && !enrollmentTerm.isGradeBaseAvailable"
+  ></div>
+  <div
+    data-cc-campus-solutions-link-item-directive
+    data-link="enrollmentTerm.links.gradeBase"
+    data-text="Change Grade Base"
+    data-cache="enrollment"
+    data-ng-if="enrollmentTerm.isGradeBaseAvailable && !enrollment.isLawStudent"
+  ></div>
+  <div
+    data-cc-campus-solutions-link-item-directive
+    data-link="enrollmentTerm.links.withdrawFromSemester"
+    data-text="Withdraw"
+    data-ng-if="enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent"
+    data-cache="enrollment"
+  ></div>
+</div>
+
 
 <div data-ng-if="!enrollmentTerm.enrolledClasses.length">
   You are currently not enrolled in any classes for

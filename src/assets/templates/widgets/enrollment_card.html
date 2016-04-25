@@ -19,7 +19,7 @@
         class="cc-flex cc-flex-space-between cc-text-light"
         data-ng-class="{'cc-enrollment-card-margin-top':(!enrollmentTerm.enrollmentPeriod[0])}">
         <div>
-          <strong>Action</strong>
+          <strong>Activity</strong>
         </div>
         <div data-ng-if="enrollmentTerm.enrollmentPeriod[0] && !enrollment.isLawStudent">
           <strong>When</strong>
@@ -29,7 +29,7 @@
     <ul class="cc-widget-list cc-widget-list-border-top">
       <li
         data-ng-repeat="section in enrollmentTerm.sections"
-        class="cc-widget-list-hover cc-widget-list-hover-notriangle cc-enrollment-card-section"
+        class="cc-widget-list-hover cc-enrollment-card-section"
         data-ng-class="{'cc-widget-list-hover-opened':(section.show)}"
         data-cc-accessible-focus-directive
         data-ng-click="api.widget.toggleShow($event, null, section, 'Class Enrollment Section - ' + section.title)"
