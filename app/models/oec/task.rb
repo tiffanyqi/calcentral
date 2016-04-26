@@ -184,11 +184,12 @@ module Oec
         raise UnexpectedDataError, "#{self.class.name} requires a non-empty '#{@term_code}/#{category_name}' folder"
       end
       log :info, "#{self.class.name} will pull data from '#{@term_code}/#{category_name}/#{last.title}'"
-      DateTime.strptime(last.title, "#{self.class.date_format} #{self.class.timestamp_format}")
-    rescue => e
-      pattern = "#{Oec::Task.date_format}_#{Oec::Task.timestamp_format}"
-      log :error, "Folder in '#{@term_code}/#{category_name}' failed to match '#{pattern}'.\n#{e.message}\n#{e.backtrace.join "\n\t"}"
-      nil
+      datetime_format = "#{self.class.date_format} #{self.class.timestamp_format}"
+      begin
+        DateTime.strptime(last.title, datetime_format)
+      rescue
+        raise UnexpectedDataError, "Folder '#{@term_code}/#{category_name}/#{last.title}' failed to match datetime format '#{datetime_format}'"
+      end
     end
 
     def log(level, message, opts={})

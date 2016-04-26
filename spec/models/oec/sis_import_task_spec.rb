@@ -30,6 +30,7 @@ describe Oec::SisImportTask do
     let(:local_write) { false }
     before do
       expect(Oec::ReportDiffTask).to receive(:new).and_call_original
+      expect_any_instance_of(Oec::ReportDiffTask).to receive(:date_time_of_most_recent).and_return DateTime.now
       expect(fake_remote_drive).to receive(:check_conflicts_and_upload)
         .with(kind_of(Pathname), report_diff_logfile, 'text/plain', logs_today_folder, anything)
         .and_return mock_google_drive_item(report_diff_logfile)
