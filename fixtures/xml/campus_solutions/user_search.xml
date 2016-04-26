@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UC_AA_USER_SEARCH>
+  <SEARCH_RESULTS type="Array">
+    <USER_DATA>
+      <CAMPUS_SOLUTION_ID>2222222222</CAMPUS_SOLUTION_ID>
+      <STUDENT_ID>3333333333</STUDENT_ID>
+      <NAME>Day, Morris</NAME>
+      <ACADEMIC_PROGRAMS type="Array">
+        <ACADEMIC_PROGRAM>
+          <TERM>2015 Spring</TERM>
+          <ACAD_CAREER>UNDERGRAD</ACAD_CAREER>
+          <ACAD_PLAN>25428</ACAD_PLAN>
+          <ACAD_PLAN_DESCR>History BA</ACAD_PLAN_DESCR>
+          <ACAD_PROGRAM>GACAD</ACAD_PROGRAM>
+          <ACAD_PROGRAM_DESCR>Undergraduate Academic Programs</ACAD_PROGRAM_DESCR>
+          <ACAD_COLLEGE>Letters and Science</ACAD_COLLEGE>
+        </ACADEMIC_PROGRAM>
+        <ACADEMIC_PROGRAM>
+          <TERM>2016 Fall</TERM>
+          <ACAD_CAREER>GRAD</ACAD_CAREER>
+          <ACAD_PLAN>25429</ACAD_PLAN>
+          <ACAD_PLAN_DESCR>History MS</ACAD_PLAN_DESCR>
+          <ACAD_PROGRAM>GACAD</ACAD_PROGRAM>
+          <ACAD_PROGRAM_DESCR>Graduate Academic Programs</ACAD_PROGRAM_DESCR>
+          <ACAD_COLLEGE>Letters and Science</ACAD_COLLEGE>
+        </ACADEMIC_PROGRAM>
+      </ACADEMIC_PROGRAMS>
+    </USER_DATA>
+    <USER_DATA>
+      <CAMPUS_SOLUTION_ID>5555555555</CAMPUS_SOLUTION_ID>
+      <STUDENT_ID>666666</STUDENT_ID>
+      <NAME>Jam, Jimmy</NAME>
+    </USER_DATA>
+  </SEARCH_RESULTS>
+</UC_AA_USER_SEARCH>

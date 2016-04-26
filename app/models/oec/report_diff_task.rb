@@ -59,6 +59,9 @@ module Oec
 
     def default_date_time
       date_time_of_most_recent Oec::Folder.sis_imports
+    rescue => e
+      log :error, "Error retrieving date of last SIS import: #{e.message}\n#{e.backtrace.join "\n\t"}"
+      @status = 'Error'
     end
 
     def report_diff(dept_code, sis_data, dept_data, keys)

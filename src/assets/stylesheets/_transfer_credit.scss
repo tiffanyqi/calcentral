@@ -1,0 +1,17 @@
+.cc-transfer-credit {
+  .cc-widget-transfercredit-headings {
+    color: $cc-color-light-medium-grey;
+    font-weight: 700;
+    padding: 10px 20px 5px 15px;
+  }
+  .cc-widget-transfercredit-list {
+    font-size: 13px;
+    padding: 0;
+    .cc-widget-transfercredit-list-item {
+      padding: 10px 20px 10px 15px;
+    }
+    .cc-widget-transfercredit-list-subitems {
+      padding-top: 5px;
+    }
+  }
+}

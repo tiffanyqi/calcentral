@@ -1,0 +1,16 @@
+<div class="cc-widget-list-hover cc-widget-transfercredit-list-item"
+     data-cc-accessible-focus-directive
+     data-ng-class="{'cc-widget-list-hover-opened':(creditType.show)}"
+     data-ng-click="api.widget.toggleShow($event, null, creditType, creditType.title)"
+     data-ng-if="creditType.credits.length">
+  <div data-ng-include="'widgets/transfer_credit_type_units.html'"></div>
+  <div class="cc-print-show cc-widget-transfercredit-list-subitems" data-ng-show="creditType.show">
+    <div class="cc-clearfix-container" data-ng-repeat="credit in creditType.credits">
+      <div class="cc-left cc-text-small" data-ng-bind="credit.description"></div>
+      <div class="cc-right cc-text-small" data-ng-bind="credit.units | number:1"></div>
+    </div>
+  </div>
+</div>
+<div class="cc-widget-transfercredit-list-item" data-ng-if="!creditType.credits.length && creditType.unitsAdjusted">
+  <div data-ng-include="'widgets/transfer_credit_type_units.html'"></div>
+</div>

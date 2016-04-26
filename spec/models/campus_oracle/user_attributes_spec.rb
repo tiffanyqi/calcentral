@@ -79,43 +79,4 @@ describe CampusOracle::UserAttributes do
 
   end
 
-  context 'checking if user is staff or faculty member' do
-    let(:uid) { rand(99999).to_s }
-    subject { CampusOracle::UserAttributes.new(user_id: uid) }
-    before { allow(subject).to receive(:get_feed).and_return(fake_feed) }
-    let(:fake_feed) do
-      {
-        :roles => {:faculty => false, :staff => false}
-      }
-    end
-
-    context 'if user is not found by uid provided' do
-      let(:fake_feed) { nil }
-      it 'returns false' do
-        expect(subject.is_staff_or_faculty?).to eq false
-      end
-    end
-
-    context 'if user is not staff or faculty member' do
-      before { fake_feed[:roles][:student] = true }
-      it 'returns false' do
-        expect(subject.is_staff_or_faculty?).to eq false
-      end
-    end
-
-    context 'if user is staff member' do
-      before { fake_feed[:roles][:staff] = true }
-      it 'returns true' do
-        expect(subject.is_staff_or_faculty?).to eq true
-      end
-    end
-
-    context 'if user is faculty member' do
-      before { fake_feed[:roles][:faculty] = true }
-      it 'returns true' do
-        expect(subject.is_staff_or_faculty?).to eq true
-      end
-    end
-  end
-
 end

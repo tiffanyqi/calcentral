@@ -16,7 +16,7 @@ angular.module('calcentral.controllers').controller('AcademicDatesController', f
 
   var formatItemTitles = function(items) {
     var formattedItems = _.map(items, function(item) {
-      item.title.isArray = _.isArray(item.title);
+      item.isList = _.isArray(item.title);
       return item;
     });
     return formattedItems;
