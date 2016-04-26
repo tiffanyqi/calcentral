@@ -11,7 +11,7 @@ describe 'My Academics enrollments', :testui => true do
       test_users = UserUtils.load_test_users
       testable_users = []
       test_output_heading = ['UID', 'Semester', 'CCN', 'Course Code', 'Course Title', 'Section', 'Primary?',
-                            'Grade Option', 'Grade', 'Units', 'Schedule', 'Wait List Position']
+                             'Grade Option', 'Grade', 'Units', 'Schedule', 'Wait List Position', 'Associated Sections?']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
       links_tested = false
       non_law_tested = false
@@ -307,14 +307,14 @@ describe 'My Academics enrollments', :testui => true do
                                 i = api_sections.index(api_section)
                                 test_output_row = [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
                                                    academics_api_page.primary_section?(api_section), api_grade_options[i], api_section_units[i],
-                                                   nil, api_section_schedules[i], academics_api_page.wait_list_position(api_section)]
+                                                   nil, api_section_schedules[i], academics_api_page.wait_list_position(api_section), has_associated_sections]
                                 UserUtils.add_csv_row(test_output, test_output_row)
                               end
 
                               class_page.back
                             end
 
-                          # Single primary section in a course has a single class page
+                            # Single primary section in a course has a single class page
                           else
                             api_sections = academics_api_page.course_sections(course)
                             api_section_labels = academics_api_page.sections_labels(api_sections)
@@ -388,7 +388,7 @@ describe 'My Academics enrollments', :testui => true do
                               i = api_sections.index(api_section)
                               test_output_row = [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
                                                  academics_api_page.primary_section?(api_section), api_grade_options[i], nil, api_section_units[i],
-                                                 api_section_schedules[i], academics_api_page.wait_list_position(api_section)]
+                                                 api_section_schedules[i], academics_api_page.wait_list_position(api_section), nil]
                               UserUtils.add_csv_row(test_output, test_output_row)
                             end
 
@@ -405,7 +405,7 @@ describe 'My Academics enrollments', :testui => true do
                       semester_card_courses.each do |course|
                         i = semester_card_courses.index(course)
                         test_output_row = [uid, semester_name, nil, api_course_codes[i], api_course_titles[i], nil,
-                                           nil, nil, api_grades[i], api_units[i], nil, nil]
+                                           nil, nil, api_grades[i], api_units[i], nil, nil, nil]
                         UserUtils.add_csv_row(test_output, test_output_row)
                       end
                     end
@@ -433,7 +433,7 @@ describe 'My Academics enrollments', :testui => true do
 
                   api_addl_titles.each do |title|
                     i = api_addl_titles.index title
-                    test_output_row = [uid, nil, nil, nil, api_addl_titles[i], nil, nil, nil, nil, api_addl_units[i], nil, nil]
+                    test_output_row = [uid, nil, nil, nil, api_addl_titles[i], nil, nil, nil, nil, api_addl_units[i], nil, nil, nil]
                     UserUtils.add_csv_row(test_output, test_output_row)
                   end
 
