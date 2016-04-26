@@ -82,6 +82,7 @@ features:
   cs_profile_emergency_contacts: true
   cs_profile_languages: true
   cs_profile_work_experience: true
+  cs_transfer_credit: true
   financials: true
   telebears: true
   textbooks: true
