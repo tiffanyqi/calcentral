@@ -17,30 +17,6 @@ describe HubEdos::ResponseHandler do
 
   subject { Worker.new.fetch_first_postal_code parsed_response }
 
-  context 'GL4 wrapper format' do
-    let(:parsed_response) do
-      {
-        'studentResponse' => {
-          'students' => {
-            'students' => [
-              {
-                'addresses' => [
-                  {
-                    'postalCode' => '454554',
-                    'countryCode' => 'USA'
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      }
-    end
-    it 'should find postal code' do
-      expect(subject).to eq({ postalCode: '454554' })
-    end
-  end
-
   context 'GL5 wrapper format' do
     let(:parsed_response) {
       {
