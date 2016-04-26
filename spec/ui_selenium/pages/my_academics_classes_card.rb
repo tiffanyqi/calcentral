@@ -5,7 +5,7 @@ module CalCentralPages
     include PageObject
     include CalCentralPages
 
-    span(:semester_heading, :xpath => '//span[@data-ng-bind="selectedSemester.name"]')
+    span(:semester_heading, :xpath => '//span[@data-ng-bind="widgetSemesterName"]')
 
     elements(:enrolled_course_codes, :link, :xpath => '//tbody[@data-ng-repeat="course in enrolledCourses"]//a[@data-ng-bind="course.course_code"]')
     elements(:enrolled_course_titles, :td, :xpath => '//tbody[@data-ng-repeat="course in enrolledCourses"]//td[@data-ng-bind="course.title"]')
