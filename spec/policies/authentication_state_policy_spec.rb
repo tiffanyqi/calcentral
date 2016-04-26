@@ -237,11 +237,15 @@ describe AuthenticationStatePolicy do
     let(:user_id) {average_joe_uid}
     subject { AuthenticationState.new(session_state).policy.can_create_canvas_project_site? }
     context 'when user is not a staff or faculty member' do
-      before { allow_any_instance_of(CampusOracle::UserAttributes).to receive(:is_staff_or_faculty?).and_return false }
+      before do
+        allow_any_instance_of(User::AggregatedAttributes).to receive(:get_feed).and_return({roles: {student: true}})
+      end
       it { is_expected.to be false }
     end
-    context 'when user is teaching courses in a current term' do
-      before { allow_any_instance_of(CampusOracle::UserAttributes).to receive(:is_staff_or_faculty?).and_return true }
+    context 'when user is staff member' do
+      before do
+        allow_any_instance_of(User::AggregatedAttributes).to receive(:get_feed).and_return({roles: {staff: true}})
+      end
       it { is_expected.to be true }
     end
     context 'when user is a canvas root account administrator' do

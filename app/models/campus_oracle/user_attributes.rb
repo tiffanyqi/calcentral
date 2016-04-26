@@ -41,13 +41,6 @@ module CampusOracle
       @educ_level_translator ||= Notifications::EducLevelTranslator.new
     end
 
-    def is_staff_or_faculty?
-      if feed = get_feed
-        return true if get_feed[:roles] && (get_feed[:roles][:faculty] || get_feed[:roles][:staff])
-      end
-      false
-    end
-
     def term_transition?
       Berkeley::Terms.fetch.current.sis_term_status != 'CT'
     end
