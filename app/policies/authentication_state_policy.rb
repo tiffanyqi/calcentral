@@ -48,7 +48,9 @@ class AuthenticationStatePolicy
   end
 
   def can_create_canvas_project_site?
-    can_administrate_canvas? || CampusOracle::UserAttributes.new(:user_id => @user.user_id).is_staff_or_faculty?
+    return true if can_administrate_canvas?
+    attributes = User::AggregatedAttributes.new(@user.user_id).get_feed
+    !!(attributes[:roles] && (attributes[:roles][:faculty] || attributes[:roles][:staff]))
   end
 
   def can_create_canvas_course_site?
