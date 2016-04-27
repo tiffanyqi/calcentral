@@ -79,6 +79,7 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
   };
 
   $scope.userSearch.byNameOrId = function() {
+    $scope.userSearch.tabs.search.error = null;
     $scope.userSearch.tabs.search.message = null;
     $scope.userSearch.tabs.search.queryRunning = true;
     var nameOrId = $scope.userSearch.tabs.search.nameOrId;

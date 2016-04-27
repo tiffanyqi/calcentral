@@ -1,6 +1,6 @@
 module CalnetLdap
   class UserAttributes < BaseProxy
-    extend Parser
+    extend User::Parser
 
     include Cache::UserCacheExpiry
 
