@@ -210,6 +210,9 @@ Calcentral::Application.routes.draw do
   # Redirect to College Scheduler
   get '/college_scheduler/:acad_career/:term_id' => 'campus_solutions/college_scheduler#get'
 
+  # Redirect to HigherOne
+  get '/higher_one/higher_one_url' => 'campus_solutions/higher_one_url#redirect'
+
   # EDOs from integration hub
   get '/api/edos/student' => 'hub_edo#student', :via => :get, :defaults => { :format => 'json' }
   get '/api/edos/work_experience' => 'hub_edo#work_experience', :via => :get, :defaults => { :format => 'json' }

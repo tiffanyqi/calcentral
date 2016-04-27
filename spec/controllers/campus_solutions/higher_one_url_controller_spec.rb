@@ -1,6 +1,7 @@
 describe CampusSolutions::HigherOneUrlController do
 
   let(:user_id) { '12349' }
+  let(:higher_one_url) { 'https://commerce.cashnet.com/UCBpaytest?eusername=8062064084e9a8dff7a181266a3ed11e28b80eb30ab4fd84b9bc4de92394d884' }
 
   context 'higher one url feed' do
     let(:feed) { :get }
@@ -13,8 +14,19 @@ describe CampusSolutions::HigherOneUrlController do
         session['user_id'] = user_id
         get feed
         json = JSON.parse(response.body)
-        expect(json['feed']['root']['higherOneUrl']['url'].strip).to eq 'https://commerce.cashnet.com/UCBpaytest?eusername=8062064084e9a8dff7a181266a3ed11e28b80eb30ab4fd84b9bc4de92394d884'
+        expect(json['feed']['root']['higherOneUrl']['url'].strip).to eq higher_one_url
       end
+    end
+  end
+
+  context 'redirect as a student' do
+    before do
+      session['user_id'] = user_id
+    end
+    it 'redirects to higher one' do
+      get :redirect
+      expect(response.status).to eq 302
+      expect(response).to redirect_to higher_one_url
     end
   end
 
