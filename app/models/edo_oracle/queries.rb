@@ -1,6 +1,7 @@
 module EdoOracle
   class Queries < Connection
     include ActiveRecordHelper
+    include ClassLogger
 
     CANONICAL_SECTION_ORDERING = 'dept_name, catalog_root, catalog_prefix nulls first, catalog_suffix nulls first, primary DESC, instruction_format, section_display_name, section_num'
 
@@ -41,11 +42,7 @@ module EdoOracle
     #   - 'course_option' removed
     #   - 'cred_cd' and 'pnp_flag' replaced by 'grading_basis'
     def self.get_enrolled_sections(person_id, terms = nil)
-      result = []
-      return result if fake?
-      terms_list = terms_query_list(terms)
-      use_pooled_connection do
-        sql = <<-SQL
+      safe_query <<-SQL
         SELECT
           #{SECTION_COLUMNS},
           sec."maxEnroll" AS enroll_limit,
@@ -62,24 +59,17 @@ module EdoOracle
         #{JOIN_SECTION_TO_COURSE}
         WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
           AND sec."status-code" = 'A'
-          AND sec."term-id" IN (#{terms_list})
+          AND sec."term-id" IN (#{terms_query_list terms})
           AND enr."CAMPUS_UID" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
-        SQL
-        result = connection.select_all sql
-      end
-      stringify_ints! result
+      SQL
     end
 
     # EDO equivalent of CampusOracle::Queries.get_instructing_sections
     # Changes:
     #   - 'cs-course-id' added.
     def self.get_instructing_sections(person_id, terms = nil)
-      result = []
-      return result if fake?
-      terms_list = terms_query_list(terms)
-      use_pooled_connection do
-        sql = <<-SQL
+      safe_query <<-SQL
         SELECT
           #{SECTION_COLUMNS},
           sec."cs-course-id" AS cs_course_id
@@ -93,13 +83,10 @@ module EdoOracle
         #{JOIN_SECTION_TO_COURSE}
         WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
           AND sec."status-code" = 'A'
-          AND instr."term-id" IN (#{terms_list})
+          AND instr."term-id" IN (#{terms_query_list terms})
           AND instr."campus-uid" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
-        SQL
-        result = connection.select_all sql
-      end
-      stringify_ints! result
+      SQL
     end
 
     # EDO equivalent of CampusOracle::Queries.get_secondary_sections.
@@ -108,10 +95,7 @@ module EdoOracle
     #     than course catalog ID.
     #   - 'cs-course-id' added.
     def self.get_associated_secondary_sections(term_id, section_id)
-      result = []
-      return result if fake?
-      use_pooled_connection do
-        sql = <<-SQL
+      safe_query <<-SQL
         SELECT
           #{SECTION_COLUMNS},
           sec."cs-course-id" AS cs_course_id
@@ -123,10 +107,7 @@ module EdoOracle
           AND sec."term-id" = '#{term_id}'
           AND sec."primaryAssociatedSectionId" = '#{section_id}'
         ORDER BY #{CANONICAL_SECTION_ORDERING}
-        SQL
-        result = connection.select_all sql
-      end
-      stringify_ints! result
+      SQL
     end
 
     # EDO equivalent of CampusOracle::Queries.get_section_schedules
@@ -140,10 +121,7 @@ module EdoOracle
     #   - 'multi_entry_cd' obsolete now that multiple meetings directly associated with section
     #   - 'print_cd' replaced with 'print_in_schedule_of_classes' boolean
     def self.get_section_meetings(term_id, section_id)
-      results = []
-      return results if fake?
-      use_pooled_connection {
-        sql = <<-SQL
+      safe_query <<-SQL
         SELECT DISTINCT
           sec."id" AS section_id,
           sec."printInScheduleOfClasses" AS print_in_schedule_of_classes,
@@ -167,10 +145,7 @@ module EdoOracle
           sec."term-id" = '#{term_id}' AND
           sec."id" = '#{section_id}' AND
           mtg."location-code" IS NOT NULL
-        SQL
-        results = connection.select_all(sql)
-      }
-      stringify_ints! results
+      SQL
     end
 
     # EDO equivalent of CampusOracle::Queries.get_sections_from_ccns
@@ -180,10 +155,7 @@ module EdoOracle
     #   - 'catalog_suffix_1' and 'catalog_suffix_2' replaced by 'catalog_suffix' (combined)
     #   - 'primary_secondary_cd' replaced by Boolean 'primary'
     def self.get_sections_by_ids(term_id, section_ids)
-      result = {}
-      return result if fake?
-      use_pooled_connection {
-        sql = <<-SQL
+      safe_query <<-SQL
         SELECT
           #{SECTION_COLUMNS}
         FROM SISEDO.CLASSSECTIONV00_VW sec
@@ -192,10 +164,7 @@ module EdoOracle
           AND sec."term-id" = '#{term_id}'
           AND sec."id" IN (#{section_ids.collect { |id| id.to_i }.join(', ')})
         ORDER BY #{CANONICAL_SECTION_ORDERING}
-        SQL
-        result = connection.select_all(sql)
-      }
-      stringify_ints!(result)
+      SQL
     end
 
     # EDO equivalent of CampusOracle::Queries.get_section_instructors
@@ -207,36 +176,30 @@ module EdoOracle
     #     This will require a programmatic join at a higher level.
     #     See CLC-6239 for implementation of batch LDAP profile requests.
     def self.get_section_instructors(term_id, section_id)
-      results = []
-      return results if fake?
-      use_pooled_connection {
-        sql = <<-SQL
-          SELECT DISTINCT
-            TRIM(instr."formattedName") AS person_name,
-            TRIM(instr."givenName") AS first_name,
-            TRIM(instr."familyName") AS last_name,
-            instr."campus-uid" AS ldap_uid,
-            instr."role-code" AS role_code,
-            instr."role-descr" AS role_description
-          FROM
-            SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
-          JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
-            instr."cs-course-id" = sec."cs-course-id" AND
-            instr."term-id" = sec."term-id" AND
-            instr."session-id" = sec."session-id" AND
-            instr."offeringNumber" = sec."offeringNumber" AND
-            instr."number" = sec."sectionNumber"
-          )
-          WHERE
-            sec."id" = '#{section_id.to_s}' AND
-            sec."term-id" = '#{term_id.to_s}' AND
-            TRIM(instr."instructor-id") IS NOT NULL
-          ORDER BY
-            role_code
-        SQL
-        results = connection.select_all(sql)
-      }
-      stringify_ints! results
+      safe_query <<-SQL
+        SELECT DISTINCT
+          TRIM(instr."formattedName") AS person_name,
+          TRIM(instr."givenName") AS first_name,
+          TRIM(instr."familyName") AS last_name,
+          instr."campus-uid" AS ldap_uid,
+          instr."role-code" AS role_code,
+          instr."role-descr" AS role_description
+        FROM
+          SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
+        JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+          instr."cs-course-id" = sec."cs-course-id" AND
+          instr."term-id" = sec."term-id" AND
+          instr."session-id" = sec."session-id" AND
+          instr."offeringNumber" = sec."offeringNumber" AND
+          instr."number" = sec."sectionNumber"
+        )
+        WHERE
+          sec."id" = '#{section_id.to_s}' AND
+          sec."term-id" = '#{term_id.to_s}' AND
+          TRIM(instr."instructor-id") IS NOT NULL
+        ORDER BY
+          role_code
+      SQL
     end
 
     # EDO equivalent of CampusOracle::Queries.terms
@@ -247,10 +210,7 @@ module EdoOracle
     #   - Multiple entries for each term due to differing start and end dates that
     #     may exist for LAW as compared to GRAD, UGRAD, or UCBX
     def self.terms
-      result = []
-      return result if fake?
-      use_pooled_connection {
-        sql = <<-SQL
+      safe_query <<-SQL
         SELECT
           term."STRM" as term_code,
           trim(term."DESCR") AS term_name,
@@ -260,22 +220,13 @@ module EdoOracle
           SISEDO.TERM_TBL_VW term
         ORDER BY
           term_start_date desc
-        SQL
-        result = connection.select_all(sql)
-      }
-      result
+      SQL
     end
 
     def self.get_subject_areas
-      result = []
-      return result if fake?
-      use_pooled_connection {
-        sql = <<-SQL
-          SELECT DISTINCT "subjectArea" FROM SISEDO.API_COURSEIDENTIFIERSV00_VW
-        SQL
-        result = connection.select_all(sql)
-      }
-      result
+      safe_query <<-SQL
+        SELECT DISTINCT "subjectArea" FROM SISEDO.API_COURSEIDENTIFIERSV00_VW
+      SQL
     end
 
     # EDO equivalent of CampusOracle::Queries.get_enrolled_students
@@ -284,12 +235,8 @@ module EdoOracle
     #   - 'term_yr' and 'term_yr' replaced by 'term_id'
     #   - 'calcentral_student_info_vw' data (first_name, last_name, student_email_address,
     #     affiliations) are not present as these are provided by the CalNet LDAP or HubEdos module.
-    #   - ''
     def self.get_enrolled_students(section_id, term_id)
-      result = []
-      return result if fake?
-      use_pooled_connection {
-        sql = <<-SQL
+      safe_query <<-SQL
         SELECT DISTINCT
           enroll."CAMPUS_UID" AS ldap_uid,
           enroll."STUDENT_ID" AS student_id,
@@ -299,22 +246,15 @@ module EdoOracle
         WHERE
           enroll."CLASS_SECTION_ID" = '#{section_id}' AND
           enroll."TERM_ID" = '#{term_id}'
-        SQL
-        result = connection.select_all(sql)
-      }
-      stringify_ints! result
+      SQL
     end
 
     # EDO equivalent of CampusOracle::Queries.has_instructor_history?
     def self.has_instructor_history?(ldap_uid, instructor_terms = nil)
-      result = {}
-      return false if fake?
       if instructor_terms.to_a.any?
-        terms_list = terms_query_list(instructor_terms.to_a)
-        instructor_term_clause = "AND instr.\"term-id\" IN (#{terms_list})"
+        instructor_term_clause = "AND instr.\"term-id\" IN (#{terms_query_list instructor_terms.to_a})"
       end
-      use_pooled_connection {
-        sql = <<-SQL
+      result = safe_query <<-SQL
         SELECT
           count(instr."term-id") AS course_count
         FROM
@@ -323,22 +263,20 @@ module EdoOracle
           instr."campus-uid" = '#{ldap_uid}' AND
           rownum < 2
           #{instructor_term_clause}
-        SQL
-        result = connection.select_one(sql)
-      }
-      Rails.logger.debug "Instructor #{ldap_uid} history for terms #{instructor_terms} count = #{result}"
-      result["course_count"].to_i > 0
+      SQL
+      if (result_row = result.first)
+        Rails.logger.debug "Instructor #{ldap_uid} history for terms #{instructor_terms} count = #{result_row}"
+        result_row['course_count'].to_i > 0
+      else
+        false
+      end
     end
 
     def self.has_student_history?(ldap_uid, student_terms = nil)
-      result = {}
-      return false if fake?
       if student_terms.to_a.any?
-        terms_list = terms_query_list(student_terms)
-        student_term_clause = "AND enroll.\"TERM_ID\" IN (#{terms_list})"
+        student_term_clause = "AND enroll.\"TERM_ID\" IN (#{terms_query_list student_terms.to_a})"
       end
-      use_pooled_connection {
-        sql = <<-SQL
+      result = safe_query <<-SQL
         SELECT
           count(enroll."TERM_ID") AS enroll_count
         FROM
@@ -347,11 +285,25 @@ module EdoOracle
           enroll."CAMPUS_UID" = '#{ldap_uid.to_i}' AND
           rownum < 2
           #{student_term_clause}
-        SQL
-        result = connection.select_one(sql)
-      }
-      Rails.logger.debug "Student #{ldap_uid} history for terms #{student_terms} count = #{result}"
-      result["enroll_count"].to_i > 0
+      SQL
+      if (result_row = result.first)
+        Rails.logger.debug "Student #{ldap_uid} history for terms #{student_terms} count = #{result_row}"
+        result_row['enroll_count'].to_i > 0
+      else
+        false
+      end
+    end
+
+    def self.safe_query(sql)
+      result = []
+      return result if fake?
+      use_pooled_connection do
+        result = connection.select_all sql
+      end
+      stringify_ints! result
+    rescue => e
+      logger.error "Query failed: #{e.class}: #{e.message}\n #{e.backtrace.join("\n ")}"
+      []
     end
 
   end

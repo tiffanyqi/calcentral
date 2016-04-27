@@ -90,12 +90,14 @@ describe EdoOracle::CourseSections do
 
   context 'EDO DB errors' do
     before do
-      allow(EdoOracle::Queries).to receive(:get_section_instructors)
+      allow(Settings.edodb).to receive(:fake).and_return false
+      allow_any_instance_of(ActiveRecord::ConnectionAdapters::JdbcAdapter).to receive(:select_all)
         .and_raise ActiveRecord::JDBCError, 'Primary key swiped by highwaymen'
     end
-    it 'logs errors and returns a blank hash' do
-      expect(Rails.logger).to receive(:error).with /JDBCError/
-      expect(subject).to eq({})
+    it 'logs errors and returns empty results' do
+      expect(Rails.logger).to receive(:error).with(/JDBCError/).at_least :once
+      expect(subject[:instructors]).to be_empty
+      expect(subject[:schedules]).to be_empty
     end
   end
 end

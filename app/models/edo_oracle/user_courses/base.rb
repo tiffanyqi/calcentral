@@ -1,7 +1,6 @@
 module EdoOracle
   module UserCourses
     class Base < BaseProxy
-      include EdoOracle::QueryCaching
 
       def initialize(options = {})
         super(Settings.edodb, options)
