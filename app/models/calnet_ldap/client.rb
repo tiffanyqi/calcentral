@@ -2,6 +2,7 @@ require 'net/ldap'
 
 module CalnetLdap
   class Client
+    include User::Parser
     include ClassLogger
 
     PEOPLE_DN = 'ou=people,dc=berkeley,dc=edu'
@@ -81,13 +82,6 @@ module CalnetLdap
           response
         end
       end
-    end
-
-    def tokenize_for_search_by_name(phrase)
-      return [] if phrase.blank?
-      tokens = phrase.strip.downcase.gsub(/[;,\s]+/, ' ').split /[\s,]/
-      # Discard middle initials, generational designations (e.g., Jr.) and academic suffixes (e.g., M.A.)
-      tokens.select { |token| !token.end_with? '.' }
     end
 
   end

@@ -8,14 +8,15 @@
       <div class="cc-flex cc-flex-space-between-horizontal-5">
         <div>
           <a href="/user/overview/{{user.ldap_uid}}">
-            <span data-ng-bind="user.person_name" data-ng-bind="user.person_name"></span>
-            <div data-ng-if="!user.person_name">
+            <span data-ng-bind="user.name" data-ng-if="user.name"></span>
+            <div data-ng-if="!user.name">
               <span data-ng-bind="user.first_name"></span>
               <span data-ng-bind="user.last_name"></span>
             </div>
           </a>
         </div>
-        <div>(<span data-ng-bind="user.student_id"></span>)</div>
+        <div data-ng-if="user.student_id">(<span data-ng-bind="user.student_id"></span>)</div>
+        <div data-ng-if="user.sid && !user.student_id">(<span data-ng-bind="user.sid"></span>)</div>
         <div>
           <button class="cc-button-link" data-ng-click="user.delete()" data-ng-if="user.saved">Delete</button>
           <button class="cc-button-link" data-ng-click="user.save()" data-ng-if="!user.saved">Save</button>

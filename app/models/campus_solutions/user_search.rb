@@ -22,7 +22,7 @@ module CampusSolutions
         users = (root = xml['UC_AA_USER_SEARCH']) && (results = root['SEARCH_RESULTS']) && results['USER_DATA']
         users.each do |user|
           feed[:users] << {
-            campus_solutions_id: user['CAMPUS_SOLUTION_ID'],
+            ldap_uid: user['UID'],
             sid: user['STUDENT_ID'],
             name: user['NAME'],
             academic_programs: transform(user['ACADEMIC_PROGRAMS'])

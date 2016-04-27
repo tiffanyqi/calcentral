@@ -31,7 +31,7 @@ describe CampusSolutions::UserSearch do
         it 'should populate feed' do
           expected_users = [
             {
-              campusSolutionsId: '2222222222',
+              ldapUid: '22',
               sid: '3333333333',
               name: 'Day, Morris',
               academicPrograms: [
@@ -56,8 +56,8 @@ describe CampusSolutions::UserSearch do
               ]
             },
             {
-              campusSolutionsId: '5555555555',
-              sid: '666666',
+              ldapUid: '55555',
+              sid: '6666666666',
               name: 'Jam, Jimmy',
               academicPrograms: []
             }

@@ -1,5 +1,6 @@
 class SearchUsersController < ApplicationController
   include ViewAsAuthorization
+  include User::Parser
 
   before_action :api_authenticate
 
@@ -9,29 +10,34 @@ class SearchUsersController < ApplicationController
   DEFAULT_LIMIT_SEARCH_RESULTS = 50
 
   def search_users
-    users_found = authorize_results User::SearchUsers.new(id: id_param).search_users
-    render json: { users: decorate(users_found) }.to_json
+    users = authorize_results by_id(id_param)
+    render json: { users: decorate(users) }.to_json
   end
 
   def search_users_by_uid
-    users_found = authorize_results User::SearchUsersByUid.new(id: id_param).search_users_by_uid
-    render json: { users: decorate(users_found) }.to_json
+    users = authorize_results User::SearchUsersByUid.new(id: id_param).search_users_by_uid
+    render json: { users: decorate(users) }.to_json
   end
 
   def by_id_or_name
-    filter = {}
+    opts = {}
     unless can_view_as_for_all_uids? current_user
       require_advisor current_user.real_user_id
-      filter = { roles: [:applicant, :student, :recentStudent] }
+      opts[:roles] = [:applicant, :student, :recentStudent]
     end
     id_or_name = params.require 'input'
+    # We authorize_results of SearchUsersByName via roles restriction above.
     users = id_or_name =~ /\A\d+\z/ ?
-      User::SearchUsers.new(id: id_or_name).search_users :
-      User::SearchUsersByName.new.search_by(id_or_name, filter)
+      authorize_results(by_id id_or_name, opts) :
+      User::SearchUsersByName.new.search_by(id_or_name, opts)
     render json: { users: decorate(users.take(limit)) }.to_json
   end
 
   private
+
+  def by_id(id, opts={})
+    User::SearchUsers.new(opts.merge id: id).search_users
+  end
 
   def decorate(users)
     unless users.nil? || users.empty?
@@ -44,9 +50,8 @@ class SearchUsersController < ApplicationController
   end
 
   def authorize_results(users)
-    users.each do |user|
-      authorize_user_lookup current_user, user['ldap_uid']
-    end
+    # Because this returns users object we can chain method calls
+    users.each { |user| authorize_user_lookup current_user, user['ldap_uid'] }
   end
 
   def id_param
