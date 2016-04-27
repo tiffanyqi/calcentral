@@ -1,7 +1,6 @@
 module EdoOracle
   class CourseSections < BaseProxy
     include ClassLogger
-    include QueryCaching
 
     def initialize(term_id, course_id)
       super(Settings.edodb)
@@ -10,7 +9,7 @@ module EdoOracle
     end
 
     def get_section_data
-      cached_query "#{@course_id}-#{@term_id}" do
+      self.class.fetch_from_cache "#{@course_id}-#{@term_id}" do
         {
           instructors: get_section_instructors,
           schedules: get_section_schedules
