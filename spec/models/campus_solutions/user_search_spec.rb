@@ -41,8 +41,7 @@ describe CampusSolutions::UserSearch do
                   plan: '25428',
                   planDescription: 'History BA',
                   program: 'GACAD',
-                  programDescription: 'Undergraduate Academic Programs',
-                  college: 'Letters and Science'
+                  programDescription: 'Undergraduate Academic Programs'
                 },
                 {
                   term: '2016 Fall',
@@ -50,8 +49,7 @@ describe CampusSolutions::UserSearch do
                   plan: '25429',
                   planDescription: 'History MS',
                   program: 'GACAD',
-                  programDescription: 'Graduate Academic Programs',
-                  college: 'Letters and Science'
+                  programDescription: 'Graduate Academic Programs'
                 }
               ]
             },

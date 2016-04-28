@@ -13,7 +13,6 @@
           <ACAD_PLAN_DESCR>History BA</ACAD_PLAN_DESCR>
           <ACAD_PROGRAM>GACAD</ACAD_PROGRAM>
           <ACAD_PROGRAM_DESCR>Undergraduate Academic Programs</ACAD_PROGRAM_DESCR>
-          <ACAD_COLLEGE>Letters and Science</ACAD_COLLEGE>
         </ACADEMIC_PROGRAM>
         <ACADEMIC_PROGRAM>
           <TERM>2016 Fall</TERM>
@@ -22,7 +21,6 @@
           <ACAD_PLAN_DESCR>History MS</ACAD_PLAN_DESCR>
           <ACAD_PROGRAM>GACAD</ACAD_PROGRAM>
           <ACAD_PROGRAM_DESCR>Graduate Academic Programs</ACAD_PROGRAM_DESCR>
-          <ACAD_COLLEGE>Letters and Science</ACAD_COLLEGE>
         </ACADEMIC_PROGRAM>
       </ACADEMIC_PROGRAMS>
     </USER_DATA>
