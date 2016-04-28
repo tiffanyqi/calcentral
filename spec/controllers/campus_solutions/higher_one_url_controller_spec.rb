@@ -73,6 +73,11 @@ describe CampusSolutions::HigherOneUrlController do
         json_response = JSON.parse(response.body)
         json_response.should be_present
       end
+      it 'redirects to higher one' do
+        get :redirect
+        expect(response.status).to eq 302
+        expect(response).to redirect_to higher_one_url
+      end
     end
   end
 
