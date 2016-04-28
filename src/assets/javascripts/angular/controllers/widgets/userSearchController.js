@@ -36,7 +36,13 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
   };
 
   var decorate = function(users) {
+    var firstName = 'first_name';
+    var lastName = 'last_name';
+
     angular.forEach(users, function(user) {
+      // Normalize user's person name for the UI.
+      user.name = user.name || (user[firstName] || '').concat(' ', user[lastName] || '');
+
       user.actAs = function() {
         adminService.actAs(user);
       };
@@ -60,6 +66,27 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
     });
   };
 
+  // Synchronize the 'saved' state on the list of searched users.
+  var updateSearchedUserSavedStates = function() {
+    var searchedUsers = $scope.userSearch.tabs.search.users;
+    var savedUsers = $scope.userSearch.tabs.saved.users;
+    var ldapUid = 'ldap_uid';
+
+    _(searchedUsers).forEach(function(target) {
+      var saved = false;
+
+      _(savedUsers).forEach(function(source) {
+        if (target[ldapUid] === source[ldapUid]) {
+          saved = true;
+          // Exit the loop
+          return false;
+        }
+      });
+
+      target.saved = saved;
+    });
+  };
+
   var refreshStoredUsers = function() {
     var tabs = $scope.userSearch.tabs;
     getStoredUsers().success(function(data) {
@@ -68,6 +95,11 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
         tab.users = decorate(_.get(data, 'users.' + tab.label.toLowerCase()));
         if (tab.users.length === 0) {
           tab.message = 'No ' + tab.label.toLowerCase() + ' items.';
+        } else {
+          tab.message = '';
+        }
+        if (tab === tabs.saved) {
+          updateSearchedUserSavedStates();
         }
         tab.isLoading = false;
       });
@@ -85,9 +117,10 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
     var nameOrId = $scope.userSearch.tabs.search.nameOrId;
     adminFactory.searchUsers(nameOrId).success(function(data) {
       if (!data.users || data.users.length === 0) {
-        $scope.userSearch.tabs.search.message = 'Your search on ' + nameOrId + ' did not match any users.';
+        $scope.userSearch.tabs.search.message = 'Your search on \"' + nameOrId + '\" did not match any users.';
       }
       $scope.userSearch.tabs.search.users = decorate(data.users);
+      updateSearchedUserSavedStates();
     }).error(function(data, status) {
       reportError($scope.userSearch.tabs.search, status, data.error);
     }).finally(function() {

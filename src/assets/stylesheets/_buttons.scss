@@ -157,6 +157,41 @@ button {
     border-radius: 5px;
   }
 }
+
+.cc-button-star {
+  background: transparent;
+  font-size: 10px;
+  padding: 2px 0 0;
+  &:active {
+    background: transparent;
+  }
+  &:focus {
+    background: transparent;
+  }
+  &:hover {
+    background: transparent;
+    .cc-button-star-icon-outer {
+      color: $cc-color-black;
+    }
+  }
+}
+.cc-button-star-icon {
+  color: $cc-color-white;
+  font-size: 20px;
+  &.cc-button-star-saved {
+    color: $cc-color-yellow;
+  }
+}
+.cc-button-star-icon-outer {
+  color: $cc-color-light-medium-grey;
+  &:hover {
+    color: $cc-color-black;
+  }
+  &.cc-button-star-saved {
+    color: $cc-color-light-medium-grey;
+  }
+}
+
 .cc-even-1 {
   li {
     width: 100%;

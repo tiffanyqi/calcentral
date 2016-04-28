@@ -29,7 +29,7 @@ angular.module('calcentral.controllers').controller('TasksController', function(
   };
 
   var sortByDate = function(a, b, date, reverse) {
-    if (a[date].epoch !== b[date].epoch) {
+    if (a[date] && b[date] && a[date].epoch !== b[date].epoch) {
       if (!reverse) {
         return a[date].epoch - b[date].epoch;
       } else {

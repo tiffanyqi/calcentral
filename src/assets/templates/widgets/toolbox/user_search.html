@@ -2,57 +2,54 @@
   <div class="cc-widget-title">
     <h2 data-ng-bind="userSearch.title"></h2>
   </div>
-  <div class="cc-widget-text">
-    <div data-ng-switch data-on="userSearch.selectedTab.label">
-      <div class="row collapse">
-        <div class="medium-10 medium-centered columns">
-          <ul class="cc-button-group cc-even-3" role="tablist">
-            <li data-ng-repeat="tab in userSearch.tabs">
-              <button class="cc-button"
-                      data-ng-click="userSearch.loadTab(tab)"
-                      data-ng-class="{'cc-button-selected':(userSearch.selectedTab == tab)}"
-                      aria-selected="{{userSearch.selectedTab == tab}}"
-                      role="tab"
-                      data-ng-bind="tab.label">
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
 
-      <div data-ng-switch-when="Search" role="tabpanel" aria-live="polite">
-        <form data-ng-submit="userSearch.byNameOrId()">
-          <div>
-            <label for="cc-user-search-input">Enter name, UID or SID</label>
-            <div class="cc-flex cc-flex-align-center">
-              <input id="cc-user-search-input" data-ng-model="userSearch.tabs.search.nameOrId" type="text"/>
-              <button class="cc-button cc-button-blue" data-ng-disabled="!userSearch.tabs.search.nameOrId" type="submit">Search</button>
-            </div>
-          </div>
-          <p data-ng-bind="userSearch.tabs.search.message"></p>
-          <div data-cc-spinner-directive="userSearch.tabs.search.queryRunning">
-            <div data-ng-if="userSearch.tabs.search.error && !userSearch.tabs.search.queryRunning">
-              <h3 data-ng-bind="userSearch.tabs.search.error.summary"></h3>
-              <div data-ng-bind="userSearch.tabs.search.error.description"></div>
-            </div>
-            <div data-ng-include="'widgets/toolbox/user_search_results.html'"></div>
-          </div>
-        </form>
-      </div>
-
-      <div data-ng-switch-when="Saved" role="tabpanel" aria-live="polite">
-        <div data-cc-spinner-directive="userSearch.tabs.saved.isLoading">
-          <p data-ng-bind="userSearch.tabs.saved.message"></p>
-          <div data-ng-include="'widgets/toolbox/user_search_results.html'"></div>
-        </div>
-      </div>
-
-      <div data-ng-switch-when="Recent" role="tabpanel" aria-live="polite">
-        <div data-cc-spinner-directive="userSearch.tabs.recent.isLoading">
-          <p data-ng-bind="userSearch.tabs.recent.message"></p>
-          <div data-ng-include="'widgets/toolbox/user_search_results.html'"></div>
-        </div>
+  <div data-ng-switch data-on="userSearch.selectedTab.label">
+    <div class="row collapse cc-widget-text">
+      <div class="medium-10 medium-centered columns">
+        <ul class="cc-button-group cc-even-3" role="tablist">
+          <li data-ng-repeat="tab in userSearch.tabs">
+            <button class="cc-button"
+                    data-ng-click="userSearch.loadTab(tab)"
+                    data-ng-class="{'cc-button-selected':(userSearch.selectedTab == tab)}"
+                    aria-selected="{{userSearch.selectedTab == tab}}"
+                    role="tab"
+                    data-ng-bind="tab.label">
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
+
+    <div data-ng-switch-when="Search" role="tabpanel" aria-live="polite">
+      <form data-ng-submit="userSearch.byNameOrId()">
+        <div class="cc-user-search-results">
+          <label for="cc-user-search-input">Enter name, UID or SID</label>
+          <div class="cc-flex cc-flex-align-center">
+            <input id="cc-user-search-input" data-ng-model="userSearch.tabs.search.nameOrId" type="text"/>
+            <button class="cc-button cc-button-blue" data-ng-disabled="!userSearch.tabs.search.nameOrId" type="submit">Search</button>
+          </div>
+        </div>
+        <div data-cc-spinner-directive="userSearch.tabs.search.queryRunning">
+          <div data-ng-if="userSearch.currentTab.error && !userSearch.tabs.search.queryRunning">
+            <h3 data-ng-bind="userSearch.currentTab.error.summary"></h3>
+            <div data-ng-bind="userSearch.currentTab.error.description"></div>
+          </div>
+          <div data-ng-include="'widgets/toolbox/user_search_results.html'"></div>
+        </div>
+      </form>
+    </div>
+
+    <div data-ng-switch-when="Saved" role="tabpanel" aria-live="polite">
+      <div data-cc-spinner-directive="userSearch.tabs.saved.isLoading">
+        <div data-ng-include="'widgets/toolbox/user_search_results.html'"></div>
+      </div>
+    </div>
+
+    <div data-ng-switch-when="Recent" role="tabpanel" aria-live="polite">
+      <div data-cc-spinner-directive="userSearch.tabs.recent.isLoading">
+        <div data-ng-include="'widgets/toolbox/user_search_results.html'"></div>
+      </div>
+    </div>
+
   </div>
 </div>

@@ -1,30 +1,32 @@
-<ul class="cc-widget-list" data-ng-if="userSearch.selectedTab.users && userSearch.selectedTab.users.length > 0">
-  <li data-ng-repeat="user in userSearch.selectedTab.users" data-ng-class="{'cc-widget-list-selected': user.show}">
-    <span class="cc-visuallyhidden" data-ng-bind-template="Show {{user.show ? 'less' : 'more'}} information about {{user.person_name}}"></span>
-    <div
-      data-ng-class="{'cc-widget-list-hover-opened':(user.show)}"
-      data-cc-accessible-focus-directive
-      data-ng-click="api.widget.toggleShow($event, search.users, user, 'Up Next')">
-      <div class="cc-flex cc-flex-space-between-horizontal-5">
-        <div>
-          <a href="/user/overview/{{user.ldap_uid}}">
-            <span data-ng-bind="user.name" data-ng-if="user.name"></span>
-            <div data-ng-if="!user.name">
-              <span data-ng-bind="user.first_name"></span>
-              <span data-ng-bind="user.last_name"></span>
-            </div>
-          </a>
-        </div>
-        <div data-ng-if="user.student_id">(<span data-ng-bind="user.student_id"></span>)</div>
-        <div data-ng-if="user.sid && !user.student_id">(<span data-ng-bind="user.sid"></span>)</div>
-        <div>
-          <button class="cc-button-link" data-ng-click="user.delete()" data-ng-if="user.saved">Delete</button>
-          <button class="cc-button-link" data-ng-click="user.save()" data-ng-if="!user.saved">Save</button>
-        </div>
-        <div>
-          <button class="cc-button-link" data-ng-click="user.actAs()">view as</button>
+<div class="cc-user-search-results">
+  <p data-ng-bind="userSearch.selectedTab.message" data-ng-if="userSearch.selectedTab.message"></p>
+  <ul class="cc-widget-list" data-ng-if="userSearch.selectedTab.users && userSearch.selectedTab.users.length > 0">
+    <li data-ng-repeat="user in userSearch.selectedTab.users">
+      <div class="cc-user-search-item cc-clearfix">
+        <a href="/user/overview/{{user.ldap_uid}}">
+          <span data-ng-bind="user.name" data-ng-if="user.name"></span>
+        </a>
+        (<span data-ng-bind="user.student_id"></span>)
+        <div class="cc-right">
+          <button class="cc-button-star" title="Delete {{user.name}}" type="button" data-ng-click="user.delete()" data-ng-if="user.saved">
+            <span class="cc-visuallyhidden">Delete</span>
+            <span class="fa-stack cc-button-star-saved">
+              <span class="cc-visuallyhidden" data-ng-bind="user.name"></span>
+              <i class="fa fa-star fa-stack-1x cc-button-star-icon cc-button-star-saved" aria-hidden="true" ></i>
+              <i class="fa fa-star-o fa-stack-2x cc-button-star-icon-outer cc-button-star-saved" aria-hidden="true"></i>
+            </span>
+          </button>
+          <button class="cc-button-star" title="Save {{user.name}}" type="button" data-ng-click="user.save()" data-ng-if="!user.saved">
+            <span class="cc-visuallyhidden">Save</span>
+            <span class="fa-stack" aria-hidden="true">
+              <span class="cc-visuallyhidden" data-ng-bind="user.name"></span>
+              <i class="fa fa-star fa-stack-1x cc-button-star-icon"></i>
+              <i class="fa fa-star-o fa-stack-2x cc-button-star-icon-outer"></i>
+            </span>
+          </button>
+          <button class="cc-button-link" type="button" data-ng-click="user.actAs()">view as</button>
         </div>
       </div>
-    </div>
-  </li>
-</ul>
+    </li>
+  </ul>
+</div>
