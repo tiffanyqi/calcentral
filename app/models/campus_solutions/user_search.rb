@@ -48,8 +48,7 @@ module CampusSolutions
             plan: program['ACAD_PLAN'],
             plan_description: program['ACAD_PLAN_DESCR'],
             program: program['ACAD_PROGRAM'],
-            program_description: program['ACAD_PROGRAM_DESCR'],
-            college: program['ACAD_COLLEGE']
+            program_description: program['ACAD_PROGRAM_DESCR']
           }
         end
       end
