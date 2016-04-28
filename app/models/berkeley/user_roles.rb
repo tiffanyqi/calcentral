@@ -45,7 +45,7 @@ module Berkeley
         end
       end
 
-      # TODO CONFIRM: The combination of 'STUDENT-TYPE-NOT REGISTERED' and 'STUDENT-TYPE-REGISTERED' should be treated as registered.
+      # TODO: CONFIRM: The combination of 'STUDENT-TYPE-NOT REGISTERED' and 'STUDENT-TYPE-REGISTERED' should be treated as registered.
       # (That's how Bear Facts seems to handle it, anyway.)
 
       roles_from_affiliations affiliations
@@ -95,8 +95,9 @@ module Berkeley
       return {} unless cs_affiliations
       result = {}
 
-      # TODO We still need to cover staff, guests, concurrent-enrollment students and registration status.
+      # Possible CS affiliation status codes: 'ACT' (active), 'INA' (inactive) and 'ERR' (bad data that we should ignore)
       cs_affiliations.select { |a| a[:status][:code] == 'ACT' }.each do |active_affiliation|
+        # TODO: We still need to cover staff, guests, concurrent-enrollment students and registration status.
         case active_affiliation[:type][:code]
           when 'ADMT_UX'
             result[:applicant] = true
