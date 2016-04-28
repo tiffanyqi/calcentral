@@ -147,6 +147,14 @@ describe EdoOracle::Queries, :ignore => true do
     end
   end
 
+  describe '.get_cross_listed_course_title', :testext => true do
+    it 'returns cross-listed course title' do
+      result = EdoOracle::Queries.get_cross_listed_course_title('S,SEASN C112')
+      expect(result['title']).to eq 'The British Empire and Commonwealth'
+      expect(result['transcriptTitle']).to eq 'BRITISH EMPIRE'
+    end
+  end
+
   describe '.get_subject_areas', :testext => true do
     it 'returns subject areas' do
       results = EdoOracle::Queries.get_subject_areas

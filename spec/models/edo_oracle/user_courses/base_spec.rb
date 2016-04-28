@@ -119,7 +119,6 @@ describe EdoOracle::UserCourses::Base do
       expect(course[:sections][2][:associated_primary_id]).to eq '44203'
     end
     it 'includes per-section information' do
-      course = subject.first
       [course[:sections], enrollment_query_results[0..2]].transpose.each do |section, enrollment|
         expect(section[:ccn]).to eq enrollment['section_id']
         expect(section[:instruction_format]).to eq enrollment['instruction_format']
@@ -143,9 +142,29 @@ describe EdoOracle::UserCourses::Base do
       end
     end
     it 'includes only non-blank grades' do
-      course = subject.first
       expect(course[:sections][0][:grade]).to eq 'B'
       expect(course[:sections][1]).not_to include(:grade)
+    end
+    context 'when cross-listed course is missing title' do
+      before do
+        enrollment_query_results.each do |result|
+          result.merge!({
+            'catalog_id' => 'C74',
+            'catalog_prefix' => 'C',
+            'course_display_name' => 'MUSIC C74',
+            'course_title' => nil,
+            'course_title_short' => nil,
+            'section_display_name' => 'MUSIC C74'
+          })
+        end
+      end
+      it 'makes an additional database query for the title' do
+        expect(EdoOracle::Queries).to receive(:get_cross_listed_course_title).and_return({
+          'course_title' => 'George Frideric Handel as Venture Capitalist',
+          'course_title_short' => 'GFH VC'
+        })
+        expect(course[:name]).to eq 'George Frideric Handel as Venture Capitalist'
+      end
     end
   end
 
