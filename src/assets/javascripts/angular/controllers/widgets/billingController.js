@@ -44,9 +44,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
       startDt: '',
       endDt: ''
     },
-    searchTermId: {
-      itemTermId: ''
-    },
+    searchTermId: {},
     searchStatus: '0.00',
     statuses: {
       balance: '0.00',
@@ -134,7 +132,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   };
 
   var resetSearch = function() {
-    $scope.filter.searchTermId.itemTermId = '';
+    $scope.filter.searchTermId = {};
     $scope.filter.searchDates.startDt = '';
     $scope.filter.searchDates.endDt = '';
     $scope.filter.parsedDates.startDt = '';
