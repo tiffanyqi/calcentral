@@ -223,6 +223,19 @@ module EdoOracle
       SQL
     end
 
+    def self.get_cross_listed_course_title(course_code)
+      result = safe_query <<-SQL
+        SELECT DISTINCT
+          TRIM(crs."title") AS course_title,
+          TRIM(crs."transcriptTitle") AS course_title_short
+        FROM SISEDO.API_CROSSLISTINGSV00_VW xlist
+        JOIN SISEDO.API_COURSEV00_VW crs ON
+          (xlist."cms-version-independent-id" = crs."cms-version-independent-id")
+        WHERE xlist."displayName" = '#{course_code}'
+      SQL
+      result.first if result
+    end
+
     def self.get_subject_areas
       safe_query <<-SQL
         SELECT DISTINCT "subjectArea" FROM SISEDO.API_COURSEIDENTIFIERSV00_VW

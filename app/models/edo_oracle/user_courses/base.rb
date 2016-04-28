@@ -19,6 +19,9 @@ module EdoOracle
         EdoOracle::Queries.get_enrolled_sections(@uid, @non_legacy_academic_terms).each do |row|
           if (item = row_to_feed_item(row, previous_item))
             item[:role] = 'Student'
+            # Cross-listed courses may lack descriptive names. Students, unlike instructors, will
+            # not get the correctly named course elsewhere in their feed.
+            merge_cross_listed_titles item
             merge_feed_item(item, campus_classes)
             previous_item = item
           end
@@ -165,6 +168,14 @@ module EdoOracle
         end
 
         section_data
+      end
+
+      def merge_cross_listed_titles(course)
+        if (course[:catid].start_with? 'C') && !course[:name]
+          if (title_results = EdoOracle::Queries.get_cross_listed_course_title course[:course_code])
+            course[:name] = title_results['course_title'] || title_results['course_title_short']
+          end
+        end
       end
 
       def merge_detailed_section_data(campus_classes)
