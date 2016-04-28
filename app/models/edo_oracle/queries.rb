@@ -51,15 +51,15 @@ module EdoOracle
           enr."UNITS_TAKEN" AS units,
           enr."GRADE_MARK" AS grade,
           enr."GRADING_BASIS_CODE" AS grading_basis
-        FROM SISEDO.ENROLLMENTV00_VW enr
+        FROM SISEDO.ENROLLMENT_UIDV00_VW enr
         JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
           enr."TERM_ID" = sec."term-id" AND
           enr."SESSION_ID" = sec."session-id" AND
-          enr."CLASS_SECTION_ID" = sec."id")
+          enr."CLASS_SECTION_ID" = sec."id" AND
+          sec."status-code" = 'A')
         #{JOIN_SECTION_TO_COURSE}
         WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."status-code" = 'A'
-          AND sec."term-id" IN (#{terms_query_list terms})
+          AND enr."TERM_ID" IN (#{terms_query_list terms})
           AND enr."CAMPUS_UID" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
       SQL
@@ -280,7 +280,7 @@ module EdoOracle
         SELECT
           count(enroll."TERM_ID") AS enroll_count
         FROM
-          SISEDO.ENROLLMENTV00_VW enroll
+          SISEDO.ENROLLMENT_UIDV00_VW enroll
         WHERE
           enroll."CAMPUS_UID" = '#{ldap_uid.to_i}' AND
           rownum < 2
