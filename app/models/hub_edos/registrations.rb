@@ -1,7 +1,6 @@
 module HubEdos
   class Registrations < Proxy
 
-    include CampusSolutions::AcademicProfileFeatureFlagged
     include Cache::UserCacheExpiry
 
     def initialize(options = {})

@@ -1,7 +1,6 @@
 module HubEdos
   class AcademicStatus < Student
 
-    include CampusSolutions::AcademicProfileFeatureFlagged
     include Cache::UserCacheExpiry
 
     def initialize(options = {})
