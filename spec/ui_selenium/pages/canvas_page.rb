@@ -12,6 +12,8 @@ class CanvasPage
   link(:dashboard_link, :id => 'global_nav_dashboard_link')
   link(:logout_link, :text => 'Logout')
   text_area(:logout_confirm, :xpath => '//input[@value="Log Out"]')
+  link(:masquerade_link, :class => 'masquerade_button')
+  link(:stop_masquerading_link, :class => 'stop_masquerading')
 
   # Course
   link(:add_new_course_button, :xpath => '//a[contains(.,"Add a New Course")]')
@@ -66,6 +68,7 @@ class CanvasPage
   # NAVIGATION
 
   def load_homepage
+    logger.debug "Loading Canvas homepage at #{WebDriverUtils.canvas_base_url}"
     navigate_to "#{WebDriverUtils.canvas_base_url}"
   end
 
@@ -80,11 +83,11 @@ class CanvasPage
   end
 
   def accept_login_messages(course_id)
-    wait_until(timeout=WebDriverUtils.page_load_timeout) { current_url.include? "#{course_id}" }
+    wait_until(WebDriverUtils.page_load_timeout) { current_url.include? "#{course_id}" }
     sleep 1
     if updated_terms_heading?
       logger.info 'Accepting terms and conditions'
-      terms_cbx_element.when_visible timeout=WebDriverUtils.page_event_timeout
+      terms_cbx_element.when_visible WebDriverUtils.page_event_timeout
       check_terms_cbx
       submit_button
     end
@@ -93,15 +96,29 @@ class CanvasPage
     if accept_course_invite?
       logger.info 'Accepting course invite'
       accept_course_invite
-      accept_course_invite_element.when_not_visible timeout=WebDriverUtils.page_load_timeout
+      accept_course_invite_element.when_not_visible WebDriverUtils.page_load_timeout
     end
+  end
+
+  def masquerade_as(canvas_id)
+    logger.debug "Masquerading as #{canvas_id}"
+    navigate_to "#{WebDriverUtils.canvas_base_url}/users/#{canvas_id}/masquerade"
+    WebDriverUtils.wait_for_page_and_click masquerade_link_element
+    stop_masquerading_link_element.when_visible WebDriverUtils.page_load_timeout
+  end
+
+  def stop_masquerading(driver)
+    logger.debug 'Ending masquerade'
+    driver.switch_to.default_content
+    WebDriverUtils.wait_for_page_and_click stop_masquerading_link_element
+    stop_masquerading_link_element.when_not_visible WebDriverUtils.page_load_wait
   end
 
   def log_out(cal_net_page)
     navigate_to "#{WebDriverUtils.canvas_base_url}/logout"
     unless cal_net_page.username_element.visible?
       WebDriverUtils.wait_for_page_and_click logout_confirm_element
-      cal_net_page.logout_conf_heading_element.when_visible timeout=WebDriverUtils.page_load_timeout
+      cal_net_page.logout_conf_heading_element.when_visible WebDriverUtils.page_load_timeout
     end
     # Add a hard logout from CalNet due to SSO issue in test environment
     cal_net_page.logout
@@ -120,24 +137,34 @@ class CanvasPage
     navigate_to "#{WebDriverUtils.canvas_base_url}/courses/#{course_id}/users"
   end
 
+  def switch_to_frame(driver)
+    driver.switch_to.frame 'tool_content'
+  end
+
   # COURSE SITE SETUP
+
+  def load_create_site_tool(driver, canvas_id, tool_id)
+    navigate_to "#{WebDriverUtils.canvas_base_url}/users/#{canvas_id}/external_tools/#{tool_id}"
+    wait_until(WebDriverUtils.page_load_timeout) { driver.find_element(:id => 'tool_content') }
+    switch_to_frame driver
+  end
 
   def create_course_site(current_term, site_code, site_name)
     logger.info "Creating a course site named #{site_name}"
     load_sub_account
     WebDriverUtils.wait_for_page_and_click add_new_course_button_element
-    course_name_input_element.when_visible timeout=WebDriverUtils.page_event_timeout
+    course_name_input_element.when_visible WebDriverUtils.page_event_timeout
     self.course_name_input = "#{site_code}"
     self.ref_code_input = "#{site_name}"
     WebDriverUtils.wait_for_element_and_select(term_element, current_term)
     WebDriverUtils.wait_for_element_and_click create_course_button_element
-    add_course_success_element.when_visible timeout=WebDriverUtils.page_load_timeout
+    add_course_success_element.when_visible WebDriverUtils.page_load_timeout
   end
 
   def search_for_course(test_id)
     tries ||= 3
     load_sub_account
-    search_course_input_element.when_visible timeout=WebDriverUtils.page_event_timeout
+    search_course_input_element.when_visible WebDriverUtils.page_event_timeout
     self.search_course_input = "#{test_id}"
     search_course_button
     wait_until(timeout) { course_site_heading.include? "#{test_id}" }
@@ -151,7 +178,7 @@ class CanvasPage
     logger.info 'Publishing the course'
     load_course_site course_id
     WebDriverUtils.wait_for_page_and_click publish_button_element
-    published_button_element.when_visible timeout=WebDriverUtils.page_load_timeout
+    published_button_element.when_visible WebDriverUtils.page_load_timeout
   end
 
   def add_users(course_id, test_users)
@@ -187,7 +214,7 @@ class CanvasPage
   def delete_course(course_id)
     navigate_to "#{WebDriverUtils.canvas_base_url}/courses/#{course_id}/confirm_action?event=delete"
     WebDriverUtils.wait_for_page_and_click delete_course_button_element
-    delete_course_success_element.when_visible timeout=WebDriverUtils.page_load_timeout
+    delete_course_success_element.when_visible WebDriverUtils.page_load_timeout
     logger.info "Course id #{course_id} has been deleted"
   end
 
@@ -200,7 +227,7 @@ class CanvasPage
     html_editor_link if html_editor_link_element.visible?
     WebDriverUtils.wait_for_element_and_type(announcement_msg_element, announcement_body)
     WebDriverUtils.wait_for_element_and_click save_announcement_button_element
-    announcement_title_heading_element.when_visible timeout=WebDriverUtils.page_load_timeout
+    announcement_title_heading_element.when_visible WebDriverUtils.page_load_timeout
     logger.info "Announcement URL is #{current_url}"
     current_url.gsub!('discussion_topics', 'announcements')
   end
@@ -211,7 +238,7 @@ class CanvasPage
     WebDriverUtils.wait_for_element_and_type(discussion_title_element, discussion_name)
     check_threaded_discussion_cbx
     WebDriverUtils.wait_for_element_and_click save_and_publish_button_element
-    published_button_element.when_visible timeout=WebDriverUtils.page_load_timeout
+    published_button_element.when_visible WebDriverUtils.page_load_timeout
     logger.info "Discussion URL is #{current_url}"
     current_url
   end
@@ -222,10 +249,10 @@ class CanvasPage
     WebDriverUtils.wait_for_element_and_type(assignment_name_element, assignment_name)
     WebDriverUtils.wait_for_element_and_type(assignment_due_date_element, due_date.strftime("%b %-d %Y"))
     sleep 2
-    text_entry_cbx_element.when_visible timeout=WebDriverUtils.page_event_timeout
+    text_entry_cbx_element.when_visible WebDriverUtils.page_event_timeout
     check_text_entry_cbx
     WebDriverUtils.wait_for_element_and_click save_and_publish_button_element
-    published_button_element.when_visible timeout=WebDriverUtils.page_load_timeout
+    published_button_element.when_visible WebDriverUtils.page_load_timeout
     logger.info "Submission assignment URL is #{current_url}"
     current_url
   end

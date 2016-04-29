@@ -339,7 +339,7 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
         unless section_buildings(section)[index].nil?
           section_schedule.concat("#{section_buildings(section)[index].strip}")
         end
-        schedules << section_schedule
+        schedules << section_schedule.gsub(/\s+/, ' ')
       end
     end
     schedules
@@ -347,7 +347,7 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
 
   def section_instructor_names(section)
     names = []
-    section['instructors'].each { |instructor| names << instructor['name'] }
+    section['instructors'].each { |instructor| names << instructor['name'].gsub(/\s+/, ' ') }
     names
   end
 

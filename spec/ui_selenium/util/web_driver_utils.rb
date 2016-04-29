@@ -48,6 +48,10 @@ class WebDriverUtils
     Settings.ui_selenium.canvas_qa_sub_account
   end
 
+  def self.canvas_create_site_id
+    Settings.ui_selenium.canvas_create_site_id
+  end
+
   def self.google_auth_url
     Settings.ui_selenium.google_auth_url
   end
