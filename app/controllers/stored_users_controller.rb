@@ -7,17 +7,22 @@ class StoredUsersController < ApplicationController
 
   def get
     authorize_query_stored_users current_user
-    users_found = User::StoredUsers.get(current_user.real_user_id)
+    users_found = User::StoredUsers.get current_user.real_user_id
     render json: { users: users_found }.to_json
   end
 
   def store_saved_uid
-    response = User::StoredUsers.store_saved_uid(current_user.real_user_id, params['uid'])
+    response = User::StoredUsers.store_saved_uid current_user.real_user_id, uid_param
+    render json: response.to_json
+  end
+
+  def store_recent_uid
+    response = User::StoredUsers.store_recent_uid current_user.real_user_id, uid_param
     render json: response.to_json
   end
 
   def delete_saved_uid
-    response = User::StoredUsers.delete_saved_uid(current_user.real_user_id, params['uid'])
+    response = User::StoredUsers.delete_saved_uid current_user.real_user_id, uid_param
     render json: response.to_json
   end
 
@@ -33,6 +38,10 @@ class StoredUsersController < ApplicationController
 
   private
 
+  def uid_param
+    params.require 'uid'
+  end
+
   def error_response
    result = { success: false, message: 'Please provide a numeric UID.' }
     respond_with(result) do |format|
@@ -42,7 +51,7 @@ class StoredUsersController < ApplicationController
 
   def numeric_uid?
     begin
-      Integer(params['uid'], 10)
+      Integer(uid_param, 10)
     rescue ArgumentError
       error_response
     end

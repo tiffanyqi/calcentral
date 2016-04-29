@@ -31,11 +31,12 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
   };
 
   var loadProfile = function() {
+    var targetUserUid = $routeParams.uid;
     advisingFactory.getStudent({
-      uid: $routeParams.uid
+      uid: targetUserUid
     }).success(function(data) {
       angular.extend($scope.targetUser, _.get(data, 'attributes'));
-      $scope.targetUser.ldapUid = $routeParams.uid;
+      $scope.targetUser.ldapUid = targetUserUid;
       $scope.targetUser.addresses = apiService.profile.fixFormattedAddresses(_.get(data, 'contacts.feed.student.addresses'));
       $scope.targetUser.phones = _.get(data, 'contacts.feed.student.phones');
       $scope.targetUser.emails = _.get(data, 'contacts.feed.student.emails');
@@ -44,7 +45,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       apiService.util.setTitle($scope.targetUser.defaultName);
       // Get links to advising resources
       advisingFactory.getAdvisingResources({
-        uid: $routeParams.uid
+        uid: targetUserUid
       }).then(function(data) {
         $scope.ucAdvisingResources = _.get(data, 'data.feed.ucAdvisingResources');
       });

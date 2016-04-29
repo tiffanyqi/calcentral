@@ -15,8 +15,9 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
   var stopActAsUrl = '/stop_act_as';
   var stopAdvisorActAsUrl = '/stop_advisor_act_as';
   var stopDelegateActAsUrl = '/stop_delegate_act_as';
-  var storedUsersUrl = '/stored_users';
-  var storeSavedUserUrl = '/store_user/saved';
+  var storedUsersUrl = '/api/view_as/my_stored_users';
+  var storeSavedUserUrl = '/api/view_as/store_user_as_saved';
+  var storeRecentUserUrl = '/api/view_as/store_user_as_recent';
   var deleteSavedUserUrl = '/delete_user/saved';
   var deleteAllRecentUsersUrl = '/delete_users/recent';
   var deleteAllSavedUsersUrl = '/delete_users/saved';
@@ -65,6 +66,10 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
     return $http.post(storeSavedUserUrl, options);
   };
 
+  var storeUserAsRecent = function(options) {
+    return $http.post(storeRecentUserUrl, options);
+  };
+
   var deleteUser = function(options) {
     return $http.post(deleteSavedUserUrl, options);
   };
@@ -89,6 +94,7 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
     stopAdvisorActAs: stopAdvisorActAs,
     stopDelegateActAs: stopDelegateActAs,
     storeUser: storeUser,
+    storeUserAsRecent: storeUserAsRecent,
     userLookup: userLookup,
     searchUsers: searchUsers,
     userLookupByUid: userLookupByUid

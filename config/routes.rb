@@ -132,10 +132,11 @@ Calcentral::Application.routes.draw do
   get '/api/search_users/id_or_name/:input' => 'search_users#by_id_or_name', :defaults => { :format => 'json' }
 
   # View-as endpoints
-  get '/stored_users' => 'stored_users#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/view_as/my_stored_users' => 'stored_users#get', :defaults => { :format => 'json' }
+  post '/api/view_as/store_user_as_saved' => 'stored_users#store_saved_uid', defaults: { format: 'json' }
+  post '/api/view_as/store_user_as_recent' => 'stored_users#store_recent_uid', defaults: { format: 'json' }
   post '/act_as' => 'act_as#start'
   post '/stop_act_as' => 'act_as#stop'
-  post '/store_user/saved' => 'stored_users#store_saved_uid', via: :post, defaults: { format: 'json' }
   post '/delete_user/saved' => 'stored_users#delete_saved_uid', via: :post, defaults: { format: 'json' }
   post '/delete_users/recent' => 'stored_users#delete_all_recent', via: :post, defaults: { format: 'json' }
   post '/delete_users/saved' => 'stored_users#delete_all_saved', via: :post, defaults: { format: 'json' }
