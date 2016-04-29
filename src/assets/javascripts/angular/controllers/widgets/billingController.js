@@ -89,11 +89,19 @@ angular.module('calcentral.controllers').controller('BillingController', functio
     }
   };
 
-  var parseAmounts = function(value) {
-    if (_.isNumber(value)) {
-      return value.toFixed(2);
+  var makeDollarAmountsSearchable = function(billingItem) {
+    if (billingItem.itemLineAmount) {
+      var itemLineAmountSearch = '$' + billingItem.itemLineAmount;
+      _.set(billingItem, 'itemLineAmountSearch', itemLineAmountSearch);
     }
-    return value;
+    if (billingItem.itemBalance) {
+      var itemBalanceSearch = '$' + billingItem.itemBalance;
+      _.set(billingItem, 'itemBalanceSearch', itemBalanceSearch);
+    }
+  };
+
+  var parseAmounts = function(value) {
+    return _.isNumber(value) ? value.toFixed(2) : value;
   };
 
   var parseBillingInfo = function(data) {
@@ -115,6 +123,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
     _.forEach(billing.activity, function(billingItem) {
       getTermOptions(billingItem);
       makeDatesSearchable(billingItem);
+      makeDollarAmountsSearchable(billingItem);
     });
 
     $scope.billing.data = billing;
