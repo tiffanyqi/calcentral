@@ -74,7 +74,7 @@ class CanvasPage
 
   def log_in(cal_net_page, username, password)
     # Retry due to SSO issue in test environment
-    # tries ||= 2
+    tries ||= 2
     load_homepage
     cal_net_page.login(username, password)
     dashboard_link_element.when_visible timeout=WebDriverUtils.page_load_timeout
