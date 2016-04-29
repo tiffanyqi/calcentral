@@ -103,11 +103,6 @@ module CampusSolutionsHelperModule
     it_behaves_like 'a proxy that observes a feature flag'
   end
 
-  shared_examples 'a proxy that properly observes the academic profile feature flag' do
-    let(:flag) { :cs_academic_profile }
-    it_behaves_like 'a proxy that observes a feature flag'
-  end
-
   shared_examples 'a proxy that properly observes the billing feature flag' do
     let(:flag) { :cs_billing }
     it_behaves_like 'a proxy that observes a feature flag'
