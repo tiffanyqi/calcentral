@@ -13,13 +13,18 @@ module MyAcademics
         req_name, req_value = requirement.to_a
 
         display_name = case req_name.upcase
-                 when 'SUBJECTA' then 'UC Entry Level Writing'
-                 when 'AMERICANHISTORY' then 'American History'
-                 when 'AMERICANINSTITUTIONS' then 'American Institutions'
-                 when 'AMERICANCULTURES' then 'American Cultures'
-                 else req_name
-               end
-        display_status = req_value.upcase == 'REQT SATISFIED' ? 'met' : ''
+          when 'SUBJECTA' then 'UC Entry Level Writing'
+          when 'AMERICANHISTORY' then 'American History'
+          when 'AMERICANINSTITUTIONS' then 'American Institutions'
+          when 'AMERICANCULTURES' then 'American Cultures'
+          else req_name
+        end
+
+        display_status = case req_value.upcase
+          when 'REQT SATISFIED' then 'met'
+          when 'EXEMPT' then 'exempt'
+          else ''
+        end
 
         {
           name: display_name,
