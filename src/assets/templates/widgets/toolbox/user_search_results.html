@@ -1,32 +1,52 @@
 <div class="cc-user-search-results">
   <p data-ng-bind="userSearch.selectedTab.message" data-ng-if="userSearch.selectedTab.message"></p>
-  <ul class="cc-widget-list" data-ng-if="userSearch.selectedTab.users && userSearch.selectedTab.users.length > 0">
-    <li data-ng-repeat="user in userSearch.selectedTab.users">
-      <div class="cc-user-search-item cc-clearfix">
-        <a href="/user/overview/{{user.ldap_uid}}">
-          <span data-ng-bind="user.name" data-ng-if="user.name"></span>
-        </a>
-        (<span data-ng-bind="user.student_id"></span>)
-        <div class="cc-right">
-          <button class="cc-button-star" title="Delete {{user.name}}" type="button" data-ng-click="user.delete()" data-ng-if="user.saved">
-            <span class="cc-visuallyhidden">Delete</span>
-            <span class="fa-stack cc-button-star-saved">
-              <span class="cc-visuallyhidden" data-ng-bind="user.name"></span>
-              <i class="fa fa-star fa-stack-1x cc-button-star-icon cc-button-star-saved" aria-hidden="true" ></i>
-              <i class="fa fa-star-o fa-stack-2x cc-button-star-icon-outer cc-button-star-saved" aria-hidden="true"></i>
-            </span>
-          </button>
-          <button class="cc-button-star" title="Save {{user.name}}" type="button" data-ng-click="user.save()" data-ng-if="!user.saved">
-            <span class="cc-visuallyhidden">Save</span>
-            <span class="fa-stack" aria-hidden="true">
-              <span class="cc-visuallyhidden" data-ng-bind="user.name"></span>
-              <i class="fa fa-star fa-stack-1x cc-button-star-icon"></i>
-              <i class="fa fa-star-o fa-stack-2x cc-button-star-icon-outer"></i>
-            </span>
-          </button>
-          <button class="cc-button-link" type="button" data-ng-click="user.actAs()">view as</button>
+  <div data-ng-if="userSearch.selectedTab.users && userSearch.selectedTab.users.length > 0">
+
+    <div data-ng-if="userSearch.selectedTab.label == 'Search'">
+      <p data-ng-if="userSearch.selectedTab.users.length >= searchResultsLimit">
+        <i class="fa fa-exclamation-triangle cc-icon cc-icon-gold" aria-hidden="true"></i>
+        <strong>
+          More than <span data-ng-bind="searchResultsLimit"></span> results found, please narrow search.
+        </strong>
+      </p>
+    </div>
+
+    <ul class="cc-widget-list">
+      <li data-ng-repeat="user in userSearch.selectedTab.users | limitTo: userSearch.selectedTab.label == 'Search' ? searchResultsViewLimit : ''">
+        <div class="cc-user-search-item cc-clearfix">
+          <a href="/user/overview/{{user.ldap_uid}}">
+            <span data-ng-bind="user.name" data-ng-if="user.name"></span>
+          </a>
+          (<span data-ng-bind="user.student_id"></span>)
+          <div class="cc-right">
+            <button class="cc-button-star" title="Delete {{user.name}}" type="button" data-ng-click="user.delete()" data-ng-if="user.saved">
+              <span class="cc-visuallyhidden">Delete</span>
+              <span class="fa-stack cc-button-star-saved">
+                <span class="cc-visuallyhidden" data-ng-bind="user.name"></span>
+                <i class="fa fa-star fa-stack-1x cc-button-star-icon cc-button-star-saved" aria-hidden="true" ></i>
+                <i class="fa fa-star-o fa-stack-2x cc-button-star-icon-outer cc-button-star-saved" aria-hidden="true"></i>
+              </span>
+            </button>
+            <button class="cc-button-star" title="Save {{user.name}}" type="button" data-ng-click="user.save()" data-ng-if="!user.saved">
+              <span class="cc-visuallyhidden">Save</span>
+              <span class="fa-stack" aria-hidden="true">
+                <span class="cc-visuallyhidden" data-ng-bind="user.name"></span>
+                <i class="fa fa-star fa-stack-1x cc-button-star-icon"></i>
+                <i class="fa fa-star-o fa-stack-2x cc-button-star-icon-outer"></i>
+              </span>
+            </button>
+          </div>
         </div>
+      </li>
+    </ul>
+    <div class="cc-clearfix-container">
+      <div class="cc-hidden cc-print-show cc-text-center">
+        Displaying <span data-ng-bind="searchResultsViewLimit <= userSearch.selectedTab.users.length ? searchResultsViewLimit : userSearch.selectedTab.users.length"></span> of <span data-ng-bind="userSearch.selectedTab.users.length"></span> users.
       </div>
-    </li>
-  </ul>
+      <div data-ng-class="{'cc-hidden': userSearch.selectedTab.label != 'Search'}"
+        data-cc-show-more-directive
+        data-cc-show-more-increment="searchResultsIncrement"
+        data-cc-show-more-limit="searchResultsViewLimit"
+        data-cc-show-more-list="userSearch.selectedTab.users"></div>
+    </div>
 </div>
