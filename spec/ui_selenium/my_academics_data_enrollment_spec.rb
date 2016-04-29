@@ -275,7 +275,7 @@ describe 'My Academics enrollments', :testui => true do
                               class_page.back
                             end
 
-                            # Single primary section in a course has a single class page
+                          # Single primary section in a course has a single class page
                           else
                             api_sections = academics_api_page.course_sections(course)
                             api_section_labels = academics_api_page.sections_labels(api_sections)
