@@ -372,6 +372,9 @@ ui_selenium:
   live_update_timeout_delta: 180
   academics_timeout: 20
   canvas_update_timeout: 60
+  canvas_username: secret
+  canvas_password: secret
+  canvas_id: secret
   test_user_password: secret
   oski_username: secret
   oski_password: secret
