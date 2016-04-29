@@ -1,0 +1,180 @@
+{
+  "courses": [
+    {
+      "workflow": "ccn",
+      "term": "Spring 2016",
+      "courseTitle": "General Biology Lecture",
+      "courseCode": "BIOLOGY 1A",
+      "sections": [
+        {
+          "ccn": "07253",
+          "label": "LEC 001"
+        },
+        {
+          "ccn": "07256",
+          "label": "DIS 101"
+        },
+        {
+          "ccn": "07259",
+          "label": "DIS 102"
+        },
+        {
+          "ccn": "07262",
+          "label": "DIS 103"
+        },
+        {
+          "ccn": "07265",
+          "label": "DIS 104"
+        },
+        {
+          "ccn": "07268",
+          "label": "LAB 101"
+        },
+        {
+          "ccn": "07271",
+          "label": "LAB 102"
+        },
+        {
+          "ccn": "07274",
+          "label": "LAB 103"
+        },
+        {
+          "ccn": "07277",
+          "label": "LAB 104"
+        }
+      ],
+      "sectionFormatsForSite": [
+        { "label": "LEC" },
+        { "label": "DIS" },
+        { "label": "LAB" }
+      ],
+      "teachers": [
+        {
+          "uid": "123456",
+          "canvasId": "9876543",
+          "testUser": "true"
+        },
+        {
+          "uid": "123457",
+          "canvasId": "9876544"
+        }
+      ]
+    },
+    {
+      "workflow": "masquerade",
+      "term": "Summer 2016",
+      "courseTitle": "Brain, Mind, and Behavior",
+      "courseCode": "MCELLBI C61",
+      "sections": [
+        {
+          "ccn": "57560",
+          "label": "LEC 001"
+        },
+        {
+          "ccn": "57563",
+          "label": "DIS 101"
+        },
+        {
+          "ccn": "57566",
+          "label": "DIS 102"
+        },
+        {
+          "ccn": "57569",
+          "label": "DIS 103"
+        },
+        {
+          "ccn": "57572",
+          "label": "DIS 104"
+        },
+        {
+          "ccn": "57575",
+          "label": "DIS 105"
+        },
+        {
+          "ccn": "57578",
+          "label": "DIS 106"
+        },
+        {
+          "ccn": "57581",
+          "label": "DIS 107"
+        },
+        {
+          "ccn": "57584",
+          "label": "DIS 108"
+        },
+        {
+          "ccn": "73599",
+          "label": "LEC 001"
+        },
+        {
+          "ccn": "73602",
+          "label": "DIS 101"
+        },
+        {
+          "ccn": "73605",
+          "label": "DIS 102"
+        },
+        {
+          "ccn": "73608",
+          "label": "DIS 103"
+        },
+        {
+          "ccn": "73611",
+          "label": "DIS 104"
+        },
+        {
+          "ccn": "73614",
+          "label": "DIS 105"
+        },
+        {
+          "ccn": "73617",
+          "label": "DIS 106"
+        },
+        {
+          "ccn": "73620",
+          "label": "DIS 107"
+        },
+        {
+          "ccn": "73623",
+          "label": "DIS 108"
+        }
+      ],
+      "sectionFormatsForSite": [
+        { "label": "LEC" }
+      ],
+      "teachers": [
+        {
+          "uid": "123456",
+          "canvasId": "9876543",
+          "testUser": true
+        }
+      ]
+    },
+    {
+      "workflow": "uid",
+      "term": "Fall 2016",
+      "courseTitle": "Theories of Justice",
+      "courseCode": "LEGALST 107",
+      "sections": [
+        {
+          "ccn": "51542",
+          "label": "DIS 102"
+        },
+        {
+          "ccn": "51551",
+          "label": "DIS 105"
+        }
+      ],
+      "sectionFormatsForSite": [
+        { "label": "DIS" }
+      ],
+      "teachers": [
+        {
+          "uid": "123456",
+          "canvasId": "9876543",
+          "testUser": true
+        }
+      ]
+    }
+  ]
+}

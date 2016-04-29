@@ -9,7 +9,7 @@ class CanvasPage
   button(:accept_course_invite, :name => 'accept')
   li(:user_name, :class => 'user_name')
   paragraph(:not_available, :xpath => '//p[contains(.,"This course has not been published by the instructor yet.")]')
-  link(:dashboard_link, :text => 'Dashboard')
+  link(:dashboard_link, :xpath => '//a[contains(.,"Courses & Groups")]')
   link(:logout_link, :text => 'Logout')
   text_area(:logout_confirm, :xpath => '//input[@value="Log Out"]')
   link(:masquerade_link, :class => 'masquerade_button')
