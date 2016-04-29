@@ -9,8 +9,10 @@ module CalCentralPages
     h1(:page_heading, :xpath => '//h1[text()="Create a Course Site"]')
 
     button(:maintenance_button, :class => 'bc-template-canvas-maintenance-notice-button')
-    link(:bcourses_service_page_link, :xpath => '//a[contains(text(),"bCourses service page")]')
-    button(:need_help_link, :xpath => '//button[contains(text(),"Need help deciding which official sections to select?")]')
+    div(:maintenance_notice, :class => 'bc-template-canvas-maintenance-notice-details')
+    link(:bcourses_service, :xpath => '//a[contains(text(),"bCourses service page")]')
+    button(:need_help, :xpath => '//button[contains(text(),"Need help deciding which official sections to select?")]')
+    div(:help, :id => 'section-selection-help')
 
     button(:switch_mode, :class => 'bc-page-create-course-site-admin-mode-switch')
 
@@ -21,11 +23,6 @@ module CalCentralPages
     span(:switch_to_ccn, :xpath => '//span[contains(.,"Switch to CCN input")]')
     button(:review_ccns_button, :xpath => '//button[text()="Review matching CCNs"]')
     text_area(:ccn_list, :id => 'bc-page-create-course-site-ccn-list')
-
-    elements(:semester_button, :button, :name => 'semester')
-    elements(:semester_label, :label, :xpath => '//input[@name="semester"]/following-sibling::label')
-    elements(:course_toggle, :button, :xpath => '//li[@data-ng-repeat="course in coursesList"]/button')
-    elements(:course_code, :span, :xpath => '//li[@data-ng-repeat="course in coursesList"]/span[@data-ng-bind="course.course_code"]')
 
     button(:next_button, :xpath => '//button[text()="Next"]')
     link(:cancel_link, :text => 'Cancel')
@@ -69,14 +66,14 @@ module CalCentralPages
     end
 
     def course_toggle(course)
-      button_element(:xpath => "//span[text()='#{course['courseCode']}']/ancestor::button")
+      button_element(:xpath => "//button[contains(@aria-label,'#{course['courseTitle']}')]")
     end
 
     def toggle_course_sections(course)
       WebDriverUtils.wait_for_element_and_click course_toggle(course)
     end
 
-    # Section rows
+    # Section rows on page
 
     def section_data(driver, section_id)
       {
@@ -100,8 +97,9 @@ module CalCentralPages
     end
 
     def select_sections(sections)
+      section_labels = sections.map { |section| section[:label] }
+      logger.debug "Selecting sections #{section_labels * ', '}"
       sections.each do |section|
-        logger.debug "Selecting #{section[:label]}"
         section_checkbox(section[:id]).check
       end
     end
@@ -144,11 +142,14 @@ module CalCentralPages
     def click_next
       wait_until(WebDriverUtils.page_event_timeout) { !next_button_element.attribute('disabled') }
       next_button
+      site_name_input_element.when_visible WebDriverUtils.page_load_timeout
     end
 
-    def enter_site_titles(course_code, test_id)
-      WebDriverUtils.wait_for_element_and_type(site_name_input_element, "QA TEST #{test_id} - #{course_code}")
-      WebDriverUtils.wait_for_element_and_type(site_abbreviation_element, "QA TEST - #{test_id}")
+    def enter_site_titles(course_code)
+      site_abbreviation = "QA TEST #{Time.now.to_i.to_s}"
+      WebDriverUtils.wait_for_element_and_type(site_name_input_element, "#{site_abbreviation} - #{course_code}")
+      WebDriverUtils.wait_for_element_and_type(site_abbreviation_element, site_abbreviation)
+      site_abbreviation
     end
 
     def click_create_site
