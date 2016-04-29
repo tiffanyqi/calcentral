@@ -35,23 +35,38 @@ class AdvisingStudentController < ApplicationController
   end
 
   def academic_plan
-    model = CampusSolutions::MyAcademicPlan.new student_uid_param
-    model.term_id = params['term_id']
-    render json: model.get_feed_as_json
+    render json: academic_plan_by_student_uid.get_feed_as_json
   end
 
   def resources
     json = CampusSolutions::AdvisingResources.new(user_id: session['user_id'], student_uid: student_uid_param).get
-    # Advisors get only a subset of links
-    subset = [:ucServiceIndicator, :ucStudentAdvisor]
-    if json[:feed] && json[:feed][:ucAdvisingResources] && (links = json[:feed][:ucAdvisingResources][:ucAdvisingLinks])
-      filtered_links = links.select { |key| subset.include? key }
-      json[:feed][:ucAdvisingResources][:ucAdvisingLinks] = filtered_links
+    links = json[:feed] && json[:feed][:ucAdvisingResources] && json[:feed][:ucAdvisingResources][:ucAdvisingLinks]
+    if links
+      # Advisors get only a subset of links
+      keys = [:ucServiceIndicator, :ucStudentAdvisor]
+      keys << :ucGteformsWorkcenter if Settings.features.cs_advising_gte_forms
+      advising_links = links.select { |key| keys.include? key }
+      if (url = academic_planner_url)
+        advising_links[:ucAcademicPlanner] = { name: 'Academic Planner', url: url, isCsLink: true }
+      end
+      json[:feed][:ucAdvisingResources][:ucAdvisingLinks] = advising_links
     end
     render json: json
   end
 
   private
+
+  def academic_planner_url
+    (feed = academic_plan_by_student_uid.get_feed_internal[:feed]) &&
+      (planner = feed[:updateAcademicPlanner]) &&
+      planner[:url]
+  end
+
+  def academic_plan_by_student_uid
+    model = CampusSolutions::MyAcademicPlan.new student_uid_param
+    model.term_id = params['term_id']
+    model
+  end
 
   def authorize_student_lookup
     raise NotAuthorizedError.new('The student lookup feature is disabled') unless is_feature_enabled
