@@ -12,8 +12,8 @@
     input {
       padding: 5px;
     }
-    button {
-      margin: 0 0 5px 5px;
+    button:not(.cc-widget-show-more) {
+      margin: 0 0 10px 5px;
     }
   }
   .cc-user-search-results {

@@ -28,6 +28,11 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
     }
   };
 
+  // These are used by the showMoreDirective
+  $scope.searchResultsIncrement = 10;
+  $scope.searchResultsViewLimit = 10;
+  $scope.searchResultsLimit = 50;
+
   var reportError = function(tab, status, errorDescription) {
     tab.error = {
       summary: status === 403 ? 'Access Denied' : 'Unexpected Error',
@@ -43,9 +48,6 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
       // Normalize user's person name for the UI.
       user.name = user.name || (user[firstName] || '').concat(' ', user[lastName] || '');
 
-      user.actAs = function() {
-        adminService.actAs(user);
-      };
       user.save = function() {
         adminFactory.storeUser({
           uid: adminService.getLdapUid(user)
@@ -111,20 +113,21 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
   };
 
   $scope.userSearch.byNameOrId = function() {
-    $scope.userSearch.tabs.search.error = null;
-    $scope.userSearch.tabs.search.message = null;
-    $scope.userSearch.tabs.search.queryRunning = true;
-    var nameOrId = $scope.userSearch.tabs.search.nameOrId;
-    adminFactory.searchUsers(nameOrId).success(function(data) {
+    var searchTab = $scope.userSearch.tabs.search;
+    searchTab.error = null;
+    searchTab.message = null;
+    searchTab.queryRunning = true;
+
+    adminFactory.searchUsers(searchTab.nameOrId).success(function(data) {
       if (!data.users || data.users.length === 0) {
-        $scope.userSearch.tabs.search.message = 'Your search on \"' + nameOrId + '\" did not match any users.';
+        searchTab.message = 'Your search on \"' + searchTab.nameOrId + '\" did not match any users.';
       }
-      $scope.userSearch.tabs.search.users = decorate(data.users);
+      searchTab.users = decorate(data.users);
       updateSearchedUserSavedStates();
     }).error(function(data, status) {
-      reportError($scope.userSearch.tabs.search, status, data.error);
+      reportError(searchTab, status, data.error);
     }).finally(function() {
-      $scope.userSearch.tabs.search.queryRunning = false;
+      searchTab.queryRunning = false;
     });
   };
 
