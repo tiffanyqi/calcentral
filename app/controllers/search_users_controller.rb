@@ -11,11 +11,13 @@ class SearchUsersController < ApplicationController
 
   def search_users
     users = authorize_results by_id(id_param)
+    add_user_attributes users
     render json: { users: decorate(users) }.to_json
   end
 
   def search_users_by_uid
     users = authorize_results User::SearchUsersByUid.new(id: id_param).search_users_by_uid
+    add_user_attributes users
     render json: { users: decorate(users) }.to_json
   end
 
@@ -47,6 +49,14 @@ class SearchUsersController < ApplicationController
       end
     end
     users
+  end
+
+  def add_user_attributes(users)
+    # We add name information per user. Otherwise, the front-end would only receive identifiers.
+    users.map! do |user|
+      attributes = User::AggregatedAttributes.new(user['ldap_uid']).get_feed
+      user.merge attributes
+    end
   end
 
   def authorize_results(users)
