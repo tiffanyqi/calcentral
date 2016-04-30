@@ -66,7 +66,7 @@ report_error() {
   echo "  [ERROR]"
   echo "    API Endpoint: ${api_path}"
   echo "    HTTP status: ${http_code}"
-  echo "    Log: log/${path_to_file#*/log}"
+  echo "    Log: log${path_to_file#*/log}"
   echo "    URL: ${url}"
   echo
 }
@@ -80,15 +80,14 @@ validate_api_response() {
   local path_to_file="${4}"
 
   if [[ ("${http_code}" -lt "200") || ("${http_code}" -ge "400") ]] ; then
-    report_error $@
+    report_error "$@"
   elif [[ ! -f "${path_to_file}" ]] ; then
-    report_error $@
+    report_error "$@"
   else
     error_count=$(grep -i "${API_ERROR_INDICATORS}" ${path_to_file} | wc -l)
     if [ "${error_count}" -ne "0" ]; then
-      report_error $@
-      echo "    NOTE: API response body contains one of the following error indicators:"
-      echo "          ${API_ERROR_INDICATORS}"; echo
+      report_error "$@"
+      echo "    NOTE: Response contains at least one of ${API_ERROR_INDICATORS}"; echo
     else
       report_success "${api_path}" "${response_metadata}"
     fi
@@ -100,9 +99,9 @@ verify_sis_endpoints() {
   local sis_system="${1}"
   local endpoint_array=$2[@]
   local endpoints=("${!endpoint_array}")
-  local feature_flag_name="${3:-GLOBAL}"
+  local feature_flag_name="${3:-always_enabled}"
   local feature_flag_value="${4:-true}"
-  echo; echo "${sis_system} > feature flag ${feature_flag_name} = ${feature_flag_value}"
+  echo; echo "${sis_system} > ${feature_flag_name}: ${feature_flag_value}"
   echo
   if [ "${feature_flag_value}" == "true" ] ; then
     curl_write_out='\n\t%{http_code} HTTP status\n\tTotal time (seconds): %{time_total}\n\tURL: %{url_effective}\n'
@@ -136,6 +135,23 @@ verify_sis_endpoints() {
     done
   fi
   echo
+}
+
+verify_crosswalk() {
+  endpoints=($@)
+  verify_sis_endpoints "Crosswalk" endpoints
+}
+
+verify_cs() {
+  feature=${1}; flag_value=${2}
+  shift 2
+  endpoints=($@)
+  verify_sis_endpoints "Campus Solutions" endpoints "${feature}" "${flag_value}"
+}
+
+verify_hub() {
+  endpoints=($@)
+  verify_sis_endpoints "Hub" endpoints
 }
 
 # cd to 'calcentral' directory
@@ -190,92 +206,69 @@ echo "  Crosswalk: ${CROSSWALK_BASE_URL}"
 echo "  Hub: ${HUB_BASE_URL}"
 echo; echo
 
-CROSSWALK_GENERAL=(
-  "/CAMPUS_SOLUTIONS_ID/${CAMPUS_SOLUTIONS_ID}"
-  "/LEGACY_SIS_STUDENT_ID/${SID}"
+verify_crosswalk "/CAMPUS_SOLUTIONS_ID/${CAMPUS_SOLUTIONS_ID}" \
+  "/LEGACY_SIS_STUDENT_ID/${SID}" \
   "/UID/${UID_CROSSWALK}"
-)
-verify_sis_endpoints "Crosswalk" CROSSWALK_GENERAL
 
-CS_GENERAL=(
-  "/UC_AA_ADVISING_RESOURCES.v1/UC_ADVISING_RESOURCES?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_CC_COMM_DB_URL.v1/dashboard/url/"
-)
-verify_sis_endpoints "Campus Solutions" CS_GENERAL
+verify_cs 'always_enabled' true \
+  "/UC_AA_ADVISING_RESOURCES.v1/UC_ADVISING_RESOURCES?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
+  "/UC_CC_COMM_DB_URL.v1/dashboard/url/" \
+  "/UC_SR_SLR_LINKS.v1/UC_SR_SLR_LINKS_GET"
 
-CS_PROFILE=(
-  "/UC_CC_ADDR_LBL.v1/get?COUNTRY=ESP"
-  "/UC_CC_ADDR_TYPE.v1/getAddressTypes/"
-  "/UC_CC_COMM_PEND_MSG.v1/get/pendmsg?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_CC_CURRENCY_CD.v1/Currency_Cd/Get"
-  "/UC_CC_LANGUAGES.v1/get/languages/"
-  "/UC_CC_NAME_TYPE.v1/getNameTypes/"
-  "/UC_CC_SERVC_IND.v1/Servc_ind/Get?/EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_CC_SS_ETH_SETUP.v1/GetEthnicitytype/"
-  "/UC_CC_STDNT_FERPA.v1/FERPA/GET?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_CM_XLAT_VALUES.v1/GetXlats?FIELDNAME=PHONE_TYPE"
-  "/UC_COUNTRY.v1/country/get"
-  "/UC_SIR_CONFIG.v1/get/sir/config/?INSTITUTION=UCB01"
+verify_cs 'cs_profile' "${yml_features_cs_profile}" \
+  "/UC_CC_ADDR_LBL.v1/get?COUNTRY=ESP" \
+  "/UC_CC_ADDR_TYPE.v1/getAddressTypes/" \
+  "/UC_CC_COMM_PEND_MSG.v1/get/pendmsg?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
+  "/UC_CC_CURRENCY_CD.v1/Currency_Cd/Get" \
+  "/UC_CC_LANGUAGES.v1/get/languages/" \
+  "/UC_CC_NAME_TYPE.v1/getNameTypes/" \
+  "/UC_CC_SERVC_IND.v1/Servc_ind/Get?/EMPLID=${CAMPUS_SOLUTIONS_ID}" \
+  "/UC_CC_SS_ETH_SETUP.v1/GetEthnicitytype/" \
+  "/UC_CC_STDNT_FERPA.v1/FERPA/GET?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
+  "/UC_CM_XLAT_VALUES.v1/GetXlats?FIELDNAME=PHONE_TYPE" \
+  "/UC_COUNTRY.v1/country/get" \
+  "/UC_SIR_CONFIG.v1/get/sir/config/?INSTITUTION=UCB01" \
   "/UC_STATE_GET.v1/state/get/?COUNTRY=ESP"
-)
-verify_sis_endpoints "Campus Solutions" CS_PROFILE "cs_profile" "${yml_features_cs_profile}"
 
-CS_SIR=(
-  "/UC_CC_CHECKLIST.v1/get/checklist?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-  "/UC_DEPOSIT_AMT.v1/deposit/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&ADM_APPL_NBR=00000087"
+verify_cs "cs_sir" "${yml_features_cs_sir}" \
+  "/UC_CC_CHECKLIST.v1/get/checklist?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
+  "/UC_DEPOSIT_AMT.v1/deposit/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&ADM_APPL_NBR=00000087" \
   "/UC_OB_HIGHER_ONE_URL_GET.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-)
-verify_sis_endpoints "Campus Solutions" CS_SIR "cs_sir" "${yml_features_cs_sir}"
 
-CS_FIN_AID=(
-  "/UC_FA_FINANCIAL_AID_DATA.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016"
-  "/UC_FA_FUNDING_SOURCES.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016"
-  "/UC_FA_FUNDING_SOURCES_TERM.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016"
+verify_cs "cs_fin_aid" "${yml_features_cs_fin_aid}" \
+  "/UC_FA_FINANCIAL_AID_DATA.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016" \
+  "/UC_FA_FUNDING_SOURCES.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016" \
+  "/UC_FA_FUNDING_SOURCES_TERM.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016" \
   "/UC_FA_GET_T_C.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01"
-)
-verify_sis_endpoints "Campus Solutions" CS_FIN_AID "cs_fin_aid" "${yml_features_cs_fin_aid}"
 
-CS_DELEGATED_ACCESS=(
-  "/UC_CC_DELEGATED_ACCESS.v1/DelegatedAccess/get?SCC_DA_PRXY_OPRID=${UID_CROSSWALK}"
-  "/UC_CC_DELEGATED_ACCESS_URL.v1/get"
+verify_cs "cs_delegated_access" "${yml_features_cs_delegated_access}" \
+  "/UC_CC_DELEGATED_ACCESS.v1/DelegatedAccess/get?SCC_DA_PRXY_OPRID=${UID_CROSSWALK}" \
+  "/UC_CC_DELEGATED_ACCESS_URL.v1/get" \
   "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=25000&MESSAGE_NBR=15"
-)
-verify_sis_endpoints "Campus Solutions" CS_DELEGATED_ACCESS "cs_delegated_access" "${yml_features_cs_delegated_access}"
 
-CS_ENROLLMENT_CARD=(
-  "/UC_SR_ACADEMIC_PLANNER.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
-  "/UC_SR_COLLEGE_SCHDLR_URL.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168&ACAD_CAREER=UGRD&INSTITUTION=UCB01"
-  "/UC_SR_CURR_TERMS.v1/GetCurrentItems?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+verify_cs "cs_enrollment_card" "${yml_features_cs_enrollment_card}"  \
+  "/UC_SR_ACADEMIC_PLANNER.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168" \
+  "/UC_SR_COLLEGE_SCHDLR_URL.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168&ACAD_CAREER=UGRD&INSTITUTION=UCB01" \
+  "/UC_SR_CURR_TERMS.v1/GetCurrentItems?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
   "/UC_SR_STDNT_CLASS_ENROLL.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
-)
-verify_sis_endpoints "Campus Solutions" CS_ENROLLMENT_CARD "cs_enrollment_card" "${yml_features_cs_enrollment_card}"
 
-CS_FIN_AID_AWARD_COMPARE=(
-  "/UC_FA_AWARD_COMPARE_CURRNT.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016"
-  "/UC_FA_AWARD_COMPARE_PARMS.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016"
+verify_cs "cs_fin_aid_award_compare" "${yml_features_cs_fin_aid_award_compare}" \
+  "/UC_FA_AWARD_COMPARE_CURRNT.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016" \
+  "/UC_FA_AWARD_COMPARE_PARMS.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016" \
   "/UC_FA_AWARD_COMPARE_PRIOR.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016"
-)
-verify_sis_endpoints "Campus Solutions" CS_FIN_AID_AWARD_COMPARE "cs_fin_aid_award_compare" "${yml_features_cs_fin_aid_award_compare}"
 
-CS_BILLING=(
+verify_cs "cs_billing" "${yml_features_cs_billing}" \
   "/UC_SF_BILLING_DETAILS.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}"
-)
-verify_sis_endpoints "Campus Solutions" CS_BILLING "cs_billing" "${yml_features_cs_billing}"
 
-if [ "${yml_features_cs_profile_emergency_contacts}" == "true" ] ; then
-  echo; echo "----------------------------------------------------------------------------------------------------"
-  echo "  [INFO] No API endpoints associated with cs_profile_emergency_contacts feature flag"; echo
-fi
+verify_cs "cs_advisor_student_lookup" "${yml_features_cs_advisor_student_lookup}" \
+  "/UC_CC_USER_LOOKUP.v1/lookup?NAME1=Wavy&NAME2=Gravy&AFFILIATIONS[]=STUDENT&AFFILIATIONS[]=UNDERGRAD"
 
-HUB_GENERAL=(
-  "/${CAMPUS_SOLUTIONS_ID}/academic-status"
-  "/${CAMPUS_SOLUTIONS_ID}/affiliation"
-  "/${CAMPUS_SOLUTIONS_ID}/all"
-  "/${CAMPUS_SOLUTIONS_ID}/contacts"
-  "/${CAMPUS_SOLUTIONS_ID}/demographic"
+verify_hub "/${CAMPUS_SOLUTIONS_ID}/academic-status" \
+  "/${CAMPUS_SOLUTIONS_ID}/affiliation" \
+  "/${CAMPUS_SOLUTIONS_ID}/all" \
+  "/${CAMPUS_SOLUTIONS_ID}/contacts" \
+  "/${CAMPUS_SOLUTIONS_ID}/demographic" \
   "/${CAMPUS_SOLUTIONS_ID}/work-experiences"
-)
-verify_sis_endpoints "Hub" HUB_GENERAL
 
 echo; echo "----------------------------------------------------------------------------------------------------"; echo
 echo "Results can be found in the directory:"
