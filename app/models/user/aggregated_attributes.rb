@@ -3,7 +3,7 @@ module User
     include CampusSolutions::ProfileFeatureFlagged
 
     # Conservative merge of roles from EDO
-    WHITELISTED_EDO_ROLES = [:student, :applicant, :advisor]
+    WHITELISTED_EDO_ROLES = [:student, :applicant, :advisor, :law]
 
     def initialize(uid, options={})
       super(uid, options)
