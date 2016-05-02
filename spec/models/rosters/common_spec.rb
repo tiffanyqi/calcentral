@@ -26,6 +26,7 @@ describe Rosters::Common do
           ],
           :photo => '/canvas/1/photo/9016',
           :profile_url => 'http://example.com/courses/733/users/9016',
+          :units => '4.0'
         },
         {
           :enroll_status => 'W',
@@ -41,6 +42,7 @@ describe Rosters::Common do
           ],
           :photo => '/canvas/1/photo/9017',
           :profile_url => 'http://example.com/courses/733/users/9017',
+          :units => '3.0'
         },
         {
           :enroll_status => 'C',
@@ -55,6 +57,7 @@ describe Rosters::Common do
           ],
           :photo => '/canvas/1/photo/9018',
           :profile_url => 'http://example.com/courses/733/users/9018',
+          :units => '3.0'
         },
       ]
     }
@@ -63,16 +66,6 @@ describe Rosters::Common do
 
   context 'when serving roster feed based content' do
     before { allow_any_instance_of(Rosters::Common).to receive(:get_feed_internal).and_return(fake_feed) }
-
-    describe '#get_feed_filtered' do
-      it 'should return feed without student email addresses' do
-        feed = subject.get_feed_filtered
-        feed[:students].length.should == 3
-        expect(feed[:students][0].has_key?(:email)).to eq false
-        expect(feed[:students][1].has_key?(:email)).to eq false
-        expect(feed[:students][2].has_key?(:email)).to eq false
-      end
-    end
 
     describe '#get_csv' do
       it "returns rosters csv" do

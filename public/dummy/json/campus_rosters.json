@@ -1,0 +1,102 @@
+{
+  "campus_course": {
+    "id": "econ-100b-2016-D",
+    "name": "Economic Analysis--Macro"
+  },
+  "sections": [
+    {
+      "ccn": "14299",
+      "name": "ECON 100B LEC 001"
+    },
+    {
+      "ccn": "14300",
+      "name": "ECON 100B DIS 101"
+    },
+    {
+      "ccn": "14301",
+      "name": "ECON 100B DIS 102"
+    }
+  ],
+  "students": [
+    {
+      "email": "aaaa@berkeley.edu",
+      "enroll_status": "E",
+      "first_name": "PQQOTEQ",
+      "grade_option": "Letter",
+      "id": "11111111",
+      "last_name": "TITTEFWT",
+      "login_id": "11111111",
+      "photo": "/campus/econ-100b-2016-D/photo/11111111",
+      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=11111111",
+      "section_ccns": [
+        "14299",
+        "14300"
+      ],
+      "sections": [
+        {
+          "ccn": "14299",
+          "name": "ECON 100B LEC 001"
+        },
+        {
+          "ccn": "14300",
+          "name": "ECON 100B DIS 101"
+        }
+      ],
+      "student_id": "44444444",
+      "units": "4.0"
+    },
+    {
+      "email": "bbbb@berkeley.edu",
+      "enroll_status": "W",
+      "first_name": "OTQQ",
+      "grade_option": "Letter",
+      "id": "222222222",
+      "last_name": "SEFTT",
+      "login_id": "222222222",
+      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=222222222",
+      "section_ccns": [
+        "14299",
+        "14300"
+      ],
+      "sections": [
+        {
+          "ccn": "14299",
+          "name": "ECON 100B LEC 001"
+        },
+        {
+          "ccn": "14300",
+          "name": "ECON 100B DIS 101"
+        }
+      ],
+      "student_id": "555555",
+      "units": "4.0"
+    },
+    {
+      "email": "cccc@berkeley.edu",
+      "enroll_status": "E",
+      "first_name": "WWORRR",
+      "grade_option": "P/NP",
+      "id": "333333",
+      "last_name": "LBBERRR",
+      "login_id": "333333",
+      "photo": "/campus/econ-100b-2016-D/photo/333333",
+      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=333333",
+      "section_ccns": [
+        "14299",
+        "14301"
+      ],
+      "sections": [
+        {
+          "ccn": "14299",
+          "name": "ECON 100B LEC 001"
+        },
+        {
+          "ccn": "14301",
+          "name": "ECON 100B DIS 102"
+        }
+      ],
+      "student_id": "66666",
+      "units": "4.0"
+    }
+  ]
+}

@@ -107,7 +107,7 @@ describe CanvasRostersController do
   context 'when serving course rosters feed' do
 
     it_should_behave_like 'an api endpoint' do
-      before { allow_any_instance_of(Rosters::Canvas).to receive(:get_feed_filtered).and_raise(RuntimeError, 'Something went wrong') }
+      before { allow_any_instance_of(Rosters::Canvas).to receive(:get_feed).and_raise(RuntimeError, 'Something went wrong') }
       let(:make_request) { get :get_feed, canvas_course_id: 'embedded' }
     end
 
