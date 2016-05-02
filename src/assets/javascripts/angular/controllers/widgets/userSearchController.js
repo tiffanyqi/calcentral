@@ -46,7 +46,7 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
 
     angular.forEach(users, function(user) {
       // Normalize user's person name for the UI.
-      user.name = user.name || (user[firstName] || '').concat(' ', user[lastName] || '');
+      user.name = user.name || user.defaultName || (user[firstName] || '').concat(' ', user[lastName] || '');
 
       user.save = function() {
         adminFactory.storeUser({
