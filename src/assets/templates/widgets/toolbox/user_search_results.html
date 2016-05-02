@@ -1,4 +1,8 @@
 <div class="cc-user-search-results">
+  <div data-ng-if="userSearch.tabs.search.error && !userSearch.tabs.search.queryRunning">
+    <h3 data-ng-bind="userSearch.tabs.search.error.summary"></h3>
+    <div data-ng-bind="userSearch.tabs.search.error.description"></div>
+  </div>
   <p data-ng-bind="userSearch.selectedTab.message" data-ng-if="userSearch.selectedTab.message"></p>
   <div data-ng-if="userSearch.selectedTab.users && userSearch.selectedTab.users.length > 0">
 
