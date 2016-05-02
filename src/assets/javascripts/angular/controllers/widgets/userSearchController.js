@@ -48,6 +48,11 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
       // Normalize user's person name for the UI.
       user.name = user.name || user.defaultName || (user[firstName] || '').concat(' ', user[lastName] || '');
 
+      user.storeAsRecent = function() {
+        adminFactory.storeUserAsRecent({
+          uid: adminService.getLdapUid(user)
+        });
+      };
       user.save = function() {
         adminFactory.storeUser({
           uid: adminService.getLdapUid(user)

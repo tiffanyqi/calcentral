@@ -14,7 +14,7 @@
     <ul class="cc-widget-list">
       <li data-ng-repeat="user in userSearch.selectedTab.users | limitTo: userSearch.selectedTab.label == 'Search' ? searchResultsViewLimit : ''">
         <div class="cc-user-search-item cc-clearfix">
-          <a href="/user/overview/{{user.ldap_uid}}">
+          <a href="/user/overview/{{user.ldap_uid}}" data-ng-click="user.storeAsRecent()">
             <span data-ng-bind="user.name" data-ng-if="user.name"></span>
           </a>
           (<span data-ng-bind="user.student_id"></span>)
