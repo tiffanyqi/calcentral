@@ -34,7 +34,7 @@
           <tr>
             <th>Contact Information</th>
             <td>
-              <div data-ng-repeat="address in targetUser.addresses">
+              <div class="cc-widget-vertical-padding" data-ng-repeat="address in targetUser.addresses">
                 <div>
                   <strong data-ng-bind-template="{{address.type.description}} Address"></strong>
                 </div>
@@ -44,7 +44,7 @@
                 </div>
               </div>
               <br/>
-              <div data-ng-repeat="phone in targetUser.phones">
+              <div class="cc-widget-vertical-padding" data-ng-repeat="phone in targetUser.phones">
                 <div>
                   <strong data-ng-bind-template="{{phone.type.description}} Phone"></strong>
                   <span data-ng-if="phone.primary">(preferred)</span>
@@ -55,7 +55,7 @@
                 </div>
               </div>
               <br/>
-              <div data-ng-repeat="email in targetUser.emails">
+              <div class="cc-widget-vertical-padding" data-ng-repeat="email in targetUser.emails">
                 <div>
                   <strong data-ng-bind-template="{{email.type.description}} Email"></strong>
                   <span data-ng-if="email.primary">(preferred)</span>

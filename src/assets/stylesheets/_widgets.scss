@@ -233,6 +233,10 @@
   }
 }
 
+.cc-widget-vertical-padding {
+  padding: 5px 0;
+}
+
 @media #{$small-only} {
   .cc-widget-title-sub {
     margin-top: 0;

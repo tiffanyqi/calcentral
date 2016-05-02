@@ -164,9 +164,15 @@ button {
   padding: 0;
   &:active {
     background: transparent;
+    .cc-button-star-icon-outer {
+      color: $cc-color-black;
+    }
   }
   &:focus {
     background: transparent;
+    .cc-button-star-icon-outer {
+      color: $cc-color-black;
+    }
   }
   &:hover {
     background: transparent;

@@ -1,7 +1,6 @@
 <div class="cc-user-search-results">
   <p data-ng-bind="userSearch.selectedTab.message" data-ng-if="userSearch.selectedTab.message"></p>
-  <div data-ng-if="userSearch.selectedTab.users && userSearch.selectedTab.users.length > 0">
-
+  <div data-ng-if="userSearch.selectedTab.users.length > 0">
     <div data-ng-if="userSearch.selectedTab.label == 'Search'">
       <p data-ng-if="userSearch.selectedTab.users.length >= searchResultsLimit">
         <i class="fa fa-exclamation-triangle cc-icon cc-icon-gold" aria-hidden="true"></i>
@@ -10,7 +9,6 @@
         </strong>
       </p>
     </div>
-
     <ul class="cc-widget-list">
       <li data-ng-repeat="user in userSearch.selectedTab.users | limitTo: userSearch.selectedTab.label == 'Search' ? searchResultsViewLimit : ''">
         <div class="cc-user-search-item cc-clearfix">
