@@ -87,7 +87,7 @@
               <th data-ng-click="changeSorting('itemEffectiveDate')" width="15%" scope="col">
                 Date <i data-ng-class="getSortClass('itemEffectiveDate')"></i>
               </th>
-              <th data-ng-click="changeSorting('itemDescription')" width="35%" scope="col">
+              <th data-ng-click="changeSorting('itemDescription')" width="30%" scope="col">
                 Description <i data-ng-class="getSortClass('itemDescription')"></i>
               </th>
               <th data-ng-click="changeSorting('itemBalance')" width="30%" class="cc-table-right cc-table-right-spacing" scope="col">
@@ -96,7 +96,7 @@
               <th data-ng-click="changeSorting('itemType')" width="10%" scope="col">
                 Type <i data-ng-class="getSortClass('itemType')"></i>
               </th>
-              <th data-ng-click="changeSorting('itemDueFlag')" width="15%" class="cc-table-center" scope="col">
+              <th data-ng-click="changeSorting('itemDueFlag')" class="cc-table-center" width="20%" scope="col">
                 Due <i data-ng-class="getSortClass('itemDueFlag')"></i>
               </th>
             </tr>
@@ -124,8 +124,14 @@
                      data-ng-class="{'fa-plus':(item.itemLineAmount > 0),'fa-minus':(item.itemLineAmount < 0)}"></i>
                 </div>
               </td>
-              <td class="cc-table-center">
-                <i class="fa" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.itemDueFlag === 'OVER_DUE'),'fa-exclamation':(item.itemDueFlag === 'DUE_NOW'),'fa-arrow-right':(item.itemDueFlag === 'FUTURE_DUE')}" data-ng-if="item.itemDueFlag">
+              <td class="cc-page-myfinances-due-date cc-table-center" data-ng-if="item.itemDueFlag">
+                <div class="hide-for-small cc-print-show">
+                  <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'"></span>
+                  <i class="fa cc-page-myfinances-due-date-icons-medium-up" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.itemDueFlag === 'OVER_DUE'),'fa-exclamation':(item.itemDueFlag === 'DUE_NOW'),'fa-arrow-right':(item.itemDueFlag === 'FUTURE_DUE')}"></i>
+                </div>
+                <div class="hide-for-medium-up cc-print-hide" aria-hidden>
+                  <i class="fa" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.itemDueFlag === 'OVER_DUE'),'fa-exclamation':(item.itemDueFlag === 'DUE_NOW'),'fa-arrow-right':(item.itemDueFlag === 'FUTURE_DUE')}"></i>
+                </div>
               </td>
             </tr>
             <tr data-ng-if="item.show">
@@ -147,7 +153,7 @@
                     <strong>Status:</strong>
                     <span data-ng-bind="item.itemStatus"></span>
                   </div>
-                  <div data-ng-if="item.itemDueDate && item.itemStatus === 'Unpaid'">
+                  <div class="hide-for-medium-up" data-ng-if="item.itemDueDate && item.itemStatus === 'Unpaid'">
                     <strong>Due Date:</strong>
                     <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'"></span>
                   </div>
