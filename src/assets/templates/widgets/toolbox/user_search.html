@@ -25,15 +25,11 @@
         <div class="cc-user-search-results">
           <label for="cc-user-search-input">Enter name, UID or SID</label>
           <div class="cc-flex cc-flex-align-center">
-            <input id="cc-user-search-input" data-ng-model="userSearch.tabs.search.nameOrId" type="text"/>
+            <input id="cc-user-search-input" maxlength="50" type="text" data-ng-model="userSearch.tabs.search.nameOrId"/>
             <button class="cc-button cc-button-blue" data-ng-disabled="!userSearch.tabs.search.nameOrId" type="submit">Search</button>
           </div>
         </div>
         <div data-cc-spinner-directive="userSearch.tabs.search.queryRunning">
-          <div data-ng-if="userSearch.currentTab.error && !userSearch.tabs.search.queryRunning">
-            <h3 data-ng-bind="userSearch.currentTab.error.summary"></h3>
-            <div data-ng-bind="userSearch.currentTab.error.description"></div>
-          </div>
           <div data-ng-include="'widgets/toolbox/user_search_results.html'"></div>
         </div>
       </form>
