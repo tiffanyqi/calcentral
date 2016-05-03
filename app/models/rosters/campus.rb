@@ -55,6 +55,9 @@ module Rosters
                 section_ccns: [section[:ccn]]
               })
             end
+            if enr[:grade_option].present? && enr[:units].to_f.nonzero?
+              campus_enrollment_map[enr[:ldap_uid]].merge! enr.slice(:grade_option, :units)
+            end
           end
         end
       end

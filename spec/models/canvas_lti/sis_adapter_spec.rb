@@ -32,10 +32,27 @@ describe CanvasLti::SisAdapter do
     let(:expected_term_id) { '2168' }
     before { allow(Berkeley::Terms).to receive(:legacy?).and_return(false) }
     let(:term_code) { 'D' }
-    it 'provides enrolled students from sisedo source' do
-      expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(section_id, expected_term_id)
-      expect(CampusOracle::Queries).to_not receive(:get_enrolled_students)
-      CanvasLti::SisAdapter.get_enrolled_students(section_id, term_year, term_code)
+
+    describe '#get_enrolled_students' do
+      let(:dummy_enrollments) {
+        [
+          {'ldap_uid' => '1234', 'student_id' => 'PI', 'enroll_status' => 'E', 'grading_basis' => 'GRD'},
+          {'ldap_uid' => '1235', 'student_id' => 'PI', 'enroll_status' => 'E', 'grading_basis' => 'CNV'},
+          {'ldap_uid' => '1236', 'student_id' => 'PI', 'enroll_status' => 'E', 'grading_basis' => 'ESU'},
+          {'ldap_uid' => '1237', 'student_id' => 'PI', 'enroll_status' => 'W', 'grading_basis' => 'PNP'}
+        ]
+      }
+      before { allow(EdoOracle::Queries).to receive(:get_enrolled_students).and_return(dummy_enrollments) }
+      it 'provides enrolled students from sisedo source' do
+        expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(section_id, expected_term_id)
+        expect(CampusOracle::Queries).to_not receive(:get_enrolled_students)
+        CanvasLti::SisAdapter.get_enrolled_students(section_id, term_year, term_code)
+      end
+      it 'converts sisedo grading basis to legacy P/NP flag' do
+        results = CanvasLti::SisAdapter.get_enrolled_students(section_id, term_year, term_code)
+        expect(results[0..1]).to all include({'pnp_flag' => 'N'})
+        expect(results[2..3]).to all include({'pnp_flag' => 'Y'})
+      end
     end
 
     describe '#get_section_instructors' do

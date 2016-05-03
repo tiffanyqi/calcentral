@@ -22,13 +22,6 @@ module Rosters
       end
     end
 
-    # Serves feed without student email address included
-    def get_feed_filtered
-      feed = get_feed
-      feed[:students].each {|student| student.delete(:email) }
-      feed
-    end
-
     # Serves rosters in CSV format
     def get_csv
       CSV.generate do |csv|
@@ -85,6 +78,8 @@ module Rosters
           attrs[:email] = attrs.delete :email_address
           if (enrollment_row = enrollments_by_uid[attrs[:ldap_uid]].first)
             attrs[:enroll_status] = enrollment_row['enroll_status']
+            attrs[:grade_option] = Berkeley::GradeOptions.grade_option_from_basis enrollment_row['grading_basis']
+            attrs[:units] = enrollment_row['units'].to_s
           end
         end
       end

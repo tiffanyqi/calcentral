@@ -245,6 +245,7 @@ module EdoOracle
     # EDO equivalent of CampusOracle::Queries.get_enrolled_students
     # Changes:
     #   - 'ccn' replaced by 'section_id' argument
+    #   - 'pnp_flag' replaced by 'grading_basis'
     #   - 'term_yr' and 'term_yr' replaced by 'term_id'
     #   - 'calcentral_student_info_vw' data (first_name, last_name, student_email_address,
     #     affiliations) are not present as these are provided by the CalNet LDAP or HubEdos module.
@@ -254,7 +255,8 @@ module EdoOracle
           enroll."CAMPUS_UID" AS ldap_uid,
           enroll."STUDENT_ID" AS student_id,
           enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
-          trim(enroll."GRADING_BASIS_CODE") AS pnp_flag
+          enroll."UNITS_TAKEN" AS units,
+          TRIM(enroll."GRADING_BASIS_CODE") AS grading_basis
         FROM SISEDO.ENROLLMENTV00_VW enroll
         WHERE
           enroll."CLASS_SECTION_ID" = '#{section_id}' AND

@@ -165,7 +165,7 @@ describe EdoOracle::Queries, :ignore => true do
   end
 
   describe '.get_enrolled_students', :textext => true do
-    let(:expected_keys) { ['ldap_uid', 'student_id', 'enroll_status', 'pnp_flag'] }
+    let(:expected_keys) { ['ldap_uid', 'student_id', 'enroll_status', 'units', 'grading_basis'] }
     it 'returns enrollments for section' do
       results = EdoOracle::Queries.get_enrolled_students(section_ids[0], fall_term_id)
       results.each do |enrollment|

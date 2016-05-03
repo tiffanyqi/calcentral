@@ -95,7 +95,7 @@ describe Rosters::Campus do
     end
   end
 
-  context 'a course with one section' do
+  context 'a course with two sections' do
     before do
       expect(Berkeley::Terms).to receive(:legacy?).exactly(2).times.and_return is_legacy
       allow(CampusOracle::UserCourses::All).to receive(:new).with(user_id: user_id).and_return(double(get_all_campus_courses: fake_oracle))
@@ -104,7 +104,7 @@ describe Rosters::Campus do
       allow(EdoOracle::UserCourses::All).to receive(:new).with(user_id: student_user_id).and_return(double(get_all_campus_courses: fake_edo_student))
     end
 
-    context 'one-section course from legacy data' do
+    context 'two-section course from legacy data' do
       let(:is_legacy) { true }
       let(:fake_oracle) { fake_campus }
       let(:fake_oracle_student) { fake_campus_student }
@@ -137,7 +137,7 @@ describe Rosters::Campus do
       it_should_behave_like 'a good and proper roster'
     end
 
-    context 'one-section course from Campus Solutions data' do
+    context 'two-section course from Campus Solutions data' do
       let(:is_legacy) { false }
       let(:term_id) { Berkeley::TermCodes.to_edo_id(term_yr, term_cd) }
       let(:fake_oracle) { {} }
@@ -145,23 +145,45 @@ describe Rosters::Campus do
       let(:fake_edo) { fake_campus }
       let(:fake_edo_student) { fake_campus_student }
       before do
-        expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(ccn1, term_id).and_return enrollments
-        expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(ccn2, term_id).and_return enrollments
+        expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(ccn1, term_id).and_return primary_enrollments
+        expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(ccn2, term_id).and_return secondary_enrollments
         expect(User::BasicAttributes).to receive(:attributes_for_uids)
           .with([enrolled_student_login_id, waitlisted_student_login_id])
           .exactly(2).times.and_return attributes
       end
-      let(:enrollments) do
+      let(:primary_enrollments) do
         [
           {
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'E',
-            'student_id' => enrolled_student_student_id
+            'student_id' => enrolled_student_student_id,
+            'grading_basis' => 'GRD',
+            'units' => 4.0
           },
           {
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
-            'student_id' => waitlisted_student_student_id
+            'student_id' => waitlisted_student_student_id,
+            'grading_basis' => 'ESU',
+            'units' => 3.0
+          }
+        ]
+      end
+      let(:secondary_enrollments) do
+        [
+          {
+            'ldap_uid' => enrolled_student_login_id,
+            'enroll_status' => 'E',
+            'student_id' => enrolled_student_student_id,
+            'grading_basis' => 'NON',
+            'units' => 0.0
+          },
+          {
+            'ldap_uid' => waitlisted_student_login_id,
+            'enroll_status' => 'W',
+            'student_id' => waitlisted_student_student_id,
+            'grading_basis' => 'NON',
+            'units' => 0.0
           }
         ]
       end
@@ -184,6 +206,13 @@ describe Rosters::Campus do
         ]
       end
       it_should_behave_like 'a good and proper roster'
+      it 'should pick out stringified units and translated grade option from section with grade component' do
+        feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed
+        expect(feed[:students][0][:grade_option]).to eq 'Letter'
+        expect(feed[:students][0][:units]).to eq '4.0'
+        expect(feed[:students][1][:grade_option]).to eq 'S/U'
+        expect(feed[:students][1][:units]).to eq '3.0'
+      end
     end
   end
 

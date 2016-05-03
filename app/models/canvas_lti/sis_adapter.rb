@@ -6,7 +6,9 @@ module CanvasLti
       if Berkeley::Terms.legacy?(term_year, term_code)
         CampusOracle::Queries.get_enrolled_students(section_id, term_year, term_code)
       else
-        EdoOracle::Queries.get_enrolled_students(section_id, term_id(term_year, term_code))
+        EdoOracle::Queries.get_enrolled_students(section_id, term_id(term_year, term_code)).tap do |enrollments|
+          add_legacy_pnp_flag enrollments
+        end
       end
     end
 
@@ -52,6 +54,16 @@ module CanvasLti
 
     def add_legacy_ccns(sections)
       sections.each {|sec| sec['course_cntl_num'] = sec['section_id']}
+    end
+
+    def add_legacy_pnp_flag(enrollments)
+      enrollments.each do |enr|
+        grade_option = Berkeley::GradeOptions.grade_option_from_basis enr['grading_basis']
+        enr['pnp_flag'] = case grade_option
+                            when 'P/NP', 'S/U' then 'Y'
+                            else 'N'
+                          end
+      end
     end
 
     def add_legacy_term_fields(sections)

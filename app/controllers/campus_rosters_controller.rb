@@ -15,7 +15,7 @@ class CampusRostersController < RostersController
 
   # GET /api/academics/rosters/campus/:campus_course_id
   def get_feed
-    feed = Rosters::Campus.new(session['user_id'], course_id: params['campus_course_id']).get_feed_filtered
+    feed = Rosters::Campus.new(session['user_id'], course_id: params['campus_course_id']).get_feed
     render :json => feed.to_json
   end
 
