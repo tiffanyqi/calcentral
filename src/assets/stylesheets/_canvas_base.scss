@@ -63,7 +63,7 @@ $bc-base-font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
 // Canvas-specific overrides
 .bc-main {
-  a {
+  a:not(.bc-canvas-button) {
     color: $bc-color-link;
     &:hover, &:focus {
       color: $bc-color-link-hover;
