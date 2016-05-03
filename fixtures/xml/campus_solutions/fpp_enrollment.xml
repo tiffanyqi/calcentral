@@ -1,0 +1,7 @@
+<UC_SF_FPP_ENROLL>
+  <FPP_ENROLL_URL>
+    <NAME>Activate Fee Payment Plan</NAME>
+    <URL>https://bcs-web-dev-02.is.berkeley.edu:8443/psc/bcscfg/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SSF_SS_PPL_ENRL.GBL</URL>
+    <IS_CS_LINK type="boolean">true</IS_CS_LINK>
+  </FPP_ENROLL_URL>
+</UC_SF_FPP_ENROLL>
