@@ -8,6 +8,32 @@ describe 'MyAcademics::CollegeAndLevel' do
     {}.tap { |feed| MyAcademics::CollegeAndLevel.new(uid).merge feed }
   end
 
+  context 'when legacy user but non-legacy term' do
+    let(:status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
+    before do
+      allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return eight_digit_cs_id
+      allow_any_instance_of(Berkeley::Term).to receive(:legacy?).and_return(false)
+      allow(Settings.features).to receive(:cs_academic_profile_prefers_legacy).and_return(prefer_legacy)
+    end
+    context 'CS-based registration data not fully baked' do
+      let(:prefer_legacy) {true}
+      let(:bearfacts_proxy) { Bearfacts::Profile.new(user_id: uid, fake: true) }
+      it 'sources from Bear Facts' do
+        expect(Bearfacts::Profile).to receive(:new).and_return bearfacts_proxy
+        expect(HubEdos::AcademicStatus).to receive(:new).and_return status_proxy
+        expect(feed[:collegeAndLevel][:level]).to eq 'Senior'
+      end
+    end
+    context 'CS registration data is ready to go' do
+      let(:prefer_legacy) {false}
+      it 'sources from Hub' do
+        expect(Bearfacts::Profile).to receive(:new).never
+        expect(HubEdos::AcademicStatus).to receive(:new).and_return status_proxy
+        expect(feed[:collegeAndLevel][:statusCode]).to eq 200
+      end
+    end
+  end
+
   context 'when sourced from Hub academic status' do
     let(:status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
     before do
@@ -46,7 +72,7 @@ describe 'MyAcademics::CollegeAndLevel' do
     end
 
     it 'specifies term name' do
-      expect(feed[:collegeAndLevel][:termName]).to eq '2017 Spring'
+      expect(feed[:collegeAndLevel][:termName]).to eq 'Spring 2017'
     end
 
     context 'empty status feed' do
@@ -78,8 +104,12 @@ describe 'MyAcademics::CollegeAndLevel' do
     end
   end
 
-  context 'when sourced from Bearfacts profile' do
-    before { allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return eight_digit_cs_id }
+  context 'when legacy user and in legacy term with no Hub status' do
+    before do
+      allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return eight_digit_cs_id
+      allow(Berkeley::Terms).to receive(:legacy?).and_return(true)
+      allow_any_instance_of(HubEdos::AcademicStatus).to receive(:get).and_return({})
+    end
 
     context 'known test users' do
       before do
@@ -181,10 +211,10 @@ describe 'MyAcademics::CollegeAndLevel' do
         let(:xml_body) {
           '<studentProfile xmlns="urn:berkeley.edu/babl" termName="Spring" termYear="2014" asOfDate="May 27, 2014 12:00 AM"><studentType>STUDENT</studentType><noProfileDataFlag>false</noProfileDataFlag><studentGeneralProfile><studentName><firstName>OWPRQTOPEW</firstName><lastName>SEBIRTFEIWB</lastName></studentName></studentGeneralProfile></studentProfile>'
         }
-        it 'reports an empty feed for the Bearfacts-provided term' do
+        it 'reports an empty feed for the CalCentral current term' do
           expect(feed[:collegeAndLevel]).to include(
             empty: true,
-            termName: 'Spring 2014'
+            termName: Berkeley::Terms.fetch.current.to_english
           )
           expect(feed[:collegeAndLevel]).not_to include :errored
         end
@@ -200,6 +230,27 @@ describe 'MyAcademics::CollegeAndLevel' do
           expect(feed[:collegeAndLevel]).not_to include :errored
         end
       end
+    end
+  end
+
+  describe '#profile_in_past?' do
+    subject { MyAcademics::CollegeAndLevel.new(uid).profile_in_past? profile }
+    let(:profile) { {termName: term_name} }
+    context 'profile is for the current CalCentral  term' do
+      let(:term_name) { Berkeley::Terms.fetch.current.to_english }
+      it {should eq false}
+    end
+    context 'profile is for the next CalCentral term' do
+      let(:term_name) { Berkeley::Terms.fetch.next.to_english }
+      it {should eq false}
+    end
+    context 'profile is for the previous CalCentral term' do
+      let(:term_name) { Berkeley::Terms.fetch.previous.to_english }
+      it {should eq true}
+    end
+    context 'profile is empty' do
+      let(:profile) { {empty: true} }
+      it {should eq false}
     end
   end
 

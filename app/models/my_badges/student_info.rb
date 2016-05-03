@@ -8,6 +8,7 @@ module MyBadges
     end
 
     def get
+      # TODO THIS IS CURRENTLY COMPLETELY DEPENDENT ON LEGACY SYSTEMS AND WILL BREAK FOR ALL STUDENTS AS OF FALL 2016
       campus_attributes = CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       result = {
         isLawStudent: law_student?,
@@ -55,6 +56,8 @@ module MyBadges
       end
     end
 
+    # "Holds" (the replacement for "Blocks" in the new SIS) are obtained by front-end code directly from a
+    # Campus Solutions API.
     def get_reg_blocks
       blocks_feed = Bearfacts::Regblocks.new({user_id: @uid}).get
       response = blocks_feed.slice(:empty, :errored, :noStudentId).merge({

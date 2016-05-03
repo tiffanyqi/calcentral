@@ -424,6 +424,7 @@ features:
   class_enrollment_summer_2016: false
   course_manage_official_sections: false
   cs_academic_planner: false
+  cs_academic_profile_prefers_legacy: true
   cs_academic_progress_report: false
   cs_advising_gte_forms: false
   cs_advising_scheduler_view: false

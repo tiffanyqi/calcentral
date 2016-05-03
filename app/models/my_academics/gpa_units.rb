@@ -5,6 +5,7 @@ module MyAcademics
     include User::Student
 
     def merge(data)
+      # TODO This needs to be term-based, like CollegeAndLevel.
       data[:gpaUnits] = if legacy_user?
         oracle_gpa_units
       else
