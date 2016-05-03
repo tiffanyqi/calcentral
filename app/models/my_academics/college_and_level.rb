@@ -5,11 +5,29 @@ module MyAcademics
     include User::Student
 
     def merge(data)
-      data[:collegeAndLevel] = if legacy_user?
-        bearfacts_college_and_level
-      else
-        hub_college_and_level
+      # TEMPORARY TRANSITIONAL LOGIC BETWEEN SPRING 2016 AND FALL 2016.
+      # New incoming Fall 2016 users will have no BearFacts API data.
+      # Legacy users may have Fall 2016 CS/Hub academic status data, but it will be incomplete until GL5.4 conversions.
+      # Legacy users may also have Summer 2016 BearFacts RegStatus and Spring 2016 BearFacts College-Level-Major data,
+      # but neither will be exposed in CalCentral as of Fall 2016.
+      college_and_level = hub_college_and_level
+      prefer_legacy_data = Settings.features.cs_academic_profile_prefers_legacy
+      if (current_term.legacy? || prefer_legacy_data) && legacy_user?
+        legacy_college_and_level = bearfacts_college_and_level
+        if college_and_level[:empty] || !current_term.is_summer || (prefer_legacy_data && !legacy_college_and_level[:empty])
+          college_and_level = legacy_college_and_level
+        end
       end
+      # If we have no profile at all, consider the no-profile to be active for the current term.
+      if college_and_level[:empty]
+        college_and_level[:termName] = Berkeley::Terms.fetch.current.to_english
+        college_and_level[:isCurrent] = true
+      else
+        # The key name is a bit misleading, since the profile might be for a future term.
+        # TODO Use this in place of the overly complex 'isProfileCurrent' front-end logic.
+        college_and_level[:isCurrent] = !profile_in_past?(college_and_level)
+      end
+      data[:collegeAndLevel] = college_and_level
     end
 
     def bearfacts_college_and_level
@@ -22,7 +40,6 @@ module MyAcademics
       else
         response.merge! parse_bearfacts_feed(feed)
       end
-      response[:termName] = parse_term_name feed
       response
     end
 
@@ -36,7 +53,6 @@ module MyAcademics
         response.merge! parse_hub_plans status
       else
         response[:empty] = true
-        response[:termName] = Berkeley::Terms.fetch.current.to_english
       end
       response
     end
@@ -81,7 +97,7 @@ module MyAcademics
     end
 
     def parse_hub_term_name(status)
-      status['currentRegistration'].try(:[], 'term').try(:[], 'name')
+      Berkeley::TermCodes.normalized_english status['currentRegistration'].try(:[], 'term').try(:[], 'name')
     end
 
     def parse_bearfacts_feed(feed)
@@ -154,22 +170,23 @@ module MyAcademics
           }
         end
       end
-
+      term_name = "#{feed['studentProfile']['termName'].to_text} #{feed['studentProfile']['termYear'].to_text}"
       feed = {
         careers: careers,
         level: level,
         futureTelebearsLevel: futureTBLevel,
-        majors: majors
+        majors: majors,
+        termName: term_name
       }
       feed[:nonApLevel] = nonAPLevel if nonAPLevel.present? && nonAPLevel != level
       feed
     end
 
-    def parse_term_name(feed)
-      if (feed.nil? || feed['studentProfile']['termName'].blank? || feed['studentProfile']['termYear'].blank?)
-        Berkeley::Terms.fetch.current.to_english
+    def profile_in_past?(profile)
+      if !profile[:empty] && (term = Berkeley::TermCodes.from_english profile[:termName])
+        time_bucket(term[:term_yr], term[:term_cd]) == 'past'
       else
-        "#{feed['studentProfile']['termName'].to_text} #{feed['studentProfile']['termYear'].to_text}"
+        false
       end
     end
   end

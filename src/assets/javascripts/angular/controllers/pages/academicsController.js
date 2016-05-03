@@ -135,6 +135,7 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.isLSStudent = academicsService.isLSStudent($scope.collegeAndLevel);
     $scope.isUndergraduate = _.includes(_.get($scope.collegeAndLevel, 'careers'), 'Undergraduate');
     $scope.isProfileCurrent = !$scope.transitionTerm || $scope.transitionTerm.isProfileCurrent;
+    // The isEmpty check will be true if collegeAndLevel.errored or collegeAndLevel.empty.
     $scope.showProfileMessage = (!$scope.isProfileCurrent || !$scope.collegeAndLevel || _.isEmpty($scope.collegeAndLevel.careers));
 
     $scope.hasTeachingClasses = academicsService.hasTeachingClasses(data.teachingSemesters);

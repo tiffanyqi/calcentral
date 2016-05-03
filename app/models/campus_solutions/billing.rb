@@ -20,14 +20,9 @@ module CampusSolutions
     end
 
     def normalize_term_names(billing)
-      # Force four-digit year to the end of the term description if present at the start.
-      if (term_name = billing['SUMMARY']['CURRENT_TERM']) && (m = term_name.strip.match /\A(\d{4})\s(\w+)\Z/)
-        billing['SUMMARY']['CURRENT_TERM'] = "#{m[2]} #{m[1]}"
-      end
+      billing['SUMMARY']['CURRENT_TERM'] = Berkeley::TermCodes.normalized_english billing['SUMMARY']['CURRENT_TERM']
       billing['ACTIVITY'].each do |activity_item|
-        if (term_name = activity_item['ITEM_TERM_DESCRIPTION']) && (m = term_name.strip.match /\A(\d{4})\s(\w+)\Z/)
-          activity_item['ITEM_TERM_DESCRIPTION'] = "#{m[2]} #{m[1]}"
-        end
+        activity_item['ITEM_TERM_DESCRIPTION'] = Berkeley::TermCodes.normalized_english activity_item['ITEM_TERM_DESCRIPTION']
       end
     end
 
