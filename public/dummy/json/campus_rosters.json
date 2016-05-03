@@ -69,7 +69,8 @@
         }
       ],
       "student_id": "555555",
-      "units": "4.0"
+      "units": "4.0",
+      "waitlist_position": 1
     },
     {
       "email": "cccc@berkeley.edu",

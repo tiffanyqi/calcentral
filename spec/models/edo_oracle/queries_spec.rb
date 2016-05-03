@@ -57,7 +57,7 @@ describe EdoOracle::Queries, :ignore => true do
     it 'fetches expected data' do
       results = EdoOracle::Queries.get_instructing_sections(uid, [term])
       expect(results.count).to eq 17
-      expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix']
+      expected_keys = ['course_title', 'course_title_short', 'dept_name', 'catalog_id', 'primary', 'section_num', 'instruction_format', 'primary_associated_section_id', 'catalog_root', 'catalog_prefix', 'catalog_suffix', 'enroll_limit', 'waitlist_limit']
       results.each do |result|
         expect(result['term_id']).to eq '2102'
         expect(result).to have_keys(expected_keys)
@@ -165,7 +165,7 @@ describe EdoOracle::Queries, :ignore => true do
   end
 
   describe '.get_enrolled_students', :textext => true do
-    let(:expected_keys) { ['ldap_uid', 'student_id', 'enroll_status', 'units', 'grading_basis'] }
+    let(:expected_keys) { ['ldap_uid', 'student_id', 'enroll_status', 'waitlist_position', 'units', 'grading_basis'] }
     it 'returns enrollments for section' do
       results = EdoOracle::Queries.get_enrolled_students(section_ids[0], fall_term_id)
       results.each do |enrollment|

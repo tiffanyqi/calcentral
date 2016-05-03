@@ -109,27 +109,35 @@ describe MyAcademics::Teaching do
             sections: [
               {
                 ccn: '07309',
+                enroll_limit: 50,
                 instruction_format: 'LEC',
                 is_primary_section: true,
                 section_label: 'LEC 003',
-                section_number: '003'
+                section_number: '003',
+                waitlist_limit: 10
               },
               {
                 ccn: '07366',
+                enroll_limit: 25,
                 instruction_format: 'DIS',
                 is_primary_section: false,
                 section_label: 'DIS 201',
-                section_number: '201'
+                section_number: '201',
+                waitlist_limit: 5
               },
               {
                 ccn: '07372',
+                enroll_limit: 25,
                 instruction_format: 'DIS',
                 is_primary_section: false,
                 section_label: 'DIS 202',
                 section_number: '202',
+                waitlist_limit: 5
               }
             ],
-            role: 'Instructor'
+            role: 'Instructor',
+            enroll_limit: 50,
+            waitlist_limit: 10
           },
           {
             id: 'sumerian-c147-2013-D',
@@ -146,14 +154,18 @@ describe MyAcademics::Teaching do
             sections: [
               {
                 ccn: '10171',
+                enroll_limit: 30,
                 instruction_format: 'LEC',
                 is_primary_section: true,
                 section_label: 'LEC 001',
                 section_number: '001',
+                waitlist_limit: 0,
                 cross_listing_hash: '2138-12345-LEC-001'
               }
             ],
-            role: 'Instructor'
+            role: 'Instructor',
+            enroll_limit: 30,
+            waitlist_limit: 0
           },
           {
             id: 'cog_sci-c147-2013-D',
@@ -174,10 +186,14 @@ describe MyAcademics::Teaching do
                 is_primary_section: true,
                 section_label: 'LEC 001',
                 section_number: '001',
+                enroll_limit: 30,
+                waitlist_limit: 0,
                 cross_listing_hash: '2138-12345-LEC-001'
               }
             ],
-            role: 'Instructor'
+            role: 'Instructor',
+            enroll_limit: 30,
+            waitlist_limit: 0
           }
         ],
         '2012-B' => [
@@ -196,10 +212,12 @@ describe MyAcademics::Teaching do
             sections: [
               {
                 ccn: '07366',
+                enroll_limit: 25,
                 instruction_format: 'DIS',
                 is_primary_section: false,
                 section_label: 'DIS 201',
                 section_number: '201',
+                waitlist_limit: 5,
               }
             ],
             role: 'Instructor'
@@ -222,10 +240,14 @@ describe MyAcademics::Teaching do
                 instruction_format: 'LEC',
                 is_primary_section: true,
                 section_label: 'LEC 001',
-                section_number: '001'
+                section_number: '001',
+                enroll_limit: 30,
+                waitlist_limit: 0
               }
             ],
-            role: 'Instructor'
+            role: 'Instructor',
+            enroll_limit: 30,
+            waitlist_limit: 0
           }
         ]
       }
@@ -235,6 +257,11 @@ describe MyAcademics::Teaching do
       language_disorders = teaching[0][:classes].find { |course| course[:title] == 'Language Disorders' }
       expect(language_disorders[:listings].map { |listing| listing[:dept]}).to match_array ['COG SCI', 'SUMERIAN']
       expect(language_disorders[:sections].map { |section| section[:ccn]}).to match_array %w(10171 16171)
+    end
+    it 'translates enrollment and waitlist limits' do
+      bio1a = teaching[0][:classes].find { |course| course[:listings].first[:course_code] == 'BIOLOGY 1A' }
+      expect(bio1a[:enrollLimit]).to eq 50
+      expect(bio1a[:waitlistLimit]).to eq 10
     end
   end
 

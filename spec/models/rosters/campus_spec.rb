@@ -158,14 +158,16 @@ describe Rosters::Campus do
             'enroll_status' => 'E',
             'student_id' => enrolled_student_student_id,
             'grading_basis' => 'GRD',
-            'units' => 4.0
+            'units' => 4.0,
+            'waitlist_position' => nil
           },
           {
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
             'student_id' => waitlisted_student_student_id,
             'grading_basis' => 'ESU',
-            'units' => 3.0
+            'units' => 3.0,
+            'waitlist_position' => 9.0
           }
         ]
       end
@@ -176,14 +178,16 @@ describe Rosters::Campus do
             'enroll_status' => 'E',
             'student_id' => enrolled_student_student_id,
             'grading_basis' => 'NON',
-            'units' => 0.0
+            'units' => 0.0,
+            'waitlist_position' => nil
           },
           {
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
             'student_id' => waitlisted_student_student_id,
             'grading_basis' => 'NON',
-            'units' => 0.0
+            'units' => 0.0,
+            'waitlist_position' => 2.0
           }
         ]
       end
@@ -206,12 +210,14 @@ describe Rosters::Campus do
         ]
       end
       it_should_behave_like 'a good and proper roster'
-      it 'should pick out stringified units and translated grade option from section with grade component' do
+      it 'should translate additional enrollment data from section with grade component' do
         feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed
         expect(feed[:students][0][:grade_option]).to eq 'Letter'
         expect(feed[:students][0][:units]).to eq '4.0'
+        expect(feed[:students][0][:waitlist_position]).to be_nil
         expect(feed[:students][1][:grade_option]).to eq 'S/U'
         expect(feed[:students][1][:units]).to eq '3.0'
+        expect(feed[:students][1][:waitlist_position]).to eq 9
       end
     end
   end

@@ -72,7 +72,9 @@ module EdoOracle
       safe_query <<-SQL
         SELECT
           #{SECTION_COLUMNS},
-          sec."cs-course-id" AS cs_course_id
+          sec."cs-course-id" AS cs_course_id,
+          sec."maxEnroll" AS enroll_limit,
+          sec."maxWaitlist" AS waitlist_limit
         FROM SISEDO.ASSIGNEDINSTRUCTORV00_VW instr
         JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
           instr."term-id" = sec."term-id" AND
@@ -255,6 +257,7 @@ module EdoOracle
           enroll."CAMPUS_UID" AS ldap_uid,
           enroll."STUDENT_ID" AS student_id,
           enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
+          enroll."WAITLISTPOSITION" AS waitlist_position,
           enroll."UNITS_TAKEN" AS units,
           TRIM(enroll."GRADING_BASIS_CODE") AS grading_basis
         FROM SISEDO.ENROLLMENTV00_VW enroll

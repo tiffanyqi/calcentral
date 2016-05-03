@@ -112,6 +112,10 @@ describe EdoOracle::UserCourses::Base do
       expect(course[:term_id]).to eq '2168'
       expect(course[:term_yr]).to eq '2016'
     end
+    it 'does not include instructor-specific data' do
+      expect(course).not_to include :enroll_limit
+      expect(course).not_to include :waitlist_limit
+    end
     it 'de-duplicates sections differing only by primary_associated_section_id' do
       expect(course[:sections].size).to eq 3
     end
@@ -181,11 +185,13 @@ describe EdoOracle::UserCourses::Base do
           'course_title' => 'The Stooges in Context',
           'course_title_short' => 'STGS CNTXT',
           'dept_name' => 'MUSIC',
+          'enroll_limit' => 40,
           'instruction_format' => 'LEC',
           'primary' => 'true',
           'section_display_name' => 'MUSIC 99C',
           'section_id' => '44807',
-          'section_num' => '001'
+          'section_num' => '001',
+          'waitlist_limit' => 10
         }),
         base_course_data.merge({
           'cs_course_id' => '30001',
@@ -197,11 +203,13 @@ describe EdoOracle::UserCourses::Base do
           'course_title' => 'Einstuerzende Neubauten and Structural Failure',
           'course_title_short' => 'KOLLAPS',
           'dept_name' => 'MUSIC',
+          'enroll_limit' => 35,
           'instruction_format' => 'LEC',
           'primary' => 'true',
           'section_display_name' => 'MUSIC C105',
           'section_id' => '45807',
-          'section_num' => '001'
+          'section_num' => '001',
+          'waitlist_limit' => 9
         }),
         base_course_data.merge({
           'cs_course_id' => '30001',
@@ -213,25 +221,31 @@ describe EdoOracle::UserCourses::Base do
           'course_title' => 'Einstuerzende Neubauten and Structural Failure',
           'course_title_short' => 'KOLLAPS',
           'dept_name' => 'MEC ENG',
+          'enroll_limit' => 35,
           'instruction_format' => 'LEC',
           'primary' => 'true',
           'section_display_name' => 'MEC ENG C112',
           'section_id' => '54807',
-          'section_num' => '001'
+          'section_num' => '001',
+          'waitlist_limit' => 9
         }),
         base_course_data.merge({
           'cs_course_id' => '10001',
+          'enroll_limit' => 23,
           'instruction_format' => 'LEC',
           'primary' => 'true',
           'section_id' => '44206',
-          'section_num' => '001'
+          'section_num' => '001',
+          'waitlist_limit' => 6
         }),
         base_course_data.merge({
           'cs_course_id' => '10001',
+          'enroll_limit' => 24,
           'instruction_format' => 'LEC',
           'primary' => 'true',
           'section_id' => '44207',
-          'section_num' => '002'
+          'section_num' => '002',
+          'waitlist_limit' => 7
         })
       ]
     end
@@ -239,24 +253,30 @@ describe EdoOracle::UserCourses::Base do
       [
         base_course_data.merge({
           'cs_course_id' => '10001',
+          'enroll_limit' => 20,
           'instruction_format' => 'DIS',
           'primary' => 'false',
           'section_id' => '44210',
-          'section_num' => '201'
+          'section_num' => '201',
+          'waitlist_limit' => 5
         }),
         base_course_data.merge({
           'cs_course_id' => '10001',
+          'enroll_limit' => 20,
           'instruction_format' => 'DIS',
           'primary' => 'false',
           'section_id' => '44211',
-          'section_num' => '202'
+          'section_num' => '202',
+          'waitlist_limit' => 5
         }),
         base_course_data.merge({
           'cs_course_id' => '10001',
+          'enroll_limit' => 20,
           'instruction_format' => 'DIS',
           'primary' => 'false',
           'section_id' => '44211',
-          'section_num' => '202'
+          'section_num' => '202',
+          'waitlist_limit' => 5
         })
       ]
     end
@@ -271,8 +291,12 @@ describe EdoOracle::UserCourses::Base do
     let(:feed) { {}.tap { |feed| EdoOracle::UserCourses::Base.new(user_id: random_id).merge_instructing feed } }
     subject { feed['2016-D'] }
 
+    def get_course(course_code)
+      subject.find { |course| course[:course_code] == course_code }
+    end
+
     def get_sections(course_code)
-      subject.find { |course| course[:course_code] == course_code }[:sections]
+      get_course(course_code)[:sections]
     end
 
     shared_examples 'proper section sorting' do
@@ -321,16 +345,33 @@ describe EdoOracle::UserCourses::Base do
       expect(get_sections('MUSIC 74').select { |section| !section[:is_primary_section]}).to have(2).items
     end
 
-    it 'includes course data without enrollment-specific properties' do
+    it 'includes course data with instructor-specific properties and without student-specific properties' do
       subject.each do |course|
-        expect(course.keys).to include(:catid, :course_catalog, :course_code, :dept, :emitter, :id, :name, :role, :sections, :slug, :term_cd, :term_id, :term_yr)
+        expect(course.keys).to include(
+          :catid, :course_catalog, :course_code, :dept, :emitter, :enroll_limit, :id, :name, :role,
+          :sections, :slug, :term_cd, :term_id, :term_yr, :waitlist_limit
+        )
         expect(course[:role]).to eq 'Instructor'
         course[:sections].each do |section|
-          expect(section.keys).to include(:ccn, :instruction_format, :is_primary_section, :section_label, :section_number)
+          expect(section.keys).to include(
+            :ccn, :enroll_limit, :instruction_format, :is_primary_section, :section_label,
+            :section_number, :waitlist_limit
+          )
           expect(section.keys).to include(:units) if section[:is_primary_section]
-          expect(section.keys).not_to include(:grading_basis, :enroll_limit, :waitlistPosition)
+          expect(section.keys).not_to include(:grading_basis, :waitlistPosition)
         end
       end
+    end
+
+    it 'sums enrollment and waitlist limits for primary sections' do
+      expect(get_course('MUSIC 74')[:enroll_limit]).to eq 47
+      expect(get_course('MUSIC 74')[:waitlist_limit]).to eq 13
+      expect(get_course('MUSIC 99C')[:enroll_limit]).to eq 40
+      expect(get_course('MUSIC 99C')[:waitlist_limit]).to eq 10
+      expect(get_course('MUSIC C105')[:enroll_limit]).to eq 35
+      expect(get_course('MUSIC C105')[:waitlist_limit]).to eq 9
+      expect(get_course('MEC ENG C112')[:enroll_limit]).to eq 35
+      expect(get_course('MEC ENG C112')[:waitlist_limit]).to eq 9
     end
 
     it 'assigns cross-listing hashes to matching cs_course_id and section only' do

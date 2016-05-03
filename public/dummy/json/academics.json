@@ -964,6 +964,8 @@
               ]
             }
           ],
+          "enrollLimit": 150,
+          "waitlistLimit": 10,
           "scheduledSectionCount": 3,
           "scheduledSections": [
             {
@@ -983,6 +985,8 @@
             {
               "ccn": "27606",
               "courseCode": "BIOLOGY 123A",
+              "enroll_limit": 150,
+              "waitlist_limit": 10,
               "instruction_format": "LEC",
               "section_label": "LEC 002",
               "section_number": "002",
@@ -1005,6 +1009,8 @@
             {
               "ccn": "27619",
               "courseCode": "BIOLOGY 123A",
+              "enroll_limit": 40,
+              "waitlist_limit": 5,
               "instruction_format": "LAB",
               "section_label": "LAB 201",
               "section_number": "201",
@@ -1028,6 +1034,8 @@
               "section_label": "DIS 008",
               "ccn": "49713",
               "courseCode": "BIOLOGY 123A",
+              "enroll_limit": 40,
+              "waitlist_limit": 5,
               "instruction_format": "DIS",
               "section_number": "008",
               "is_primary_section": false,
@@ -1048,6 +1056,8 @@
             {
               "ccn": "37606",
               "courseCode": "INTEGBI 183A",
+              "enroll_limit": 150,
+              "waitlist_limit": 10,
               "instruction_format": "LEC",
               "section_label": "LEC 002",
               "section_number": "002",
@@ -1073,6 +1083,8 @@
               "courseCode": "INTEGBI 183A",
               "instruction_format": "LAB",
               "section_label": "LAB 201",
+              "enroll_limit": 40,
+              "waitlist_limit": 5,
               "section_number": "201",
               "scheduledWithCcn": "29713",
               "is_primary_section": false,
@@ -1097,6 +1109,8 @@
               "courseCode": "INTEGBI 183A",
               "instruction_format": "DIS",
               "section_number": "008",
+              "enroll_limit": 40,
+              "waitlist_limit": 5,
               "is_primary_section": false,
               "schedules": [],
               "scheduledWithCcn": "49713",
@@ -1148,6 +1162,8 @@
               "instruction_format": "LEC",
               "section_label": "LEC 003",
               "section_number": "003",
+              "enroll_limit": 150,
+              "waitlist_limit": 10,
               "is_primary_section": false,
               "instructors": [
                 {

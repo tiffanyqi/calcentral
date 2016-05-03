@@ -33,6 +33,7 @@ module MyAcademics
         sections_data[term_key].each do |course|
           next unless ignore_roles || (course[:role] == 'Instructor')
           course_info = course_info_with_multiple_listings course
+          course_info.merge! enrollment_limits(course)
           if course_info[:sections].count { |section| section[:is_primary_section] } > 1
             merge_multiple_primaries(course_info, course[:course_option])
           end
@@ -41,6 +42,13 @@ module MyAcademics
         teaching_semesters << teaching_semester unless teaching_semester[:classes].empty?
       end
       teaching_semesters
+    end
+
+    def enrollment_limits(course)
+      {
+        enrollLimit: course[:enroll_limit],
+        waitlistLimit: course[:waitlist_limit]
+      }
     end
 
   end
