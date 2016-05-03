@@ -81,6 +81,7 @@ module EdoOracle
             end
           else
             previous_item[:sections] << row_to_section_data(row, cross_listing_tracker)
+            sum_primary_limits(previous_item, row) unless row['enroll_status']
           end
           nil
         else
@@ -95,6 +96,7 @@ module EdoOracle
               row_to_section_data(row, cross_listing_tracker)
             ]
           }
+          sum_primary_limits(course_data, row) unless row['enroll_status']
           course_item.merge(term_data).merge(course_data)
         end
       end
@@ -103,6 +105,14 @@ module EdoOracle
         campus_classes.each_value do |semester_classes|
           semester_classes.sort_by! { |c| Berkeley::CourseCodes.comparable_course_code c }
         end
+      end
+
+      def sum_primary_limits(course_data, row)
+        return unless to_boolean(row['primary'])
+        course_data[:enroll_limit] ||= 0
+        course_data[:waitlist_limit] ||= 0
+        course_data[:enroll_limit] += row['enroll_limit'].to_i
+        course_data[:waitlist_limit] += row['waitlist_limit'].to_i
       end
 
       # Create IDs for a given course item:
@@ -141,14 +151,18 @@ module EdoOracle
           section_data[:associated_primary_id] = row['primary_associated_section_id']
         end
 
-        # Grading and waitlist data only apply to enrollment records and will be skipped for instructors.
         if row.include? 'enroll_status'
+          # Grading and waitlist data relevant to students.
           section_data[:grade] = row['grade'].strip if row['grade'].present?
           section_data[:grading_basis] = row['grading_basis'] if section_data[:is_primary_section]
           if row['enroll_status'] == 'W'
             section_data[:waitlistPosition] = row['waitlist_position'].to_i
             section_data[:enroll_limit] = row['enroll_limit'].to_i
           end
+        else
+          # Enrollment and waitlist data relevant to instructors.
+          section_data[:enroll_limit] = row['enroll_limit'].to_i
+          section_data[:waitlist_limit] = row['waitlist_limit'].to_i
         end
 
         # Cross-listed primaries are tracked only when merging instructed sections.

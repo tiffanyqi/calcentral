@@ -26,7 +26,8 @@ describe Rosters::Common do
           ],
           :photo => '/canvas/1/photo/9016',
           :profile_url => 'http://example.com/courses/733/users/9016',
-          :units => '4.0'
+          :units => '4.0',
+          :waitlist_position => nil
         },
         {
           :enroll_status => 'W',
@@ -42,7 +43,8 @@ describe Rosters::Common do
           ],
           :photo => '/canvas/1/photo/9017',
           :profile_url => 'http://example.com/courses/733/users/9017',
-          :units => '3.0'
+          :units => '3.0',
+          :waitlist_position => 2
         },
         {
           :enroll_status => 'C',
@@ -57,7 +59,8 @@ describe Rosters::Common do
           ],
           :photo => '/canvas/1/photo/9018',
           :profile_url => 'http://example.com/courses/733/users/9018',
-          :units => '3.0'
+          :units => '3.0',
+          :waitlist_position => nil
         },
       ]
     }

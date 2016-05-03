@@ -55,8 +55,9 @@ module Rosters
                 section_ccns: [section[:ccn]]
               })
             end
+            # Grading and waitlist information in the enrollment summary view should apply to the graded component.
             if enr[:grade_option].present? && enr[:units].to_f.nonzero?
-              campus_enrollment_map[enr[:ldap_uid]].merge! enr.slice(:grade_option, :units)
+              campus_enrollment_map[enr[:ldap_uid]].merge! enr.slice(:grade_option, :units, :waitlist_position)
             end
           end
         end
