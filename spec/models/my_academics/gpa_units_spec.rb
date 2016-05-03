@@ -8,6 +8,33 @@ describe 'MyAcademics::GpaUnits' do
     {}.tap { |feed| MyAcademics::GpaUnits.new(uid).merge feed }
   end
 
+  context 'when legacy user but non-legacy term' do
+    let(:status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
+    before do
+      allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return eight_digit_cs_id
+      allow_any_instance_of(Berkeley::Term).to receive(:legacy?).and_return(false)
+      allow(Settings.features).to receive(:cs_academic_profile_prefers_legacy).and_return(prefer_legacy)
+    end
+    context 'CS-based data not fully baked' do
+      let(:prefer_legacy) {true}
+      it 'sources from Oracle' do
+        expect(CampusOracle::Queries).to receive(:get_student_info).with(uid).and_return({
+          'cum_gpa' => 2.0
+        })
+        expect(HubEdos::AcademicStatus).to receive(:new).and_return status_proxy
+        expect(feed[:gpaUnits][:cumulativeGpa]).to eq '2.0'
+      end
+    end
+    context 'CS data is ready to go' do
+      let(:prefer_legacy) {false}
+      it 'sources from Hub' do
+        expect(CampusOracle::Queries).to receive(:get_student_info).never
+        expect(HubEdos::AcademicStatus).to receive(:new).and_return status_proxy
+        expect(feed[:gpaUnits][:cumulativeGpa]).to eq '3.8'
+      end
+    end
+  end
+
   context 'when sourced from Hub academic status' do
     let(:status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
     before do
@@ -16,7 +43,7 @@ describe 'MyAcademics::GpaUnits' do
     end
 
     it 'translates GPA' do
-      expect(feed[:gpaUnits][:cumulativeGpa]).to eq 3.8
+      expect(feed[:gpaUnits][:cumulativeGpa]).to eq '3.8'
     end
 
     it 'translates total units' do

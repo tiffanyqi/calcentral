@@ -5,19 +5,23 @@ module MyAcademics
     include User::Student
 
     def merge(data)
-      # TODO This needs to be term-based, like CollegeAndLevel.
-      data[:gpaUnits] = if legacy_user?
-        oracle_gpa_units
-      else
-        hub_gpa_units
+      gpa = hub_gpa_units
+      prefer_legacy_data = Settings.features.cs_academic_profile_prefers_legacy
+      if (current_term.legacy? || prefer_legacy_data) && legacy_user?
+        legacy_gpa = oracle_gpa_units
+        if gpa[:empty] || (prefer_legacy_data && !legacy_gpa[:empty])
+          gpa = legacy_gpa
+        end
       end
+      data[:gpaUnits] = gpa
     end
 
     def hub_gpa_units
       response = HubEdos::AcademicStatus.new(user_id: @uid).get
       if (status = parse_hub_academic_status response)
-        response[:cumulativeGpa] = parse_hub_cumulative_gpa status
-        response[:totalUnits] = parse_hub_total_units status
+        # GPA is passed as a string to force a decimal point for whole values.
+        response[:cumulativeGpa] = (cumulativeGpa = parse_hub_cumulative_gpa status) && cumulativeGpa.to_s
+        response[:totalUnits] = (totalUnits = parse_hub_total_units status) && totalUnits.to_f
       else
         response[:empty] = true
       end
