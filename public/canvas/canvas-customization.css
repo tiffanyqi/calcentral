@@ -1,0 +1,61 @@
+/* RIGHT SIDEBAR */
+
+.course-options {
+  margin-bottom: 25px;
+}
+
+/* CREATE A SITE */
+
+#start_new_course {
+  display: none !important;
+}
+
+/* ALTERNATIVE MEDIA PANEL */
+
+#alt-media-container.alert {
+  color: #3B7EA1;
+  font-size: 14px;
+  margin-bottom: -5px;
+  margin-top: 15px;
+}
+
+#alt-media-container #alt-media-content {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+/* ADD PEOPLE */
+
+form#ui-id-2[data-view='createUsers'] {
+  height: 420px !important;
+}
+
+#calnet-directory-link {
+  position: relative;
+  right: 3px;
+  top: 12px;
+}
+
+#add-people-help {
+  color: #3b7ea1;
+  left: -5px;
+  position: relative;
+  top: 3px;
+}
+
+#add-people-error-guests {
+  margin-top: 10px;
+}
+
+#add-people-error-guests strong,
+#add-people-error-guests a {
+  font-weight: 500;
+}
+
+/* FOOTER */
+
+#footer .footer-logo {
+  background-size: 100% auto;
+  height: 35px;
+  width: 110px;
+}
