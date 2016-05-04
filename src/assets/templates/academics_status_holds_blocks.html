@@ -30,11 +30,8 @@
               <td colspan="2" data-ng-bind-html="studentInfo.regStatus.explanation"></td>
             </tr>
           </tbody>
-          <tbody class="cc-widget-list-hover"
-            data-cc-accessible-focus-directive
-            data-ng-class="{'cc-widget-list-hover-opened':(slr.show)}"
-            data-ng-click="api.widget.toggleShow($event, '', slr, 'Statement of Legal Residency')">
-            <tr data-ng-if="!residency.isLoading">
+          <tbody data-ng-if="!residency.isLoading">
+            <tr>
               <th class="cc-table-subheader" scope="row">California Residency</th>
               <td>
                 <i class="cc-icon fa fa-info-circle cc-icon-red" aria-hidden="true" data-ng-if="residency.code === ''"></i>
@@ -43,11 +40,11 @@
                <span data-ng-bind="residency.description"></span>
               </td>
             </tr>
-            <tr data-ng-class="{'cc-hidden':(!slr.show)}" data-ng-if="!residency.isLoading">
+            <tr>
               <th class="cc-table-subheader" scope="row">Term Applied:</th>
               <td data-ng-bind="residency.fromTerm"></td>
             </tr>
-            <tr data-ng-class="{'cc-hidden':(!slr.show)}" data-ng-if="slr.deeplink">
+            <tr data-ng-if="slr.deeplink">
               <td colspan="2" data-ng-include="'california_residency_status.html'"></td>
             </tr>
           </tbody>
