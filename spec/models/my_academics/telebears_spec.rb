@@ -163,7 +163,8 @@ describe MyAcademics::Telebears do
     let(:fake_summer_term) { double({
         code: 'B',
         year: 2014,
-        sis_term_status: 'CS'
+        sis_term_status: 'CS',
+        legacy?: true
       }) }
     let(:fake_terms) { double({
         current: fake_summer_term,

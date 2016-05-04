@@ -5,7 +5,8 @@ module MyAcademics
     include User::Student
 
     def merge(data)
-      return unless legacy_user?
+      # TODO Remove by Fall 2016.
+      return unless legacy_user? && current_term.legacy?
       telebears_list = []
       telebears_terms.each do |term_id|
         if (parsed = parse_xml_feed(term_id))
