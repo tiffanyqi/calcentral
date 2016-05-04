@@ -387,6 +387,42 @@
       ]
     },
     {
+      "name": "Berkeley Campus Solutions (SIS)",
+      "description": "New Student Information System Administrative Interface",
+      "url": "https://bcsint.is.berkeley.edu",
+      "roles": {
+        "student": false,
+        "applicant": false,
+        "staff": true,
+        "faculty": true,
+        "exStudent": false
+      },
+      "categories": [
+        {
+          "topcategory": "Tools \u0026 Resources",
+          "subcategory": "Staff Portal"
+        }
+      ]
+    },
+    {
+      "name": "Berkeley International Office",
+      "description": "Providing advising, immigration services, and advocacy to international students",
+      "url": "http://internationaloffice.berkeley.edu/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Financial Assistance"
+        }
+      ]
+    },
+    {
       "name": "Berkeley Jobs",
       "description": "Start here to learn about job openings on campus, student, staff and academic positions",
       "url": "http://jobs.berkeley.edu/",
@@ -534,24 +570,6 @@
       "name": "Blu",
       "description": "Berkeley's employee portal: work-related tools and information",
       "url": "http://blu.berkeley.edu",
-      "roles": {
-        "student": false,
-        "applicant": false,
-        "staff": true,
-        "faculty": true,
-        "exStudent": false
-      },
-      "categories": [
-        {
-          "topcategory": "Tools \u0026 Resources",
-          "subcategory": "Staff Portal"
-        }
-      ]
-    },
-    {
-      "name": "Berkeley Campus Solutions (SIS)",
-      "description": "New Student Information System Administrative Interface",
-      "url": "https://bcsint.is.berkeley.edu",
       "roles": {
         "student": false,
         "applicant": false,
@@ -1307,7 +1325,7 @@
       ]
     },
     {
-      "name": "Class pass",
+      "name": "Class Pass",
       "description": "AC Transit Pass to bus for free",
       "url": "http://pt.berkeley.edu/pay/transit/classpass/",
       "roles": {
@@ -1375,6 +1393,24 @@
         {
           "topcategory": "Policies \u0026 Procedures",
           "subcategory": "Policies"
+        }
+      ]
+    },
+    {
+      "name": "Cost of Attendance",
+      "description": "An estimated cost of completing an academic year at UC Berkeley",
+      "url": "http://financialaid.berkeley.edu/cost-attendance",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Financial Assistance"
         }
       ]
     },
@@ -1491,6 +1527,24 @@
         {
           "topcategory": "Support Services",
           "subcategory": "Students"
+        }
+      ]
+    },
+    {
+      "name": "Dream Act Application",
+      "description": "Apply for different types of California Dream Act financial aid (nonresident students)",
+      "url": "https://dream.csac.ca.gov/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Financial Assistance"
         }
       ]
     },
@@ -1715,7 +1769,7 @@
       ]
     },
     {
-      "name": "Faculty gateway",
+      "name": "Faculty Gateway",
       "description": "Useful resources for faculty members ",
       "url": "http://berkeley.edu/faculty/",
       "roles": {
@@ -1751,8 +1805,26 @@
       ]
     },
     {
+      "name": "Federal Student Loans",
+      "description": "Federal loan application, counseling, and repayment site",
+      "url": "https://studentloans.gov/myDirectLoan/index.action",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Financial Assistance"
+        }
+      ]
+    },
+    {
       "name": "Financial Aid \u0026 Scholarships Office",
-      "description": "Start here to learn about Financial Aid and for step-by-step guidance about financial aid and select scholarships at UC Berkeley",
+      "description": "Learn about Financial Aid and receive step-by-step guidance about financial aid and select scholarships",
       "url": "http://financialaid.berkeley.edu",
       "roles": {
         "student": true,
@@ -1769,9 +1841,9 @@
       ]
     },
     {
-      "name": "Loan Repayment Calculator",
-      "description": "Loan repayment calculator",
-      "url": "https://studentloans.gov/myDirectLoan/whatYouNeed.action?page=repayEst",
+      "name": "Financial Literacy",
+      "description": "A peer-to-peer financial wellness program",
+      "url": "http://financialaid.berkeley.edu/bears-financial-success",
       "roles": {
         "student": true,
         "applicant": true,
@@ -2181,6 +2253,24 @@
       ]
     },
     {
+      "name": "Loan Repayment Calculator",
+      "description": "Estimate the repayment costs of federal student loans",
+      "url": "https://studentloans.gov/myDirectLoan/whatYouNeed.action?page=repayEst",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Financial Assistance"
+        }
+      ]
+    },
+    {
       "name": "Mail Services",
       "description": "United States Postal Service-incoming and outgoing mail",
       "url": "http://mailservices.berkeley.edu/",
@@ -2217,8 +2307,8 @@
       ]
     },
     {
-      "name": "MyFinAid",
-      "description": "Manage your Financial Aid Awards-grants, scholarships, work-study, loans, etc.",
+      "name": "MyFinAid (aid prior to Fall 2016)",
+      "description": "Personal financial aid information prior to Fall 2016",
       "url": "https://myfinaid.berkeley.edu/",
       "roles": {
         "student": true,
@@ -2235,7 +2325,25 @@
       ]
     },
     {
-      "name": "New Faculty resources",
+      "name": "National Student Loan Database System",
+      "description": "The U.S. Department of Education's central database for student aid",
+      "url": "https://www.nslds.ed.gov/nslds/nslds_SA/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Financial Assistance"
+        }
+      ]
+    },
+    {
+      "name": "New Faculty Resources",
       "description": "Hints, resources, and guidelines on productive teaching",
       "url": "http://teaching.berkeley.edu/new-faculty-resources",
       "roles": {
@@ -2451,7 +2559,7 @@
       ]
     },
     {
-      "name": "Personal Info - HR record",
+      "name": "Personal Info - HR Record",
       "description": "HR personal data, requires log-in.",
       "url": "https://auth.berkeley.edu/cas/login?service=https://hrw-vip-prod.is.berkeley.edu/cgi-bin/cas-hrsprod.pl",
       "roles": {
@@ -2523,7 +2631,7 @@
       ]
     },
     {
-      "name": "Policies \u0026 procedures A-Z",
+      "name": "Policies \u0026 Procedures A-Z",
       "description": "A-Z of campuswide policies and procedures",
       "url": "http://campuspol.chance.berkeley.edu/Home/AtoZPolicies.cfm?long_page=yes",
       "roles": {
@@ -2761,7 +2869,7 @@
       ]
     },
     {
-      "name": "SARA - request system access",
+      "name": "SARA - Request System Access",
       "description": "Form that grants access to different systems for employees",
       "url": "http://www.bai.berkeley.edu/BFS/systems/systemAccess.htm",
       "roles": {
@@ -2913,6 +3021,24 @@
       ]
     },
     {
+      "name": "Student Advocates Office",
+      "description": "Representation, help, and advice to any student involved in a dispute with the University",
+      "url": "http://advocate.berkeley.edu",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Financial Assistance"
+        }
+      ]
+    },
+    {
       "name": "Student Affairs",
       "description": "Berkeley's division responsible for many student life services including the Registrar, Admissions, Financial Aid, Housing \u0026 Dining, Conduct, Public Service Center, LEAD center, and ASUC auxiliary",
       "url": "http://sa.berkeley.edu/",
@@ -2927,24 +3053,6 @@
         {
           "topcategory": "Campus Departments",
           "subcategory": "Administrative and Other"
-        }
-      ]
-    },
-    {
-      "name": "Student Budgets",
-      "description": "Estimated living expense amounts for students",
-      "url": "http://financialaid.berkeley.edu/cost-attendance",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Finances",
-          "subcategory": "Financial Assistance"
         }
       ]
     },
@@ -3079,7 +3187,7 @@
       ]
     },
     {
-      "name": "Teaching resources",
+      "name": "Teaching Resources",
       "description": "Resources that promotes teaching and learning including consultation and program facilitation",
       "url": "http://teaching.berkeley.edu/teaching.html",
       "roles": {
@@ -3223,7 +3331,7 @@
       ]
     },
     {
-      "name": "UC Berkeley Facebook page",
+      "name": "UC Berkeley Facebook Page",
       "description": "Keep updated with Berkeley news through social media",
       "url": "http://www.facebook.com/UCBerkeley",
       "roles": {
@@ -3241,7 +3349,7 @@
       ]
     },
     {
-      "name": "UC Berkeley museums",
+      "name": "UC Berkeley Museums",
       "description": "Berkeley's national history museums ",
       "url": "http://bnhm.berkeley.edu/",
       "roles": {
