@@ -43,7 +43,12 @@
     </ul>
     <div class="cc-clearfix-container">
       <div class="cc-hidden cc-print-show cc-text-center">
-        Displaying <span data-ng-bind="searchResultsViewLimit <= userSearch.selectedTab.users.length ? searchResultsViewLimit : userSearch.selectedTab.users.length"></span> of <span data-ng-bind="userSearch.selectedTab.users.length"></span> users.
+        <div data-ng-if="userSearch.selectedTab.label == 'Search'">
+          Displaying <span data-ng-bind="searchResultsViewLimit <= userSearch.selectedTab.users.length ? searchResultsViewLimit : userSearch.selectedTab.users.length"></span> of <span data-ng-bind="userSearch.selectedTab.users.length"></span> users.
+        </div>
+        <div data-ng-if="userSearch.selectedTab.label != 'Search'">
+          Displaying <span data-ng-bind="userSearch.selectedTab.users.length"></span> users.
+        </div>
       </div>
       <div data-ng-class="{'cc-hidden': userSearch.selectedTab.label != 'Search'}"
         data-cc-show-more-directive
