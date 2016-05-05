@@ -20,6 +20,10 @@
     margin: 0;
   }
 
+  .bc-page-course-official-sections-current-sections-grey-border .bc-page-course-official-sections-courses-container {
+    margin-bottom: 15px;
+  }
+
   .bc-page-course-official-sections-current-course {
     margin-left: 0;
     margin-top: 10px;
@@ -37,13 +41,21 @@
     border: $cc-color-white solid 1px;
   }
 
-  .bc-page-course-official-sections-sections-area {
-    padding: 0;
+  .bc-page-course-official-sections-sections-area.bc-page-course-official-sections-current-sections-grey-border {
+    padding: 15px;
+  }
+
+  .bc-page-course-official-sections-sections-area + .bc-page-course-official-sections-sections-area {
+    margin-top: 25px;
   }
 
   .bc-page-course-official-sections-existing-sections-header-label {
     font-size: 19px;
     margin-top: 10px;
+  }
+
+  .bc-page-course-official-sections-current-sections-grey-border .bc-page-course-official-sections-existing-sections-header-label {
+    margin-top: 3px;
   }
 
   .bc-page-course-official-sections-available-sections-header-label {
