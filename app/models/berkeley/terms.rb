@@ -56,8 +56,14 @@ module Berkeley
       end
     end
 
+    def self.campus_solutions?(term_yr, term_cd)
+      term = self.fetch.campus[Berkeley::TermCodes.to_slug(term_yr, term_cd)]
+      term.present? && !term.legacy?
+    end
+
     def self.legacy?(term_yr, term_cd)
-      self.fetch.campus[Berkeley::TermCodes.to_slug(term_yr, term_cd)].legacy?
+      term = self.fetch.campus[Berkeley::TermCodes.to_slug(term_yr, term_cd)]
+      term.present? && term.legacy?
     end
 
     def initialize(options)

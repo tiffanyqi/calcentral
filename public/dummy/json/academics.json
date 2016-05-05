@@ -485,6 +485,7 @@
       "termYear": "2014",
       "timeBucket": "future",
       "hasEnrollmentData": true,
+      "campusSolutionsTerm": false,
       "classes": [
         {
           "courseCatalog": "1A",
@@ -539,6 +540,7 @@
       "termCode": "D",
       "termYear": "2013",
       "timeBucket": "current",
+      "campusSolutionsTerm": false,
       "hasEnrollmentData": true,
       "classes": [
         {
@@ -736,6 +738,7 @@
       "termCode": "B",
       "termYear": "2013",
       "timeBucket": "past",
+      "campusSolutionsTerm": false,
       "hasEnrollmentData": false,
       "classes": [
         {
@@ -929,6 +932,7 @@
       "slug": "summer-2013",
       "termCode": "C",
       "termYear": "2013",
+      "campusSolutionsTerm": false,
       "classes": [
         {
           "role": "GSI",
@@ -1137,6 +1141,7 @@
       "slug": "fall-2013",
       "termCode": "D",
       "termYear": "2013",
+      "campusSolutionsTerm": false,
       "classes": [
         {
           "role": "Instructor",

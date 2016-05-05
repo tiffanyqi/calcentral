@@ -60,6 +60,9 @@ describe MyAcademics::Teaching do
     before { allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2014' }
     let(:uid) { '238382' }
     it_should_behave_like 'a properly translated feed'
+    it 'advertises legacy source' do
+      expect(teaching).to all include({campusSolutionsTerm: false})
+    end
 
     context 'user with future teaching assignments' do
       let(:uid) { '904715' }
@@ -253,6 +256,9 @@ describe MyAcademics::Teaching do
       }
     end
     it_should_behave_like 'a properly translated feed'
+    it 'advertises Campus Solutions source' do
+      expect(teaching).to all include({campusSolutionsTerm: true})
+    end
     it 'merges cross-listings preserving course title' do
       language_disorders = teaching[0][:classes].find { |course| course[:title] == 'Language Disorders' }
       expect(language_disorders[:listings].map { |listing| listing[:dept]}).to match_array ['COG SCI', 'SUMERIAN']

@@ -69,6 +69,7 @@ features:
   audio: true
   cal1card: true
   class_enrollment_summer_2016: true
+  class_info_enrollment_tab: true
   course_manage_official_sections: true
   cs_academic_planner: true
   cs_academic_progress_report: true
