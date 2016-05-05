@@ -103,7 +103,7 @@ module Textbooks
     def get_as_json
       self.class.smart_fetch_from_cache(
         {id: "#{@slug}-#{@dept}-#{@course_catalog}-#{@section_numbers.join('-')}",
-         user_message_on_exception: "Currently, we can't reach the bookstore. Check again later for updates, or contact your instructor directly.",
+         user_message_on_exception: "Currently, we can't reach the bookstore. Check again later for updates, or contact the <a href=\"https://calstudentstore.berkeley.edu/textbook\" target=\"_blank\">ASUC book store</a>.",
          jsonify: true}) do
         get
       end
@@ -114,7 +114,7 @@ module Textbooks
 
       response = request_bookstore_list(@section_numbers)
       books = process_response(response)
-      book_unavailable_error = 'Currently, there is no textbook information for this course. Check again later for updates, or contact your instructor directly.'
+      book_unavailable_error = 'Currently, there is no textbook information for this course. Check again later for updates, or contact the <a href="https://calstudentstore.berkeley.edu/textbook" target="_blank">ASUC book store</a>.'
 
       {
         books: {

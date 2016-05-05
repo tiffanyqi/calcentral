@@ -74,6 +74,6 @@
         ]
       }
     ],
-    "bookUnavailableError": "Currently, there is no textbook information for this course. Check again later for updates, or contact your instructor directly."
+    "bookUnavailableError": "Currently, there is no textbook information for this course. Check again later for updates, or contact the <a href=\"https://calstudentstore.berkeley.edu/textbook\" target=\"_blank\">ASUC book store</a>."
   }
 }

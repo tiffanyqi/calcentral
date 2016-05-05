@@ -23,9 +23,12 @@
           </div>
           <div data-ng-repeat="courseBooks in semesterBooks" class="cc-clearfix-container">
             <h3 class="cc-book-title" data-ng-bind="courseBooks.course"></h3>
-            <div data-ng-repeat="books in courseBooks">
-              <div data-ng-include="'textbook.html'"></div>
-              <div class="cc-text-line-height" data-ng-if="!books.items.length" data-ng-bind="books.bookUnavailableError"></div>
+            <div data-ng-if="courseBooks.errorMessage" data-ng-bind-html="courseBooks.errorMessage"></div>
+            <div data-ng-if="!courseBooks.errorMessage">
+              <div data-ng-repeat="books in courseBooks">
+                <div data-ng-include="'textbook.html'"></div>
+                <div class="cc-text-line-height" data-ng-if="!books.items.length" data-ng-bind-html="books.bookUnavailableError"></div>
+              </div>
             </div>
             <hr>
           </div>
