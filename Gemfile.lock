@@ -214,6 +214,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (5.0.0)
       railties (>= 3.2.16)
+    jruby-openssl (0.9.16-java)
     json (1.8.3-java)
     jwt (1.5.4)
     kaminari (0.16.1)
@@ -484,6 +485,7 @@ DEPENDENCIES
   icalendar (~> 2.2.2)
   ims-lti!
   jruby-activemq (~> 5.13.0)!
+  jruby-openssl (~> 0.9.16)
   json (~> 1.8.0)
   link_header (~> 0.0.7)
   log4r (~> 1.1)
