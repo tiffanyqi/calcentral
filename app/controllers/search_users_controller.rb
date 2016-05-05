@@ -11,13 +11,13 @@ class SearchUsersController < ApplicationController
 
   def search_users
     users = authorize_results by_id(id_param)
-    render json: { users: post_process(users) }.to_json
+    render json: { users: prepare_to_render(users) }.to_json
   end
 
   def search_users_by_uid
     results = User::SearchUsersByUid.new(id: id_param).search_users_by_uid
     users = authorize_results add_user_attributes(results)
-    render json: { users: post_process(users) }.to_json
+    render json: { users: prepare_to_render(users) }.to_json
   end
 
   def by_id_or_name
@@ -31,7 +31,7 @@ class SearchUsersController < ApplicationController
     users = id_or_name =~ /\A\d+\z/ ?
       authorize_results(by_id id_or_name, opts) :
       User::SearchUsersByName.new.search_by(id_or_name, opts)
-    render json: { users: post_process(users.take(limit)) }.to_json
+    render json: { users: prepare_to_render(users.take(limit)) }.to_json
   end
 
   private
@@ -40,15 +40,18 @@ class SearchUsersController < ApplicationController
     add_user_attributes User::SearchUsers.new(opts.merge id: id).search_users
   end
 
-  def post_process(users)
+  def prepare_to_render(users)
     unless users.nil? || users.empty?
-      if (saved = User::StoredUsers.get(current_user.real_user_id)[:saved])
-        stored_uid_list = saved.map { |user| user['ldap_uid'] }
-        users.each { |user| user[:saved] = stored_uid_list.include? user[:ldap_uid] }
+      # Give the front-end the camelCase it wants.
+      users.map! { |user| HashConverter.camelize user }
+      # Identify users in the result-set which were once "saved".
+      if (saved_users = User::StoredUsers.get(current_user.real_user_id)[:saved])
+        stored_uid_list = saved_users.map { |saved_user| saved_user['ldap_uid'] }
+        users.each { |user| user[:saved] = stored_uid_list.include? user[:ldapUid] }
       end
     end
     # If users is a Set then uniqueness is enforced by default
-    users.is_a?(Array) ? users.uniq { |user| user[:ldap_uid] } : users
+    users.is_a?(Array) ? users.uniq { |user| user[:ldapUid] } : users
   end
 
   def add_user_attributes(users)

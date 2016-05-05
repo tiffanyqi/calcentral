@@ -7,8 +7,10 @@ class StoredUsersController < ApplicationController
 
   def get
     authorize_query_stored_users current_user
-    users_found = User::StoredUsers.get current_user.real_user_id
-    render json: { users: users_found }.to_json
+    saved_and_recent = User::StoredUsers.get current_user.real_user_id
+    camelize saved_and_recent[:saved]
+    camelize saved_and_recent[:recent]
+    render json: { users: saved_and_recent }.to_json
   end
 
   def store_saved_uid
@@ -40,6 +42,10 @@ class StoredUsersController < ApplicationController
 
   def uid_param
     params.require 'uid'
+  end
+
+  def camelize(users)
+    users.map! { |user| HashConverter.camelize user } if users
   end
 
   def error_response

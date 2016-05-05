@@ -38,12 +38,12 @@ describe StoredUsersController do
 
       get :get
       expect(response).to be_success
-      json_response = JSON.parse response.body
-      expect(json_response['users']).to be_a Hash
-      expect(json_response['users']['saved']).to be_an Array
-      expect(json_response['users']['recent']).to be_an Array
-      expect(json_response['users']['saved'][0]['ldap_uid']).to eq '1'
-      expect(json_response['users']['recent'][0]['ldap_uid']).to eq '2'
+      users = JSON.parse(response.body)['users']
+      expect(users).to be_a Hash
+      expect(users['saved']).to be_an Array
+      expect(users['recent']).to be_an Array
+      expect(users['saved'][0]['ldapUid']).to eq '1'
+      expect(users['recent'][0]['ldapUid']).to eq '2'
     end
   end
 

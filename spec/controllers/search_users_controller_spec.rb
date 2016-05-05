@@ -1,7 +1,6 @@
 describe SearchUsersController do
 
-  let(:users_found) { [ { 'student_id' => '24680', 'ldap_uid' => '13579' } ] }
-  let(:users_not_found) { [] }
+  let(:id) { '61889' }
   before do
     session['user_id'] = random_id
     auth = User::Auth.new uid: session['user_id'], is_superuser: is_superuser, active: true
@@ -10,28 +9,24 @@ describe SearchUsersController do
 
   describe '#search_users' do
     let(:is_superuser) { true }
-    before do
-      expect(User::SearchUsers).to receive(:new).with(id: id).and_return (search = double)
-      expect(search).to receive(:search_users).and_return search_results
-    end
 
     context 'valid id' do
-      let(:id) { '13579' }
-      let(:search_results) { users_found }
-
       it 'finds one matching user' do
         get :search_users, id: id
         expect(response).to be_success
         users = JSON.parse(response.body)['users']
         expect(users).to have(1).item
-        expect(users[0]['student_id']).to eq '24680'
-        expect(users[0]['ldap_uid']).to eq '13579'
+        expect(users[0]['studentId']).to eq '11667051'
+        expect(users[0]['ldapUid']).to eq id
         users.each { |user| expect(user).to be_a Hash }
       end
     end
     context 'invalid id' do
-      let(:id) { '12345' }
-      let(:search_results) { users_not_found }
+      let(:id) { random_id }
+      before do
+        expect(User::SearchUsers).to receive(:new).with(id: id).and_return (search = double)
+        expect(search).to receive(:search_users).and_return Set.new
+      end
 
       it 'returns empty set' do
         get :search_users, id: id
@@ -44,11 +39,7 @@ describe SearchUsersController do
 
   describe '#search_users by advisor' do
     let(:is_superuser) { false }
-    let(:id) { '13579' }
-    let(:search_results) { users_found }
     before do
-      expect(User::SearchUsers).to receive(:new).with(id: id).and_return (search = double)
-      expect(search).to receive(:search_users).and_return search_results
       # Advisor
       expect(User::AggregatedAttributes).to receive(:new).with(session['user_id']).and_return (advisor_proxy = double)
       expect(advisor_proxy).to receive(:get_feed).and_return({ roles: { advisor: is_advisor } })
@@ -89,28 +80,24 @@ describe SearchUsersController do
 
   describe '#search_users_by_uid' do
     let(:is_superuser) { true }
-    before do
-      expect(User::SearchUsersByUid).to receive(:new).with(id: id).and_return (search = double)
-      expect(search).to receive(:search_users_by_uid).and_return search_results
-    end
 
     context 'valid uid' do
-      let(:id) { '13579' }
-      let(:search_results) { users_found }
-
       it 'returns one matching user' do
         get :search_users_by_uid, id: id
         expect(response).to be_success
         users = JSON.parse(response.body)['users']
         expect(users).to have(1).item
-        expect(users[0]['student_id']).to eq '24680'
-        expect(users[0]['ldap_uid']).to eq '13579'
+        expect(users[0]['studentId']).to eq '11667051'
+        expect(users[0]['ldapUid']).to eq '61889'
         users.each { |user| expect(user).to be_a Hash }
       end
     end
     context 'invalid uid' do
-      let(:id) { '12345' }
-      let(:search_results) { users_not_found }
+      let(:id) { random_id }
+      before do
+        expect(User::SearchUsersByUid).to receive(:new).with(id: id).and_return (search = double)
+        expect(search).to receive(:search_users_by_uid).and_return Set.new
+      end
 
       it 'returns no record for invalid uid' do
         get :search_users_by_uid, id: id
