@@ -139,7 +139,6 @@ describe MyAcademics::Semesters do
   shared_examples 'a good and proper munge' do
     include_examples 'semester ordering'
     it 'should preserve structure of enrollment data' do
-      pp feed
       feed[:semesters].each do |s|
         expect(s[:hasEnrollmentData]).to eq true
         enrollment_semester = enrollment_data["#{s[:termYear]}-#{s[:termCode]}"]
@@ -169,6 +168,9 @@ describe MyAcademics::Semesters do
     end
     let(:enrollment_data) { generate_enrollment_data(edo_source: false)  }
     it_should_behave_like 'a good and proper munge'
+    it 'advertises legacy source' do
+      expect(feed[:semesters]).to all include({campusSolutionsTerm: false})
+    end
   end
 
   context 'Campus Solutions academic data' do
@@ -179,19 +181,22 @@ describe MyAcademics::Semesters do
     end
     let(:enrollment_data) { generate_enrollment_data(edo_source: true) }
     it_should_behave_like 'a good and proper munge'
+    it 'advertises Campus Solutions source' do
+      expect(feed[:semesters]).to all include({campusSolutionsTerm: true})
+    end
   end
 
   context 'mixed legacy and Campus Solutions academic data' do
     let(:legacy_enrollment_data) do
       {
         '2013-B' => enrollment_term('2013-B', edo_source: false),
-        '2013-D' => enrollment_term('2013-B', edo_source: false)
+        '2013-D' => enrollment_term('2013-D', edo_source: false)
       }
     end
     let(:edo_enrollment_data) {
       {
-        '2014-B' => enrollment_term('2013-B', edo_source: true),
-        '2014-C' => enrollment_term('2013-B', edo_source: true)
+        '2014-B' => enrollment_term('2014-B', edo_source: true),
+        '2014-C' => enrollment_term('2014-C', edo_source: true)
       }
     }
     let(:enrollment_data) { legacy_enrollment_data.merge edo_enrollment_data }
@@ -201,6 +206,10 @@ describe MyAcademics::Semesters do
       allow_any_instance_of(EdoOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return edo_enrollment_data
     end
     it_should_behave_like 'a good and proper munge'
+    it 'advertises mixed source' do
+      expect(feed[:semesters][0..1]).to all include({campusSolutionsTerm: true})
+      expect(feed[:semesters][2..3]).to all include({campusSolutionsTerm: false})
+    end
   end
 
   shared_examples 'a good and proper multiple-primary munge' do

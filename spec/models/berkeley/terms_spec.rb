@@ -75,14 +75,33 @@ describe Berkeley::Terms do
     context 'term is before legacy cutoff' do
       let(:legacy_cutoff) { 'summer-2014' }
       its(:legacy?) { should eq true }
+      it 'reports legacy status from class methods' do
+        expect(Berkeley::Terms.legacy?('2014', 'B')).to eq true
+        expect(Berkeley::Terms.campus_solutions?('2014', 'B')).to eq false
+      end
     end
     context 'term is equal to legacy cutoff' do
       let(:legacy_cutoff) { 'spring-2014' }
       its(:legacy?) { should eq true }
+      it 'reports legacy status from class methods' do
+        expect(Berkeley::Terms.legacy?('2014', 'B')).to eq true
+        expect(Berkeley::Terms.campus_solutions?('2014', 'B')).to eq false
+      end
     end
     context 'term is after legacy cutoff' do
       let(:legacy_cutoff) { 'fall-2013' }
       its(:legacy?) { should eq false }
+      it 'reports Campus Solutions status from class methods' do
+        expect(Berkeley::Terms.legacy?('2014', 'B')).to eq false
+        expect(Berkeley::Terms.campus_solutions?('2014', 'B')).to eq true
+      end
+    end
+    context 'term not found' do
+      let(:legacy_cutoff) { 'fall-2013' }
+      it 'returns false from class methods' do
+        expect(Berkeley::Terms.legacy?('1969', 'B')).to eq false
+        expect(Berkeley::Terms.campus_solutions?('1969', 'B')).to eq false
+      end
     end
   end
 

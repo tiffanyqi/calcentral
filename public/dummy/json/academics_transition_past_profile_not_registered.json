@@ -469,6 +469,7 @@
       "termCode": "B",
       "termYear": "2014",
       "timeBucket": "future",
+      "campusSolutionsTerm": false,
       "classes": [
         {
           "course_code": "BIOLOGY 1A",
@@ -520,6 +521,7 @@
       "termCode": "D",
       "termYear": "2013",
       "timeBucket": "current",
+      "campusSolutionsTerm": false,
       "classes": [
         {
           "course_code": "BIOLOGY 1A",
@@ -675,6 +677,7 @@
       "termCode": "B",
       "termYear": "2012",
       "timeBucket": "past",
+      "campusSolutionsTerm": false,
       "classes": [
         {
           "course_code": "BIOLOGY 1A",
@@ -807,6 +810,7 @@
       "slug": "summer-2013",
       "termCode": "C",
       "termYear": "2013",
+      "campusSolutionsTerm": false,
       "classes": [
         {
           "role": "GSI",
@@ -1001,6 +1005,7 @@
       "slug": "fall-2013",
       "termCode": "D",
       "termYear": "2013",
+      "campusSolutionsTerm": false,
       "classes": [
         {
           "role": "Instructor",
