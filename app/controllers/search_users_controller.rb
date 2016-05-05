@@ -11,14 +11,13 @@ class SearchUsersController < ApplicationController
 
   def search_users
     users = authorize_results by_id(id_param)
-    add_user_attributes users
-    render json: { users: decorate(users) }.to_json
+    render json: { users: post_process(users) }.to_json
   end
 
   def search_users_by_uid
-    users = authorize_results User::SearchUsersByUid.new(id: id_param).search_users_by_uid
-    add_user_attributes users
-    render json: { users: decorate(users) }.to_json
+    results = User::SearchUsersByUid.new(id: id_param).search_users_by_uid
+    users = authorize_results add_user_attributes(results)
+    render json: { users: post_process(users) }.to_json
   end
 
   def by_id_or_name
@@ -32,23 +31,24 @@ class SearchUsersController < ApplicationController
     users = id_or_name =~ /\A\d+\z/ ?
       authorize_results(by_id id_or_name, opts) :
       User::SearchUsersByName.new.search_by(id_or_name, opts)
-    render json: { users: decorate(users.take(limit)) }.to_json
+    render json: { users: post_process(users.take(limit)) }.to_json
   end
 
   private
 
   def by_id(id, opts={})
-    User::SearchUsers.new(opts.merge id: id).search_users
+    add_user_attributes User::SearchUsers.new(opts.merge id: id).search_users
   end
 
-  def decorate(users)
+  def post_process(users)
     unless users.nil? || users.empty?
       if (saved = User::StoredUsers.get(current_user.real_user_id)[:saved])
         stored_uid_list = saved.map { |user| user['ldap_uid'] }
         users.each { |user| user[:saved] = stored_uid_list.include? user[:ldap_uid] }
       end
     end
-    users
+    # If users is a Set then uniqueness is enforced by default
+    users.is_a?(Array) ? users.uniq { |user| user[:ldap_uid] } : users
   end
 
   def add_user_attributes(users)
