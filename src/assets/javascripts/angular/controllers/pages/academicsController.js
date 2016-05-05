@@ -56,6 +56,34 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.previousNextSemesterShow = (nextSemesterCompare || previousSemesterCompare);
   };
 
+  var setClassInfoCategories = function(teachingSemester) {
+    $scope.classInfoCategories = [
+      {
+        'title': 'Class Info',
+        'path': null
+      }
+    ];
+    if (teachingSemester) {
+      if (apiService.user.profile.features.classInfoEnrollmentTab && teachingSemester.campusSolutionsTerm) {
+        $scope.classInfoCategories.push({
+          'title': 'Enrollment',
+          'path': 'enrollment'
+        });
+      }
+      $scope.classInfoCategories.push({
+        'title': 'Roster',
+        'path': 'roster'
+      });
+    }
+    if ($routeParams.category) {
+      $scope.currentCategory = _.find($scope.classInfoCategories, {
+        'path': $routeParams.category
+      });
+    } else {
+      $scope.currentCategory = $scope.classInfoCategories[0];
+    }
+  };
+
   var fillSemesterSpecificPage = function(semesterSlug, data) {
     var isOnlyInstructor = !!$routeParams.teachingSemesterSlug;
     var selectedStudentSemester = academicsService.findSemester(data.semesters, semesterSlug, selectedStudentSemester);
@@ -114,6 +142,8 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
       $scope.selectedCourseCountSchedules = academicsService.countSectionItem($scope.selectedCourse, 'schedules');
       $scope.selectedCourseCountScheduledSections = academicsService.countSectionItem($scope.selectedCourse);
       $scope.selectedCourseLongInstructorsList = ($scope.selectedCourseCountScheduledSections > 5) || ($scope.selectedCourseCountInstructors > 10);
+
+      setClassInfoCategories(selectedTeachingSemester);
     }
   };
 
@@ -185,13 +215,6 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
         $scope.enrollmentVerificationLink = 'http://registrar.berkeley.edu/academic-records/verification-enrollment-degrees';
       }
     }
-  };
-
-  $scope.currentSelection = 'Class Info';
-  $scope.selectOptions = ['Class Info', 'Class Roster'];
-
-  $scope.switchSelectedOption = function(selectedOption) {
-    $scope.currentSelection = selectedOption;
   };
 
   // Wait until user profile is fully loaded before hitting academics data
