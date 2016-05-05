@@ -4,6 +4,16 @@
   margin-bottom: 25px;
 }
 
+/* COURSES */
+
+#my-courses-create-site {
+  margin-top: 5px;
+}
+
+#my_courses_table {
+  margin-top: 25px;
+}
+
 /* CREATE A SITE */
 
 #start_new_course {

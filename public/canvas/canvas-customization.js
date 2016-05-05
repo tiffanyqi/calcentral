@@ -104,15 +104,29 @@
           getExternalToolId('globalTools', 'Create a Site', function(createSiteId) {
             if (createSiteId) {
               var linkUrl = '/users/' + window.ENV.current_user_id + '/external_tools/' + createSiteId;
+              var $createSiteButton = $('<a/>', {
+                'href': linkUrl,
+                'text': 'Create a Site',
+                'class': 'btn btn-primary button-sidebar-wide'
+              });
 
-              // Replace the 'Start A New Course' button with the custom 'Create a Site' button
-              waitUntilAvailable('#start_new_course', false, function($startNewCourse) {
-                var $createSiteButton = $('<a/>', {
-                  'href': linkUrl,
-                  'text': 'Create a Site',
-                  'class': 'element_toggler btn btn-primary button-sidebar-wide'
-                });
-                $startNewCourse.replaceWith($createSiteButton);
+              // Add the 'Create a Site' button to the Dashboard page
+              waitUntilAvailable('#right-side .rs-margin-lr', false, function($container) {
+                $('#start_new_course').remove();
+                $container.prepend($createSiteButton);
+              });
+
+              // Add the 'Create a Site' button to the Courses page
+              waitUntilAvailable('.ic-Action-header', false, function($actionHeader) {
+                $actionHeader.remove();
+                // Add the button to the header
+                var $headerBar = $('.header-bar');
+                $('h2', $headerBar).addClass('pull-left');
+                var $createSiteContainer = $('<div/>', {
+                  'id': 'my-courses-create-site',
+                  'class': 'text-right'
+                }).append($createSiteButton);
+                $headerBar.append($createSiteContainer);
               });
             }
           });
