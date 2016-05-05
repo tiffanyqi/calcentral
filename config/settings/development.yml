@@ -64,6 +64,9 @@ hot_plate:
 advising_proxy:
   fake: true
 
+eft_proxy:
+  fake: true
+
 features:
   advising: true
   audio: true

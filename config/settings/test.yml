@@ -21,6 +21,9 @@ ldap:
 google_proxy:
   fake: true
 
+eft_proxy:
+  fake: true
+
 financials_proxy:
   fake: true
 
