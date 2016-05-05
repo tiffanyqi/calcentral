@@ -30,34 +30,62 @@ describe User::SearchUsersByName do
 
     it_should_behave_like 'a search with empty input'
 
-    context 'expected API arguments' do
-      it 'should only set :name_1 if name is a single token' do
-        opts = proxy.send :search_by_name_options, 'Barack'
-        expect(opts[:name_1]).to eq 'Barack'
-        expect(opts[:name_2]).to be_nil
+    context 'wildcard usage' do
+      it 'should reject a wildcard-only search' do
+        expect { proxy.search_by '  * ' }.to raise_error
+        expect { proxy.search_by '*?' }.to raise_error
       end
-      it 'should set :name_1 and :name_2 if name is two tokens, without comma' do
-        opts = proxy.send :search_by_name_options, 'Barack H. Obama'
-        expect(opts[:name_1]).to eq 'Barack'
-        expect(opts[:name_2]).to eq 'Obama'
-      end
-      it 'should separate out last-name per first comma in name' do
-        opts = proxy.send :search_by_name_options, 'Obama II, Barack Hussein'
-        expect(opts[:name_1]).to eq 'Barack Hussein'
-        expect(opts[:name_2]).to eq 'Obama II'
-      end
-      it 'should drop the Jr.' do
-        opts = proxy.send :search_by_name_options, 'Obama Jr., Barack'
-        expect(opts[:name_1]).to eq 'Barack'
-        expect(opts[:name_2]).to eq 'Obama'
-      end
-      it 'should assume the leading two tokens are first-name and middle-name when token count is 3 or more' do
-        opts = proxy.send :search_by_name_options, 'Mr. Barack Hussein Obama II'
-        expect(opts[:name_1]).to eq 'Barack Hussein'
-        expect(opts[:name_2]).to eq 'Obama II'
+      it 'should allow phrase plus wildcard' do
+        expect(proxy.send :only_special_characters?, 'Barack*').to be false
+        expect(proxy.send :only_special_characters?, 'Barack * Obama').to be false
+        expect(proxy.send :only_special_characters?, 'Barry O*').to be false
       end
     end
 
+    context 'expected API arguments' do
+      let(:name) { nil }
+      subject { proxy.send :search_by_name_options, name }
+
+      before(:each) do
+        expect(proxy.send :only_special_characters?, name).to be false
+      end
+
+      context 'name is a single token' do
+        let(:name) { 'Barack' }
+        it 'should only set :name_1' do
+          expect(subject[:name_1]).to eq 'Barack'
+          expect(subject[:name_2]).to be_nil
+        end
+      end
+      context 'two tokens, without comma' do
+        let(:name) { 'Barack H. Obama' }
+        it 'should set :name_1 and :name_2' do
+          expect(subject[:name_1]).to eq 'Barack'
+          expect(subject[:name_2]).to eq 'Obama'
+        end
+      end
+      context 'first comma matters' do
+        let(:name) { 'Obama II, Barack Hussein' }
+        it 'should separate out last-name' do
+          expect(subject[:name_1]).to eq 'Barack Hussein'
+          expect(subject[:name_2]).to eq 'Obama II'
+        end
+      end
+      context 'generational titles' do
+        let(:name) { 'Obama Jr., Barack' }
+        it 'should drop the Jr.' do
+          expect(subject[:name_1]).to eq 'Barack'
+          expect(subject[:name_2]).to eq 'Obama'
+        end
+      end
+      context 'token count is 3 or more' do
+        let(:name) { 'Mr. Barack Hussein Obama II' }
+        it 'should assume the leading two tokens are first-name and middle-name' do
+          expect(subject[:name_1]).to eq 'Barack Hussein'
+          expect(subject[:name_2]).to eq 'Obama II'
+        end
+      end
+    end
   end
 
   context 'LDAP search' do
@@ -81,7 +109,6 @@ describe User::SearchUsersByName do
         it { should be_empty }
       end
     end
-
     context 'filter by role' do
       let(:name) { random_name }
       let(:roles) { [:student, :recentStudent] }
