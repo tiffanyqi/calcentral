@@ -64,8 +64,35 @@
     margin-bottom: 10px;
     margin-top: 0;
   }
+  .cc-academics-class-enrollment-select {
+    margin: 5px;
+    width: 50%;
+  }
+  .cc-academics-class-enrollment-table {
+    margin: 10px 0;
+  }
+  .cc-academics-class-enrollment-table-head {
+    background-color: $cc-color-light-medium-grey;
+    margin: 5px;
+    th {
+      color: $cc-color-white;
+      padding: 5px;
+    }
+  }
+  .cc-academics-class-enrollment-table-row {
+    td {
+      padding: 5px;
+    }
+  }
+  .cc-academics-class-enrollment-text {
+    font-size: 13px;
+  }
   .cc-academics-class-info {
     margin-bottom: 10px;
+  }
+  .cc-academics-class-info-category-button {
+    display: inline-block;
+    text-align: center;
   }
   .cc-academics-class-primary-row {
     font-weight: bold;
@@ -243,7 +270,7 @@
   .cc-academics-teaching-button-group {
     float: right;
     margin-right: 10px;
-    width: 200px;
+    width: 300px;
   }
   .cc-academics-teaching-class {
     font-size: 12px;

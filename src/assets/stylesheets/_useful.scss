@@ -35,6 +35,9 @@
 .cc-clearfix-container:after {
   clear: both;
 }
+.cc-clickable {
+  cursor: pointer;
+}
 .cc-ellipsis {
   display: block;
   overflow: hidden;
@@ -51,6 +54,11 @@
 }
 .cc-inline-block {
   display: inline-block;
+}
+// As distinct from cc-visuallyhidden, this does not display but takes up space; useful for show/hide without layout jitters.
+.cc-invisible {
+  cursor: default;
+  visibility: hidden;
 }
 .cc-italic {
   font-style: italic;

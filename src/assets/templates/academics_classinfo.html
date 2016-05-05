@@ -2,7 +2,7 @@
   class="cc-page-academics"
   data-cc-spinner-directive
   data-ng-show="canViewAcademics"
-  data-ng-switch data-on="currentSelection"
+  data-ng-switch data-on="currentCategory.title"
 >
   <div>
     <h1 class="cc-heading-page-title">
@@ -11,15 +11,16 @@
       <span data-ng-bind="selectedCourse.course_code"></span>
       <span data-ng-if="selectedSection" data-ng-bind-template=" &raquo; {{selectedSection.section_label}}"></span>
       <div class="cc-academics-teaching-button-group" data-ng-if="isInstructorOrGsi">
-        <ul class="cc-button-group cc-even-{{selectOptions.length}}" role="tablist">
-          <li data-ng-repeat="selectOption in selectOptions">
-            <button class="cc-button"
-              data-ng-click="switchSelectedOption(selectOption)"
-              data-ng-class="{'cc-button-selected cc-button-selected-roster':(currentSelection === selectOption)}"
-              aria-selected="{{currentSelection === selectOption}}"
+        <ul class="cc-button-group cc-even-{{classInfoCategories.length}}" role="tablist">
+          <li data-ng-repeat="classInfoCategory in classInfoCategories">
+            <a class="cc-button cc-academics-class-info-category-button"
+              data-cc-accessible-focus-directive=""
+              data-ng-class="{'cc-button-selected cc-button-selected-roster':(currentCategory === classInfoCategory)}"
+              aria-selected="{{currentCategory === classInfoCategory}}"
               role="tab"
-              data-ng-bind="selectOption">
-            </button>
+              data-ng-bind="classInfoCategory.title"
+              data-ng-href="{{selectedCourse.url}}/{{classInfoCategory.path}}">
+            </a>
           </li>
         </ul>
       </div>
@@ -154,13 +155,32 @@
         </div>
       </div>
     </div>
-
   </div>
 
-  <div data-ng-switch-when="Class Roster" role="tabpanel" aria-live="polite" class="cc-clearfix">
+  <div data-ng-switch-when="Enrollment" role="tabpanel" aria-live="polite" class="cc-clearfix" data-ng-controller="ClassInfoEnrollmentController" data-cc-spinner-directive>
+    <div data-ng-if="errorStatus">
+      There was an error retrieving enrollment data.
+    </div>
+    <div class="medium-6 columns cc-academics-row-margin"
+         data-cc-academics-class-info-enrollment-directive
+         data-seats-available="selectedCourse.waitlistLimit"
+         data-show-position="true"
+         data-students="waitlistedStudents"
+         data-title="Wait List"
+    ></div>
+    <div class="medium-6 columns cc-academics-row-margin"
+         data-cc-academics-class-info-enrollment-directive
+         data-seats-available="selectedCourse.enrollLimit"
+         data-show-position="false"
+         data-students="enrolledStudents"
+         data-title="Enrolled"
+    ></div>
+  </div>
+
+  <div data-ng-switch-when="Roster" role="tabpanel" aria-live="polite" class="cc-clearfix">
     <div class="cc-widget">
       <div class="cc-widget-title">
-        <h2>Class Roster</h2>
+        <h2>Roster</h2>
       </div>
       <div data-ng-include src="'canvas_embedded/roster.html'"></div>
     </div>

@@ -36,6 +36,10 @@ angular.module('calcentral.config').config(function($routeProvider) {
     templateUrl: 'academics_classinfo.html',
     controller: 'AcademicsController'
   }).
+  when('/academics/teaching-semester/:teachingSemesterSlug/class/:classSlug/:category', {
+    templateUrl: 'academics_classinfo.html',
+    controller: 'AcademicsController'
+  }).
   when('/calcentral_update', {
     templateUrl: 'calcentral_update.html',
     controller: 'CalCentralUpdateController'

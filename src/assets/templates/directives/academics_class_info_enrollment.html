@@ -1,0 +1,59 @@
+<div class="cc-widget">
+  <div class="cc-widget-title">
+    <h2 class="cc-left" data-ng-bind="title"></h2>
+    <div class="cc-select cc-right cc-academics-class-enrollment-select">
+      <label for="section-select" class="cc-visuallyhidden">Filter by Section</label>
+      <select id="section-select" class="cc-roster-select bc-canvas-embedded-roster-select"
+              data-ng-options="section as section.name for section in sections track by section.ccn"
+              data-ng-model="selectedSection"
+              data-ng-change="accessibilityAnnounce('Enrollment filtered by section')">
+        <option value="">All Sections</option>
+      </select>
+    </div>
+  </div>
+  <div class="cc-widget-padding">
+    <div class="cc-academics-class-enrollment-text">
+      Total: <strong data-ng-bind="students.length"></strong> |
+      Available: <strong data-ng-bind="seatsAvailable"></strong>
+    </div>
+    <div class="cc-table cc-academics-class-enrollment-table">
+      <table>
+        <thead class="cc-academics-class-enrollment-table-head">
+          <th data-ng-show="showPosition" data-cc-sortable-column-directive="waitlist_position" data-column-heading="Pos"></th>
+          <th data-cc-sortable-column-directive="last_name" data-column-heading="Name"></th>
+          <th data-cc-sortable-column-directive="units" data-column-heading="Units"></th>
+          <th data-cc-sortable-column-directive="grade_option" data-column-heading="Grade"></th>
+          <th data-cc-sortable-column-directive="student_id" data-column-heading="SID"></th>
+        </thead>
+        <tbody data-ng-repeat="student in filteredStudents = (students | filter:studentInSectionFilter | orderBy:tableSort.column:tableSort.reverse)"
+               data-ng-class-even="'cc-academics-even'"
+               data-ng-if="students.length">
+          <tr class="cc-academics-class-enrollment-table-row">
+            <td data-ng-if="showPosition">
+              <strong data-ng-bind="student.waitlist_position"></strong>
+            </td>
+            <td>
+              <a data-ng-if="student.email" data-ng-href="mailto:{{student.email}}">
+                <span data-ng-bind="student.last_name"></span>,
+                <span data-ng-bind="student.first_name"></span>
+              </a>
+              <div data-ng-if="!student.email">
+                <span data-ng-bind="student.last_name"></span>,
+                <span data-ng-bind="student.first_name"></span>
+              </div>
+            </td>
+            <td data-ng-bind="student.units"></td>
+            <td data-ng-bind="student.grade_option"></td>
+            <td data-ng-bind="student.student_id"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cc-academics-class-enrollment-text" data-ng-if="!students.length">
+      No students are currently <span data-ng-bind="studentRole"></span> in this class.
+    </div>
+    <div class="cc-academics-class-enrollment-text" data-ng-if="students.length && !filteredStudents.length">
+      No students are currently <span data-ng-bind="studentRole"></span> in this section.
+    </div>
+  </div>
+</div>
