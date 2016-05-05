@@ -16,6 +16,9 @@ angular.module('calcentral.controllers').controller('BooklistController', functi
     })
     .success(function(books) {
       books.course = courseNumber;
+      if (books.statusCode && books.statusCode >= 400) {
+        books.errorMessage = books.body;
+      }
       $scope.semesterBooks.push(books);
       $scope.semesterBooks.sort(function(a, b) {
         return a.course.localeCompare(b.course);

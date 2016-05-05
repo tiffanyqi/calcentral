@@ -49,7 +49,7 @@ describe Textbooks::Proxy do
         it 'returns a helpful message' do
           it_is_a_normal_server_response
           feed = subject[:books]
-          expect(feed[:bookUnavailableError]).to eq 'Currently, there is no textbook information for this course. Check again later for updates, or contact your instructor directly.'
+          expect(feed[:bookUnavailableError]).to eq 'Currently, there is no textbook information for this course. Check again later for updates, or contact the <a href="https://calstudentstore.berkeley.edu/textbook" target="_blank">ASUC book store</a>.'
         end
       end
 
