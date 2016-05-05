@@ -90,13 +90,13 @@ describe 'My Academics enrollments', :testui => true do
                     it "offers a valid law 'Enrollment Verification' link for UID #{uid}" do
                       expect(enroll_verification_works).to be true
                     end
-                    non_law_tested = true
+                    law_tested = true
                   else
                     enroll_verification_works = WebDriverUtils.verify_external_link(driver, my_academics.enroll_verif_link_element, 'Academic Records | Office of the Registrar')
                     it "offers a valid non-law 'Enrollment Verification' link for UID #{uid}" do
                       expect(enroll_verification_works).to be true
                     end
-                    law_tested = true
+                    non_law_tested = true
                   end
 
                   links_tested = true if non_law_tested && law_tested
