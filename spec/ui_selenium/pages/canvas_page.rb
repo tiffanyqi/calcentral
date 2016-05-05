@@ -167,7 +167,7 @@ class CanvasPage
     search_course_input_element.when_visible WebDriverUtils.page_event_timeout
     self.search_course_input = "#{test_id}"
     search_course_button
-    wait_until(timeout) { course_site_heading.include? "#{test_id}" }
+    wait_until(WebDriverUtils.page_load_timeout) { course_site_heading.include? "#{test_id}" }
     logger.info "Course site URL is #{current_url}"
     current_url.sub("#{WebDriverUtils.canvas_base_url}/courses/", '')
   rescue

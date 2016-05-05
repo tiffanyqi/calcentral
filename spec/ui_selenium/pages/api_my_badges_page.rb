@@ -38,7 +38,7 @@ class ApiMyBadgesPage
   end
 
   def reg_status_summary
-    reg_status['summary']
+    reg_status.nil? ? nil : reg_status['summary']
   end
 
   def reg_status_explanation
@@ -47,6 +47,10 @@ class ApiMyBadgesPage
 
   def reg_status_needs_action
     reg_status['needsAction']
+  end
+
+  def is_registered?
+    reg_status_summary == 'Registered' ? true : false
   end
 
   def reg_block

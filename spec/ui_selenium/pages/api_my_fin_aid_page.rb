@@ -83,6 +83,7 @@ class ApiMyFinAidPage
         ui_date = date.strftime('%b %-d')
         # Include the year in the visible date if it does not match the current year
         ui_date << date.strftime(' %Y') if date.strftime('%Y') != Date.today.strftime('%Y')
+        ui_date
       end
     end
   end

@@ -19,6 +19,8 @@ describe 'Delegated access', :testui => true do
       @cs_delegate_students_api = ApiCSDelegateAccessStudents.new @driver
       @status_api = ApiMyStatusPage.new @driver
       @academics_api = ApiMyAcademicsPageSemesters.new @driver
+      @financials_api = ApiMyFinancialsPage.new @driver
+      @cal1card_api = ApiMyCal1CardPage.new @driver
       @my_fin_aid_api = ApiMyFinAidPage.new @driver
       @cs_fin_aid_years_api = ApiCSAidYearsPage.new @driver
 
@@ -93,7 +95,7 @@ describe 'Delegated access', :testui => true do
 
             # Check page links for one of the test delegates
 
-              if delegate == test_delegates.first
+            if delegate == test_delegates.first
 
               shows_less = @toolbox_page.delegate_msg_expanded_element.visible?
               it ("shows delegate UID #{uid} a collapsed view of delegate instructions") { expect(shows_less).to be false }
@@ -112,7 +114,7 @@ describe 'Delegated access', :testui => true do
               grad_div_calendar_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.grad_div_deadlines_element, 'Degree Deadlines | Berkeley Graduate Division')
               it ("shows delegate UID #{uid} a link to 'Graduate Division Degree Deadlines'") { expect(grad_div_calendar_link).to be true }
 
-              calparents_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.cal_parents_element, 'UC Berkeley Cal Parents')
+              calparents_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.cal_parents_element, 'Cal Parents')
               it ("shows delegate UID #{uid} a link to 'CalParents'") { expect(calparents_link).to be true }
 
               important_dates_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.important_dates_element, 'Cal Parents Calendar')
@@ -168,6 +170,8 @@ describe 'Delegated access', :testui => true do
                 @splash_page.basic_auth student_uid
                 @academics_api.get_json @driver
                 @status_api.get_json @driver
+                @financials_api.get_json @driver
+                @cal1card_api.get_json @driver
                 @my_fin_aid_api.get_json @driver
                 @cs_fin_aid_years_api.get_json @driver
 
@@ -201,7 +205,7 @@ describe 'Delegated access', :testui => true do
                   @toolbox_page.delegate_view_as student_name
 
                   current_url = @driver.current_url
-                  if privileges['viewEnrollments'] || privileges['viewGrades']
+                  if (privileges['viewEnrollments'] || privileges['viewGrades']) && @status_api.has_academics_tab?
                     it "lands delegate UID #{uid} on the Academics page for UID #{student_uid}" do
                       expect(current_url).to eql("#{WebDriverUtils.base_url}/academics")
                     end
@@ -356,26 +360,20 @@ describe 'Delegated access', :testui => true do
 
                   if privileges['financial']
 
-                    # Billing Summary
-                    sees_billing_summary = WebDriverUtils.verify_block do
-                      @finances_page.load_page
-                      @finances_page.account_balance_element_element.when_visible timeout
-                    end
-                    it ("shows delegate UID #{uid} the billing summary for UID #{student_uid}") { expect(sees_billing_summary).to be true }
+                    @finances_page.load_page
 
+                    # Billing Summary
+                    sees_billing_summary = WebDriverUtils.verify_block { @finances_page.account_balance_element_element.when_visible timeout }
                     sees_payment_button = @finances_page.make_payment_link?
-                    it ("shows delegate UID #{uid} the 'Make a Payment' button for UID #{student_uid}") { expect(sees_payment_button).to be true }
+                    if @financials_api.has_cars_data?
+                      it ("shows delegate UID #{uid} the billing summary for UID #{student_uid}") { expect(sees_billing_summary).to be true }
+                      it ("shows delegate UID #{uid} the 'Make a Payment' button for UID #{student_uid}") { expect(sees_payment_button).to be true }
+                    end
 
                     # Cal 1 Card
-                    @finances_page.cal_1_card_content_element.when_visible timeout
-                    sees_cal_1_card = @finances_page.debit_account_header?
-                    it ("shows delegate UID #{uid} the Cal 1 Card card for UID #{student_uid}") { expect(sees_cal_1_card).to be true }
-
-                    # FinAid Messages (legacy)
-                    @finances_page.fin_messages_heading_element.when_visible timeout
-                    if @my_fin_aid_api.all_activity.any?
-                      shows_finaid_msgs = @finances_page.fin_messages_list?
-                      it ("shows delegate UID #{uid} the MyFinAid messages card for UID #{student_uid}") { expect(shows_finaid_msgs).to be true }
+                    sees_cal_1_card = WebDriverUtils.verify_block { @finances_page.debit_account_header_element.when_visible WebDriverUtils.page_event_timeout }
+                    if @cal1card_api.has_data?
+                      it ("shows delegate UID #{uid} the Cal 1 Card card for UID #{student_uid}") { expect(sees_cal_1_card).to be true }
                     end
 
                     # Financial Resources links
@@ -415,15 +413,17 @@ describe 'Delegated access', :testui => true do
 
                     # Billing - Detail
 
-                    shows_details_summary = WebDriverUtils.verify_block do
-                      @finances_details_page.load_page
-                      @finances_details_page.account_balance_element_element.when_visible timeout
-                    end
-                    it ("shows delegate UID #{uid} the billing summary on the Details page for UID #{student_uid}") { expect(shows_details_summary).to be true }
+                    if @financials_api.has_cars_data?
+                      shows_details_summary = WebDriverUtils.verify_block do
+                        @finances_details_page.load_page
+                        @finances_details_page.account_balance_element_element.when_visible timeout
+                      end
+                      it ("shows delegate UID #{uid} the billing summary on the Details page for UID #{student_uid}") { expect(shows_details_summary).to be true }
 
-                    WebDriverUtils.wait_for_element_and_select(@finances_details_page.activity_filter_select_element, 'All Transactions')
-                    shows_transactions = @finances_details_page.transaction_table?
-                    it ("shows delegate UID #{uid} the list of transactions on the Details page for UID #{student_uid}") { expect(shows_transactions).to be true }
+                      WebDriverUtils.wait_for_element_and_select(@finances_details_page.activity_filter_select_element, 'All Transactions')
+                      shows_transactions = @finances_details_page.transaction_table?
+                      it ("shows delegate UID #{uid} the list of transactions on the Details page for UID #{student_uid}") { expect(shows_transactions).to be true }
+                    end
 
                   else
 

@@ -52,7 +52,7 @@ describe 'My Academics teaching', :testui => true do
                   api_current_listing_codes = academics_api_page.semester_listing_course_codes(current_semester)
                   api_current_course_titles = academics_api_page.course_titles(api_current_courses)
 
-                  my_academics_semester_name = classes_card.semester_heading
+                  my_academics_semester_name = classes_card.teaching_semester_heading
                   my_academics_course_codes = classes_card.all_teaching_course_codes
                   my_academics_course_titles = classes_card.all_teaching_course_titles
 
