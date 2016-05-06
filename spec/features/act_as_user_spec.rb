@@ -30,7 +30,7 @@ feature 'act_as_user' do
     response['uid'].should == '238382'
     visit '/api/view_as/my_stored_users'
     response = JSON.parse(page.body)
-    response['users']['recent'][0]['ldap_uid'].should == '2040'
+    response['users']['recent'][0]['ldapUid'].should == '2040'
   end
 
   scenario 'make sure admin users can act as a user who has never signed in before' do

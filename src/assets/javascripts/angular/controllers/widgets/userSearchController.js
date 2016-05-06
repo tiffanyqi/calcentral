@@ -41,13 +41,11 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
   };
 
   var decorate = function(users) {
-    var firstName = 'first_name';
-    var lastName = 'last_name';
     var missingName = 'Name Not Provided';
 
     angular.forEach(users, function(user) {
       // Normalize user's person name for the UI.
-      user.name = user.name || user.defaultName || (user[firstName] || '').concat(' ', user[lastName] || '');
+      user.name = user.name || user.defaultName || (user.firstName || '').concat(' ', user.lastName || '');
       // Guard against whitespace-only name.
       if (/^\s+$/.test(user.name)) {
         user.name = missingName;
@@ -82,13 +80,12 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
   var updateSearchedUserSavedStates = function() {
     var searchedUsers = $scope.userSearch.tabs.search.users;
     var savedUsers = $scope.userSearch.tabs.saved.users;
-    var ldapUid = 'ldap_uid';
 
     _(searchedUsers).forEach(function(target) {
       var saved = false;
 
       _(savedUsers).forEach(function(source) {
-        if (target[ldapUid] === source[ldapUid]) {
+        if (adminService.getLdapUid(target) === adminService.getLdapUid(source)) {
           saved = true;
           // Exit the loop
           return false;

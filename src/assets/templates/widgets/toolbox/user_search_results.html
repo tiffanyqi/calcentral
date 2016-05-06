@@ -16,10 +16,10 @@
     <ul class="cc-widget-list">
       <li data-ng-repeat="user in userSearch.selectedTab.users | limitTo: userSearch.selectedTab.label == 'Search' ? searchResultsViewLimit : ''">
         <div class="cc-user-search-item cc-clearfix">
-          <a href="/user/overview/{{user.ldap_uid}}" data-ng-click="user.storeAsRecent()">
+          <a href="/user/overview/{{user.ldapUid}}" data-ng-click="user.storeAsRecent()">
             <span data-ng-bind="user.name" data-ng-if="user.name"></span>
           </a>
-          (<span data-ng-bind="user.student_id"></span>)
+          (<span data-ng-bind="user.studentId"></span>)
           <div class="cc-right">
             <button class="cc-button-star" title="Delete {{user.name}}" type="button" data-ng-click="user.delete()" data-ng-if="user.saved">
               <span class="cc-visuallyhidden">Delete</span>

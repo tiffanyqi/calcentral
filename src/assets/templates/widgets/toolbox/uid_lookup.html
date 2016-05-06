@@ -25,8 +25,8 @@
           </thead>
           <tbody data-ng-repeat="user in admin.users">
             <tr>
-              <td data-ng-bind="user.ldap_uid"></td>
-              <td data-ng-bind="user.student_id || 'This user has no SID'"></td>
+              <td data-ng-bind="user.ldapUid"></td>
+              <td data-ng-bind="user.studentId || 'This user has no SID'"></td>
             </tr>
           </tbody>
         </table>
