@@ -72,6 +72,8 @@ module EdoOracle
         course_item = course_ids_from_row row
         if course_item[:id] == previous_item[:id]
           previous_section = previous_item[:sections].last
+          # Odd database joins will occasionally give us null course titles, which we can replace from later rows.
+          previous_item[:name] = row['course_title'] if previous_item[:name].blank?
           # Duplicate CCNs indicate duplicate section listings. The only possibly useful information in these repeated
           # listings is a more relevant associated-primary ID for secondary sections.
           if (row['section_id'].to_s == previous_section[:ccn]) && !to_boolean(row['primary'])

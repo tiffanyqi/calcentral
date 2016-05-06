@@ -119,6 +119,15 @@ describe EdoOracle::UserCourses::Base do
     it 'de-duplicates sections differing only by primary_associated_section_id' do
       expect(course[:sections].size).to eq 3
     end
+    context 'some rows missing course name' do
+      before do
+        enrollment_query_results.first.delete 'course_title'
+        enrollment_query_results.first.delete 'course_title_short'
+      end
+      it 'prefers present to blank course title' do
+        expect(course[:name]).to eq 'Introduction to Selected Musics of the World'
+      end
+    end
     it 'prefers a primary_associated_section_id matching a section in the result set' do
       expect(course[:sections][2][:associated_primary_id]).to eq '44203'
     end
