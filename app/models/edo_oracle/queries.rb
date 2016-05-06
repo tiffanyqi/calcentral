@@ -3,7 +3,7 @@ module EdoOracle
     include ActiveRecordHelper
     include ClassLogger
 
-    CANONICAL_SECTION_ORDERING = 'dept_name, catalog_root, catalog_prefix nulls first, catalog_suffix nulls first, primary DESC, instruction_format, section_display_name, section_num'
+    CANONICAL_SECTION_ORDERING = 'section_display_name, primary DESC, instruction_format, section_num'
 
     # Changes from CampusOracle::Queries section columns:
     #   - 'course_cntl_num' now 'section_id'
@@ -33,7 +33,8 @@ module EdoOracle
       LEFT OUTER JOIN SISEDO.DISPLAYNAMEXLAT_MVW xlat ON (
         xlat."classDisplayName" = sec."displayName")
       LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (
-        xlat."courseDisplayName" = crs."displayName")
+        xlat."courseDisplayName" = crs."displayName" AND
+        crs."status-code" = 'ACTIVE')
     SQL
 
     # EDO equivalent of CampusOracle::Queries.get_enrolled_sections
@@ -58,8 +59,7 @@ module EdoOracle
           enr."CLASS_SECTION_ID" = sec."id" AND
           sec."status-code" = 'A')
         #{JOIN_SECTION_TO_COURSE}
-        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND enr."TERM_ID" IN (#{terms_query_list terms})
+        WHERE enr."TERM_ID" IN (#{terms_query_list terms})
           AND enr."CAMPUS_UID" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
       SQL
@@ -83,8 +83,7 @@ module EdoOracle
           instr."offeringNumber" = sec."offeringNumber" AND
           instr."number" = sec."sectionNumber")
         #{JOIN_SECTION_TO_COURSE}
-        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."status-code" = 'A'
+        WHERE sec."status-code" = 'A'
           AND instr."term-id" IN (#{terms_query_list terms})
           AND instr."campus-uid" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
@@ -103,8 +102,7 @@ module EdoOracle
           sec."cs-course-id" AS cs_course_id
         FROM SISEDO.CLASSSECTIONV00_VW sec
         #{JOIN_SECTION_TO_COURSE}
-        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."status-code" = 'A'
+        WHERE sec."status-code" = 'A'
           AND sec."primary" = 'false'
           AND sec."term-id" = '#{term_id}'
           AND sec."primaryAssociatedSectionId" = '#{section_id}'
@@ -162,8 +160,7 @@ module EdoOracle
           #{SECTION_COLUMNS}
         FROM SISEDO.CLASSSECTIONV00_VW sec
         #{JOIN_SECTION_TO_COURSE}
-        WHERE (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
-          AND sec."term-id" = '#{term_id}'
+        WHERE sec."term-id" = '#{term_id}'
           AND sec."id" IN (#{section_ids.collect { |id| id.to_i }.join(', ')})
         ORDER BY #{CANONICAL_SECTION_ORDERING}
       SQL
