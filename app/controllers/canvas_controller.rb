@@ -1,4 +1,5 @@
 class CanvasController < ApplicationController
+  include AllowLti
   include DisallowAdvisorViewAs
   include ClassLogger
 

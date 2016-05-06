@@ -8,7 +8,7 @@
 ###############################################################################################
 
 # This example is intended to be used with let(:make_request) which defines the controller method call
-# for the method that is being tested. For exapmle, see spec/controllers/my_academics_controller_spec.rb
+# for the method that is being tested. For example, see spec/controllers/my_academics_controller_spec.rb
 shared_examples 'a user authenticated api endpoint' do
   context 'when no user session present' do
     before { session['user_id'] = nil }
@@ -54,6 +54,18 @@ shared_examples 'an unauthorized endpoint for users in advisor-view-as mode' do
     # Controller might rescue_from authorization failure then return 500 status
     expect(response.status).to be >= 403
     expect(response.body.blank? || JSON.parse(response.body)['error']).to be_truthy
+  end
+end
+
+shared_examples 'an unauthorized endpoint for LTI' do
+  before do
+    session['user_id'] = random_id
+    session[SessionKey.lti_authenticated_only] = true
+  end
+  it 'denies all access' do
+    make_request
+    expect(response.status).to eq 403
+    expect(response.body).to eq ' '
   end
 end
 
@@ -119,5 +131,12 @@ shared_context 'advisor view-as' do
     allow(Settings.features).to receive(:reauthentication).and_return false
     session['user_id'] = uid
     session[SessionKey.original_advisor_user_id] = random_id
+  end
+end
+
+shared_context 'LTI authenticated' do
+  before do
+    session['user_id'] = uid
+    session[SessionKey.lti_authenticated_only] = true
   end
 end

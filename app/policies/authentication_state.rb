@@ -65,7 +65,7 @@ class AuthenticationState
         return original_advisor_user_id
       elsif original_delegate_user_id.present?
         return original_delegate_user_id
-      elsif canvas_masquerading_user_id
+      elsif canvas_masquerading_user_id.present?
         return "#{LTI_AUTHENTICATED_ONLY}: masquerading Canvas ID #{canvas_masquerading_user_id}"
       elsif lti_authenticated_only
         return LTI_AUTHENTICATED_ONLY

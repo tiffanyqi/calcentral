@@ -61,13 +61,19 @@ class ApplicationController < ActionController::Base
   def allow_if_classic_view_as?
     true
   end
+  def allow_if_canvas_lti?
+    false
+  end
   def deny_if_filtered
-    deny_view_as = !allow_if_classic_view_as? && current_user.classic_viewing_as?
-    raise Pundit::NotAuthorizedError.new("By View As user #{current_user.original_user_id}") if deny_view_as
-    deny_delegate = !allow_if_delegate_view_as? && current_user.authenticated_as_delegate?
-    raise Pundit::NotAuthorizedError.new("By delegate #{current_user.original_delegate_user_id}") if deny_delegate
-    deny_advisor = !allow_if_advisor_view_as? && current_user.authenticated_as_advisor?
-    raise Pundit::NotAuthorizedError.new("By advisor #{current_user.original_advisor_user_id}") if deny_advisor
+    if !allow_if_classic_view_as? && current_user.classic_viewing_as?
+      raise Pundit::NotAuthorizedError.new("By View As user #{current_user.original_user_id}")
+    elsif !allow_if_delegate_view_as? && current_user.authenticated_as_delegate?
+      raise Pundit::NotAuthorizedError.new("By delegate #{current_user.original_delegate_user_id}")
+    elsif !allow_if_advisor_view_as? && current_user.authenticated_as_advisor?
+      raise Pundit::NotAuthorizedError.new("By advisor #{current_user.original_advisor_user_id}")
+    elsif !allow_if_canvas_lti? && current_user.lti_authenticated_only
+      raise Pundit::NotAuthorizedError.new('In LTI session')
+    end
   end
 
   def delete_reauth_cookie
@@ -185,8 +191,7 @@ class ApplicationController < ActionController::Base
   end
 
   def session_message
-    session_keys = %w(user_id canvas_user_id canvas_course_id) + SessionKey::CANVAS_MASQUERADE_TYPES + SessionKey::VIEW_AS_TYPES
-    session_keys.map { |key| "#{key}: #{session[key]}" if session[key] }.compact.join('; ')
+    SessionKey::ALL_KEYS.map { |key| "#{key}: #{session[key]}" if session[key] }.compact.join('; ')
   end
 
   def access_log

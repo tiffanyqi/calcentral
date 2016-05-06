@@ -1,4 +1,5 @@
 class CanvasSiteCreationController < ApplicationController
+  include AllowLti
   include DisallowAdvisorViewAs
 
   before_filter :api_authenticate

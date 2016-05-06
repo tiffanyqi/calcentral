@@ -44,7 +44,7 @@ class CanvasLtiController < ApplicationController
   end
 
   def check_for_masquerade(masquerading_user_id)
-    if masquerading_user_id != EMPTY_MASQUERADE_VALUE
+    if masquerading_user_id.present? && masquerading_user_id != EMPTY_MASQUERADE_VALUE
       session['canvas_masquerading_user_id'] = masquerading_user_id
       session['lti_authenticated_only'] = true
     end

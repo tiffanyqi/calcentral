@@ -39,6 +39,19 @@ describe UserApiController do
       visit = User::Visit.where(:uid => session['user_id'])[0]
       expect(visit.last_visit_at).to be_present
     end
+    context 'in LTI' do
+      let(:uid) { user_id }
+      include_context 'LTI authenticated'
+      it 'succeeds' do
+        get :mystatus
+        json_response = JSON.parse(response.body)
+        expect(json_response['isLoggedIn']).to be_truthy
+        expect(json_response['uid']).to eq user_id
+        expect(json_response['preferredName']).to be_present
+        expect(json_response['features']).to be_present
+        expect(json_response['isDirectlyAuthenticated']).to be false
+      end
+    end
   end
 
   context 'when a new user' do
@@ -70,6 +83,14 @@ describe UserApiController do
     context 'when authenticated by LTI' do
       before { session['lti_authenticated_only'] = true }
       it { should eq 'Authenticated through LTI' }
+    end
+    context 'when masquerading through LTI' do
+      let(:canvas_user_id) {random_id}
+      before do
+        session['lti_authenticated_only'] = true
+        session['canvas_masquerading_user_id'] = canvas_user_id
+      end
+      it { should eq "Authenticated through LTI: masquerading Canvas ID #{canvas_user_id}" }
     end
   end
 
