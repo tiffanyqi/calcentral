@@ -31,7 +31,6 @@
   </div>
 
   <div data-ng-if="!enrollmentTerm.isLawStudent">
-    <!-- This presentation not yet in use. See SISRP-15831 -->
     <ul class="cc-enrollment-card-advisors-list" data-ng-if="enrollmentTerm.advisors.length && api.user.profile.features.csAdvisingShowAdvisors">
       <li data-ng-repeat="advisor in enrollmentTerm.advisors">
         <div>
