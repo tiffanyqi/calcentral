@@ -32,14 +32,26 @@ module CalnetLdap
     end
 
     def search_by_name(name, include_guest_users=false)
-      results = []
-      if (tokens = tokenize_for_search_by_name name).any?
+      return [] if (tokens = tokenize_for_search_by_name name).empty?
+      if tokens.length == 1
+        filter = Net::LDAP::Filter.intersect(
+          Net::LDAP::Filter.eq('sn', "#{tokens[0]}*"),
+          Net::LDAP::Filter.eq('givenname', "#{tokens[0]}*"))
+        search_by_filter filter, include_guest_users
+      else
+        parent_filter = nil
         tokens.permutation.to_a.each do |args|
-          search_by = Net::LDAP::Filter.eq 'displayname', "#{args.join '* '}*"
-          results.concat search(base: PEOPLE_DN, filter: search_by)
-          results.concat search(base: GUEST_DN, filter: search_by) if include_guest_users
+          filter = Net::LDAP::Filter.eq 'displayname', "#{args.join '* '}*"
+          parent_filter = parent_filter.nil? ? filter : Net::LDAP::Filter.intersect(parent_filter, filter)
         end
+        search_by_filter parent_filter, include_guest_users
       end
+    end
+
+    def search_by_filter(filter, include_guest_users=false)
+      results = []
+      results.concat search(base: PEOPLE_DN, filter: filter)
+      results.concat search(base: GUEST_DN, filter: filter) if include_guest_users
       results
     end
 
