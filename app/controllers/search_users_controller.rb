@@ -4,7 +4,7 @@ class SearchUsersController < ApplicationController
 
   before_action :api_authenticate
 
-  rescue_from ArgumentError, with: :handle_api_exception
+  rescue_from Errors::BadRequestError, with: :handle_client_error
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   DEFAULT_LIMIT_SEARCH_RESULTS = 50
@@ -73,7 +73,7 @@ class SearchUsersController < ApplicationController
 
   def limit
     return DEFAULT_LIMIT_SEARCH_RESULTS unless (arg = params[:limit])
-    raise ArgumentError, "The 'limit' param must be a number greater than zero. Invalid: #{arg}" if (limit = arg.to_i) <= 0
+    raise Errors::BadRequestError, "The 'limit' param must be a number greater than zero. Invalid: #{arg}" if (limit = arg.to_i) <= 0
     limit
   end
 
