@@ -101,13 +101,13 @@ describe CalnetLdap::Client do
       expect(ldap).to receive(:search).exactly(expected_ldap_searches).times.and_return [ double ]
     end
     context 'do not include guest user search' do
-      let(:expected_ldap_searches) { 2 }
+      let(:expected_ldap_searches) { 1 }
       it 'should only ' do
         expect(subject.search_by_name('John Doe', false)).to_not be_empty
       end
     end
     context 'include guest user search' do
-      let(:expected_ldap_searches) { 4 }
+      let(:expected_ldap_searches) { 2 }
       it 'should only ' do
         expect(subject.search_by_name('John Doe', true)).to_not be_empty
       end
