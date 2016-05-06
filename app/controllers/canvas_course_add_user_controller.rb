@@ -1,4 +1,5 @@
 class CanvasCourseAddUserController < ApplicationController
+  include AllowLti
   include DisallowAdvisorViewAs
   include SpecificToCourseSite
 

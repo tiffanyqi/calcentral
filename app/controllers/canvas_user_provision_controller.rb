@@ -1,4 +1,5 @@
 class CanvasUserProvisionController < ApplicationController
+  include AllowLti
   include DisallowAdvisorViewAs
   include ClassLogger
 

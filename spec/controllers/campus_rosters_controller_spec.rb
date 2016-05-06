@@ -27,13 +27,16 @@ describe CampusRostersController do
   end
 
   context "when serving course rosters feed" do
-
     it_should_behave_like "an api endpoint" do
       before { allow_any_instance_of(Rosters::Campus).to receive(:get_feed).and_raise(RuntimeError, "Something went wrong") }
       let(:make_request) { get :get_feed, campus_course_id: campus_course_id }
     end
 
     it_should_behave_like "a user authenticated api endpoint" do
+      let(:make_request) { get :get_feed, campus_course_id: campus_course_id }
+    end
+
+    it_behaves_like 'an unauthorized endpoint for LTI' do
       let(:make_request) { get :get_feed, campus_course_id: campus_course_id }
     end
 

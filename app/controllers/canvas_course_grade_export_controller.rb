@@ -1,4 +1,5 @@
 class CanvasCourseGradeExportController < ApplicationController
+  include AllowLti
   include DisallowAdvisorViewAs
   include SpecificToCourseSite
 

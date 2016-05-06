@@ -36,6 +36,13 @@ describe CanvasCourseProvisionController do
           make_request(admin_acting_as: admin_acting_as, admin_by_ccns: admin_by_ccns, admin_term_slug: admin_term_slug)
           assert_response 500
         end
+        context 'in LTI' do
+          include_context 'LTI authenticated'
+          it 'succeeds' do
+            make_request({admin_by_ccns: admin_by_ccns, admin_term_slug: admin_term_slug})
+            assert_response 200
+          end
+        end
       end
       context 'when not an admin' do
         let(:fake_admin) { false }
