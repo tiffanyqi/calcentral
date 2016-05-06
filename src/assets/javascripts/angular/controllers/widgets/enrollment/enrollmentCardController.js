@@ -108,7 +108,6 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     } else {
       data.sections = angular.copy(sections);
     }
-
     return data;
   };
 

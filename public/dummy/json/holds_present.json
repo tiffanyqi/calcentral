@@ -1,0 +1,18 @@
+{
+  "statusCode":200,
+  "feed":{
+    "serviceIndicators":[
+      {
+        "serviceIndicatorDescr":"AA - Advising Holds",
+        "startTerm":"2168",
+        "startTermDescr":"2016 Fall",
+        "startDate":null,
+        "reasonDescr":"Advisor Hold",
+        "amount":0.0,
+        "contactName":null,
+        "contactEmail":null,
+        "instructions":"You must see your College advisor immediately."
+      }
+    ]
+  }
+}
