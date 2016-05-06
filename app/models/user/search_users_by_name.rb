@@ -4,7 +4,7 @@ module User
 
     def search_by(name, opts={})
       return [] if name.blank?
-      raise ArgumentError, 'Wildcard-only searches are not allowed.' if only_special_characters?(name)
+      raise Errors::BadRequestError, 'Wildcard-only searches are not allowed.' if only_special_characters?(name)
       # TODO: For now, you must opt-in to search via Campus Solutions; LDAP remains the default.
       opt_in = !!opts[:search_campus_solutions]
       users = opt_in ? search_campus_solutions(name, opts) : search_ldap(name, opts)
