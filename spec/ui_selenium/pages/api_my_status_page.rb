@@ -22,6 +22,10 @@ class ApiMyStatusPage
     @parsed['roles']
   end
 
+  def is_applicant?
+    roles['applicant']
+  end
+
   def is_student?
     roles['student']
   end
@@ -60,6 +64,10 @@ class ApiMyStatusPage
 
   def is_eap?
     @parsed['inEducationAbroadProgram']
+  end
+
+  def is_campus_solutions_student?
+    @parsed['isCampusSolutionsStudent']
   end
 
   def has_student_history?

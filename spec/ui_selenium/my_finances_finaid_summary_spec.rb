@@ -15,6 +15,7 @@ describe 'My Finances Financial Aid summary card', :testui => true do
       @api_aid_years = ApiCSAidYearsPage.new @driver
       @api_fin_aid_data = ApiCSFinAidDataPage.new @driver
       @api_funding_sources = ApiCSFinAidFundingSourcesPage.new @driver
+      @status_api = ApiMyStatusPage.new @driver
 
       @splash_page = CalCentralPages::SplashPage.new @driver
       @finances_page = CalCentralPages::MyFinancesPages::MyFinancesLandingPage.new @driver
@@ -39,8 +40,9 @@ describe 'My Finances Financial Aid summary card', :testui => true do
             @splash_page.load_page
             @splash_page.basic_auth uid
             @api_aid_years.get_json @driver
+            @status_api.get_json @driver
 
-            unless @api_aid_years.feed.nil?
+            unless @api_aid_years.feed.nil? || !@status_api.has_finances_tab?
 
               @finances_page.load_fin_aid_summary
 

@@ -9,6 +9,10 @@ class ApiCSAidYearsPage
     @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
   end
 
+  def status_code
+    @parsed['statusCode']
+  end
+
   def feed
     @parsed['feed']
   end

@@ -68,7 +68,7 @@ describe 'My Finances financial aid messages', :testui => true do
                   my_fin_message_icons = my_finances_page.all_fin_aid_message_icons
                   fin_api_message_titles = finaid_api_page.all_message_titles_sorted
                   fin_api_message_sources = finaid_api_page.all_message_sources_sorted
-                  fin_api_message_dates = finaid_api_page.all_message_dates_sorted
+                  fin_api_message_dates = finaid_api_page.all_message_dates_sorted.compact
                   fin_api_message_statuses = finaid_api_page.all_message_statuses_sorted
                   fin_api_message_types = finaid_api_page.all_message_types_sorted
                   if fin_api_message_types.include?('alert')
@@ -108,8 +108,8 @@ describe 'My Finances financial aid messages', :testui => true do
                     my_finances_page.open_profile_popover
                     has_popover_alert = my_finances_page.finaid_status_alert_element.visible?
                     if has_alert
-                      popover_fin_aid_count = my_finances_page.finaid_status_alert_count
-                      fin_api_alert_count = finaid_api_page.all_undated_alert_messages.length.to_s
+                      popover_fin_aid_count = my_finances_page.finaid_status_alert_count.to_i
+                      fin_api_alert_count = finaid_api_page.all_undated_alert_messages.compact.length
                       has_red_fin_aid_icon = my_finances_page.finaid_status_alert_icon_element.visible?
                       has_fin_aid_link = my_finances_page.finaid_status_alert_link_element.visible?
                       it "shows Fin Aid alert message in the status popover for UID #{uid}" do
@@ -163,9 +163,9 @@ describe 'My Finances financial aid messages', :testui => true do
         end
       end
 
-        it 'has FinAid messages for at least one of the test UIDs' do
-          expect(testable_users.any?).to be true
-        end
+      it 'has FinAid messages for at least one of the test UIDs' do
+        expect(testable_users.any?).to be true
+      end
 
     rescue => e
       logger.error e.message + "\n" + e.backtrace.join("\n ")

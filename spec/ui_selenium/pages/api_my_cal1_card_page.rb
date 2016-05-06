@@ -4,28 +4,25 @@ class ApiMyCal1CardPage
   include ClassLogger
 
   def get_json(driver)
-    logger.info('Parsing JSON from /api/my/cal1card')
+    logger.info 'Parsing JSON from /api/my/cal1card'
     navigate_to "#{WebDriverUtils.base_url}/api/my/cal1card"
-    body = driver.find_element(:xpath, '//pre').text
-    @parsed = JSON.parse(body)
+    @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
+  end
+
+  def has_data?
+    true unless @parsed['cal1cardStatus'].nil?
   end
 
   def card_lost?
-    if @parsed['cal1cardLost'] == 'Lost'
-      true
-    end
+    true if @parsed['cal1cardLost'] == 'Lost'
   end
 
   def card_found?
-    if @parsed['cal1cardLost'] == 'Found'
-      true
-    end
+    true if @parsed['cal1cardLost'] == 'Found'
   end
 
   def has_debit_account?
-    if @parsed['debitMessage'] == 'OK'
-      true
-    end
+    true if @parsed['debitMessage'] == 'OK'
   end
 
   def debit_balance
@@ -33,9 +30,7 @@ class ApiMyCal1CardPage
   end
 
   def has_meal_plan?
-    unless @parsed['mealpointsPlan'].nil?
-      true
-    end
+    true unless @parsed['mealpointsPlan'].nil?
   end
 
   def meal_points_balance

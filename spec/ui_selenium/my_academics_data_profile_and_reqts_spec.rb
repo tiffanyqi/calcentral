@@ -55,7 +55,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
               end
 
               # GPA
-              if academics_api_page.gpa == '0.0' || status_api_page.is_concurrent_enroll_student?
+              if academics_api_page.gpa == '0.0' || academics_api_page.gpa.nil? || status_api_page.is_concurrent_enroll_student?
                 has_gpa = profile_card.gpa?
                 it "show no GPA for UID #{uid}" do
                   expect(has_gpa).to be false

@@ -83,7 +83,7 @@ module CalCentralPages
     link(:jobs_and_careers, :xpath => '//a[contains(.,"Jobs & Careers")]')
     link(:housing, :xpath => '//a[contains(.,"Housing")]')
     link(:financial_info, :xpath => '//a[contains(.,"Financial Information")]')
-    link(:academics, :xpath => '//a[contains(@href,"http://calparents.berkeley.edu/academics/")]')
+    link(:academics, :xpath => '//a[contains(@href,"http://www.berkeley.edu/academics/schools-colleges")]')
     link(:academic_calendar, :xpath => '//a[contains(.,"Academic Calendar")]')
     link(:news_center, :xpath => '//a[contains(.,"UC Berkeley NewsCenter")]')
     link(:berkeley_news, :xpath => '//a[contains(.,"Berkeley in the News")]')

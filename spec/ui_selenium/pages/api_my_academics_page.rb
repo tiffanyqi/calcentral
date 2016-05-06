@@ -154,12 +154,16 @@ class ApiMyAcademicsPage
 
   # BLOCKS
 
+  def blocks
+    @parsed['regblocks']
+  end
+
   def active_blocks
-    @parsed['regblocks']['activeBlocks']
+    blocks['activeBlocks'] unless blocks.nil?
   end
 
   def inactive_blocks
-    @parsed['regblocks']['inactiveBlocks']
+    blocks['inactiveBlocks'] unless blocks.nil?
   end
 
   def block_type(item)
