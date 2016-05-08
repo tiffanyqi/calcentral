@@ -132,6 +132,7 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
       searchTab.users = decorate(data.users);
       updateSearchedUserSavedStates();
     }).error(function(data, status) {
+      searchTab.users = [];
       reportError(searchTab, status, data.error);
     }).finally(function() {
       searchTab.queryRunning = false;
