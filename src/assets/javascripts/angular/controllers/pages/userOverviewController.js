@@ -79,9 +79,9 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
   $scope.$on('calcentral.api.user.isAuthenticated', function(event, isAuthenticated) {
     if (isAuthenticated) {
       // Refresh user properties because the actAsOptions.canSeeCSLinks property is sensitive to the /user/overview route.
-      apiService.user.fetch();
-      loadProfile();
-      loadAcademics();
+      apiService.user.fetch()
+      .then(loadProfile)
+      .then(loadAcademics);
     }
   });
 });
