@@ -158,6 +158,7 @@ module EdoOracle
           section_data[:grade] = row['grade'].strip if row['grade'].present?
           section_data[:grading_basis] = row['grading_basis'] if section_data[:is_primary_section]
           if row['enroll_status'] == 'W'
+            section_data[:waitlisted] = true
             section_data[:waitlistPosition] = row['waitlist_position'].to_i
             section_data[:enroll_limit] = row['enroll_limit'].to_i
           end
