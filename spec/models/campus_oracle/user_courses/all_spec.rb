@@ -94,10 +94,9 @@ describe CampusOracle::UserCourses::All do
     courses = client.get_all_campus_courses
     courses["2014-C"].length.should == 1
     course_primary = courses["2014-C"][0][:sections][0]
-    course_primary[:waitlistPosition].should == 42
-    course_primary[:enroll_limit].should == 5000
-    course_primary[:waitlistPosition].to_s.should == '42'
-    course_primary[:enroll_limit].to_s.should == '5000'
+    expect(course_primary[:waitlisted]).to eq true
+    expect(course_primary[:waitlistPosition]).to eq 42
+    expect(course_primary[:enroll_limit]).to eq 5000
   end
 
   it 'should return a shallower summary of enrollment data on request', :if => CampusOracle::Connection.test_data? do

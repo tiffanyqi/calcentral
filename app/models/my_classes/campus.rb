@@ -57,7 +57,8 @@ module MyClasses
           working_course[:listings].first[:courseCodeSection] = "#{section[:instruction_format]} #{section[:section_number]}"
           working_course[:site_url] << "/#{section[:instruction_format].downcase}-#{section[:section_number]}"
         end
-        if section[:waitlistPosition] && section[:waitlistPosition] > 0
+        if section[:waitlisted] && section[:waitlistPosition] && section[:waitlistPosition] > 0
+          working_course[:waitlisted] = true
           working_course[:enroll_limit] = section[:enroll_limit]
           working_course[:waitlistPosition] = section[:waitlistPosition]
         end

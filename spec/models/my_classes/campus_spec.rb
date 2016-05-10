@@ -100,7 +100,7 @@ describe MyClasses::Campus do
           [subject, fake_sections[0..1]].transpose.each do |course, enrollment|
             expect(course[:listings].first[:courseCodeSection]).to eq "#{enrollment[:instruction_format]} #{enrollment[:section_number]}"
             expect(course[:sections][0][:ccn]).to eq enrollment[:ccn]
-            if (enrollment[:waitlistPosition] > 0)
+            if (enrollment[:waitlisted])
               expect(course[:enroll_limit]).to eq enrollment[:enroll_limit]
               expect(course[:waitlistPosition]).to eq enrollment[:waitlistPosition]
             end
@@ -135,6 +135,7 @@ describe MyClasses::Campus do
             pnp_flag: 'N ',
             unit: '2',
             section_number: '021',
+            waitlisted: true,
             waitlistPosition: 2
           },
           {
@@ -145,6 +146,7 @@ describe MyClasses::Campus do
             pnp_flag: 'N ',
             unit: '0',
             section_number: '200',
+            waitlisted: true,
             waitlistPosition: 0
           }
         ]}
@@ -174,6 +176,7 @@ describe MyClasses::Campus do
             is_primary_section: true,
             unit: '2',
             section_number: '021',
+            waitlisted: true,
             waitlistPosition: 2
           },
           {

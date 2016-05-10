@@ -148,8 +148,9 @@ describe EdoOracle::UserCourses::Base do
         if enrollment['enroll_status'] == 'W'
           expect(section[:enroll_limit]).to eq enrollment['enroll_limit'].to_i
           expect(section[:waitlistPosition]).to eq enrollment['wait_list_seq_num'].to_i
+          expect(section[:waitlisted]).to eq true
         else
-          expect(section).not_to include(:enroll_limit, :waitlistPosition)
+          expect(section).not_to include(:enroll_limit, :waitlistPosition, :waitlisted)
         end
         expect(section).not_to include :cross_listing_hash
       end
@@ -367,7 +368,7 @@ describe EdoOracle::UserCourses::Base do
             :section_number, :waitlist_limit
           )
           expect(section.keys).to include(:units) if section[:is_primary_section]
-          expect(section.keys).not_to include(:grading_basis, :waitlistPosition)
+          expect(section.keys).not_to include(:grading_basis, :waitlistPosition, :waitlisted)
         end
       end
     end
