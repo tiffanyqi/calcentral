@@ -163,7 +163,6 @@ module User
         givenFullName: given_first_name + ' ' + @user_attributes[:familyName],
         isGoogleReminderDismissed: is_google_reminder_dismissed,
         isCalendarOptedIn: is_calendar_opted_in,
-        hasCanvasAccount: Canvas::Proxy.has_account?(@uid),
         hasGoogleAccessToken: GoogleApps::Proxy.access_granted?(@uid),
         hasStudentHistory: has_student_history,
         hasInstructorHistory: has_instructor_history,
