@@ -85,7 +85,12 @@ describe CampusOracle::UserCourses::Base do
           expect(section[:pnp_flag]).to eq enrollment['pnp_flag']
           expect(section[:section_number]).to eq enrollment['section_num']
           expect(section[:units]).to eq enrollment['unit']
-          expect(section[:waitlistPosition]).to eq enrollment['wait_list_seq_num'] if enrollment['enroll_status'] == 'W'
+          if enrollment['enroll_status'] == 'W'
+            expect(section[:waitlisted]).to eq true
+            expect(section[:waitlistPosition]).to eq enrollment['wait_list_seq_num']
+          else
+            expect(section).not_to include :waitlisted
+          end
         end
       end
       it 'includes only non-blank grades' do

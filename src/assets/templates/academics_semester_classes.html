@@ -58,7 +58,9 @@
                 </td>
                 <td data-ng-bind="course.title"></td>
                 <td>
-                  <strong data-ng-bind="section.waitlistPosition"></strong> on list of class of <strong data-ng-bind="section.enroll_limit"></strong>
+                  <div data-ng-if="section.waitlisted && section.waitlistPosition">
+                    <strong data-ng-bind="section.waitlistPosition"></strong> on list of class of <strong data-ng-bind="section.enroll_limit"></strong>
+                  </div>
                 </td>
               </tr>
             </tbody>

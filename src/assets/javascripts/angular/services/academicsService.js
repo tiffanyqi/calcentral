@@ -107,7 +107,7 @@ angular.module('calcentral.services').service('academicsService', function() {
       var sections = [];
       for (var j = 0; j < course.sections.length; j++) {
         var section = course.sections[j];
-        if ((findWaitlisted && section.waitlistPosition) || (!findWaitlisted && !section.waitlistPosition)) {
+        if ((findWaitlisted && section.waitlisted) || (!findWaitlisted && !section.waitlisted)) {
           sections.push(section);
         }
       }
