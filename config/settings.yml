@@ -256,7 +256,7 @@ cache:
     CampusOracle::CourseSections: NEXT_08_00
     CampusOracle::UserAttributes: NEXT_08_00
 
-    Canvas::MergedUserSites: <%= 15.minutes %>
+    Canvas::MergedUserSites: <%= 30.minutes %>
     Canvas::UserCourses: <%= 30.minutes %>
     Canvas::Groups: <%= 30.minutes %>
     Canvas::UserActivityStream: <%= 10.minutes %>
@@ -275,7 +275,7 @@ cache:
 
     Textbooks::Proxy: <%= 24.hours %>
 
-    ServiceAlerts::Merged: <%= 2.minutes %>
+    ServiceAlerts::Merged: <%= 24.hours %>
 
     CampusSolutions::AddressLabel: <%= 29.days %>
     CampusSolutions::AddressType: <%= 29.days %>
