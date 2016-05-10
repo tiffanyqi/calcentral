@@ -61,6 +61,7 @@ module EdoOracle
         #{JOIN_SECTION_TO_COURSE}
         WHERE enr."TERM_ID" IN (#{terms_query_list terms})
           AND enr."CAMPUS_UID" = '#{person_id}'
+          AND enr."STDNT_ENRL_STATUS_CODE" != 'D'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
       SQL
     end
@@ -259,8 +260,9 @@ module EdoOracle
           TRIM(enroll."GRADING_BASIS_CODE") AS grading_basis
         FROM SISEDO.ENROLLMENTV00_VW enroll
         WHERE
-          enroll."CLASS_SECTION_ID" = '#{section_id}' AND
-          enroll."TERM_ID" = '#{term_id}'
+          enroll."CLASS_SECTION_ID" = '#{section_id}'
+          AND enroll."TERM_ID" = '#{term_id}'
+          AND enroll."STDNT_ENRL_STATUS_CODE" != 'D'
       SQL
     end
 
