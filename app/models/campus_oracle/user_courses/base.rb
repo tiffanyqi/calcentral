@@ -172,6 +172,7 @@ module CampusOracle
         end
         # enroll_status and grade only apply to enrollment records and will be skipped for instructors.
         if row['enroll_status'] == 'W'
+          section_data[:waitlisted] = true
           section_data[:waitlistPosition] = row['wait_list_seq_num'].to_i
           section_data[:enroll_limit] = row['enroll_limit'].to_i
         end

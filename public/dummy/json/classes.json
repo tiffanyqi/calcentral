@@ -26,6 +26,7 @@
           "schedules": [], "instructors": [{"name": "Gee Esai", "uid": "1111"}]}
       ],
       "role": "Student",
+      "waitlisted": true,
       "waitlistPosition": "2",
       "enroll_limit": "50",
       "emitter": "Campus"
@@ -105,6 +106,7 @@
         }
       ],
       "role": "Student",
+      "waitlisted": true,
       "waitlistPosition": "3",
       "enroll_limit": "20",
       "emitter": "Campus"
