@@ -56,7 +56,6 @@ describe User::Api do
     it 'should return a user data structure' do
       api = User::Api.new(uid).get_feed
       expect(api[:preferredName]).to eq preferred_name
-      expect(api[:hasCanvasAccount]).to_not be_nil
       expect(api[:isCalendarOptedIn]).to_not be_nil
       expect(api[:isCampusSolutionsStudent]).to be true
       expect(api[:isDelegateUser]).to be false
@@ -227,14 +226,6 @@ describe User::Api do
 
   context 'session metadata' do
     let(:delegate_students) { {} }
-    it 'should return whether the user is registered with Canvas' do
-      expect(Canvas::Proxy).to receive(:has_account?).and_return(true, false)
-      api = User::Api.new(uid).get_feed
-      expect(api[:hasCanvasAccount]).to be true
-      Rails.cache.clear
-      api = User::Api.new(uid).get_feed
-      expect(api[:hasCanvasAccount]).to be false
-    end
     it 'should have a null first_login time for a new user' do
       api = User::Api.new(uid).get_feed
       expect(api[:firstLoginAt]).to be_nil
