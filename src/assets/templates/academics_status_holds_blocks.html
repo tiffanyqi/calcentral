@@ -34,8 +34,8 @@
             <tr>
               <th class="cc-table-subheader" scope="row">California Residency</th>
               <td>
-                <i class="cc-icon fa fa-info-circle cc-icon-red" aria-hidden="true" data-ng-if="residency.code === ''"></i>
-                <i class="cc-icon fa fa-info-circle cc-icon-gold" aria-hidden="true" data-ng-if="residency.code === 'PEND'"></i>
+                <i class="cc-icon fa fa-exclamation-circle cc-icon-red" aria-hidden="true" data-ng-if="residency.code === ''"></i>
+                <i class="cc-icon fa fa-warning cc-icon-gold" aria-hidden="true" data-ng-if="residency.code === 'PEND'"></i>
                 <i class="cc-icon fa fa-check-circle cc-icon-green" aria-hidden="true" data-ng-if="residency.code === 'NON' || residency.code === 'RES'"></i>
                <span data-ng-bind="residency.description"></span>
               </td>
