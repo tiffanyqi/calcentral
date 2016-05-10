@@ -145,7 +145,8 @@ module EdoOracle
           sec."printInScheduleOfClasses" = 'Y' AND
           sec."term-id" = '#{term_id}' AND
           sec."id" = '#{section_id}' AND
-          mtg."location-code" IS NOT NULL
+          mtg."location-code" IS NOT NULL AND
+          mtg."startDate" != mtg."endDate"
       SQL
     end
 
