@@ -10,7 +10,7 @@ describe CampusSolutions::AdvisingResourcesController do
     end
 
     context 'no advisor privileges' do
-      let(:user_roles) { {staff: true, student: true} }
+      let(:user_roles) { { staff: true, student: true } }
       it 'returns forbidden' do
         get feed
         expect(response.status).to eq 403
@@ -18,15 +18,35 @@ describe CampusSolutions::AdvisingResourcesController do
     end
 
     context 'advisor privileges' do
-      let(:user_roles) { {staff: true, advisor: true} }
+      let(:user_roles) { { staff: true, advisor: true } }
       let(:feed_key) { 'ucAdvisingResources' }
-      it_behaves_like 'a successful feed'
-      it 'includes specific mock data' do
-        get feed
-        json = JSON.parse(response.body)
-        expect(json['feed']['ucAdvisingResources']['ucAdvisingLinks']['ucAdviseeStudentCenter']['url'].strip).to eq(
-          'https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SSR_ADVISEE_OVRD.SSS_STUDENT_CENTER.GBL?')
+
+      shared_examples 'a feed with advising resources' do
+        it 'contains advising links' do
+          get feed
+          json = JSON.parse response.body
+          expect(resources = json['feed']['ucAdvisingResources']).to_not be_nil
+          expect(link = resources['ucAdvisingLinks'][key]).to_not be_nil
+          expect(link['isCsLink']).to be true
+          expect(link['name']).to eq expected_name
+
+        end
+      end
+
+      context 'links from the CS API' do
+        let(:key) { 'ucAdviseeStudentCenter' }
+        let(:expected_name) { 'Advisee Student Center' }
+
+        it_behaves_like 'a feed with advising resources'
+      end
+
+      context 'links from YAML settings' do
+        let(:key) { 'multiYearAcademicPlanner' }
+        let(:expected_name) { 'Multi-Year Academic Planner' }
+
+        it_behaves_like 'a feed with advising resources'
       end
     end
   end
+
 end
