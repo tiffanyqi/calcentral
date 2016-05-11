@@ -240,6 +240,8 @@ cache:
     User::AuthenticationValidator: <%= 8.hours %>
     User::AuthenticationValidator::short: <%= 5.minutes %>
     UserApiController: <%= 4.hours %>
+    Cal1card::Photo: <%= 4.hours %>
+
     Canvas::CourseStudents: <%= 15.minutes %>
     Canvas::CourseTeachers: <%= 5.minutes %>
     CanvasBackgroundJobs: <%= 24.hours %>
