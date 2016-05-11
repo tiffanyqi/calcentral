@@ -147,6 +147,7 @@ Calcentral::Application.routes.draw do
   get '/api/advising/academics/:student_uid' => 'advising_student#academics', :defaults => { :format => 'json' }
   get '/api/advising/enrollment_term/:student_uid' => 'advising_student#enrollment_term', :defaults => { :format => 'json' }
   get '/api/advising/enrollment_terms/:student_uid' => 'advising_student#enrollment_terms', :defaults => { :format => 'json' }
+  get '/api/advising/holds/:student_uid' => 'advising_student#holds', :defaults => { :format => 'json' }
   get '/api/advising/resources/:student_uid' => 'advising_student#resources', :defaults => { :format => 'json' }
   get '/api/advising/student/:student_uid' => 'advising_student#profile', :defaults => { :format => 'json' }
   post '/advisor_act_as' => 'advisor_act_as#start'
