@@ -47,24 +47,15 @@ class AdvisingStudentController < ApplicationController
     links = json[:feed] && json[:feed][:ucAdvisingResources] && json[:feed][:ucAdvisingResources][:ucAdvisingLinks]
     if links
       # Advisors get only a subset of links
-      keys = [:ucServiceIndicator, :ucStudentAdvisor]
+      keys = [:ucServiceIndicator, :ucStudentAdvisor, :multiYearAcademicPlannerStudentSpecific, :schedulePlannerStudentSpecific]
       keys << :ucGteformsWorkcenter if Settings.features.cs_advising_gte_forms
       advising_links = links.select { |key| keys.include? key }
-      if (url = academic_planner_url)
-        advising_links[:ucAcademicPlanner] = { name: 'Academic Planner', url: url, isCsLink: true }
-      end
       json[:feed][:ucAdvisingResources][:ucAdvisingLinks] = advising_links
     end
     render json: json
   end
 
   private
-
-  def academic_planner_url
-    (feed = academic_plan_by_student_uid.get_feed_internal[:feed]) &&
-      (planner = feed[:updateAcademicPlanner]) &&
-      planner[:url]
-  end
 
   def academic_plan_by_student_uid
     model = CampusSolutions::MyAcademicPlan.new student_uid_param
