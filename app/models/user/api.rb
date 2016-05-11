@@ -139,7 +139,6 @@ module User
       first_name = @user_attributes[:firstName]
       last_name = @user_attributes[:lastName]
       google_mail = User::Oauth2Data.get_google_email @uid
-      canvas_mail = User::Oauth2Data.get_canvas_email @uid
       current_user_policy = authentication_state.policy
       is_google_reminder_dismissed = User::Oauth2Data.is_google_reminder_dismissed(@uid)
       is_google_reminder_dismissed = is_google_reminder_dismissed && is_google_reminder_dismissed.present?
@@ -174,7 +173,6 @@ module User
         hasPhoto: !!User::Photo.fetch(@uid, @options),
         inEducationAbroadProgram: @user_attributes[:educationAbroad],
         googleEmail: google_mail,
-        canvasEmail: canvas_mail,
         officialBmailAddress: @user_attributes[:officialBmailAddress],
         primaryEmailAddress: @user_attributes[:primaryEmailAddress],
         preferredName: self.preferred_name,
