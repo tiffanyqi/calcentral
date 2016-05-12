@@ -5,7 +5,8 @@
   </label>
 </div>
 <div class="cc-select">
-  <select data-ng-options="country.country as country.descr for country in countries" data-ng-model="currentObject.data.country" id="cc-page-widget-profile-address-country" required aria-required="true" />
+  <select data-ng-options="country.country as country.descr for country in countries" data-ng-model="currentObject.data.country" id="cc-page-widget-profile-address-country" required aria-required="true">
+  </select>
 </div>
 
 <div data-cc-spinner-directive="currentObject.stateFieldLoading">

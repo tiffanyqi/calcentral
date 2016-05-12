@@ -12,7 +12,8 @@
           </label>
         </div>
         <div class="cc-select">
-          <select data-ng-options="type.fieldvalue as type.xlatlongname for type in types" data-ng-model="currentObject.data.type.code"  id="cc-page-widget-profile-email-type" required aria-required="true" />
+          <select data-ng-options="type.fieldvalue as type.xlatlongname for type in types" data-ng-model="currentObject.data.type.code"  id="cc-page-widget-profile-email-type" required aria-required="true">
+          </select>
         </div>
       </div>
       <div data-ng-if="!currentObject.isAdding">
