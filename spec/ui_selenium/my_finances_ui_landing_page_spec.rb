@@ -88,11 +88,26 @@ describe 'My Finances landing page', :testui => true do
 
       # Financial Assistance
 
+      it 'includes a link to Berkeley International Office' do
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.berk_intl_office_link_element, 'BIO Home | Berkeley International Office')).to be true
+      end
+      it 'includes a link to Cost of Attendance' do
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.cost_of_attend_link_element, 'Cost of Attendance | Financial Aid and Scholarships | UC Berkeley')).to be true
+      end
+      it 'includes a link to Dream Act Application' do
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.dream_act_link_element, 'Home - CA Dream Act Application')).to be true
+      end
       it 'includes a link to FAFSA' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.fafsa_link_element, 'Home - FAFSA on the Web - Federal Student Aid')).to be true
       end
+      it 'includes a link to Federal Student Loans' do
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.fed_student_loans_link_element, 'StudentLoans.gov')).to be true
+      end
       it 'includes a link to Financial Aid & Scholarships Office' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.fin_aid_scholarships_link_element, 'Financial Aid and Scholarships | UC Berkeley')).to be true
+      end
+      it 'includes a link to Financial Literacy' do
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.fin_literacy_link_element, 'Bears for Financial Success | Financial Aid and Scholarships | UC Berkeley')).to be true
       end
       it 'includes a link to Graduate Financial Support' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.grad_fin_support_link_element, 'Financial Support | Berkeley Graduate Division')).to be true
@@ -100,11 +115,14 @@ describe 'My Finances landing page', :testui => true do
       it 'includes a link to Loan Repayment Calculator' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.loan_replay_calc_link_element, 'StudentLoans.gov'))
       end
-      it 'includes a link to MyFinAid' do
+      it 'includes a link to MyFinAid (aid prior to Fall 2016)' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.my_fin_aid_link_element, 'UC Berkeley Financial Aid Web Self Service')).to be true
       end
-      it 'includes a link to Student Budgets' do
-        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.student_budgets_link_element, 'Cost of Attendance | Financial Aid and Scholarships | UC Berkeley')).to be true
+      it 'includes a link to National Student Loan Database System' do
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.natl_student_loan_db_link_element, 'National Student Loan Data System for Students')).to be true
+      end
+      it 'includes a link to Student Advocates Office' do
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.student_advocates_link_element, 'Student Advocate\'s Office | Problems with the University? We can Help!')).to be true
       end
       it 'includes a link to Work Study' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances_page.work_study_link_element, 'Work-Study | Financial Aid and Scholarships | UC Berkeley')).to be true
