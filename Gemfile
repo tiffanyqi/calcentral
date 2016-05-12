@@ -41,7 +41,7 @@ gem 'faraday_middleware', '~> 0.9.1'
 gem 'httparty', '~> 0.13.3'
 
 # OAuth2 support
-gem 'signet', '~> 0.7.2'
+gem 'signet', '~> 0.6.0'
 gem 'google-api-client', '~> 0.8.6'
 gem 'google_drive', '~> 1.0.1'
 
@@ -59,9 +59,6 @@ gem 'active_attr', '~> 0.8.5'
 
 # for production deployment
 gem 'jruby-activemq', '~> 5.13.0', git: 'https://github.com/ets-berkeley-edu/jruby-activemq.git'
-
-# To support TLSv1.2
-gem 'jruby-openssl', '~> 0.9.16'
 
 # Addressable is a replacement for the URI implementation that is part of Ruby's standard library.
 # https://github.com/sporkmonger/addressable
