@@ -1,3 +1,10 @@
+.cc-two-column-layout {
+  .cc-column-2 {
+    .cc-widget {
+      margin-right: 0;
+    }
+  }
+}
 .cc-widget {
   background: $cc-color-white;
   margin: 15px 15px 0 0;
@@ -12,7 +19,7 @@
     clear: both;
   }
 }
-.cc-column-last {
+.cc-column-3 {
   .cc-widget {
     margin-right: 0;
   }
@@ -235,6 +242,14 @@
 
 .cc-widget-vertical-padding {
   padding: 5px 0;
+}
+
+@media #{$medium-only} {
+  .cc-column-2, .cc-column-3 {
+    .cc-widget {
+      margin-right: 0;
+    }
+  }
 }
 
 @media #{$small-only} {
