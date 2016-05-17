@@ -103,7 +103,8 @@
             <strong>Currency Type</strong>
           </label>
         <div class="cc-select">
-          <select data-ng-options="currency.currencyCd as (currency.currencyCd + ' - ' + currency.descr) for currency in currencies" data-ng-model="currentObject.data.currencyType" id="cc-page-widget-profile-work-experience-currency-type" required aria-required="true" />
+          <select data-ng-options="currency.currencyCd as (currency.currencyCd + ' - ' + currency.descr) for currency in currencies" data-ng-model="currentObject.data.currencyType" id="cc-page-widget-profile-work-experience-currency-type" required aria-required="true">
+          </select>
         </div>
       </div>
 
@@ -119,7 +120,8 @@
           <strong>Pay Frequency</strong> <span class="cc-text-light">(Required)</span>
         </label>
         <div class="cc-select">
-          <select data-ng-options="payfreq.fieldvalue as payfreq.xlatshortname for payfreq in typesPayFrequency" data-ng-model="currentObject.data.payFrequency" id="cc-page-widget-profile-work-experience-pay-frequency" required aria-required="true" />
+          <select data-ng-options="payfreq.fieldvalue as payfreq.xlatshortname for payfreq in typesPayFrequency" data-ng-model="currentObject.data.payFrequency" id="cc-page-widget-profile-work-experience-pay-frequency" required aria-required="true">
+          </select>
         </div>
       </div>
 
