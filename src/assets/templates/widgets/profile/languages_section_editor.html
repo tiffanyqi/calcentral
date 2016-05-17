@@ -102,15 +102,18 @@
     </div>
 
     <div>
-      <button class="cc-button cc-button-blue" type="submit" data-ng-disabled="cc_page_widget_languages_section.cc_page_widget_profile_language_code.$invalid || isSaving">
+      <button class="cc-button cc-button-blue" type="submit" data-ng-disabled="cc_page_widget_languages_section.cc_page_widget_profile_language_code.$invalid || isSaving || isDeleting">
         <span data-ng-if="!isSaving">Save</span>
         <span data-ng-if="isSaving">Updating&hellip;</span>
       </button>
-      <button class="cc-button" type="button" data-ng-click="cancelEdit()" data-ng-disabled="isSaving">Cancel</button>
+      <button class="cc-button" type="button" data-ng-click="cancelEdit()" data-ng-disabled="isSaving || isDeleting">Cancel</button>
     </div>
 
     <div class="cc-nowrap" data-ng-if="!currentObject.isAdding">
-      (<button class="cc-button-link" type="button" data-ng-click="deleteItem(currentObject.data)" data-ng-disabled="cc_page_widget_languages_section.cc_page_widget_profile_language_code.$invalid || isSaving">Delete language credential</span></button>)
+      (<button class="cc-button-link" type="button" data-ng-click="deleteItem(currentObject.data)" data-ng-disabled="cc_page_widget_languages_section.cc_page_widget_profile_language_code.$invalid || isSaving || isDeleting">
+        <span data-ng-if="!isDeleting">Delete language credential</span>
+        <span data-ng-if="isDeleting">Deleting&hellip;</span>
+      </button>)
     </div>
   </form>
 </div>
