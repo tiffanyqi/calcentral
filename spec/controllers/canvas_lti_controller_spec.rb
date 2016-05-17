@@ -92,4 +92,19 @@ describe CanvasLtiController do
     end
   end
 
+  describe '#embedded' do
+    before do
+      session['user_id'] = random_id
+      session['lti_authenticated_only'] = true
+      allow_any_instance_of(CanvasLti::Lti).to receive(:validate_tool_provider).and_return(lti)
+    end
+    it 'switches to the new authentication' do
+      post :embedded, url: 'something'
+      assert_response :success
+      expect(session['user_id']).to eq lti_values['canvas_user_login_id']
+      expect(session['canvas_user_id']).to eq lti_values['canvas_user_id']
+      expect(session['canvas_course_id']).to eq lti_values['canvas_course_id']
+    end
+  end
+
 end
