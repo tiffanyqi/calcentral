@@ -425,9 +425,7 @@ calnet_crosswalk_proxy:
 campus_solutions_links:
   advising:
     multi_year_academic_planner: ''
-    multi_year_academic_planner_student_specific: ''
     schedule_planner: ''
-    schedule_planner_student_specific: ''
 
 # A feature will be disabled if the corresponding feature-flag is false or nil.
 features:
