@@ -30,7 +30,14 @@
               <td colspan="2" data-ng-bind-html="studentInfo.regStatus.explanation"></td>
             </tr>
           </tbody>
-          <tbody data-ng-if="!residency.isLoading && residency.description">
+          <tbody data-ng-if="residency.isLoading">
+            <tr>
+              <td colspan="2">
+                <div data-cc-spinner-directive="residency.isLoading"></div>
+              </td>
+            </tr>
+          </tbody>
+          <tbody data-ng-if="!residency.isLoading">
             <tr>
               <th class="cc-table-subheader" scope="row">California Residency</th>
               <td>
