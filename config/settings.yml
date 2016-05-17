@@ -453,7 +453,7 @@ features:
   cs_logout: false
   cs_profile: true
   cs_profile_emergency_contacts: false
-  cs_profile_languages: false
+  cs_profile_languages: true
   cs_profile_visible_for_legacy_users: true
   cs_profile_work_experience: false
   cs_sir: true
