@@ -1,6 +1,7 @@
 module MyAcademics
   class TransitionTerm
     include AcademicsModule
+    include User::Student
     include ClassLogger
 
     # TODO This class collapses two different feeds based on two different data sources and used in two different APIs. Fix!
@@ -25,12 +26,16 @@ module MyAcademics
     # It is displayed in My Academics / Status, Holds, and Blocks and in the Status popover.
     def regstatus_feed
       # TODO LEGACY ONLY! Must be replaced before Settings.terms.legacy_cutoff.
-      response = Regstatus::Proxy.new(user_id: @uid).get
-      if response && response[:feed] && (reg_status = response[:feed]['regStatus'])
-        {
-          registered: reg_status['isRegistered'],
-          termName: "#{reg_status['termName']} #{reg_status['termYear']}"
-        }
+      if legacy_user?
+        response = Regstatus::Proxy.new(user_id: @uid).get
+        if response && response[:feed] && (reg_status = response[:feed]['regStatus'])
+          {
+            registered: reg_status['isRegistered'],
+            termName: "#{reg_status['termName']} #{reg_status['termYear']}"
+          }
+        end
+      else
+        {}
       end
     end
 
