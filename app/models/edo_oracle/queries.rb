@@ -111,6 +111,18 @@ module EdoOracle
       SQL
     end
 
+    # EDO equivalent of #CampusOracle::Queries.get_course_secondary_sections
+    # see #self.get_course_sections
+    def self.get_course_secondary_sections(term_id, department, catalog_id)
+      get_course_sections(term_id, department, catalog_id, true)
+    end
+
+    # EDO equivalent of #CampusOracle::Queries.get_all_course_sections
+    # see #self.get_course_sections
+    def self.get_all_course_sections(term_id, department, catalog_id)
+      get_course_sections(term_id, department, catalog_id, false)
+    end
+
     # EDO equivalent of CampusOracle::Queries.get_section_schedules
     # Changes:
     #   - 'course_cntl_num' is replaced with 'section_id'
@@ -310,6 +322,33 @@ module EdoOracle
       else
         false
       end
+    end
+
+    private
+
+    # EDO equivalent of #CampusOracle::Queries.get_course_sections
+    # Changes:
+    #   - 'course_cntl_num' is replaced with 'section_id'
+    #   - 'term_yr' and 'term_cd' replaced by 'term_id'
+    #   - See more info at #SECTION_COLUMNS
+    def self.get_course_sections(term_id, department, catalog_id, only_secondary_sections)
+      section_type_restriction = only_secondary_sections ? ' AND sec."primary" = \'false\' ' : ''
+      safe_query <<-SQL
+        SELECT
+          #{SECTION_COLUMNS}
+        FROM
+          SISEDO.CLASSSECTIONV00_VW sec
+        #{JOIN_SECTION_TO_COURSE}
+        WHERE
+          sec."term-id" = '#{term_id}' AND
+          crs."subjectArea" = '#{department}' AND
+          crs."catalogNumber-formatted" = '#{catalog_id}' AND
+          sec."status-code" = 'A'
+          #{section_type_restriction}
+        ORDER BY
+          sec."component-code",
+          sec."sectionNumber"
+      SQL
     end
 
     def self.safe_query(sql)
