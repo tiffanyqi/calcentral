@@ -73,6 +73,10 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
   var getPerson = profileFactory.getPerson;
 
   var parseCalResidency = function(residency) {
+    if (!residency.code) {
+      return;
+    }
+
     residency.description = calResidencyCode[residency.code];
     angular.merge($scope.residency, residency);
   };

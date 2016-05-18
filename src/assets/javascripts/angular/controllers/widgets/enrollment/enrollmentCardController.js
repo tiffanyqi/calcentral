@@ -65,8 +65,8 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
   /**
    * Stop the main spinner.
    * This happens when
-   * 	- the terms data has loaded
-   * 	- or when there is no term data
+   * - the terms data has loaded
+   * - or when there is no term data
    */
   var stopMainSpinner = function() {
     $scope.enrollment.isLoading = false;
