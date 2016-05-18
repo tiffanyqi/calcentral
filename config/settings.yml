@@ -185,9 +185,9 @@ textbooks_proxy:
 
 webcast_proxy:
   fake: false
-  base_url: 'https://webcast-cc-dev.ets.berkeley.edu'
-  username: 'secret'
-  password: 'secret'
+  base_url: 'https://webcast-cc-staging.ets.berkeley.edu'
+  username: ''
+  password: ''
 
 audio_proxy:
   base_url: 'https://wbe-itunes.berkeley.edu'
