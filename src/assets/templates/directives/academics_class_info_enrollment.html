@@ -49,11 +49,16 @@
         </tbody>
       </table>
     </div>
-    <div class="cc-academics-class-enrollment-text" data-ng-if="!students.length">
-      No students are currently <span data-ng-bind="studentRole"></span> in this class.
+    <div class="cc-academics-class-enrollment-text" data-ng-if="errorStatus">
+      There was an error retrieving enrollment data.
     </div>
-    <div class="cc-academics-class-enrollment-text" data-ng-if="students.length && !filteredStudents.length">
-      No students are currently <span data-ng-bind="studentRole"></span> in this section.
+    <div data-ng-if="!errorStatus">
+      <div class="cc-academics-class-enrollment-text" data-ng-if="!students.length">
+        No students are currently <span data-ng-bind="studentRole"></span> in this class.
+      </div>
+      <div class="cc-academics-class-enrollment-text" data-ng-if="students.length && !filteredStudents.length">
+        No students are currently <span data-ng-bind="studentRole"></span> in this section.
+      </div>
     </div>
   </div>
 </div>
