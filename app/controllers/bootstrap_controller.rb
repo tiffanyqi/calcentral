@@ -1,6 +1,7 @@
 class BootstrapController < ApplicationController
   include ActiveRecordHelper
   include AllowDelegateViewAs
+  include AllowLti
   before_filter :get_settings, :initialize_calcentral_config
   before_filter :check_lti_only
   before_filter :check_databases_alive, :warmup_live_updates, :check_cache_clear_flag
