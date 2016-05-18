@@ -99,7 +99,6 @@ describe 'My Academics enrollments', :testui => true do
                       expect(academics_page_course_grades).to eql(api_grades)
                     end
 
-
                     # SEMESTER PAGES
 
                     if academics_api_page.has_enrollment_data?(semester)
@@ -151,9 +150,9 @@ describe 'My Academics enrollments', :testui => true do
                       if wait_list_courses.any?
                         api_wait_list_course_codes = academics_api_page.wait_list_course_codes(wait_list_courses)
                         api_wait_list_course_titles = academics_api_page.wait_list_course_titles(wait_list_courses)
-                        api_wait_list_sections = academics_api_page.wait_list_semester_sections(wait_list_courses)
                         api_wait_list_section_labels = academics_api_page.courses_section_labels(wait_list_courses)
-                        api_wait_list_positions = academics_api_page.wait_list_positions api_wait_list_sections
+                        api_wait_list_primary_sections = academics_api_page.wait_list_primary_sections(wait_list_courses)
+                        api_wait_list_positions = academics_api_page.wait_list_positions api_wait_list_primary_sections
                         api_wait_list_sizes = academics_api_page.enrollment_limits(wait_list_courses)
 
                         sem_page_wait_list_codes = semester_page.all_waitlist_course_codes
@@ -270,7 +269,7 @@ describe 'My Academics enrollments', :testui => true do
                                 i = api_sections.index(api_section)
                                 test_output_row = [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
                                                    academics_api_page.primary_section?(api_section), api_grade_options[i], api_section_units[i],
-                                                   nil, api_section_schedules[i], academics_api_page.wait_list_position(api_section), has_associated_sections]
+                                                   nil, api_section_schedules[i], academics_api_page.wait_list_position(api_section)]
                                 UserUtils.add_csv_row(test_output, test_output_row)
                               end
 

@@ -191,8 +191,8 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
   end
 
   def semester_grades(courses)
-    grades = courses.map { |course| course_grades(course) unless course_grades(course).nil? }
-    grades.flatten
+    grades = courses.map { |course| course_grades(course) }
+    grades.flatten.compact
   end
 
   def semester_card_grades(semesters, courses, semester)
@@ -424,7 +424,7 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
   def enrollment_limits(wait_list_courses)
     limits = []
     wait_list_courses.each do |course|
-      course_sections(course).each { |section| limits << section['enroll_limit'].to_s }
+      course_primary_sections(course).each { |section| limits << section['enroll_limit'].to_s }
     end
     limits
   end

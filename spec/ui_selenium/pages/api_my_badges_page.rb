@@ -29,20 +29,16 @@ class ApiMyBadgesPage
     residency['needsAction']
   end
 
-  def law_student?
-    student_info['isLawStudent']
-  end
-
   def reg_status
     student_info['regStatus']
   end
 
   def reg_status_summary
-    reg_status.nil? ? nil : reg_status['summary']
+    reg_status && reg_status['summary']
   end
 
   def reg_status_explanation
-    reg_status['explanation']
+    reg_status && reg_status['explanation']
   end
 
   def reg_status_needs_action
@@ -50,7 +46,7 @@ class ApiMyBadgesPage
   end
 
   def is_registered?
-    reg_status_summary == 'Registered' ? true : false
+    reg_status_summary == 'Registered'
   end
 
   def reg_block

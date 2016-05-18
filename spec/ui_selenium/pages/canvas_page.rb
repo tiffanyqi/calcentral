@@ -98,6 +98,7 @@ class CanvasPage
       accept_course_invite
       accept_course_invite_element.when_not_visible WebDriverUtils.page_load_timeout
     end
+    sleep 1
   end
 
   def masquerade_as(canvas_id)
@@ -111,7 +112,7 @@ class CanvasPage
     logger.debug 'Ending masquerade'
     driver.switch_to.default_content
     WebDriverUtils.wait_for_page_and_click stop_masquerading_link_element
-    stop_masquerading_link_element.when_not_visible WebDriverUtils.page_load_wait
+    stop_masquerading_link_element.when_not_visible WebDriverUtils.page_load_timeout
   end
 
   def log_out(cal_net_page)

@@ -7,14 +7,17 @@ module CalCentralPages
     include ClassLogger
 
     table(:status_table, :class => 'cc-academics-status-holds-blocks-status-table')
-    span(:reg_status_summary, :xpath => '//th[contains(.,"Registration")]/following-sibling::td/span[@data-ng-bind="studentInfo.regStatus.summary"]')
+    span(:reg_status_summary, :xpath => '//tr[@data-ng-if="api.user.profile.features.regstatus"]//span[@data-ng-bind="studentInfo.regStatus.summary"]')
     div(:reg_status_explanation, :xpath => '//td[@data-ng-bind-html="studentInfo.regStatus.explanation"]')
     image(:reg_status_icon_green, :xpath => '//tr[@data-ng-if="api.user.profile.features.regstatus"]//i[@class="cc-icon fa fa-check-circle cc-icon-green"]')
     image(:reg_status_icon_red, :xpath => '//tr[@data-ng-if="api.user.profile.features.regstatus"]//i[@class="cc-icon fa fa-exclamation-circle cc-icon-red"]')
 
-    span(:res_status_summary, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td/span[@data-ng-bind="studentInfo.californiaResidency.summary"]')
-    image(:res_status_icon_green, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-check-circle cc-icon-green"]')
-    image(:res_status_icon_red, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-exclamation-circle cc-icon-red"]')
+    span(:res_status_summary, :xpath => '//span[@data-ng-bind="residency.description"]')
+    image(:res_status_icon_green, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-check-circle cc-icon-green ng-scope"]')
+    image(:res_status_icon_gold, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-warning cc-icon-gold ng-scope"]')
+    image(:res_status_icon_red, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-exclamation-circle cc-icon-red ng-scope"]')
+    link(:res_slr_submit_link, :xpath => '//a[contains(text(),"Statement of Legal Residence")]')
+    link(:res_slr_status_link, :xpath => '//a[contains(text(),"check the status of your submission")]')
     link(:res_info_link, :xpath => '//a[contains(text(),"residency information")]')
 
     h3(:active_blocks_heading, :xpath => '//h3[text()="Active Blocks"]')
@@ -41,39 +44,23 @@ module CalCentralPages
     end
 
     def active_block_types
-      types = []
-      active_blocks_table_element.each do |row|
-        type = row[0].text
-        types.push(type)
-      end
-      types.drop(1)
+      types = active_blocks_table_element.map { |row| row[0].text }
+      types.drop 1
     end
 
     def active_block_reasons
-      reasons = []
-      active_blocks_table_element.each do |row|
-        reason = row[1].text
-        reasons.push(reason)
-      end
-      reasons.drop(1)
+      reasons = active_blocks_table_element.map { |row| row[1].text }
+      reasons.drop 1
     end
 
     def active_block_offices
-      offices = []
-      active_blocks_table_element.each do |row|
-        office = row[2].text
-        offices.push(office)
-      end
-      offices.drop(1)
+      offices = active_blocks_table_element.map { |row| row[2].text }
+      offices.drop 1
     end
 
     def active_block_dates
-      dates = []
-      active_blocks_table_element.each do |row|
-        date = row[3].text
-        dates.push(date)
-      end
-      dates.drop(1)
+      dates = active_blocks_table_element.map { |row| row[3].text }
+      dates.drop 1
     end
 
     def inactive_block_count
@@ -81,29 +68,17 @@ module CalCentralPages
     end
 
     def inactive_block_types
-      types = []
-      inactive_blocks_table_element.each do |row|
-        type = row[0].text
-        types.push(type)
-      end
-      types.drop(1)
+      types = inactive_blocks_table_element.map { |row| row[0].text }
+      types.drop 1
     end
 
     def inactive_block_dates
-      dates = []
-      inactive_blocks_table_element.each do |row|
-        date = row[1].text
-        dates.push(date)
-      end
-      dates.drop(1)
+      dates = inactive_blocks_table_element.map { |row| row[1].text }
+      dates.drop 1
     end
 
     def inactive_block_cleared_dates
-      dates = []
-      inactive_blocks_table_element.each do |row|
-        date = row[2].text
-        dates.push(date)
-      end
+      dates = inactive_blocks_table_element.map { |row| row[2].text }
       dates.drop(1).sort!
     end
   end

@@ -93,13 +93,8 @@ class WebDriverUtils
   end
 
   def self.ui_numeric_date_format(date)
-    today = Date.today
-    if date.strftime("%Y") == today.strftime("%Y")
-      date_format = date.strftime("%m/%d")
-    else
-      date_format = date.strftime("%m/%d/%Y")
-    end
-    date_format
+    # Shows the year only if it is not the same as the current year
+    (date.strftime("%Y") == Date.today.strftime("%Y")) ? date.strftime("%m/%d") : date.strftime("%m/%d/%Y")
   end
 
   def self.ui_alphanumeric_date_format(date)
@@ -116,7 +111,7 @@ class WebDriverUtils
 
   def self.wait_for_page_and_click(element)
     element.when_present page_load_timeout
-    element.when_visible page_event_timeout
+    element.when_visible page_load_timeout
     element.click
   end
 

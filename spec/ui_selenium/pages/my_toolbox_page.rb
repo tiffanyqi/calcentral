@@ -17,16 +17,16 @@ module CalCentralPages
 
     div(:saved_users, :xpath => '//div[@class="cc-toolbox-user-section ng-scope"][1]')
     button(:clear_saved_users_button, :xpath => '//strong[text()="Saved Users"]/following-sibling::button[@data-ng-click="block.clearAllUsers()"]')
-    div(:saved_user_view_as_button, :xpath => '//strong[text()="Saved Users"]/following-sibling::div//button[@data-ng-click="admin.updateIDField(user.ldap_uid)"]')
-    span(:saved_user_sid, :xpath => '//strong[text()="Saved Users"]/following-sibling::div//span[contains(@data-ng-bind,"user.student_id")]')
-    span(:saved_user_name, :xpath => '//strong[text()="Saved Users"]/following-sibling::div//span[@data-ng-bind="user.first_name"]')
+    div(:saved_user_view_as_button, :xpath => '//strong[text()="Saved Users"]/following-sibling::div//button[@data-ng-click="admin.updateIDField(user.ldapUid)"]')
+    span(:saved_user_sid, :xpath => '//strong[text()="Saved Users"]/following-sibling::div//span[contains(@data-ng-bind,"user.studentId")]')
+    span(:saved_user_name, :xpath => '//strong[text()="Saved Users"]/following-sibling::div//span[@data-ng-bind="user.firstName"]')
     button(:saved_user_delete_button, :xpath => '//button[@data-ng-click="block.clearUser(user)"]')
 
     div(:recent_users, :xpath => '//div[@class="cc-toolbox-user-section ng-scope"][2]')
     button(:clear_recent_users_button, :xpath => '//strong[text()="Recent Users"]/following-sibling::button[@data-ng-click="block.clearAllUsers()"]')
-    div(:recent_user_view_as_button, :xpath => '//strong[text()="Recent Users"]/following-sibling::div//button[@data-ng-click="admin.updateIDField(user.ldap_uid)"]')
-    span(:recent_user_sid, :xpath => '//strong[text()="Recent Users"]/following-sibling::div//span[contains(@data-ng-bind,"user.student_id")]')
-    span(:recent_user_name, :xpath => '//strong[text()="Recent Users"]/following-sibling::div//span[@data-ng-bind="user.first_name"]')
+    div(:recent_user_view_as_button, :xpath => '//strong[text()="Recent Users"]/following-sibling::div//button[@data-ng-click="admin.updateIDField(user.ldapUid)"]')
+    span(:recent_user_sid, :xpath => '//strong[text()="Recent Users"]/following-sibling::div//span[contains(@data-ng-bind,"user.studentId")]')
+    span(:recent_user_name, :xpath => '//strong[text()="Recent Users"]/following-sibling::div//span[@data-ng-bind="user.firstName"]')
     button(:recent_user_save_button, :xpath => '//button[@data-ng-click="block.storeUser(user)"]')
 
     def view_as_user(id)
