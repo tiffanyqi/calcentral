@@ -1,7 +1,7 @@
 describe HubEdos::Registrations do
 
   context 'mock proxy' do
-    let(:proxy) { HubEdos::Registrations.new(fake: true, user_id: '61889', term_id: '2168') }
+    let(:proxy) { HubEdos::Registrations.new(fake: true, user_id: '61889') }
     subject { proxy.get }
 
     it_should_behave_like 'a simple proxy that returns errors'
