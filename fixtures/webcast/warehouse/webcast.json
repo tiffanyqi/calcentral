@@ -2073,6 +2073,23 @@
         }
       ],
       "audioOnly": false
+    },
+    {
+      "year": 2016,
+      "semester": "Fall",
+      "ccn": 30598,
+      "deptName": "XASTRON",
+      "catalogId": "10",
+      "public": false,
+      "youTubePlaylist": "PL-XXv-cvA_iAn6Qt6B7D-phRT0Ld1GOUV",
+      "recordings": [
+        {
+          "lecture": "2016-08-25: A Grand Tour of the Cosmos",
+          "youTubeId": "E8WBr8u7YoI",
+          "recordingStartUTC": "2015-08-25T15:07:00-08:00"
+        }
+      ],
+      "audioOnly": false
     }
   ]
 }
