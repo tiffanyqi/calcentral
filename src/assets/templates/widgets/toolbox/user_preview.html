@@ -104,10 +104,9 @@
                   ></div>
                 </div>
                 <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.schedulePlannerStudentSpecific.url">
-                  <div
-                    data-cc-campus-solutions-link-item-directive
-                    data-link="ucAdvisingResources.ucAdvisingLinks.schedulePlannerStudentSpecific"
-                  ></div>
+                  <a
+                    data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.schedulePlannerStudentSpecific.url}}"
+                    data-ng-bind="ucAdvisingResources.ucAdvisingLinks.schedulePlannerStudentSpecific.name"></a>
                 </div>
               </td>
             </tr>
