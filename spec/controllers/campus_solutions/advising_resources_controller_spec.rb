@@ -29,7 +29,6 @@ describe CampusSolutions::AdvisingResourcesController do
           expect(link = resources['ucAdvisingLinks'][key]).to_not be_nil
           expect(link['isCsLink']).to be true
           expect(link['name']).to eq expected_name
-
         end
       end
 
@@ -41,8 +40,8 @@ describe CampusSolutions::AdvisingResourcesController do
       end
 
       context 'links from YAML settings' do
-        let(:key) { 'multiYearAcademicPlanner' }
-        let(:expected_name) { 'Multi-Year Academic Planner' }
+        let(:key) { 'multiYearAcademicPlannerGeneric' }
+        let(:expected_name) { 'Multi-Year Planner' }
 
         it_behaves_like 'a feed with advising resources'
       end
