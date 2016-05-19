@@ -92,9 +92,6 @@ gem 'net-ssh', '~>2.9.2' # v3 requires Ruby 2.0
 
 gem 'icalendar', '~> 2.2.2'
 
-# Fake proxies
-gem 'webmock', '~> 1.20.4'
-
 ##################################
 # Front-end Gems for Rails Admin #
 ##################################
@@ -142,6 +139,8 @@ group :development, :test , :testext do
   gem 'spork','1.0.0rc0'
   gem 'guard-spork'
   gem 'spork-rails'
+
+  gem 'webmock', '~> 1.20.4'
 end
 
 group :development do
