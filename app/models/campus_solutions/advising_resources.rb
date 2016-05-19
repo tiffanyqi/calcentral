@@ -38,7 +38,7 @@ module CampusSolutions
         add_cs_link links, :multi_year_academic_planner, 'MULTI_YEAR_ACADEMIC_PLANNER', 'Multi-Year Academic Planner'
         add_cs_link links, :schedule_planner, 'SCHEDULE_PLANNER', 'Schedule Planner'
         add_cs_link links, :multi_year_academic_planner, 'MULTI_YEAR_ACADEMIC_PLANNER_STUDENT_SPECIFIC', 'Multi-Year Academic Planner', "?UCemplid=#{lookup_student_id}"
-        add_cs_link links, :schedule_planner, 'SCHEDULE_PLANNER_STUDENT_SPECIFIC', 'Schedule Planner'
+        add_cs_link links, :schedule_planner, 'SCHEDULE_PLANNER_STUDENT_SPECIFIC', 'Schedule Planner', "?EMPLID=#{lookup_student_id}"
       end
       feed
     end
