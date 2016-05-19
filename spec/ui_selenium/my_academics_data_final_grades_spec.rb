@@ -78,13 +78,17 @@ describe 'My Academics transcripts', :testui => true do
 
                   end
 
-                elsif past_semesters.include? semester
+                elsif past_semesters.include?(semester) && grades.any?
 
-                  it ("show a Final Grades card on the #{semester_name} page for UID #{uid}") { expect(shows_final_grades_card).to be true }
-
-                  courses = academics_api_page.courses_by_transcripts semester
+                  courses = academics_api_page.semester_card_courses(semester, semester_courses)
                   course_codes = academics_api_page.course_codes courses
                   units = academics_api_page.semester_card_units semester_courses
+
+                  if gpa_calculator.grade_options_elements.any?
+                    it ("show a GPA Calculator card on the #{semester_name} page for UID #{uid}") { expect(shows_gpa_calc_card).to be true }
+                  else
+                    it ("show a Final Grades card on the #{semester_name} page for UID #{uid}") { expect(shows_final_grades_card).to be true }
+                  end
 
                   i = 0
                   grades.each do |api_course_grade|

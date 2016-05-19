@@ -8,6 +8,7 @@ module CalCentralPages
     h2(:gpa_calc_heading, :xpath => '//h2[text()="GPA Calculator"]')
     elements(:course, :td, :xpath => '//td[@data-ng-bind="course.course_code"]')
     elements(:units, :td, :xpath => '//td[contains(@data-ng-bind,"units | number:1")]')
+    elements(:grade_options, :select_list, :xpath => '//select[contains(@data-ng-options,"gradeOptions")]')
     td(:current_gpa, :xpath => '//strong[@data-ng-bind="gpaUnits.cumulativeGpa || \'N/A\'"]')
     td(:est_gpa, :xpath => '//strong[contains(@data-ng-bind,"estimatedGpa")]')
     td(:cum_gpa, :xpath => '//strong[contains(@data-ng-bind,"estimatedCumulativeGpa")]')

@@ -3,15 +3,12 @@ class ApiMyAcademicsPage
   include PageObject
   include ClassLogger
 
-  element(:json_body, :xpath => '//pre')
-
   def get_json(driver)
-    logger.info('Parsing JSON from /api/my/academics')
+    logger.info 'Parsing JSON from /api/my/academics'
     navigate_to "#{WebDriverUtils.base_url}/api/my/academics"
     wait = Selenium::WebDriver::Wait.new(:timeout => WebDriverUtils.academics_timeout)
     wait.until { driver.find_element(:xpath => '//pre[contains(.,"MyAcademics::Merged")]') }
-    body = driver.find_element(:xpath, '//pre').text
-    @parsed = JSON.parse(body)
+    @parsed = JSON.parse driver.find_element(:xpath, '//pre').text
   end
 
   def academics_date(epoch)
@@ -36,6 +33,10 @@ class ApiMyAcademicsPage
 
   def has_no_standing?
     college_and_level['empty']
+  end
+
+  def student_not_found?
+    college_and_level['studentNotFound'].blank?
   end
 
   def level
@@ -72,18 +73,13 @@ class ApiMyAcademicsPage
   end
 
   def colleges
-    colleges = []
-    colleges_and_majors.each do |college_and_major|
-      # For double majors within the same college, only show the college once
-      colleges << college_and_major['college'] unless college_and_major['college'] == ''
-    end
-    colleges
+    colleges = colleges_and_majors.map { |college| college['college'] }
+    # For double majors within the same college, only show the college once
+    colleges.reject { |college| college.blank? }
   end
 
   def majors
-    majors = []
-    colleges_and_majors.each { |college_and_major| majors << college_and_major['major'].split.join(' ') }
-    majors
+    colleges_and_majors.map { |college_and_major| college_and_major['major'].split.join(' ') }
   end
 
   def term_name
@@ -116,39 +112,14 @@ class ApiMyAcademicsPage
     @parsed['requirements'].inject({}) { |map, reqt| map[reqt['name']] = reqt; map }
   end
 
-  def writing_reqt_met?
-    reqt = requirements['UC Entry Level Writing']
-    if reqt['status'] == 'met'
-      true
-    else
-      false
-    end
-  end
-
-  def history_reqt_met?
-    reqt = requirements['American History']
-    if reqt['status'] == 'met'
-      true
-    else
-      false
-    end
-  end
-
-  def institutions_reqt_met?
-    reqt = requirements['American Institutions']
-    if reqt['status'] == 'met'
-      true
-    else
-      false
-    end
-  end
-
-  def cultures_reqt_met?
-    reqt = requirements['American Cultures']
-    if reqt['status'] == 'met'
-      true
-    else
-      false
+  def requirement_status(requirement)
+    case requirements[requirement]['status']
+      when 'met'
+        'Completed'
+      when 'exempt'
+        'Exempt'
+      else
+        'Incomplete'
     end
   end
 
@@ -166,90 +137,36 @@ class ApiMyAcademicsPage
     blocks['inactiveBlocks'] unless blocks.nil?
   end
 
-  def block_type(item)
-    item['type']
-  end
-
-  def block_reason(item)
-    item['reason']
-  end
-
-  def block_office(item)
-    item['office']
-  end
-
-  def block_date(item)
-    item['blockedDate']['dateString']
-  end
-
   def block_message(item)
     item['message']
   end
 
-  def block_cleared_date(item)
-    item['clearedDate']['dateString']
-  end
-
   def active_block_types
-    types = []
-    active_blocks.select do |item|
-      type = block_type(item)
-      types.push(type)
-    end
-    types
+    active_blocks.map { |block| block['type'] }
   end
 
   def active_block_reasons
-    reasons = []
-    active_blocks.select do |item|
-      reason = block_reason(item)
-      reasons.push(reason)
-    end
-    reasons
+    active_blocks.map { |block| block['reason'] }
   end
 
   def active_block_offices
-    offices = []
-    active_blocks.select do |item|
-      office = block_office(item)
-      offices.push(office)
-    end
-    offices
+    active_blocks.map { |block| block['office'] }
   end
 
   def active_block_dates
-    dates = []
-    active_blocks.select do |item|
-      date = (Time.strptime(block_date(item), '%m/%d/%Y')).strftime('%m/%d/%y')
-      dates.push(date)
-    end
-    dates
+    active_blocks.map { |block| Time.strptime(block['blockedDate']['dateString'], '%m/%d/%Y').strftime('%m/%d/%y') }
   end
 
   def inactive_block_types
-    types = []
-    inactive_blocks.select do |item|
-      type = block_type(item)
-      types.push(type)
-    end
-    types
+    inactive_blocks.map { |block| block['type'] }
   end
 
   def inactive_block_dates
-    dates = []
-    inactive_blocks.select do |item|
-      date = (Time.strptime(block_date(item), '%m/%d/%Y')).strftime('%m/%d/%y')
-      dates.push(date)
-    end
-    dates
+    inactive_blocks.map { |block| Time.strptime(block['blockedDate']['dateString'], '%m/%d/%Y').strftime('%m/%d/%y') }
   end
 
   def inactive_block_cleared_dates
-    dates = []
-    inactive_blocks.select do |item|
-      date = (Time.strptime(block_cleared_date(item), '%m/%d/%Y')).strftime('%m/%d/%y')
-      dates.push(date)
-    end
+    dates = inactive_blocks.map { |block| Time.strptime(block['clearedDate']['dateString'], '%m/%d/%Y').strftime('%m/%d/%y') }
     dates.sort!
   end
 
@@ -264,27 +181,19 @@ class ApiMyAcademicsPage
   end
 
   def exam_epochs
-    epochs = []
-    exam_schedules.each { |schedule| epochs.push(schedule['date']['epoch'].to_s) }
-    epochs
+    exam_schedules.map { |schedule| schedule['date']['epoch'].to_s }
   end
 
   def all_exam_dates
-    dates = []
-    exam_epochs.each { |epoch| dates.push(academics_date(epoch)) }
-    dates
+    exam_epochs.map { |epoch| academics_date epoch }
   end
 
   def all_exam_times
-    times = []
-    exam_schedules.each { |exam| times.push(exam['time']) }
-    times
+    exam_schedules.map { |exam| exam['time'] }
   end
 
   def all_exam_courses
-    courses = []
-    exam_schedules.each { |schedule| courses.push(schedule['course_code']) }
-    courses
+    exam_schedules.map { |schedule| schedule['course_code'] }
   end
 
   def exam_locations(exam)
@@ -313,15 +222,11 @@ class ApiMyAcademicsPage
   end
 
   def other_site_names(sites)
-    names = []
-    sites.each { |site| names.push(site['name']) }
-    names
+    sites.map { |site| site['name'] }
   end
 
   def other_site_descriptions(sites)
-    descriptions = []
-    sites.each { |site| descriptions.push(site['shortDescription'].gsub('  ', ' ')) }
-    descriptions
+    sites.map { |site| site['shortDescription'].gsub(/\s+/, ' ') }
   end
 
 end

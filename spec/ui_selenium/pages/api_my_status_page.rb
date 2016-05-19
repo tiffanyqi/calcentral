@@ -62,6 +62,10 @@ class ApiMyStatusPage
     roles['isDelegateUser']
   end
 
+  def is_law_student?
+    roles['law']
+  end
+
   def is_eap?
     @parsed['inEducationAbroadProgram']
   end

@@ -35,6 +35,7 @@ describe 'bCourses course site creation', :testui => true do
 
           unless links_tested
 
+            @create_course_site_page.maintenance_button_element.when_visible WebDriverUtils.page_event_timeout
             short_maintenance_notice = @create_course_site_page.maintenance_button_element.text
             it ('shows a collapsed maintenance notice') { expect(short_maintenance_notice).to include('From 8 - 9 AM, you may experience delays of up to 10 minutes') }
 
