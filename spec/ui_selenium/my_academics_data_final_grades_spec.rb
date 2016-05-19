@@ -78,7 +78,7 @@ describe 'My Academics transcripts', :testui => true do
 
                   end
 
-                elsif past_semesters.include? semester && grades.any?
+                elsif past_semesters.include?(semester) && grades.any?
 
                   courses = academics_api_page.semester_card_courses(semester, semester_courses)
                   course_codes = academics_api_page.course_codes courses
