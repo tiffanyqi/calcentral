@@ -192,7 +192,7 @@ describe EdoOracle::Queries, :ignore => true do
     end
   end
 
-  describe '.get_enrolled_students', :textext => true do
+  describe '.get_enrolled_students', :testext => true do
     let(:expected_keys) { %w(ldap_uid student_id enroll_status waitlist_position units grading_basis) }
     it 'returns enrollments for section' do
       results = EdoOracle::Queries.get_enrolled_students(section_ids[0], fall_term_id)
@@ -202,7 +202,7 @@ describe EdoOracle::Queries, :ignore => true do
     end
   end
 
-  describe '.has_instructor_history?', :textext => true do
+  describe '.has_instructor_history?', :testext => true do
     subject { EdoOracle::Queries.has_instructor_history?(ldap_uid, terms) }
     context 'when user is an instructor' do
       let(:ldap_uid) { '172701' } # Leah A Carroll - Haas Scholars Program Manager and Advisor
@@ -222,7 +222,7 @@ describe EdoOracle::Queries, :ignore => true do
     end
   end
 
-  describe '.has_student_history?', :textext => true do
+  describe '.has_student_history?', :testext => true do
     subject { EdoOracle::Queries.has_student_history?(ldap_uid, terms) }
     context 'when user has a student history' do
       let(:ldap_uid) { '184270' }
