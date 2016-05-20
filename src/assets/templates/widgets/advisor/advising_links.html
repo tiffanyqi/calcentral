@@ -50,7 +50,8 @@
   <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.multiYearAcademicPlannerGeneric.url">
     <a
       data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.multiYearAcademicPlannerGeneric.url}}"
-    >Multi-Year Planner</a>
+      data-ng-bind="ucAdvisingResources.ucAdvisingLinks.multiYearAcademicPlannerGeneric.name"
+    ></a>
   </li>
   <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.webNowDocuments.url">
     <a
