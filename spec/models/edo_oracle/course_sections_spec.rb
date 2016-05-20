@@ -2,7 +2,53 @@ describe EdoOracle::CourseSections do
 
   let(:term_id) { '2168' }
   let(:course_id) { random_id }
-  subject { described_class.new(term_id, course_id).get_section_data }
+  let(:proxy) { described_class.new term_id, course_id }
+  subject { proxy.get_section_data }
+
+  context 'translate location' do
+    shared_examples 'an intelligent parser of EDO db \'location\'' do
+      it 'should properly split \'location\' value' do
+        meeting = {
+          'location' => location
+        }
+        result = proxy.send :translate_location, meeting
+        expect(result[:buildingName]).to eq building_name
+        expect(result[:roomNumber]).to eq room_number
+      end
+    end
+    pending do
+      it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+        let(:location) { 'Pauley Ballroom' }
+        let(:building_name) { 'Pauley Ballroom' }
+        let(:room_number) { nil }
+      end
+      it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+        let(:location) { 'Off Campus' }
+        let(:building_name) { 'Off Campus' }
+        let(:room_number) { nil }
+      end
+    end
+    it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+      let(:location) { 'Internet/Online' }
+      let(:building_name) { 'Internet/Online' }
+      let(:room_number) { nil }
+    end
+    it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+      let(:location) { '2195 Hearst 330C' }
+      let(:building_name) { '2195 Hearst' }
+      let(:room_number) { '330C' }
+    end
+    it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+      let(:location) { 'Genetics & Plant Bio 104' }
+      let(:building_name) { 'Genetics & Plant Bio' }
+      let(:room_number) { '104' }
+    end
+    it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+      let(:location) { 'Unit 3 Spens-Black 3' }
+      let(:building_name) { 'Unit 3 Spens-Black' }
+      let(:room_number) { '3' }
+    end
+  end
 
   context 'working EDO connection' do
     before do
