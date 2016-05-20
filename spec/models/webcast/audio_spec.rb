@@ -2,7 +2,7 @@ require 'json'
 
 describe Webcast::Audio do
 
-  context 'real data', :textext => true do
+  context 'real data', :testext => true do
 
     let (:audio_base_url) { URI.parse(Settings.audio_proxy.base_url) }
     let (:rss_url) { "#{audio_base_url}/media/common/courses/spring_2014/rss/english_117s_001_audio.rss"; }
