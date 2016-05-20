@@ -15,6 +15,9 @@ class CanvasPage
   link(:masquerade_link, :class => 'masquerade_button')
   link(:stop_masquerading_link, :class => 'stop_masquerading')
 
+  # LTI Tools
+  link(:create_site_link, :xpath => '//a[contains(text(),"Create a Site")]')
+
   # Course
   link(:add_new_course_button, :xpath => '//a[contains(.,"Add a New Course")]')
   text_area(:course_name_input, :xpath => '//label[@for="course_name"]/../following-sibling::td/input')
@@ -143,6 +146,12 @@ class CanvasPage
   end
 
   # COURSE SITE SETUP
+
+  def click_create_site(driver)
+    WebDriverUtils.wait_for_page_and_click create_site_link_element
+    wait_until(WebDriverUtils.page_load_timeout) { driver.find_element(:id => 'tool_content') }
+    switch_to_frame driver
+  end
 
   def load_create_site_tool(driver, canvas_id, tool_id)
     navigate_to "#{WebDriverUtils.canvas_base_url}/users/#{canvas_id}/external_tools/#{tool_id}"

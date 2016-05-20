@@ -308,7 +308,7 @@ module CalCentralPages
     def click_cancel_address
       scroll_to_bottom
       WebDriverUtils.wait_for_element_and_click cancel_address_button_element
-      cancel_address_button_element.when_not_visible WebDriverUtils.page_event_timeout
+      cancel_address_button_element.when_not_visible WebDriverUtils.page_event_timeout rescue Selenium::WebDriver::Error::StaleElementReferenceError
     end
 
     def wait_for_address_form(address)
@@ -387,7 +387,7 @@ module CalCentralPages
 
     def verify_address(address, index, inputs, selections)
       wait_until(WebDriverUtils.campus_solutions_timeout, 'Timed out waiting for the new address to appear') do
-        all_formatted_addresses.find { |address| address.include? trimmed_input(inputs[0]) } rescue Selenium::WebDriver::Error::StaleElementReferenceError
+        all_formatted_addresses.find { |item| item.include? trimmed_input(inputs[0]) } rescue Selenium::WebDriver::Error::StaleElementReferenceError
       end
       logger.debug "Address displayed is \n#{formatted_address(index)}"
       inputs.each do |input|

@@ -34,14 +34,10 @@ module CalCentralPages
     def choose_course_site(driver, course, instructor, canvas, create_course_site)
       create_site_workflow = course['workflow']
       canvas.stop_masquerading driver if canvas.stop_masquerading_link?
-      if create_site_workflow == 'uid' || create_site_workflow == 'ccn'
-        canvas.load_create_site_tool(driver, UserUtils.canvas_id, WebDriverUtils.canvas_create_site_id)
-        click_create_course_site create_course_site
-      else
-        canvas.masquerade_as instructor['canvasId']
-        canvas.load_create_site_tool(driver, instructor['canvasId'], WebDriverUtils.canvas_create_site_id)
-        click_create_course_site create_course_site
-      end
+      canvas.masquerade_as instructor['canvasId'] if create_site_workflow == 'masquerade'
+      canvas.load_homepage
+      canvas.click_create_site driver
+      click_create_course_site create_course_site
     end
 
   end
