@@ -1,7 +1,7 @@
 {
-   "data": {
-        "transaction-status": "Confirmed",
-        "eft-is-active": true,
-        "account-number": 4252
+   "statusCode":200,
+   "data":{
+      "eftStatus": "active",
+      "accountNumber": "6456"
    }
 }
