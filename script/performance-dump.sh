@@ -46,6 +46,7 @@ jstack -l $TPID > "$HOME/perf-$DT-$NODE-jstack-2.txt"
 echo "`date`: About to dump server memory to file" | $LOGIT
 # This will take a LOT of space. scp and rm it ASAP.
 jmap -dump:live,format=b,file="$HOME/perf-$DT-$NODE-heap.bin" $TPID
+ruby lib/top_h_parser.rb "$HOME/perf-$DT-$NODE-top.log"
 
 echo "------------------------------------------" | $LOGIT
 echo "`date`: Performance data dumped to $HOME - copy and delete files ASAP!" | $LOGIT
