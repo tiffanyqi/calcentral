@@ -17,9 +17,8 @@ module CampusSolutions
       response.parsed_response
     end
 
-    #TODO: Replace with actual API endpoint when ready.
     def url
-      "#{@settings.base_url}/UC_FPP_ENROLLMENT_API.v1/UC_FPP_ENROLLMENT_API_GET"
+      "#{@settings.base_url}/UC_SF_FPP_LINKS_GET.v1/Get"
     end
 
   end
