@@ -1,15 +1,12 @@
 module HubEdos
   class Registrations < Proxy
 
-    include Cache::UserCacheExpiry
-
     def initialize(options = {})
       super(options)
-      @term_id = options[:term_id]
     end
 
     def url
-      "#{@settings.base_url}/#{@campus_solutions_id}/registrations?term-id=#{@term_id}"
+      "#{@settings.base_url}/#{@campus_solutions_id}/registrations"
     end
 
     def json_filename
@@ -31,10 +28,6 @@ module HubEdos
     def build_feed(response)
       resp = parse_response response
       get_students(resp)
-    end
-
-    def instance_key
-      "#{@uid}-#{@term_id}"
     end
 
     def wrapper_keys
