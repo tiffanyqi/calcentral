@@ -258,7 +258,8 @@ verify_cs "cs_fin_aid_award_compare" "${yml_features_cs_fin_aid_award_compare}" 
   "/UC_FA_AWARD_COMPARE_PRIOR.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016"
 
 verify_cs "cs_billing" "${yml_features_cs_billing}" \
-  "/UC_SF_BILLING_DETAILS.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}"
+  "/UC_SF_BILLING_DETAILS.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
+  "/UC_SF_FPP_LINKS_GET.v1/Get"
 
 verify_cs "cs_advisor_student_lookup" "${yml_features_cs_advisor_student_lookup}" \
   "/UC_CC_USER_LOOKUP.v1/lookup?NAME1=Wavy&NAME2=Gravy&AFFILIATIONS[]=STUDENT&AFFILIATIONS[]=UNDERGRAD"
@@ -268,6 +269,7 @@ verify_hub "/${CAMPUS_SOLUTIONS_ID}/academic-status" \
   "/${CAMPUS_SOLUTIONS_ID}/all" \
   "/${CAMPUS_SOLUTIONS_ID}/contacts" \
   "/${CAMPUS_SOLUTIONS_ID}/demographic" \
+  "/${CAMPUS_SOLUTIONS_ID}/registrations" \
   "/${CAMPUS_SOLUTIONS_ID}/work-experiences"
 
 echo; echo "----------------------------------------------------------------------------------------------------"; echo
