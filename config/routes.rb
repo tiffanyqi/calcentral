@@ -12,7 +12,6 @@ Calcentral::Application.routes.draw do
   get '/api/my/am_i_logged_in' => 'user_api#am_i_logged_in', :as => :am_i_logged_in, :defaults => { :format => 'json' }
   get '/api/my/status' => 'user_api#mystatus', :as => :mystatus, :defaults => { :format => 'json' }
   post '/api/my/record_first_login' => 'user_api#record_first_login', :as => :record_first_login, :defaults => { :format => 'json' }, :via => :post
-  post '/api/my/opt_out'=> 'user_api#delete', :via => :post
   post '/api/my/calendar/opt_in' => 'user_api#calendar_opt_in', :via => :post
   post '/api/my/calendar/opt_out' => 'user_api#calendar_opt_out', :via => :post
 

@@ -57,9 +57,6 @@ module CalCentralPages
 
   # Footer
   div(:toggle_footer_link, :class => 'cc-footer-berkeley')
-  button(:opt_out_button, :xpath => '//button[text()="Opt out of CalCentral"]')
-  button(:opt_out_yes, :xpath => '//button[@data-ng-click="api.user.optOut()"]')
-  button(:out_out_no, :xpath => '//button[@data-ng-click="deleteSelf=false"]')
   text_field(:basic_auth_uid_input, :name => 'email')
   text_field(:basic_auth_password_input, :name => 'password')
   button(:basic_auth_login_button, :xpath => '//button[contains(text(),"Login")]')
@@ -150,13 +147,6 @@ module CalCentralPages
       click_logout_link
       splash_page.sign_in_element.when_visible timeout
     end
-  end
-
-  def opt_out
-    logger.info('Opting out of CalCentral')
-    WebDriverUtils.wait_for_page_and_click toggle_footer_link_element
-    WebDriverUtils.wait_for_element_and_click opt_out_button_element
-    WebDriverUtils.wait_for_element_and_click opt_out_yes_element
   end
 
   def basic_auth(uid)

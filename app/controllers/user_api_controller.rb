@@ -54,15 +54,6 @@ class UserApiController < ApplicationController
     render :nothing => true, :status => 204
   end
 
-  def delete
-    if (user_id = session['user_id']) && current_user.directly_authenticated?
-      User::Api.delete user_id
-      render :nothing => true, :status => 204
-    else
-      render :nothing => true, :status => 403
-    end
-  end
-
   def calendar_opt_in
     expire_current_user
     if (user_id = session['user_id']) && current_user.directly_authenticated?

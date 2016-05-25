@@ -121,26 +121,5 @@ describe 'User authentication', :testui => true do
       end
 
     end
-
-    context 'when opting out of CalCentral' do
-
-      before(:example) do
-        @splash_page = CalCentralPages::SplashPage.new(@driver)
-        @splash_page.load_page
-        @splash_page.click_sign_in_button
-        @cal_net_auth_page.login(UserUtils.qa_username, UserUtils.qa_password)
-      end
-
-      it 'logs the user out of CalCentral' do
-        dashboard_page = CalCentralPages::MyDashboardPage.new(@driver)
-        dashboard_page.opt_out
-        @splash_page.wait_for_expected_title?
-        @splash_page.sign_in_element.when_visible(timeout=WebDriverUtils.page_event_timeout)
-        @splash_page.click_sign_in_button
-        @cal_net_auth_page.page_heading_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
-        expect(@cal_net_auth_page.username_element.visible?).to be true
-      end
-
-    end
   end
 end

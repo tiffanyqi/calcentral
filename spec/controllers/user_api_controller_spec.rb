@@ -215,23 +215,6 @@ describe UserApiController do
         end
       end
 
-      context 'opting out of calcentral entirely' do
-        before { User::Api.should_not_receive(:delete) }
-        subject do
-          post :delete
-          response.status
-        end
-        context 'when viewing as' do
-          let(:original_user_id) { random_id }
-          it { should eq 403 }
-        end
-        context 'when authenticated by LTI' do
-          let(:original_user_id) { nil }
-          before { session['lti_authenticated_only'] = true }
-          it { should eq 403 }
-        end
-      end
-
       context 'opting into the calendar integration' do
         before { Calendar::User.should_not_receive(:find_or_create_by) }
         subject do
