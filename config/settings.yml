@@ -156,9 +156,9 @@ calmail_proxy:
 
 eft_proxy:
   fake: true
-  base_url: 'https://example.com'
-  usermname: 'some_username'
-  password: 'some_password'
+  # QA Environment
+  base_url: 'https://eftstudent-qa.berkeley.edu/api/'
+  token: 'secret'
 
 regstatus_proxy:
   fake: false
