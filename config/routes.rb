@@ -192,6 +192,7 @@ Calcentral::Application.routes.draw do
   get '/api/campus_solutions/billing' => 'campus_solutions/billing#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/slr_deeplink' => 'campus_solutions/slr_deeplink#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/fpp_enrollment' => 'campus_solutions/fpp_enrollment#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/campus_solutions/emergency_contacts' => 'campus_solutions/emergency_contacts#get', :via => :get, :defaults => { :format => 'json' }
   post '/api/campus_solutions/address' => 'campus_solutions/address#post', :via => :post, :defaults => { :format => 'json' }
   post '/api/campus_solutions/email' => 'campus_solutions/email#post', :via => :post, :defaults => { :format => 'json' }
   post '/api/campus_solutions/person_name' => 'campus_solutions/person_name#post', :via => :post, :defaults => { :format => 'json' }
