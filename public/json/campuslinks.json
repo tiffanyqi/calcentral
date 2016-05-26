@@ -549,9 +549,9 @@
       ]
     },
     {
-      "name": "Billing Services",
-      "description": "Billing and payment options for students and parents",
-      "url": "http://studentbilling.berkeley.edu/",
+      "name": "Billing FAQ",
+      "description": "Frequently asked questions about billing, payments, financial aid, registration, and enrollment",
+      "url": "http://studentcentral.berkeley.edu/faqs#/faq3",
       "roles": {
         "student": true,
         "applicant": true,
@@ -788,7 +788,7 @@
     },
     {
       "name": "Cal Student Central",
-      "description": "A resourceful website with answers to the most frequently asked questions by students",
+      "description": "Providing support to your questions concerning financial aid, fees and billing, payments, disbursements, registration, and enrollment",
       "url": "http://studentcentral.berkeley.edu/",
       "roles": {
         "student": true,
@@ -1567,24 +1567,6 @@
       ]
     },
     {
-      "name": "e-bills",
-      "description": "Pay your CARS bill online with either Electronic Billing (e-Bill) or Electronic Payment (e-Check)",
-      "url": "https://bearfacts.berkeley.edu/bearfacts/student/CARS/ebill.do?bfaction=accessEBill ",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Finances",
-          "subcategory": "Billing \u0026 Payments"
-        }
-      ]
-    },
-    {
       "name": "Educational Opportunity Program",
       "description": "Guidance and resources for first generation and low-income college students.",
       "url": "http://eop.berkeley.edu",
@@ -2018,10 +2000,6 @@
         "exStudent": true
       },
       "categories": [
-        {
-          "topcategory": "Finances",
-          "subcategory": "Billing \u0026 Payments"
-        },
         {
           "topcategory": "Wellness",
           "subcategory": "Campus Health Center"
@@ -2506,7 +2484,7 @@
     },
     {
       "name": "Payment Options",
-      "description": "Learn more about the options for making payment either electronically or by check to your CARS account",
+      "description": "Learn more about the options for making payments either electronically or by check to your CARS account",
       "url": "http://studentbilling.berkeley.edu/carsPaymentOptions.htm",
       "roles": {
         "student": true,
@@ -3169,24 +3147,6 @@
       ]
     },
     {
-      "name": "Tax 1098-T Form",
-      "description": "Start here to access your 1098-T form",
-      "url": "http://studentbilling.berkeley.edu/taxpayer.htm",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Finances",
-          "subcategory": "Billing \u0026 Payments"
-        }
-      ]
-    },
-    {
       "name": "Teaching Resources",
       "description": "Resources that promotes teaching and learning including consultation and program facilitation",
       "url": "http://teaching.berkeley.edu/teaching.html",
@@ -3309,6 +3269,24 @@
         {
           "topcategory": "Tools \u0026 Resources",
           "subcategory": "Travel \u0026 Entertainment"
+        }
+      ]
+    },
+    {
+      "name": "Tuition and Fees",
+      "description": "Estimated fee schedule",
+      "url": "http://registrar.berkeley.edu/Registration/feesched.html",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Billing \u0026 Payments"
         }
       ]
     },
@@ -3539,7 +3517,7 @@
     {
       "name": "Withdrawing or Canceling?",
       "description": "Learn more about what you need to do if you are planning to cancel, withdraw and readmit to UC Berkeley",
-      "url": "http://registrar.berkeley.edu/canwd.html ",
+      "url": "http://studentcentral.berkeley.edu/withdraw",
       "roles": {
         "student": true,
         "applicant": true,
