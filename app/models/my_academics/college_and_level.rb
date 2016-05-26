@@ -72,27 +72,40 @@ module MyAcademics
     def parse_hub_plans(status)
       majors = []
       minors = []
+      plans = []
       status['studentPlans'].each do |student_plan|
+        plan_primary = !!student_plan['primary']
         if (academic_plan = student_plan['academicPlan'])
           college = academic_plan['academicProgram'].try(:[], 'program').try(:[], 'description')
-          plan = academic_plan['plan'].try(:[], 'description')
+          plan_description = academic_plan['plan'].try(:[], 'description')
           case academic_plan['type'].try(:[], 'code')
             when 'MAJ'
               majors << {
                 college: college,
-                major: plan
+                major: plan_description
               }
             when 'MIN'
               minors << {
                 college: college,
-                minor: plan
+                minor: plan_description
               }
+          end
+
+          if (plan_code = academic_plan['plan'].try(:[], 'code'))
+            plans << {
+              code: plan_code,
+              primary: plan_primary
+            }
           end
         end
       end
       {
         majors: majors,
-        minors: minors
+        minors: minors,
+        plans: plans,
+        roles: {
+          fpf: plans.any? { |plan| plan[:code] == '25000FPFU' }
+        }
       }
     end
 

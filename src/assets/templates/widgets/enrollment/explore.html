@@ -16,7 +16,19 @@
         ></div>
       </li>
     </ul>
-    <ul class="cc-list-links">
+    <ul class="cc-list-links" data-ng-if="collegeAndLevel.roles.fpf">
+      <li>
+        <a href="http://fpf.berkeley.edu/your-courses">
+          FPF Course Catalog
+        </a>
+      </li>
+      <li>
+        <a href="http://guide.berkeley.edu/">
+          Berkeley Academic Guide
+        </a>
+      </li>
+    </ul>
+    <ul class="cc-list-links" data-ng-if="!collegeAndLevel.roles.fpf">
       <li>
         <a href="http://guide.berkeley.edu/">
           Berkeley Academic Guide
