@@ -148,16 +148,6 @@ angular.module('calcentral.services').service('userService', function($http, $lo
   };
 
   /**
-   * Opt-out.
-   */
-  var optOut = function() {
-    $http.post('/api/my/opt_out').success(function() {
-      analyticsService.sendEvent('Settings', 'User opt-out');
-      signOut();
-    });
-  };
-
-  /**
    * Sign the current user in.
    */
   var signIn = function() {
@@ -205,7 +195,6 @@ angular.module('calcentral.services').service('userService', function($http, $lo
     handleAccessToPage: handleAccessToPage,
     handleRouteChange: handleRouteChange,
     handleUserLoaded: handleUserLoaded,
-    optOut: optOut,
     profile: profile,
     redirectToHome: redirectToHome,
     removeOAuth: removeOAuth,

@@ -69,18 +69,6 @@ feature 'act_as_user' do
     visit '/api/my/status'
     page.status_code.should == 200
     User::Visit.where(:uid => '4').should be_empty
-
-    # you don't want the admin user to delete an existing 'viewed as' user's data row
-    viewed_user_uid = '2040'
-    User::Data.where(:uid => viewed_user_uid).should_not be_empty
-    suppress_rails_logging {
-      act_as_user '2040'
-    }
-    page.driver.post '/api/my/opt_out'
-    page.status_code.should == 403
-    viewed_user = User::Data.where(:uid => viewed_user_uid).first
-    viewed_user.should_not be_nil
-    viewed_user.uid.should == viewed_user_uid
   end
 
   scenario 'check the footer message for a user that has logged in' do
