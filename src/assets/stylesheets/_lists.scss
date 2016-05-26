@@ -23,6 +23,13 @@
       padding-right: 8px;
     }
   }
+  .cc-list-links-nested-dash {
+    display: block;
+    margin-left: 32px;
+    &:before {
+      content: '\2013';
+    }
+  }
 }
 .cc-list-link-container {
   padding: 0 15px;

@@ -2,7 +2,44 @@
   <div class="cc-widget-title">
     <h2>Financial Resources</h2>
   </div>
-  <div data-cc-spinner-directive>
-    <div data-ng-include="'campus_link_list.html'"></div>
+  <div data-cc-spinner-directive="isLoading">
+    <div class="cc-list-link-container" data-ng-repeat="subcategory in campuslinks.data.subcategories">
+      <h3>{{subcategory}}</h3>
+      <ul class="cc-list-links">
+        <li data-ng-repeat="link in campuslinks.data.links | orderBy:'name' | campusLinksSubcategoryFilter:subcategory">
+          <a data-ng-href="{{link.url}}"
+            data-ng-click="api.analytics.trackExternalLink('Campus links', subcategory, link.url)"
+            title="{{link.description}}">{{link.name}}</a>
+        </li>
+        <li data-ng-if="subcategory === 'Billing & Payments'">
+          <a data-ng-href="{{$parent.eft.eftLink.url}}" data-ng-attr-title="{{$parent.eft.eftLink.title}}">Electronic Funds Transfer / EFT </a>
+          <span class="cc-text-green-plus" data-ng-if="$parent.eft.studentActive">
+            <span class="cc-list-links-nested-dash" data-ng-if="$parent.eft.data.data.eftStatus === 'active'">
+              Status: <i class="fa fa-check cc-icon-green"></i> Active
+            </span>
+            <span class="cc-list-links-nested-dash" data-ng-if="$parent.eft.data.data.accountNumber">
+              Account <span aria-hidden="true">#: </span>
+              <span class="cc-visuallyhidden">Number</span>
+              <span data-ng-bind="$parent.eft.data.data.accountNumber"></span>
+            </span>
+          </span>
+          <span class="cc-list-links-nested-dash" data-ng-if="!$parent.eft.studentActive">
+            Status: Not Active
+          </span>
+          <a class="cc-list-links-nested-dash" data-ng-href="{{$parent.eft.manageAccountLink.url}}" data-ng-attr-title="{{$parent.eft.manageAccountLink.title}}">
+            <strong>Manage Account</strong>
+          </a>
+        </li>
+        <li data-ng-if="subcategory === 'Billing & Payments'">
+          <a data-ng-href="{{$parent.fpp.fppLink.url}}" data-ng-attr-title="{{$parent.fpp.fppLink.title}}">Tuition and Fees Payment Plan</a>
+          <a class="cc-list-links-nested-dash"
+              data-ng-href="{{$parent.fpp.data.fppEnrollUrl.url}}"
+              data-ng-attr-title="{{$parent.fpp.activatePlanLink.title}}"
+              data-ng-if="$parent.fpp.data.fppEnrollUrl.url"><strong>Activate Plan</strong>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="cc-widget-text" data-ng-if="campuslinks.data.links.length === 0">There are no links available.</div>
   </div>
 </div>
