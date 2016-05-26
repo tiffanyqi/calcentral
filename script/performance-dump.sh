@@ -43,6 +43,11 @@ jstack -l $TPID > "$HOME/perf-$DT-$NODE-jstack-1.txt"
 echo "`date`: About to gather 15 seconds of top -H" | $LOGIT
 top -Hb -n 5 -d 3 > "$HOME/perf-$DT-$NODE-top.log"
 jstack -l $TPID > "$HOME/perf-$DT-$NODE-jstack-2.txt"
+
+echo "`date`: About to copy Torquebox log" | $LOGIT
+TORQUEBOX_LOG=$(find "$HOME/calcentral/log/" -name torquebox\*.log | sort -n | tail -1)
+cp $TORQUEBOX_LOG "$HOME/perf-$DT-$NODE-torquebox.log"
+
 echo "`date`: About to dump server memory to file" | $LOGIT
 # This will take a LOT of space. scp and rm it ASAP.
 jmap -dump:live,format=b,file="$HOME/perf-$DT-$NODE-heap.bin" $TPID
