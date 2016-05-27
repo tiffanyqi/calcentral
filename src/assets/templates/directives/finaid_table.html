@@ -7,7 +7,10 @@
     <thead>
       <tr>
         <th data-ng-bind="category.title" scope="col" width="40%"></th>
-        <th data-ng-repeat="header in category.headers" class="cc-table-right" data-ng-bind="header" scope="col" width="20%"></th>
+        <th data-ng-repeat="header in category.headers" class="cc-table-right" scope="col" width="20%">
+          <span data-ng-bind="header"></span>
+          <span data-ng-if="$last && category.change" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
+        </th>
       </tr>
     </thead>
     <tbody
@@ -17,28 +20,53 @@
       data-ng-click="!item.subItems.length || toggle($event, category.items, item, 'Financial Aid - Table')">
       <tr data-ng-if="!item.totals">
         <td data-ng-bind="item.title"></td>
-        <td data-ng-repeat="amount in item.amounts track by $index" data-cc-amount-directive="amount" data-cc-amount-directive-color="false" class="cc-table-right" data-ng-if="!item.show"></td>
-        <td data-ng-if="!item.show && item.total !== undefined" data-cc-amount-directive="item.total" data-cc-amount-directive-color="false" class="cc-table-right"></td>
-        <td data-ng-repeat="amount in item.amounts track by $index" class="cc-table-right" data-ng-if="item.show">-</td>
-        <td data-ng-if="item.show" class="cc-table-right">-</td>
+        <td data-ng-if="!item.show" data-ng-repeat="amount in item.amounts track by $index" class="cc-table-right">
+          <span data-ng-if="amount !== null" data-cc-amount-directive="amount" data-cc-amount-directive-color="false"></span>
+          <span data-ng-if="amount === null">N/A</span>
+          <span data-ng-if="$last && category.change && item.total === undefined" data-cc-amount-change-symbol-directive="item.change"></span>
+        </td>
+        <td data-ng-if="!item.show && item.total !== undefined" class="cc-table-right">
+          <span data-ng-if="item.total !== null" data-cc-amount-directive="item.total" data-cc-amount-directive-color="false"></span>
+          <span data-ng-if="item.total === null">N/A</span>
+          <span data-ng-if="category.change" data-cc-amount-change-symbol-directive="item.change"></span>
+        </td>
+        <td data-ng-if="item.show" data-ng-repeat="amount in item.amounts track by $index" class="cc-table-right">-</td>
+        <td data-ng-if="item.show" class="cc-table-right">
+          -
+          <span data-ng-if="category.change" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
+        </td>
       </tr>
       <tr data-ng-if="item.totals.length">
         <td
           data-ng-attr-colspan="{{item.totals.length + 1}}"
           class="cc-table-right cc-table-top-border cc-text-small cc-widget-finaid-table-budget-total-title cc-text-uppercase"
         >
-          <span data-ng-if="category.title === 'Standard Budget Items'">Standard Budget Total</span>
-          <span data-ng-if="category.title === 'Additional Items'">Additional Budget Total</span>
+          <span data-ng-if="category.title === 'Standard Budget Items'">
+            Standard Budget Total
+            <span data-ng-if="category.change" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
+          </span>
+          <span data-ng-if="category.title === 'Additional Items'">
+            Additional Budget Total
+            <span data-ng-if="category.change" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
+          </span>
         </td>
       </tr>
       <tr data-ng-if="item.totals.length">
         <td>&nbsp;</td>
-        <td data-ng-repeat="total in item.totals track by $index" data-cc-amount-directive="total" data-cc-amount-directive-color="false" class="cc-table-right"></td>
+        <td data-ng-repeat="total in item.totals track by $index" data-ng-if="total !== undefined" class="cc-table-right">
+          <span data-ng-if="total !== null" data-cc-amount-directive="total" data-cc-amount-directive-color="false"></span>
+          <span data-ng-if="total === null">N/A</span>
+          <span data-ng-if="$last && category.change" data-cc-amount-change-symbol-directive="item.change"></span>
+        </td>
       </tr>
       <tr data-ng-if="item.show && item.subItems.length" data-ng-repeat="subItem in item.subItems">
         <td class="cc-widget-finaid-sub-total-title" data-ng-bind="subItem.title"></td>
         <td data-ng-repeat="amount in subItem.amounts track by $index" data-cc-amount-directive="amount" data-cc-amount-directive-color="false" class="cc-table-right"></td>
-        <td data-cc-amount-directive="subItem.total" data-cc-amount-directive-color="false" class="cc-table-right"></td>
+        <td class="cc-table-right">
+          <span data-ng-if="subItem.total !== null" data-cc-amount-directive="subItem.total" data-cc-amount-directive-color="false"></span>
+          <span data-ng-if="subItem.total === null">N/A</span>
+          <span data-ng-if="category.change" data-cc-amount-change-symbol-directive="subItem.change"></span>
+        </td>
       </tr>
     </tbody>
   </table>

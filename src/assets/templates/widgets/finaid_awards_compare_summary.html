@@ -1,16 +1,15 @@
 <div>
   <h4 class="show-for-small-only cc-text-light" data-ng-bind="type.title"></h4>
-  <div data-ng-repeat="items in finaidAwardsCompare.data[type.id].status.categories[0].itemGroups">
-    <div data-ng-repeat="item in items" class="cc-flex cc-flex-space-between">
-      <div>
-        <strong data-ng-bind="item.title"></strong>
-      </div>
-      <div>
-        <div data-ng-bind="item.value" data-ng-if="item.value"></div>
-        <div data-ng-if="item.values">
-          <div data-ng-repeat="value in item.values" class="cc-text-right">
-            <div data-ng-bind="value.subvalue.join(' &bull; ')"></div>
-          </div>
+  <div data-ng-repeat="item in finaidAwardsCompare.data[type.id].summary" class="cc-flex cc-flex-space-between">
+    <div>
+      <strong data-ng-bind="item.title"></strong>
+    </div>
+    <div data-ng-if="item.values">
+      <div data-ng-repeat="value in item.values track by $index" class="cc-text-right">
+        <div>
+          <span data-ng-bind="'&nbsp;' + value.subvalue.join(' &bull; ')"></span>
+          <span data-ng-if="$first" data-cc-amount-change-symbol-directive="item.change"></span>
+          <span data-ng-if="!$first" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
         </div>
       </div>
     </div>

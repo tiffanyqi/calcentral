@@ -1,3 +1,7 @@
+$cc-color-amount-deleted-color: #c10006;
+$cc-color-amount-added-color: #008040;
+$cc-color-amount-changed-color: #a79526;
+
 .cc-finaid-compare-awards-margin-top {
   margin-top: 10px;
 }
@@ -38,5 +42,17 @@
         padding-left: 0;
       }
     }
+  }
+}
+
+.cc-finaid-compare-change-icons {
+  &.cc-amount-deleted-icon {
+    color: $cc-color-amount-deleted-color;
+  }
+  &.cc-amount-added-icon {
+    color: $cc-color-amount-added-color;
+  }
+  &.cc-amount-changed-icon {
+    color: $cc-color-amount-changed-color;
   }
 }
