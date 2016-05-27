@@ -10,7 +10,8 @@ angular.module('calcentral.directives').directive('ccFinaidTableDirective', func
     templateUrl: 'directives/finaid_table.html',
     scope: {
       data: '=',
-      toggle: '='
+      toggle: '=',
+      changeTags: '='
     }
   };
 });

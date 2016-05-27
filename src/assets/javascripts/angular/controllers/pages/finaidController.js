@@ -14,6 +14,13 @@ angular.module('calcentral.controllers').controller('FinaidController', function
     isLoading: true,
     backToText: 'My Finances'
   };
+  $scope.changeTags = {
+    added: 'added',
+    deleted: 'deleted',
+    changed: 'changed',
+    same: 'same',
+    blank: 'blank'
+  };
 
   /**
    * Set whether you can a user can see the finaid year data
