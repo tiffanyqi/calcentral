@@ -134,7 +134,8 @@
                         }
                       },
                       "plan": {
-                        "description": "Art History",
+                        "code": "25090U",
+                        "description": "Art BA",
                         "fromDate": "2016-01-12"
                       },
                       "type": {

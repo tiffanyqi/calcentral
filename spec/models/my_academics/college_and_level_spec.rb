@@ -67,8 +67,37 @@ describe 'MyAcademics::CollegeAndLevel' do
     it 'translates minors' do
       expect(feed[:collegeAndLevel][:minors].first).to eq({
         college: 'Undergrad Letters & Science',
-        minor: 'Art History'
+        minor: 'Art BA'
       })
+    end
+
+    it 'translates plans' do
+      expect(feed[:collegeAndLevel][:plans]).to eq(
+        [
+          {
+            :code => "25345U",
+            :primary => true
+          },
+          {
+            :code => "25090U",
+            :primary => false
+          },
+        ]
+      )
+    end
+
+    it 'specifies cpp roles' do
+      expect(feed[:collegeAndLevel][:roles]).to eq({
+        fpf: false
+      })
+    end
+
+    context 'fpf plan is present' do
+      it 'includes fpf role' do
+        expect(feed[:collegeAndLevel][:roles]).to eq({
+          fpf: false
+        })
+      end
     end
 
     it 'specifies term name' do
