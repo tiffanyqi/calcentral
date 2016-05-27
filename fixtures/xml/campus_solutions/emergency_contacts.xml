@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<STUDENTS xmlns="http://bcs.is.berkeley.edu">
+  <STUDENT>
+    <EMERGENCY_CONTACTS>
+      <EMERGENCY_CONTACT type="boolean">
+        <student-id>24172048</student-id>
+        <CONTACT_NAME>Chet</CONTACT_NAME>
+        <ADDRESS1>123 4th St.</ADDRESS1>
+        <ADDRESS2>Apt. XYZ</ADDRESS2>
+        <ADDRESS3>Aisle 3</ADDRESS3>
+        <ADDRESS4/>
+        <ADDR_FIELD1/>
+        <ADDR_FIELD2/>
+        <ADDR_FIELD3/>
+        <CITY>Antioch</CITY>
+        <COUNTRY>USA</COUNTRY>
+        <COUNTRY_DESCR>United States</COUNTRY_DESCR>
+        <COUNTY>Contra Costa</COUNTY>
+        <HOUSE_TYPE/>
+        <NUM1/>
+        <NUM2/>
+        <STATE>CA</STATE>
+        <STATE_DESCR>California</STATE_DESCR>
+        <POSTAL>94509</POSTAL>
+        <ADDRESS_TYPE/>
+        <GEO_CODE/>
+        <IN_CITY_LIMIT/>
+        <SAME_ADDRESS_EMPL>N</SAME_ADDRESS_EMPL>
+        <SAME_PHONE_EMPL>N</SAME_PHONE_EMPL>
+        <EMAIL_ADDR>contact@foobarbaz.quux</EMAIL_ADDR>
+        <RELATIONSHIP>FR</RELATIONSHIP>
+        <RELATIONSHIP_DESCR>Friend</RELATIONSHIP_DESCR>
+        <PRIMARY_CONTACT>N</PRIMARY_CONTACT>
+        <FORMATTED_ADDRESS>
+          123 4th St.\nApt. XYZ\nAisle 3\nAntioch, California 94509
+        </FORMATTED_ADDRESS>
+      </EMERGENCY_CONTACT>
+      <EMERGENCY_CONTACT type="boolean">
+        <student-id>24172048</student-id>
+        <CONTACT_NAME>Mom</CONTACT_NAME>
+        <ADDRESS1>6966 PARKSIDE AVENUE</ADDRESS1>
+        <ADDRESS2/>
+        <ADDRESS3/>
+        <ADDRESS4/>
+        <ADDR_FIELD1/>
+        <ADDR_FIELD2/>
+        <ADDR_FIELD3/>
+        <CITY>SAN DIEGO</CITY>
+        <COUNTRY>USA</COUNTRY>
+        <COUNTRY_DESCR>United States</COUNTRY_DESCR>
+        <COUNTY/>
+        <HOUSE_TYPE/>
+        <NUM1/>
+        <NUM2/>
+        <STATE>CA</STATE>
+        <STATE_DESCR>California</STATE_DESCR>
+        <POSTAL>92139-3832</POSTAL>
+        <ADDRESS_TYPE>HOME</ADDRESS_TYPE>
+        <GEO_CODE/>
+        <IN_CITY_LIMIT/>
+        <SAME_ADDRESS_EMPL>Y</SAME_ADDRESS_EMPL>
+        <SAME_PHONE_EMPL>Y</SAME_PHONE_EMPL>
+        <EMAIL_ADDR/>
+        <RELATIONSHIP>P</RELATIONSHIP>
+        <RELATIONSHIP_DESCR>Parent</RELATIONSHIP_DESCR>
+        <PRIMARY_CONTACT>Y</PRIMARY_CONTACT>
+        <FORMATTED_ADDRESS>
+          6966 PARKSIDE AVENUE\nSAN DIEGO, California 92139-3832
+        </FORMATTED_ADDRESS>
+        <EMERGENCY_PHONES>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>Y</PRIMARY_PHONE>
+            <PHONE_TYPE>LOCL</PHONE_TYPE>
+            <PHONE_TYPE_DESCR>Local</PHONE_TYPE_DESCR>
+            <PHONE>619/370-4644</PHONE>
+            <EXTENSION/>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+        </EMERGENCY_PHONES>
+      </EMERGENCY_CONTACT>
+      <EMERGENCY_CONTACT type="boolean">
+        <student-id>24172048</student-id>
+        <CONTACT_NAME>Nancy</CONTACT_NAME>
+        <ADDRESS1>567 8th Ave.</ADDRESS1>
+        <ADDRESS2/>
+        <ADDRESS3/>
+        <ADDRESS4/>
+        <ADDR_FIELD1/>
+        <ADDR_FIELD2/>
+        <ADDR_FIELD3/>
+        <CITY>New York</CITY>
+        <COUNTRY>USA</COUNTRY>
+        <COUNTRY_DESCR>United States</COUNTRY_DESCR>
+        <COUNTY/>
+        <HOUSE_TYPE/>
+        <NUM1/>
+        <NUM2/>
+        <STATE>NY</STATE>
+        <STATE_DESCR>New York</STATE_DESCR>
+        <POSTAL>10001</POSTAL>
+        <ADDRESS_TYPE/>
+        <GEO_CODE/>
+        <IN_CITY_LIMIT/>
+        <SAME_ADDRESS_EMPL>N</SAME_ADDRESS_EMPL>
+        <SAME_PHONE_EMPL>N</SAME_PHONE_EMPL>
+        <EMAIL_ADDR/>
+        <RELATIONSHIP>SB</RELATIONSHIP>
+        <RELATIONSHIP_DESCR>Sibling</RELATIONSHIP_DESCR>
+        <PRIMARY_CONTACT>N</PRIMARY_CONTACT>
+        <FORMATTED_ADDRESS>567 8th Ave.\nNew York, New York 10001</FORMATTED_ADDRESS>
+        <EMERGENCY_PHONES>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE/>
+            <PHONE_TYPE_DESCR/>
+            <PHONE>123/456-7890</PHONE>
+            <EXTENSION>121</EXTENSION>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+        </EMERGENCY_PHONES>
+      </EMERGENCY_CONTACT>
+      <EMERGENCY_CONTACT type="boolean">
+        <student-id>24172048</student-id>
+        <CONTACT_NAME>PhoneGuy</CONTACT_NAME>
+        <ADDRESS1/>
+        <ADDRESS2/>
+        <ADDRESS3/>
+        <ADDRESS4/>
+        <ADDR_FIELD1/>
+        <ADDR_FIELD2/>
+        <ADDR_FIELD3/>
+        <CITY/>
+        <COUNTRY>USA</COUNTRY>
+        <COUNTRY_DESCR>United States</COUNTRY_DESCR>
+        <COUNTY/>
+        <HOUSE_TYPE/>
+        <NUM1/>
+        <NUM2/>
+        <STATE/>
+        <STATE_DESCR/>
+        <POSTAL/>
+        <ADDRESS_TYPE/>
+        <GEO_CODE/>
+        <IN_CITY_LIMIT/>
+        <SAME_ADDRESS_EMPL>N</SAME_ADDRESS_EMPL>
+        <SAME_PHONE_EMPL>N</SAME_PHONE_EMPL>
+        <EMAIL_ADDR/>
+        <RELATIONSHIP>R</RELATIONSHIP>
+        <RELATIONSHIP_DESCR>Other Relative</RELATIONSHIP_DESCR>
+        <PRIMARY_CONTACT>N</PRIMARY_CONTACT>
+        <FORMATTED_ADDRESS/>
+        <EMERGENCY_PHONES>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE/>
+            <PHONE_TYPE_DESCR/>
+            <PHONE>123/456-7890</PHONE>
+            <EXTENSION/>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE>BUSN</PHONE_TYPE>
+            <PHONE_TYPE_DESCR>Business</PHONE_TYPE_DESCR>
+            <PHONE>987/654-3210</PHONE>
+            <EXTENSION>9876</EXTENSION>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE>CAMP</PHONE_TYPE>
+            <PHONE_TYPE_DESCR>Campus</PHONE_TYPE_DESCR>
+            <PHONE>876/543-2109</PHONE>
+            <EXTENSION/>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE>CELL</PHONE_TYPE>
+            <PHONE_TYPE_DESCR>Mobile</PHONE_TYPE_DESCR>
+            <PHONE>654.321.0987</PHONE>
+            <EXTENSION/>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE>HOME</PHONE_TYPE>
+            <PHONE_TYPE_DESCR>Home/Permanent</PHONE_TYPE_DESCR>
+            <PHONE>765/432-1098</PHONE>
+            <EXTENSION/>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE>INTL</PHONE_TYPE>
+            <PHONE_TYPE_DESCR>International</PHONE_TYPE_DESCR>
+            <PHONE>011/011-0111</PHONE>
+            <EXTENSION/>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE>LOCL</PHONE_TYPE>
+            <PHONE_TYPE_DESCR>Local</PHONE_TYPE_DESCR>
+            <PHONE>415/415-4154</PHONE>
+            <EXTENSION/>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+          <EMERGENCY_PHONE>
+            <PRIMARY_PHONE>N</PRIMARY_PHONE>
+            <PHONE_TYPE>OTR</PHONE_TYPE>
+            <PHONE_TYPE_DESCR>Other</PHONE_TYPE_DESCR>
+            <PHONE>000.000.0000</PHONE>
+            <EXTENSION/>
+            <COUNTRY_CODE/>
+          </EMERGENCY_PHONE>
+        </EMERGENCY_PHONES>
+      </EMERGENCY_CONTACT>
+    </EMERGENCY_CONTACTS>
+  </STUDENT>
+</STUDENTS>

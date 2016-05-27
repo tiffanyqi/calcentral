@@ -85,7 +85,14 @@ angular.module('calcentral.services').service('profileService', function() {
   };
 
   /**
-   * Prepare formattedAddress by replacing '\\n' with '\n'.
+   * Process a single formattedAddress by replacing '\\n' with '\n'.
+   */
+  var fixFormattedAddress = function(formattedAddress) {
+    return formattedAddress.replace(/\\n/g, '\n');
+  };
+
+  /**
+   * Process an array of formattedAddresses by replacing '\\n' with '\n'.
    */
   var fixFormattedAddresses = function(addresses) {
     if (!addresses) {
@@ -199,6 +206,7 @@ angular.module('calcentral.services').service('profileService', function() {
     filterTypes: filterTypes,
     findPreferred: findPreferred,
     findPrimary: findPrimary,
+    fixFormattedAddress: fixFormattedAddress,
     fixFormattedAddresses: fixFormattedAddresses,
     matchFields: matchFields,
     parseSection: parseSection,

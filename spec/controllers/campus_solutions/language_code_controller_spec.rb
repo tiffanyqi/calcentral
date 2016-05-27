@@ -1,5 +1,5 @@
 describe CampusSolutions::LanguageCodeController do
-  context 'language feed' do
+  context 'language codes feed' do
     let(:feed) { :get }
     it_behaves_like 'an unauthenticated user'
     context 'authenticated user' do
@@ -9,4 +9,3 @@ describe CampusSolutions::LanguageCodeController do
     end
   end
 end
-
