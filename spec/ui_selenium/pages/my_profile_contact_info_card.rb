@@ -282,12 +282,6 @@ module CalCentralPages
       address_types.index(type)
     end
 
-    def scroll_to_bottom
-      # Scroll to the bottom of the page in case the page element is not in view
-      sleep 1
-      execute_script('window.scrollTo(0, document.body.scrollHeight);')
-    end
-
     def click_add_address
       click_cancel_address if cancel_address_button_element.visible?
       WebDriverUtils.wait_for_element_and_click add_address_button_element
