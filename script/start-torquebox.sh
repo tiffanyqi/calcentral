@@ -25,7 +25,11 @@ echo "------------------------------------------" | $LOGIT
 echo "`date`: Starting CalCentral..." | $LOGIT
 OPTS=${CALCENTRAL_JRUBY_OPTS:="-Xcompile.invokedynamic=false -Xcext.enabled=true -J-Djruby.thread.pool.enabled=true -J-Djava.io.tmpdir=$PWD/tmp"}
 export JRUBY_OPTS=$OPTS
-JVM_OPTS=${CALCENTRAL_JVM_OPTS:="\-server \-verbose:gc \-XX:+PrintGCDateStamps \-XX:+PrintGCCause \-XX:+PrintGCDetails \-XX:+UseConcMarkSweepGC \-Xms3000m \-Xmx3000m \-Xmn500m \-XX:ReservedCodeCacheSize=256m \-XX:+UseCodeCacheFlushing"}
+
+#JVM_OPTS=${CALCENTRAL_JVM_OPTS:="\-server \-verbose:gc \-XX:+PrintGCDateStamps \-XX:+PrintGCCause \-XX:+PrintGCDetails \-XX:+UseConcMarkSweepGC \-Xms3000m \-Xmx3000m \-Xmn500m \-XX:ReservedCodeCacheSize=256m \-XX:+UseCodeCacheFlushing"}
+# Limit Metaspace size to reduce potential impact on system memory.
+JVM_OPTS=${CALCENTRAL_JVM_OPTS:="\-server \-verbose:gc \-XX:MaxMetaspaceSize=1024m \-XX:+PrintGCDateStamps \-XX:+PrintGCCause \-XX:+PrintGCDetails \-XX:+UseConcMarkSweepGC \-Xms3000m \-Xmx3000m \-Xmn500m \-XX:ReservedCodeCacheSize=256m \-XX:+UseCodeCacheFlushing"}
+
 LOG_DIR=${CALCENTRAL_LOG_DIR:=`pwd`"/log"}
 MAX_THREADS=${CALCENTRAL_MAX_THREADS:="90"}
 export CALCENTRAL_LOG_DIR=$LOG_DIR
