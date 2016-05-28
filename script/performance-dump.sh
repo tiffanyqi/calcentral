@@ -44,6 +44,9 @@ echo "`date`: About to gather 15 seconds of top -H" | $LOGIT
 top -Hb -n 5 -d 3 > "$HOME/perf-$DT-$NODE-top.log"
 jstack -l $TPID > "$HOME/perf-$DT-$NODE-jstack-2.txt"
 
+echo "`date`: About to collect class loader stats" | $LOGIT
+jmap -clstats $TPID > "$HOME/perf-$DT-$NODE-clstats.txt"
+
 echo "`date`: About to copy Torquebox log" | $LOGIT
 TORQUEBOX_LOG=$(find "$HOME/calcentral/log/" -name torquebox\*.log | sort -n | tail -1)
 cp $TORQUEBOX_LOG "$HOME/perf-$DT-$NODE-torquebox.log"
