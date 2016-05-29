@@ -61,7 +61,11 @@ gem 'active_attr', '~> 0.8.5'
 gem 'jruby-activemq', '~> 5.13.0', git: 'https://github.com/ets-berkeley-edu/jruby-activemq.git'
 
 # To support TLSv1.2
-gem 'jruby-openssl', '~> 0.9.16'
+gem 'jruby-openssl', '0.9.7'
+# gem 'jruby-openssl', '~> 0.9.16'
+# gem 'jruby-openssl', git: 'https://github.com/jruby/jruby-openssl.git'
+# gem 'jruby-openssl', '0.9.17.dev'
+# gem 'bouncy-castle-java'
 
 # Addressable is a replacement for the URI implementation that is part of Ruby's standard library.
 # https://github.com/sporkmonger/addressable
