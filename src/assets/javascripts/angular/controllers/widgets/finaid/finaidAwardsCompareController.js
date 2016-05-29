@@ -334,15 +334,19 @@ angular.module('calcentral.controllers').controller('FinaidAwardsCompareControll
 
     // Re-add the Grand Total category.
     var priorGrandTotalCategory = priorCategoriesByTitle[grandTotalTitle];
-    priorGrandTotalCategory.change = $scope.changeTags.blank;
-    priorPackages.push(priorGrandTotalCategory);
+    if (priorGrandTotalCategory) {
+      priorGrandTotalCategory.change = $scope.changeTags.blank;
+      priorPackages.push(priorGrandTotalCategory);
+    }
     var currentGrandTotalCategory = currentCategoriesByTitle[grandTotalTitle];
-    currentGrandTotalCategory.change = $scope.changeTags.blank;
-    currentGrandTotalCategory.items[0].change = findChange(
-      _.last(currentGrandTotalCategory.items[0].amounts),
-      _.last(priorGrandTotalCategory.items[0].amounts)
-    );
-    currentPackages.push(currentGrandTotalCategory);
+    if (currentGrandTotalCategory) {
+      currentGrandTotalCategory.change = $scope.changeTags.blank;
+      _.get(currentGrandTotalCategory, 'items[0]').change = findChange(
+        _.last(_.get(currentGrandTotalCategory, 'items[0].amounts')),
+        _.last(_.get(priorGrandTotalCategory, 'items[0].amounts'))
+      );
+      currentPackages.push(currentGrandTotalCategory);
+    }
 
     $scope.finaidAwardsCompare.data.prior.packages = priorPackages;
     $scope.finaidAwardsCompare.data.current.packages = currentPackages;
