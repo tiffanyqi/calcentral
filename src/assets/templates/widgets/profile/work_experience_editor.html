@@ -10,7 +10,7 @@
         <label for="cc-page-widget-profile-work-experience-employment-descr">
             <strong>Employer</strong> <span class="cc-text-light">(Required)</span>
         </label>
-        <input type="text" data-ng-model="currentObject.data.employmentDescr" id="cc-page-widget-profile-work-experience-employment-descr" required aria-required="true" />
+        <input type="text" data-ng-model="currentObject.data.employmentDescr" id="cc-page-widget-profile-work-experience-employment-descr" required aria-required="true">
       </div>
 
       <div class="cc-page-widget-profile-margin-top" data-ng-include="'widgets/profile/address.html'"></div>
@@ -21,7 +21,7 @@
         </label>
       </div>
       <div>
-        <input type="text" id="cc-page-widget-profile-work-experience-phone-number" data-ng-model="currentObject.data.phone" maxlength="24" />
+        <input type="text" id="cc-page-widget-profile-work-experience-phone-number" data-ng-model="currentObject.data.phone" maxlength="24">
       </div>
 
       <div class="cc-page-widget-profile-margin-top">
@@ -36,7 +36,7 @@
             name="cc_page_widget_profile_work_experience_start_date"
             id="cc-page-widget-profile-work-experience-start-date"
             placeholder="mm/dd/yyyy"
-            data-cc-date-validator-directive />
+            data-cc-date-validator-directive>
           <p class="cc-alert cc-alert-text" role="alert" data-ng-show="cc_page_widget_profile_work_experience.cc_page_widget_profile_work_experience_start_date.$error.ccDateValidator">
             Please use mm/dd/yyyy date format
           </p>
@@ -60,7 +60,7 @@
             name="cc_page_widget_profile_work_experience_end_date"
             id="cc-page-widget-profile-work-experience-end-date"
             placeholder="mm/dd/yyyy"
-            data-cc-date-validator-directive />
+            data-cc-date-validator-directive>
           <p class="cc-alert cc-alert-text" role="alert" data-ng-show="cc_page_widget_profile_work_experience.cc_page_widget_profile_work_experience_end_date.$error.ccDateValidator">
             Please use mm/dd/yyyy date format
           </p>
@@ -76,7 +76,7 @@
         <label for="cc-page-widget-profile-work-experience-job-title">
           <strong>Job Title</strong>
         </label>
-        <input type="text" data-ng-model="currentObject.data.titleLong" id="cc-page-widget-profile-work-experience-job-title" />
+        <input type="text" data-ng-model="currentObject.data.titleLong" id="cc-page-widget-profile-work-experience-job-title">
       </div>
 
       <fieldset class="cc-page-widget-profile-fieldset">
@@ -85,7 +85,7 @@
         </legend>
         <div data-ng-repeat="value in employFracValues">
           <label>
-            <input type="radio" data-ng-model="currentObject.data.employFrac" data-ng-value="value.value" />
+            <input type="radio" data-ng-model="currentObject.data.employFrac" data-ng-value="value.value">
             <span data-ng-bind="value.label"></span>
           </label>
         </div>
@@ -95,7 +95,7 @@
         <label for="cc-page-widget-profile-work-experience-ending-pay-rate">
           <strong>Ending Pay Rate</strong>
         </label>
-        <input type="text" data-ng-model="currentObject.data.endingPayRate" id="cc-page-widget-profile-work-experience-ending-pay-rate" />
+        <input type="text" data-ng-model="currentObject.data.endingPayRate" id="cc-page-widget-profile-work-experience-ending-pay-rate">
       </div>
 
       <div>
@@ -112,7 +112,7 @@
         <label for="cc-page-widget-profile-work-experience-hours-per-week">
           <strong>Hours Per Week</strong>
         </label>
-        <input type="text" data-ng-model="currentObject.data.hoursPerWeek" id="cc-page-widget-profile-work-experience-hours-per-week" />
+        <input type="text" data-ng-model="currentObject.data.hoursPerWeek" id="cc-page-widget-profile-work-experience-hours-per-week">
       </div>
 
       <div>

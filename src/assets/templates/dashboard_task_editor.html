@@ -9,7 +9,7 @@
       <input
         data-cc-focus-directive="addEditTask.focusInput"
         data-ng-model="addEditTask.title" id="cc-widget-tasks-addtask-title-{{$parent.$id}}"
-        type="text" placeholder="Enter your task title here" required aria-required="true" />
+        type="text" placeholder="Enter your task title here" required aria-required="true">
     </div>
   </div>
   <div class="row collapse">
@@ -22,7 +22,7 @@
         name="add_task_due_date"
         id="cc-widget-tasks-addtask-date-{{$parent.$id}}"
         placeholder="mm/dd/yyyy"
-        data-cc-date-validator-directive />
+        data-cc-date-validator-directive>
       <p class="cc-alert cc-alert-text" role="alert" data-ng-show="cc_widget_tasks_form.add_task_due_date.$error.ccDateValidator">
         Please use mm/dd/yyyy date format
       </p>
@@ -63,11 +63,11 @@
       </button>
       <button class="cc-button" type="reset"
         data-ng-show="!editorEnabled"
-        data-ng-click="addEditTask.title='';toggleAddTask()" />Cancel
+        data-ng-click="addEditTask.title='';toggleAddTask()">Cancel
       </button>
       <button class="cc-button" type="button"
         data-ng-show="editorEnabled"
-        data-ng-click="disableEditor()" />Cancel
+        data-ng-click="disableEditor()">Cancel
       </button>
     </div>
   </div>

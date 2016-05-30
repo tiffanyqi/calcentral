@@ -9,23 +9,23 @@
     <div data-ng-if="!finaidSummaryInfo.errored">
       <div data-ng-if="finaidSummary.finaidYears.length">
         <div data-ng-include="'widgets/finaid_summary_aidyear.html'"></div>
-        <hr data-ng-if="selected.finaidYear.availableSemesters.length" aria-hidden="true" />
+        <hr data-ng-if="selected.finaidYear.availableSemesters.length" aria-hidden="true">
         <div data-ng-include="'widgets/finaid_summary_approvals.html'"></div>
         <div data-ng-if="canSeeFinaidData">
           <div data-ng-include="'widgets/finaid_summary_semester.html'"></div>
           <div data-cc-spinner-directive="finaidSummaryInfo.isLoadingData">
             <div data-ng-include="'widgets/finaid_summary_netcost.html'"></div>
-            <hr data-ng-if="!finaidSummaryData.netCost" aria-hidden="true" />
+            <hr data-ng-if="!finaidSummaryData.netCost" aria-hidden="true">
             <div data-ng-include="'widgets/finaid_summary_fundingoffered.html'"></div>
           </div>
         </div>
-        <hr aria-hidden="true" />
+        <hr aria-hidden="true">
       </div>
       <div data-ng-if="!finaidSummary.finaidYears.length" data-ng-include="'widgets/finaid_not_available.html'"></div>
     </div>
     <div data-ng-if="finaidSummaryInfo.errored">
       <div data-ng-include="'widgets/finaid_errored.html'"></div>
-      <hr aria-hidden="true" />
+      <hr aria-hidden="true">
     </div>
     <div data-ng-include="'widgets/finaid_summary_footer.html'"></div>
   </div>

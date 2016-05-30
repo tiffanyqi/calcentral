@@ -39,7 +39,7 @@
           <span data-ng-bind-template="{{eligible.deptName}} {{eligible.catalogId}} {{eligible.instructionFormat}} {{eligible.sectionNumber}}"></span>
           <span data-ng-if="eligible.userCanSignUp">
               | <a data-ng-href="{{eligible.signUpURL}}">Sign up</a>
-          </span><br/>
+          </span><br>
           <span data-ng-if="eligible.webcastAuthorizedInstructors && eligible.webcastAuthorizedInstructors.length > 1">
             This class has co-instructors. All qualified instructors must sign up before classes are recorded.
           </span>

@@ -14,7 +14,7 @@
         <p>Preferred names are limited to alphabetical characters (A-Z), spaces, and hyphens. Consecutive spaces or hyphens are not allowed.</p>
         <input type="text" id="cc-page-widget-basic-preferred-first-name" name="preferred_first_name" required aria-required="true" maxlength="30"
           data-ng-class="{'cc-page-widget-profile-section-input-error': cc_page_widget_basic_preferred_name.preferred_first_name.$invalid}"
-          data-ng-model="currentObject.data.givenName" data-ng-pattern="preferredNamePattern" />
+          data-ng-model="currentObject.data.givenName" data-ng-pattern="preferredNamePattern">
         <div class="cc-page-widget-profile-section-input-error-message cc-text-red" data-ng-if="cc_page_widget_basic_preferred_name.preferred_first_name.$invalid">
           <i class="cc-icon-red fa fa-exclamation-circle"></i>
           <strong>Invalid entry: </strong><span>Preferred name can only consist of letters, spaces, and hyphens. Please re-enter.</span>

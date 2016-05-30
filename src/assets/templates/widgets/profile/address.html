@@ -16,7 +16,7 @@
         <strong data-ng-if="isWorkExperience" data-ng-bind="field.label"></strong>
         <span data-ng-if="!isWorkExperience" data-ng-bind="field.label"></span>
       </label>
-      <input type="text" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-model="currentObject.data[field.field]" data-ng-attr-maxlength="{{field.length}}" />
+      <input type="text" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-model="currentObject.data[field.field]" data-ng-attr-maxlength="{{field.length}}">
     </div>
     <div data-ng-if="field.field === 'state' && states.length">
       <label data-ng-attr-for="cc-page-widget-profile-field-{{$index}}">

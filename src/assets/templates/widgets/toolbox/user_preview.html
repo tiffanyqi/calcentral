@@ -43,7 +43,7 @@
                   <div data-ng-bind="address.countryCode" data-ng-if="address.countryCode !== 'USA'"></div>
                 </div>
               </div>
-              <br/>
+              <br>
               <div class="cc-widget-vertical-padding" data-ng-repeat="phone in targetUser.phones">
                 <div>
                   <strong data-ng-bind-template="{{phone.type.description}} Phone"></strong>
@@ -54,7 +54,7 @@
                   <span data-ng-if="phone.extension" data-ng-bind-template="ext. {{phone.extension}}"></span>
                 </div>
               </div>
-              <br/>
+              <br>
               <div class="cc-widget-vertical-padding" data-ng-repeat="email in targetUser.emails">
                 <div>
                   <strong data-ng-bind-template="{{email.type.description}} Email"></strong>

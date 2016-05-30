@@ -15,7 +15,7 @@
           data-ng-change="bConnected.isCalendarOptedIn ? api.user.calendarOptIn() : api.user.calendarOptOut()"
           data-ng-disabled="!api.user.profile.hasGoogleAccessToken"
           data-ng-model="bConnected.isCalendarOptedIn"
-        />
+       >
       <label data-ng-class="{'cc-text-light':(!api.user.profile.hasGoogleAccessToken)}" for="cc-profile-bconnected-service-calendar-optin">Add my class schedule to my bConnected calendar. (Changes take effect within a day)</label>
     </div>
   </div>
