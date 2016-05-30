@@ -18,8 +18,23 @@
         </ITEM_GROUPS>
         <ITEM_GROUPS type="array">
           <ITEM>
+            <TITLE>Dependency Status</TITLE>
+            <VALUE>Dependent</VALUE>
+          </ITEM>
+        </ITEM_GROUPS>
+        <ITEM_GROUPS type="array">
+          <ITEM>
             <TITLE>Housing</TITLE>
-            <VALUES type="array" />
+            <VALUES type="array">
+              <VALUE>
+                <SUBVALUE>Fall</SUBVALUE>
+                <SUBVALUE>Room And Board - Res. Hall</SUBVALUE>
+              </VALUE>
+              <VALUE>
+                <SUBVALUE>Spring</SUBVALUE>
+                <SUBVALUE>Room And Board - Res. Hall</SUBVALUE>
+              </VALUE>
+            </VALUES>
           </ITEM>
         </ITEM_GROUPS>
         <ITEM_GROUPS type="array" />
@@ -107,4 +122,77 @@
       </DATA>
     </FULLYEAR>
   </COA>
+  <AWARDS>
+    <SEMESTER>
+      <DATA type="array">
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Fall</HEADER>
+            <HEADER>Spring</HEADER>
+            <HEADER>Total</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <AMOUNTS type="array">
+                <AMOUNT type="float">2750</AMOUNT>
+                <AMOUNT type="float">2750</AMOUNT>
+              </AMOUNTS>
+              <TOTAL type="float">5500</TOTAL>
+              <TITLE>Conditional Unsubsidized Fed D</TITLE>
+            </ITEM>
+            <ITEM>
+              <TOTALS type="array">
+                <TOTAL type="float">2750</TOTAL>
+                <TOTAL type="float">2750</TOTAL>
+                <TOTAL type="float">5500</TOTAL>
+              </TOTALS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>UnSubsidized Loans</TITLE>
+        </DATA_ITEM>
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Fall</HEADER>
+            <HEADER>Spring</HEADER>
+            <HEADER>Total</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <AMOUNTS type="array">
+                <AMOUNT type="float">10863</AMOUNT>
+                <AMOUNT type="float">10863</AMOUNT>
+              </AMOUNTS>
+              <TOTAL type="float">21726</TOTAL>
+              <TITLE>Conditional Parent PLUS Loan</TITLE>
+            </ITEM>
+            <ITEM>
+              <TOTALS type="array">
+                <TOTAL type="float">10863</TOTAL>
+                <TOTAL type="float">10863</TOTAL>
+                <TOTAL type="float">21726</TOTAL>
+              </TOTALS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>Plus Loans</TITLE>
+        </DATA_ITEM>
+        <DATA_ITEM>
+          <HEADERS type="array">
+            <HEADER>Fall</HEADER>
+            <HEADER>Spring</HEADER>
+            <HEADER>Total</HEADER>
+          </HEADERS>
+          <ITEMS type="array">
+            <ITEM>
+              <AMOUNTS type="array">
+                <TOTAL type="float">13613</TOTAL>
+                <TOTAL type="float">13613</TOTAL>
+                <TOTAL type="float">27226</TOTAL>
+              </AMOUNTS>
+            </ITEM>
+          </ITEMS>
+          <TITLE>Grand Total</TITLE>
+        </DATA_ITEM>
+      </DATA>
+    </SEMESTER>
+  </AWARDS>
 </ROOT>

@@ -176,31 +176,6 @@
           <ITEMS type="array">
             <ITEM>
               <AMOUNTS type="array">
-                <AMOUNT type="float">2750</AMOUNT>
-                <AMOUNT type="float">2750</AMOUNT>
-              </AMOUNTS>
-              <TOTAL type="float">5500</TOTAL>
-              <TITLE>Conditional Unsubsidized Fed D</TITLE>
-            </ITEM>
-            <ITEM>
-              <TOTALS type="array">
-                <TOTAL type="float">2750</TOTAL>
-                <TOTAL type="float">2750</TOTAL>
-                <TOTAL type="float">5500</TOTAL>
-              </TOTALS>
-            </ITEM>
-          </ITEMS>
-          <TITLE>UnSubsidized Loans</TITLE>
-        </DATA_ITEM>
-        <DATA_ITEM>
-          <HEADERS type="array">
-            <HEADER>Fall</HEADER>
-            <HEADER>Spring</HEADER>
-            <HEADER>Total</HEADER>
-          </HEADERS>
-          <ITEMS type="array">
-            <ITEM>
-              <AMOUNTS type="array">
                 <AMOUNT type="float">10863</AMOUNT>
                 <AMOUNT type="float">10863</AMOUNT>
               </AMOUNTS>
@@ -226,9 +201,9 @@
           <ITEMS type="array">
             <ITEM>
               <AMOUNTS type="array">
-                <TOTAL type="float">17613</TOTAL>
-                <TOTAL type="float">17613</TOTAL>
-                <TOTAL type="float">35226</TOTAL>
+                <TOTAL type="float">14863</TOTAL>
+                <TOTAL type="float">14863</TOTAL>
+                <TOTAL type="float">29726</TOTAL>
               </AMOUNTS>
             </ITEM>
           </ITEMS>
