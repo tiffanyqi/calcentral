@@ -64,7 +64,7 @@
                   <label for="bc-page-course-grade-export-unmute-assignments" class="bc-page-course-grade-export-error-resolution-action-label">Unmute All</label>
                 </div>
                 <div class="bc-page-course-grade-export-muted-assignments-see-gradebook">
-                  <button class="bc-button-link" data-ng-click="goToGradebook()">See in Gradebook</a>
+                  <button class="bc-button-link" data-ng-click="goToGradebook()">See in Gradebook</button>
                 </div>
               </div>
 
@@ -123,7 +123,7 @@
         <div class="row collapse">
           <div class="medium-12 columns">
             <div class="cc-text-right">
-              <button class="bc-canvas-button" type="button" data-ng-click="goToGradebook()" type="button" aria-label="Go Back to Gradebook">Cancel</button>
+              <button class="bc-canvas-button" type="button" data-ng-click="goToGradebook()" aria-label="Go Back to Gradebook">Cancel</button>
               <button data-ng-disabled="notReadyForPreparation() || resolvingCourseState" data-ng-click="resolveIssues()" class="bc-canvas-button bc-canvas-button-primary" type="button">
                 <span data-ng-if="!resolvingCourseState">Continue</span>
                 <span data-ng-if="resolvingCourseState"><i class="fa fa-spinner fa-spin"></i> Saving</span>
@@ -200,7 +200,7 @@
 
       <div class="row collapse">
         <div class="medium-12 columns bc-page-course-grade-export-grade-link" data-ng-if="canvasCourseId && parentHostUrl">
-          <button class="bc-button-link" data-ng-click="goToGradebook()">Back to Gradebook</a>
+          <button class="bc-button-link" data-ng-click="goToGradebook()">Back to Gradebook</button>
         </div>
       </div>
     </div>

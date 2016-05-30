@@ -52,7 +52,7 @@
           data-ng-model="title4.isApproved"
           data-ng-change="sendResponseT4(title4.isApproved ? 'Y' : 'N')"
           data-ng-disabled="!api.user.profile.actAsOptions.canPost"
-        />
+        >
         <label for="cc-page-widget-profile-title4-check" data-ng-class="{'cc-text-light':(!api.user.profile.actAsOptions.canPost)}">
           <strong>
             <span data-ng-if="title4.isApproved">I have authorized use of Title IV aid for charges</span>

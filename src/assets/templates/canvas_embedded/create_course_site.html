@@ -18,7 +18,7 @@
           <form data-ng-submit="fetchFeed()" class="bc-canvas-page-form bc-page-create-course-site-act-as-form">
             <label for="instructor-uid" class="cc-visuallyhidden">Instructor UID</label>
             <input class="cc-left" placeholder="Instructor UID" data-ng-model="$parent.admin_acting_as" type="text"
-              role="search" id="instructor-uid" />
+              role="search" id="instructor-uid">
             <button class="bc-canvas-button bc-canvas-button-primary" type="submit" aria-label="Load official sections for instructor"
               aria-controls="bc-page-create-course-site-steps-container">As instructor</button>
           </form>
@@ -253,8 +253,8 @@
               <div class="row bc-page-create-course-site-step-options">
                 <div class="medium-12 columns">
                   <div class="bc-form-actions">
-                    <button class="bc-canvas-button bc-canvas-button-primary" type="button" data-ng-click="fetchFeed()" type="button" aria-control="bc-page-create-course-site-selecting-step" aria-label="Start over course site creation process">Start Over</button>
-                    <button class="cc-button cc-page-button-grey" type="button" data-ng-click="showConfirmation()" type="button" aria-control="bc-page-create-course-site-confirmation-step" aria-label="Go Back to Site Details Confirmation">Back</button>
+                    <button class="bc-canvas-button bc-canvas-button-primary" type="button" data-ng-click="fetchFeed()" aria-control="bc-page-create-course-site-selecting-step" aria-label="Start over course site creation process">Start Over</button>
+                    <button class="cc-button cc-page-button-grey" type="button" data-ng-click="showConfirmation()" aria-control="bc-page-create-course-site-confirmation-step" aria-label="Go Back to Site Details Confirmation">Back</button>
                   </div>
                 </div>
               </div>
