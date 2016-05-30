@@ -18,14 +18,14 @@
       <fieldset class="cc-widget-sir-form-fieldset" data-ng-disabled="sirItem.isSubmitting">
         <div data-ng-repeat="sirOption in item.config.sirOptions">
           <label class="cc-widget-sir-form-label">
-            <input class="cc-widget-sir-form-radio" type="radio" data-ng-model="sirItem.form.option" data-ng-value="sirOption"></input>
+            <input class="cc-widget-sir-form-radio" type="radio" data-ng-model="sirItem.form.option" data-ng-value="sirOption">
             <div class="cc-widget-sir-form-description" data-ng-bind="sirOption.descrLong"></div>
           </label>
           <!-- Show conditions when the user accepts SIR -->
           <div data-ng-if="sirOption.progAction === 'DEIN' && sirItem.form.option.progAction === 'DEIN'" class="cc-widget-sir-form-subcontainer">
             <div data-ng-repeat="sirCondition in item.config.sirConditions">
               <label class="cc-widget-sir-form-label">
-                <input class="cc-widget-sir-form-check" type="checkbox" data-ng-model="sirItem.form.check[sirCondition.seqnum].valid" data-ng-attr-id="cc-widget-sir-form-check-{{$index}}"></input>
+                <input class="cc-widget-sir-form-check" type="checkbox" data-ng-model="sirItem.form.check[sirCondition.seqnum].valid" data-ng-attr-id="cc-widget-sir-form-check-{{$index}}">
                 <label class="cc-widget-sir-form-description cc-widget-sir-form-label" data-ng-bind="sirCondition.messageText" data-ng-attr-for="cc-widget-sir-form-check-{{$index}}"></label>
               </label>
             </div>
@@ -41,7 +41,7 @@
             </div>
             <div class="cc-widget-sir-form-reason-description">
               <label for="cc-widget-sir-form-reason-description" class="cc-visuallyhidden">Specify:</label>
-              <input type="text" id="cc-widget-sir-form-reason-description" placeholder="Specify" data-ng-model="sirItem.form.decline.reasonDescription" maxlength="30"></input>
+              <input type="text" id="cc-widget-sir-form-reason-description" placeholder="Specify" data-ng-model="sirItem.form.decline.reasonDescription" maxlength="30">
             </div>
             <hr aria-hidden="true">
             <div class="cc-text-small">
