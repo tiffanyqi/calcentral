@@ -23,7 +23,7 @@
         <span data-ng-bind="field.label"></span>
       </label>
       <div class="cc-select">
-        <select data-ng-options="state.state as state.descr for state in states" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-model="currentObject.data[field.field]">
+        <select data-ng-options="state.state as state.descr for state in states" data-ng-attr-id="cc-page-widget-profile-field-{{$index}}" data-ng-model="currentObject.data[field.field]">
           <option value="" data-ng-bind-template="-- Choose {{field.label}} --"></option>
         </select>
       </div>
