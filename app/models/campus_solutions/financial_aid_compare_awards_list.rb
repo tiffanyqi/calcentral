@@ -19,13 +19,14 @@ module CampusSolutions
       return {} if response.parsed_response.blank?
       feed = response.parsed_response['ROOT'] || response.parsed_response[error_response_root_xml_node] || {}
 
-      feed['AWARD_PARMS']['DATA'] = feed['AWARD_PARMS']['DATA'].sort.reverse.map do |label|
-        {
-           csDate: label,
-           date: format_date(strptime_in_time_zone(label, '%Y-%m-%d-%H.%M.%S'))
-        }
+      if (feed['AWARD_PARMS'])
+        feed['AWARD_PARMS']['DATA'] = feed['AWARD_PARMS']['DATA'].sort.reverse.map do |label|
+          {
+             csDate: label,
+             date: format_date(strptime_in_time_zone(label, '%Y-%m-%d-%H.%M.%S'))
+          }
+        end
       end
-
       feed
     end
 
