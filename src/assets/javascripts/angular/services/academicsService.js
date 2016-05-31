@@ -96,6 +96,12 @@ angular.module('calcentral.services').service('academicsService', function() {
     return classes;
   };
 
+  /**
+   * Returns actual or waitlisted class sections
+   * @param {Array} courses courses from the 'semesters' node of the academics feed
+   * @param {Boolean} findWaitlisted Boolean indicating return of waitlisted courses only
+   * @param {String} courseCode Optional string representing course to filter results by
+   */
   var getClassesSections = function(courses, findWaitlisted, courseCode) {
     var classes = [];
 
@@ -193,6 +199,12 @@ angular.module('calcentral.services').service('academicsService', function() {
     return count;
   };
 
+  /**
+   * Prepares course sections for display based on primary or secondary status, with support for
+   * courses with multiple primary sections
+   * @param {Object} originalCourse course object
+   * @param {Array} enrolledSections custom sections list (i.e. might be waitlisted sections only)
+   */
   var splitMultiplePrimaries = function(originalCourse, enrolledSections) {
     var classes = {};
     for (var i = 0; i < enrolledSections.length; i++) {
