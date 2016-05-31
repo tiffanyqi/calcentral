@@ -149,7 +149,8 @@ module Textbooks
       response = get_response(url,
         headers: {
           "Authorization" => "Token token=#{Settings.textbooks_proxy.token}"
-        }
+        },
+        ssl_version: 'TLSv1_2'
       )
       logger.debug "Remote server status #{response.code}; url = #{url}"
       response.parsed_response
