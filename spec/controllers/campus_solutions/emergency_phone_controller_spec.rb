@@ -1,8 +1,8 @@
-describe CampusSolutions::EmergencyContactController do
+describe CampusSolutions::EmergencyPhoneController do
 
   let(:user_id) { '12345' }
 
-  context 'updating emergency contact' do
+  context 'updating emergency phone' do
     it 'should not let an unauthenticated user post' do
       post :post, {format: 'json', uid: '100'}
       expect(response.status).to eq 401
@@ -18,33 +18,10 @@ describe CampusSolutions::EmergencyContactController do
              {
                bogus_field: 'abc',
                contactName: 'TEST',
-               isSameAddressEmpl: 'N',
-               isPrimaryContact: 'Y',
-               country: 'USA',
-               address1: 'lane7',
-               address2: 'peters road',
-               address3: 'estella st',
-               address4: 'fourth field lane',
-               city: 'ventura',
-               num1: '1',
-               num2: '2',
-               houseType: 'AB',
-               addrField1: 'L1',
-               addrField2: 'L2',
-               addrField3: 'L3',
-               county: 'Alameda',
-               state: 'CA',
-               postal: '93001',
-               geoCode: '',
-               inCityLimit: 'N',
                countryCode: '',
                phone: '805/658-4588',
-               relationship: 'SP',
-               isSamePhoneEmpl: 'N',
-               addressType: 'HOME',
                phoneType: 'CELL',
-               extension: '123',
-               emailAddr: 'foo@foo.com'
+               extension: '123'
              }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
@@ -54,7 +31,8 @@ describe CampusSolutions::EmergencyContactController do
       end
     end
   end
-  context 'deleting emergency contact' do
+
+  context 'deleting emergency phone' do
     it 'should not let an unauthenticated user delete' do
       delete :delete, {format: 'json', contactName: '100'}
       expect(response.status).to eq 401
@@ -69,7 +47,8 @@ describe CampusSolutions::EmergencyContactController do
         delete :delete,
              {
                bogus_field: 'abc',
-               contactName: 'TEST'
+               contactName: 'TEST',
+               phoneType: 'LOCL'
              }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
