@@ -69,3 +69,12 @@ form#ui-id-2[data-view='createUsers'] {
   height: 35px;
   width: 110px;
 }
+
+/* HELP */
+
+/* Hide unneccesary Help links */
+#help-dialog #help-dialog-options li a[href="#teacher_feedback"],
+#help-dialog #help-dialog-options li a[href="#create_ticket"],
+#help-dialog #help-dialog-options li a[href="https://community.canvaslms.com/community/answers"] {
+  display:none;
+}
