@@ -28,7 +28,7 @@
             You are not currently considered an active student.
           </div>
         </div>
-        <div data-ng-if="api.user.profile.roles.student && !api.user.profile.roles.concurrentEnrollmentStudent">
+        <div data-ng-if="(api.user.profile.roles.student || api.user.profile.roles.applicant) && !api.user.profile.roles.concurrentEnrollmentStudent">
           <div data-ng-if="!isProfileCurrent">
             <div data-ng-if="transitionTerm.registered" class="cc-widget-profile-message-text">
               You are registered for the <span data-ng-bind="transitionTerm.termName"></span> term, but complete profile information is not available.
