@@ -7,7 +7,7 @@ var angular = require('angular');
 /**
  * Academics controller
  */
-angular.module('calcentral.controllers').controller('AcademicsController', function(academicsFactory, academicsService, apiService, badgesFactory, $q, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('AcademicsController', function(academicsFactory, academicsService, apiService, badgesFactory, holdsFactory, $q, $routeParams, $scope) {
   var title = 'My Academics';
   apiService.util.setTitle(title);
   $scope.backToText = title;
@@ -151,6 +151,10 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.studentInfo = data.studentInfo;
   };
 
+  var loadNumberOfHolds = function(data) {
+    $scope.numberOfHolds = _.get(data, 'feed.serviceIndicators.length');
+  };
+
   var parseAcademics = function(data) {
     angular.extend($scope, data);
 
@@ -204,6 +208,7 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.showStatusAndBlocks = !$scope.filteredForDelegate &&
                                  ($scope.hasRegStatus ||
                                  ($scope.regblocks && !$scope.regblocks.noStudentId) ||
+                                 ($scope.numberOfHolds) ||
                                  ($scope.residency));
     $scope.showAdvising = !$scope.filteredForDelegate && $scope.api.user.profile.features.advising && $scope.isLSStudent;
 
@@ -223,7 +228,13 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
       $scope.canViewAcademics = $scope.api.user.profile.hasAcademicsTab;
       var getAcademics = academicsFactory.getAcademics().success(parseAcademics);
       var getBadges = badgesFactory.getBadges().success(loadBadges);
-      $q.all([getAcademics, getBadges]).then(filterWidgets);
+      var requests = [getAcademics, getBadges];
+      if ($scope.api.user.profile.features.csHolds &&
+        ($scope.api.user.profile.roles.student || $scope.api.user.profile.roles.applicant)) {
+        var getNumberOfHolds = holdsFactory.getHolds().success(loadNumberOfHolds);
+        requests.push(getNumberOfHolds);
+      }
+      $q.all(requests).then(filterWidgets);
     }
     $scope.academics.isLoading = false;
   });
