@@ -1,13 +1,11 @@
 <div class="cc-enrollment-card" data-ng-controller="EnrollmentCardController">
-  <div class="cc-widget" data-ng-if="enrollment.isLoading || enrollment.terms.length === 0">
+  <div class="cc-widget" data-ng-if="enrollment.isLoading">
     <div class="cc-widget-title">
       <h2>Class Enrollment</h2>
     </div>
-    <div class="cc-widget-padding" data-cc-spinner-directive="enrollment.isLoading">
-      <div class="cc-widget-text">No Enrollments</div>
-    </div>
+    <div data-cc-spinner-directive="enrollment.isLoading"></div>
   </div>
-  <div data-ng-if="!enrollment.isLoading && enrollment.terms.length > 0">
+  <div data-ng-if="!enrollment.isLoading">
     <div class="cc-widget cc-widget-enrollment-card" data-ng-repeat="enrollmentTerm in enrollment.terms" data-ng-if="enrollmentTerm.enrollmentPeriod">
       <div class="cc-widget-title">
         <h2>
