@@ -42,7 +42,7 @@
           "name": "ECON 100B DIS 101"
         }
       ],
-      "student_id": "44444444",
+      "student_id": "4444444",
       "units": "4.0"
     },
     {
@@ -68,7 +68,7 @@
           "name": "ECON 100B DIS 101"
         }
       ],
-      "student_id": "555555",
+      "student_id": "5555555",
       "units": "4.0",
       "waitlist_position": 1
     },
@@ -96,7 +96,56 @@
           "name": "ECON 100B DIS 102"
         }
       ],
-      "student_id": "66666",
+      "student_id": "6666666",
+      "units": "4.0"
+    },
+    {
+      "email": "ddddd@berkeley.edu",
+      "enroll_status": "W",
+      "first_name": "Gandalf",
+      "grade_option": "P/NP",
+      "id": "444444",
+      "last_name": "Vidarr",
+      "login_id": "444444",
+      "photo": "/images/sample_student_72x96.jpg",
+      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=444444",
+      "section_ccns": [
+        "14301"
+      ],
+      "sections": [
+        {
+          "ccn": "14301",
+          "name": "ECON 100B DIS 102"
+        }
+      ],
+      "student_id": "7777777",
+      "units": "4.0"
+    },
+    {
+      "email": "eeeee@berkeley.edu",
+      "enroll_status": "W",
+      "first_name": "Ramjet",
+      "grade_option": "P/NP",
+      "id": "555555",
+      "last_name": "Bonecrusher",
+      "login_id": "555555",
+      "photo": "/images/sample_student_72x96.jpg",
+      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=555555",
+      "section_ccns": [
+        "14299",
+        "14301"
+      ],
+      "sections": [
+        {
+          "ccn": "14299",
+          "name": "ECON 100B LEC 001"
+        },
+        {
+          "ccn": "14301",
+          "name": "ECON 100B DIS 102"
+        }
+      ],
+      "student_id": "8888888",
       "units": "4.0"
     }
   ]
