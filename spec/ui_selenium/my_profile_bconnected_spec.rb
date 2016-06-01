@@ -59,20 +59,6 @@ describe 'Profile bConnected', :testui => true do
         end
       end
 
-      context 'when a connected but opting out of CalCentral' do
-        it 'disconnects the user from Google apps' do
-          my_dashboard = CalCentralPages::MyDashboardPage.new(@driver)
-          my_dashboard.opt_out
-          @splash_page.wait_for_expected_title?
-          @splash_page.click_sign_in_button
-          @cal_net.login(UserUtils.qa_username, UserUtils.qa_password)
-          my_dashboard.click_email_badge
-          my_dashboard.wait_until(WebDriverUtils.page_load_timeout, 'Not-connected message has not appeared') do
-            my_dashboard.email_not_connected_heading_element.visible?
-          end
-        end
-      end
-
       context 'when connected as a user without current student classes' do
         it 'shows no "class calendar" option for a non-student' do
           @bconnected_card.load_page

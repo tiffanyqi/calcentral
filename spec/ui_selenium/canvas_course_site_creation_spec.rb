@@ -6,6 +6,8 @@ describe 'bCourses course site creation', :testui => true do
 
     begin
       @driver = WebDriverUtils.launch_browser
+      test_output = UserUtils.initialize_output_csv(self, ['Term', 'Course Code', 'Instructor', 'Site ID', 'Site Abbrev'])
+
       @splash_page = CalCentralPages::SplashPage.new @driver
       @cal_net_page = CalNetAuthPage.new @driver
       @status_api = ApiMyStatusPage.new @driver
@@ -27,6 +29,8 @@ describe 'bCourses course site creation', :testui => true do
           course_title = course['courseTitle']
           instruction_formats = course['sectionFormatsForSite'].map { |format| format['label'] }
           instructor = course['teachers'].find { |teacher| teacher['testUser'] }
+          site_id = nil
+          site_abbreviation = nil
 
           logger.info "Creating a course site for #{course_code} in #{course_term} using the '#{course['workflow']}' workflow"
 
@@ -88,6 +92,8 @@ describe 'bCourses course site creation', :testui => true do
 
         rescue => e
           logger.error e.message + "\n" + e.backtrace.join("\n")
+        ensure
+          UserUtils.add_csv_row(test_output, [course_term, course_code, instructor['uid'], site_id, site_abbreviation])
         end
       end
     rescue => e
