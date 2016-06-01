@@ -145,7 +145,7 @@ describe 'My Academics Status and Blocks', :testui => true do
 
               has_res_status = WebDriverUtils.verify_block { my_academics_page.res_status_summary_element.when_present 10 }
 
-              if has_reg_status_summary && student_api_page.has_residency?
+              if has_reg_status_summary && student_api_page.has_residency? && !academics_api_page.colleges.include?('Haas School of Business')
 
                 it ("shows residency status for UID #{uid}") { expect(has_res_status).to be true }
 

@@ -250,25 +250,21 @@ module CalCentralPages
         task_index = overdue_task_elements.index(task_element)
         edit_overdue_task(task_index, title, date, note)
         WebDriverUtils.wait_for_element_and_click overdue_task_save_button_elements[task_index]
-        overdue_task_save_button_elements[task_index].when_not_visible WebDriverUtils.google_task_timeout
       elsif today_task_elements.include? task_element
         wait_for_today_tasks
         task_index = today_task_elements.index(task_element)
         edit_today_task(task_index, title, date, note)
         WebDriverUtils.wait_for_element_and_click today_task_save_button_elements[task_index]
-        today_task_save_button_elements[task_index].when_not_visible WebDriverUtils.google_task_timeout
       elsif future_task_elements.include? task_element
         wait_for_future_tasks
         task_index = future_task_elements.index(task_element)
         edit_future_task(task_index, title, date, note)
         WebDriverUtils.wait_for_element_and_click future_task_save_button_elements[task_index]
-        future_task_save_button_elements[task_index].when_not_visible WebDriverUtils.google_task_timeout
       elsif unsched_task_elements.include? task_element
         wait_for_unsched_tasks
         task_index = unsched_task_elements.index(task_element)
         edit_unsched_task(task_index, title, date, note)
         WebDriverUtils.wait_for_element_and_click unsched_task_save_button_elements[task_index]
-        unsched_task_save_button_elements[task_index].when_not_visible WebDriverUtils.google_task_timeout
       else
         logger.error 'Task not found in time bucket'
       end
@@ -342,7 +338,7 @@ module CalCentralPages
           WebDriverUtils.wait_for_element_and_click completed_task_delete_button_elements[0]
           wait_until(WebDriverUtils.google_task_timeout) { completed_task_count.to_i == (task_count - 1) }
         end
-      rescue
+      rescue Selenium::WebDriver::Error::TimeOutError
         # Retry since Google responses can sometimes hang when too many deletions occur too rapidly, causing test timeout
         retry unless (tries -= 1).zero?
       end
