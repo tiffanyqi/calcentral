@@ -12,9 +12,9 @@ angular.module('calcentral.factories').factory('rosterFactory', function($http) 
    * @param {String} courseId ID of the course
    */
   var getRoster = function(context, courseId) {
+    var url = '/api/academics/rosters/' + context + '/' + courseId;
     // var url = '/dummy/json/canvas_rosters.json';
     // var url = '/dummy/json/campus_rosters.json';
-    var url = '/api/academics/rosters/' + context + '/' + courseId;
     return $http.get(url);
   };
 
