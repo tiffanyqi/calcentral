@@ -13,8 +13,11 @@
   </div>
   <div class="cc-widget-padding">
     <div class="cc-academics-class-enrollment-text">
-      Total: <strong data-ng-bind="students.length"></strong> |
+      On List: <strong data-ng-bind="students.length"></strong> |
       Available: <strong data-ng-bind="seatsAvailable"></strong>
+    </div>
+    <div class="cc-academics-class-enrollment-notice">
+      <strong>Notes:</strong> Use headers to sort columns. Email links and buttons work best when signed into bMail in another window/tab in the same browser as CalCentral.
     </div>
     <div class="cc-table cc-academics-class-enrollment-table">
       <table>
@@ -48,16 +51,16 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    <div class="cc-academics-class-enrollment-text" data-ng-if="errorStatus">
-      There was an error retrieving enrollment data.
-    </div>
-    <div data-ng-if="!errorStatus">
-      <div class="cc-academics-class-enrollment-text" data-ng-if="!students.length">
-        No students are currently <span data-ng-bind="studentRole"></span> in this class.
+      <div class="cc-academics-class-enrollment-table-notice" data-ng-if="errorStatus">
+        There was an error retrieving enrollment data.
       </div>
-      <div class="cc-academics-class-enrollment-text" data-ng-if="students.length && !filteredStudents.length">
-        No students are currently <span data-ng-bind="studentRole"></span> in this section.
+      <div data-ng-if="!errorStatus">
+        <div class="cc-academics-class-enrollment-table-notice" data-ng-if="!students.length">
+          No students are currently <span data-ng-bind="studentRole"></span> in this class.
+        </div>
+        <div class="cc-academics-class-enrollment-table-notice" data-ng-if="students.length && !filteredStudents.length">
+          No students are currently <span data-ng-bind="studentRole"></span> in this section.
+        </div>
       </div>
     </div>
   </div>
