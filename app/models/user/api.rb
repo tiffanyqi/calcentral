@@ -99,7 +99,7 @@ module User
     end
 
     def has_academics_tab?(roles, has_instructor_history, has_student_history)
-      roles[:student] || roles[:faculty] || has_instructor_history || has_student_history
+      roles[:student] || roles[:faculty] || roles[:applicant] || has_instructor_history || has_student_history
     end
 
     def has_financials_tab?(roles)
