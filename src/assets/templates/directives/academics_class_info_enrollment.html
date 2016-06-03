@@ -24,6 +24,7 @@
         <thead class="cc-academics-class-enrollment-table-head">
           <th data-ng-show="showPosition" data-cc-sortable-column-directive="waitlist_position" data-column-heading="Pos"></th>
           <th data-cc-sortable-column-directive="last_name" data-column-heading="Name"></th>
+          <th data-cc-sortable-column-directive="email" data-column-heading="Email"></th>
           <th data-cc-sortable-column-directive="units" data-column-heading="Units"></th>
           <th data-cc-sortable-column-directive="grade_option" data-column-heading="Grade"></th>
           <th data-cc-sortable-column-directive="student_id" data-column-heading="SID"></th>
@@ -36,14 +37,11 @@
               <strong data-ng-bind="student.waitlist_position"></strong>
             </td>
             <td>
-              <a data-ng-if="student.email" data-ng-href="mailto:{{student.email}}">
-                <span data-ng-bind="student.last_name"></span>,
-                <span data-ng-bind="student.first_name"></span>
-              </a>
-              <div data-ng-if="!student.email">
-                <span data-ng-bind="student.last_name"></span>,
-                <span data-ng-bind="student.first_name"></span>
-              </div>
+              <span data-ng-bind="student.last_name"></span>,
+              <span data-ng-bind="student.first_name"></span>
+            </td>
+            <td>
+              <a data-ng-if="student.email" data-ng-bind="student.email" data-ng-href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to={{student.email}}"></a>
             </td>
             <td data-ng-bind="student.units"></td>
             <td data-ng-bind="student.grade_option"></td>
