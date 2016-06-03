@@ -160,14 +160,14 @@
   <div data-ng-switch-when="Enrollment" role="tabpanel" aria-live="polite" class="cc-clearfix" data-ng-controller="ClassInfoEnrollmentController" data-cc-spinner-directive>
     <div class="column cc-academics-row-margin"
          data-cc-academics-class-info-enrollment-directive
-         data-seats-available="selectedCourse.waitlistLimit"
+         data-seats-limit="selectedCourse.waitlistLimit"
          data-show-position="true"
          data-students="waitlistedStudents"
          data-title="Wait List"
     ></div>
     <div class="column cc-academics-row-margin"
          data-cc-academics-class-info-enrollment-directive
-         data-seats-available="selectedCourse.enrollLimit"
+         data-seats-limit="selectedCourse.enrollLimit"
          data-show-position="false"
          data-students="enrolledStudents"
          data-title="Enrollment List"

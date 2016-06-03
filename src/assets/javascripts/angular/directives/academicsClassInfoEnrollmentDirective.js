@@ -17,10 +17,12 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
         },
         function(newValue) {
           scope.students = newValue;
+          var studentCount = Array.isArray(newValue) ? newValue.length : 0;
+          scope.seatsAvailable = scope.seatsLimit - studentCount;
         }
       );
 
-      scope.seatsAvailable = scope.$eval(attrs.seatsAvailable);
+      scope.seatsLimit = scope.$eval(attrs.seatsLimit);
       scope.showPosition = scope.$eval(attrs.showPosition);
       scope.studentRole = (attrs.title === 'Wait List') ? 'waitlisted' : 'enrolled';
       scope.tableSort = {
