@@ -40,9 +40,9 @@ module CampusSolutions
         phones = item['EMERGENCY_PHONES']
 
         if phones
-          phones['EMERGENCY_PHONE'] = Array.wrap phones['EMERGENCY_PHONE']
+          item['EMERGENCY_PHONES'] = Array.wrap phones['EMERGENCY_PHONE']
         else
-          item['EMERGENCY_PHONES'] = {"EMERGENCY_PHONE" => []}
+          item['EMERGENCY_PHONES'] = []
         end
       end
 

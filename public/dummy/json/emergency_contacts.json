@@ -1,0 +1,228 @@
+{
+  "statusCode": 200,
+  "feed": {
+    "students": {
+      "student": {
+        "emergencyContacts": {
+          "emergencyContact": [
+            {
+              "studentId": "24172048",
+              "contactName": "Mom",
+              "address1": "6966 PARKSIDE AVENUE",
+              "address2": null,
+              "address3": null,
+              "address4": null,
+              "addrField1": null,
+              "addrField2": null,
+              "addrField3": null,
+              "city": "SAN DIEGO",
+              "country": "USA",
+              "countryDescr": "United States",
+              "county": null,
+              "houseType": null,
+              "num1": null,
+              "num2": null,
+              "state": "CA",
+              "stateDescr": "California",
+              "postal": "92139-3832",
+              "addressType": "HOME",
+              "geoCode": null,
+              "inCityLimit": null,
+              "sameAddressEmpl": "Y",
+              "samePhoneEmpl": "Y",
+              "emailAddr": null,
+              "relationship": "P",
+              "relationshipDescr": "Parent",
+              "primaryContact": "Y",
+              "formattedAddress": "6966 PARKSIDE AVENUE\\nSAN DIEGO, California 92139-3832",
+              "emergencyPhones": [
+                {
+                  "primaryPhone": "Y",
+                  "phoneType": "LOCL",
+                  "phoneTypeDescr": "Local",
+                  "phone": "619/370-4644",
+                  "extension": null,
+                  "countryCode": null
+                }
+              ],
+              "type": "boolean"
+            },
+            {
+              "studentId": "24172048",
+              "contactName": "Chet",
+              "address1": "123 4th St.",
+              "address2": "Apt. XYZ",
+              "address3": "Aisle 3",
+              "address4": null,
+              "addrField1": null,
+              "addrField2": null,
+              "addrField3": null,
+              "city": "Antioch",
+              "country": "USA",
+              "countryDescr": "United States",
+              "county": "Contra Costa",
+              "houseType": null,
+              "num1": null,
+              "num2": null,
+              "state": "CA",
+              "stateDescr": "California",
+              "postal": "94509",
+              "addressType": null,
+              "geoCode": null,
+              "inCityLimit": null,
+              "sameAddressEmpl": "N",
+              "samePhoneEmpl": "N",
+              "emailAddr": "contact@foobarbaz.quux",
+              "relationship": "FR",
+              "relationshipDescr": "Friend",
+              "primaryContact": "N",
+              "formattedAddress": "123 4th St.\\nApt. XYZ\\nAisle 3\\nAntioch, California 94509",
+              "type": "boolean",
+              "emergencyPhones": [ ]
+            },
+            {
+              "studentId": "24172048",
+              "contactName": "Nancy",
+              "address1": "567 8th Ave.",
+              "address2": null,
+              "address3": null,
+              "address4": null,
+              "addrField1": null,
+              "addrField2": null,
+              "addrField3": null,
+              "city": "New York",
+              "country": "USA",
+              "countryDescr": "United States",
+              "county": null,
+              "houseType": null,
+              "num1": null,
+              "num2": null,
+              "state": "NY",
+              "stateDescr": "New York",
+              "postal": "10001",
+              "addressType": null,
+              "geoCode": null,
+              "inCityLimit": null,
+              "sameAddressEmpl": "N",
+              "samePhoneEmpl": "N",
+              "emailAddr": null,
+              "relationship": "SB",
+              "relationshipDescr": "Sibling",
+              "primaryContact": "N",
+              "formattedAddress": "567 8th Ave.\\nNew York, New York 10001",
+              "emergencyPhones": [
+                {
+                  "primaryPhone": "N",
+                  "phoneType": null,
+                  "phoneTypeDescr": null,
+                  "phone": "123/456-7890",
+                  "extension": "121",
+                  "countryCode": null
+                }
+              ],
+              "type": "boolean"
+            },
+            {
+              "studentId": "24172048",
+              "contactName": "PhoneGuy",
+              "address1": null,
+              "address2": null,
+              "address3": null,
+              "address4": null,
+              "addrField1": null,
+              "addrField2": null,
+              "addrField3": null,
+              "city": null,
+              "country": "USA",
+              "countryDescr": "United States",
+              "county": null,
+              "houseType": null,
+              "num1": null,
+              "num2": null,
+              "state": null,
+              "stateDescr": null,
+              "postal": null,
+              "addressType": null,
+              "geoCode": null,
+              "inCityLimit": null,
+              "sameAddressEmpl": "N",
+              "samePhoneEmpl": "N",
+              "emailAddr": null,
+              "relationship": "R",
+              "relationshipDescr": "Other Relative",
+              "primaryContact": "N",
+              "formattedAddress": null,
+              "emergencyPhones": [
+                {
+                  "primaryPhone": "N",
+                  "phoneType": null,
+                  "phoneTypeDescr": null,
+                  "phone": "123/456-7890",
+                  "extension": null,
+                  "countryCode": null
+                },
+                {
+                  "primaryPhone": "N",
+                  "phoneType": "BUSN",
+                  "phoneTypeDescr": "Business",
+                  "phone": "987/654-3210",
+                  "extension": "9876",
+                  "countryCode": null
+                },
+                {
+                  "primaryPhone": "N",
+                  "phoneType": "CAMP",
+                  "phoneTypeDescr": "Campus",
+                  "phone": "876/543-2109",
+                  "extension": null,
+                  "countryCode": null
+                },
+                {
+                  "primaryPhone": "N",
+                  "phoneType": "CELL",
+                  "phoneTypeDescr": "Mobile",
+                  "phone": "654.321.0987",
+                  "extension": null,
+                  "countryCode": null
+                },
+                {
+                  "primaryPhone": "N",
+                  "phoneType": "HOME",
+                  "phoneTypeDescr": "Home/Permanent",
+                  "phone": "765/432-1098",
+                  "extension": null,
+                  "countryCode": null
+                },
+                {
+                  "primaryPhone": "N",
+                  "phoneType": "INTL",
+                  "phoneTypeDescr": "International",
+                  "phone": "011/011-0111",
+                  "extension": null,
+                  "countryCode": null
+                },
+                {
+                  "primaryPhone": "N",
+                  "phoneType": "LOCL",
+                  "phoneTypeDescr": "Local",
+                  "phone": "415/415-4154",
+                  "extension": null,
+                  "countryCode": null
+                },
+                {
+                  "primaryPhone": "N",
+                  "phoneType": "OTR",
+                  "phoneTypeDescr": "Other",
+                  "phone": "000.000.0000",
+                  "extension": null,
+                  "countryCode": null
+                }
+              ],
+              "type": "boolean"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

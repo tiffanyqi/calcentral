@@ -1,7 +1,7 @@
 module CampusSolutions
   class MyEmergencyContact < UserSpecificModel
 
-    include PersonDataUpdatingModel
+    include EmergencyContactsUpdatingModel
 
     def update(params = {})
       passthrough(CampusSolutions::EmergencyContact, params)

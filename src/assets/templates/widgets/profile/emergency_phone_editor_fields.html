@@ -1,0 +1,30 @@
+<div>
+  <div>
+    <label for="cc_page_widget_profile_emergency_phone_type">
+      <strong>Phone Type</strong>
+    </label>
+  </div>
+  <div class="cc-select">
+    <select id="cc_page_widget_profile_emergency_phone_type" required aria-required="true" data-ng-model="phone.phoneType" data-ng-options="key as value for (key, value) in emergencyPhone.phoneTypes">
+      <option value="" disabled selected>Choose&hellip;</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="cc_page_widget_profile_emergency_phone">
+      <strong>Phone Number</strong>
+    </label>
+  </div>
+  <div>
+    <input type="text" id="cc_page_widget_profile_emergency_phone" data-ng-model="phone.phone">
+  </div>
+
+  <div>
+    <label for="cc_page_widget_profile_emergency_phone_extension">
+      <strong>Phone Extension</strong>
+    </label>
+  </div>
+  <div>
+    <input type="text" id="cc_page_widget_profile_emergency_phone_extension" data-ng-model="phone.extension">
+  </div>
+</div>

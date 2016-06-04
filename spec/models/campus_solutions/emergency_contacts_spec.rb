@@ -19,8 +19,8 @@ describe CampusSolutions::EmergencyContacts do
         # primary contact always at head position
         primary = emergency_contacts[0]
         expect(primary[:primaryContact]).to eq "Y"
-        if primary[:emergencyPhones][:emergencyPhone].length > 0
-          expect(primary[:emergencyPhones][:emergencyPhone][0][:primaryPhone]).to eq "Y"
+        if primary[:emergencyPhones].length > 0
+          expect(primary[:emergencyPhones][0][:primaryPhone]).to eq "Y"
         end
 
         # subsequent contacts
@@ -29,8 +29,8 @@ describe CampusSolutions::EmergencyContacts do
           contact = emergency_contacts[i]
           i += 1
           expect(contact[:primaryContact]).to eq "N"
-          if contact[:emergencyPhones][:emergencyPhone].length > 0
-            expect(contact[:emergencyPhones][:emergencyPhone][0][:primaryPhone]).to eq "N"
+          if contact[:emergencyPhones].length > 0
+            expect(contact[:emergencyPhones][0][:primaryPhone]).to eq "N"
           end
         end
       end

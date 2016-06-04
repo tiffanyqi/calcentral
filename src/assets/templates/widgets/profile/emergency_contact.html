@@ -1,28 +1,46 @@
 <div class="cc-page-widget-profile-section" data-ng-controller="EmergencyContactController" data-cc-spinner-directive="isLoading">
 
-  <div class="cc-page-widget-profile-section-label" data-ng-pluralize count="items.content.length" when="{'1': 'Emergency Contact', 'other': 'Emergency Contacts'}"></div>
+  <div class="cc-page-widget-profile-section-label-auto">
+    <button class="cc-button-link" data-ng-click="showAdd()" data-ng-if="!items.content.length && !items.editorEnabled">
+      <i class="fa fa-plus cc-text-small"></i> Add Emergency Contact
+    </button>
+    <span data-ng-if="items.content.length || items.editorEnabled" data-ng-pluralize count="items.content.length" when="{'1': 'Emergency Contact', 'other': 'Emergency Contacts'}"></span>
+  </div>
 
   <div class="cc-page-widget-profile-section-content">
-    <div data-ng-repeat="emergencyContact in items.content" class="cc-page-widget-profile-section-content-item">
+
+    <div class="cc-page-widget-profile-section-content-item" data-ng-if="items.editorEnabled">
+      <div data-ng-include="'widgets/profile/emergency_contact_editor.html'"></div>
+    </div>
+
+    <div class="cc-page-widget-profile-section-add" data-ng-if="items.content.length && !items.editorEnabled">
+      <button class="cc-button-link cc-right" data-ng-click="showAdd()">
+        <i class="fa fa-plus cc-text-small"></i> Add <span class="cc-visuallyhidden">Emergency Contact</span>
+      </button>
+    </div>
+
+    <div data-ng-repeat="item in items.content" class="cc-page-widget-profile-section-content-item" data-ng-if="!items.editorEnabled">
       <div>
-        <strong data-ng-bind="emergencyContact.contactName"></strong>
-        <span data-ng-if="emergencyContact.relationshipDescr" data-ng-bind-template="- {{emergencyContact.relationshipDescr}}"></span>
-        <span data-ng-if="emergencyContact.primaryContact === 'Y'">
+        <strong data-ng-bind="item.contactName"></strong>
+        <span data-ng-if="item.relationshipDescr" data-ng-bind-template="- {{item.relationshipDescr}}"></span>
+        <span data-ng-if="item.primaryContact === 'Y'">
           (primary contact)
         </span>
       </div>
-      <div data-ng-repeat="emergencyPhone in emergencyContact.emergencyPhones.emergencyPhone">
-        <span data-ng-bind="emergencyPhone.phone"></span>
-        <p class="cc-visuallyhidden" data-ng-if="emergencyPhone.phoneTypeDescr">
-          (<span data-ng-bind-template="{{emergencyPhone.phoneTypeDescr}} phone"></span>)
+      <div data-ng-repeat="phone in item.emergencyPhones">
+        <span data-ng-bind="phone.phone"></span>
+        <span data-ng-if="phone.extension">
+          <strong>ext.</strong> <span data-ng-bind="phone.extension"></span>
+        </span>
+        <p class="cc-visuallyhidden" data-ng-if="phone.phoneTypeDescr">
+          (<span data-ng-bind-template="{{phone.phoneTypeDescr}} phone"></span>)
         </p>
       </div>
-      <div data-ng-bind="emergencyContact.emailAddr"></div>
-      <div class="cc-text-pre-line cc-page-widget-profile-margin-top" data-ng-bind="emergencyContact.formattedAddress"></div>
-    </div>
-
-    <div data-ng-if="!items.content.length" class="cc-page-widget-profile-section-not-available">
-      There are no emergency contacts available.
+      <div data-ng-bind="item.emailAddr"></div>
+      <div class="cc-text-pre-line cc-page-widget-profile-margin-top" data-ng-bind="item.formattedAddress"></div>
+      <button class="cc-button-link" data-ng-click="showEdit(item)">
+        Edit <span class="cc-visuallyhidden" data-ng-bind-template="{{item.contactName}}'s contact information'"></span>
+      </button>
     </div>
   </div>
 </div>
