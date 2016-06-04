@@ -1,0 +1,32 @@
+<div class="cc-page-widget-profile-section-content">
+  <div data-ng-repeat="phone in currentObject.data.emergencyPhones">
+
+    <!-- edit first phone on the list as part of the parent form -->
+    <div class="cc-page-widget-profile-section-content-item" data-ng-if="$first">
+      <div data-ng-include="'widgets/profile/emergency_phone_edit_fields.html'"></div>
+    </div>
+
+    <!-- edit subsequent phones in separate editing contexts -->
+    <div class="cc-page-widget-profile-section-content-item" data-ng-if="!$first">
+
+      <div data-ng-include="'widgets/profile/emergency_phone_editor.html'" data-ng-if="emergencyPhone.items.editorEnabled && phone.isModifying"></div>
+
+      <div data-ng-if="!emergencyPhone.editorEnabled">
+        <div>
+          <strong data-ng-bind="phone.phoneTypeDescr"></strong>
+        </div>
+        <div data-ng-bind="phone.phone"></div>
+        <div>
+          <span data-ng-if="phone.extension">Extension:</span> <span data-ng-bind="phone.extension"></span>
+        </div>
+        <div>
+          <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showEdit(phone)">Edit</button> | <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.deletePhone(phone)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showAdd()">
+    <i class="fa fa-plus cc-text-small"></i> Add additional phone number
+  </button>
+</div>
