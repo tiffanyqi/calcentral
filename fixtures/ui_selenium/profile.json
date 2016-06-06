@@ -43,7 +43,6 @@
         "addresses": [
           {
             "country": "Belgium",
-            "required": "Street Name, Street Number",
             "inputs": [
               {
                 "index": 0,
@@ -94,55 +93,92 @@
           },
           {
             "country": "United States",
-              "inputs": [
-                {
-                  "index": 0,
-                  "req": true,
-                  "label": "Address 1",
-                  "text": "American Address 1 American Address 1 American Address 1 American Address 1",
-                  "max": 55
-                },
-                {
-                  "index": 1,
-                  "req": true,
-                  "label": "Address 2",
-                  "text": "American Address 2¢ American Address 2¢ American Address 2¢ American Address 2¢",
-                  "max": 55
-                },
-                {
-                  "index": 2,
-                  "req": true,
-                  "label": "Address 3",
-                  "text": "American Address 3 American Address 3 American Address 3 American Address 3",
-                  "max": 55
-                },
-                {
-                  "index": 3,
-                  "label": "City",
-                  "text": "American City American City American City",
-                  "max": 30
-                },
-                {
-                  "index": 5,
-                  "label": "ZIP Code",
-                  "text": "20260-6500",
-                  "max": 12
-                },
-                {
-                  "index": 6,
-                  "label": "County",
-                  "text": "American County American County American County",
-                  "max": 30
-                }
-              ],
-              "selects": [
-                {
-                  "index": 4,
-                  "label": "State",
-                  "option": "California"
-                }
-              ]
-            }
+            "inputs": [
+              {
+                "index": 0,
+                "req": true,
+                "label": "Address 1",
+                "text": "American Address 1 American Address 1 American Address 1 American Address 1",
+                "max": 55
+              },
+              {
+                "index": 1,
+                "req": true,
+                "label": "Address 2",
+                "text": "American Address 2¢ American Address 2¢ American Address 2¢ American Address 2¢",
+                "max": 55
+              },
+              {
+                "index": 2,
+                "req": true,
+                "label": "Address 3",
+                "text": "American Address 3 American Address 3 American Address 3 American Address 3",
+                "max": 55
+              },
+              {
+                "index": 3,
+                "label": "City",
+                "text": "American City American City American City",
+                "max": 30
+              },
+              {
+                "index": 5,
+                "label": "ZIP Code",
+                "text": "20260-6500",
+                "max": 12
+              },
+              {
+                "index": 6,
+                "label": "County",
+                "text": "American County American County American County",
+                "max": 30
+              }
+            ],
+            "selects": [
+              {
+                "index": 4,
+                "label": "State",
+                "option": "California"
+              }
+            ]
+          }
+        ]
+      },
+      "workExperience": {
+        "inputsMaxChar": {
+          "employer": "50",
+          "phone": "24",
+          "title": "50"
+        },
+        "jobs": [
+          {
+            "test": "adding",
+            "employer": "Employer Current",
+            "country": "United States",
+            "phone": "510-642-3000",
+            "startDate": "01/01/2010",
+            "endDate": "",
+            "title": "Executive Director of Something Very Important",
+            "fraction": "100",
+            "rate": "3500",
+            "currency": "USD - US Dollar",
+            "hours": "40",
+            "payFrequency": "Month"
+          },
+          {
+            "test": "editing",
+            "employer": "Employer Past",
+            "country": "United Kingdom",
+            "phone": "44 01440 652 7574",
+            "startDate": "01/01/2005",
+            "endDate": "12/31/2009",
+            "title": "Asst to the Executive Director of Something Very Important",
+            "fraction": "75",
+            "rate": "500",
+            "currency": "GBP - Pound Sterling",
+            "hours": "40",
+            "payFrequency": "Week"
+          }
         ]
       }
     }

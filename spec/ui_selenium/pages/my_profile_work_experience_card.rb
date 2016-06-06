@@ -19,7 +19,10 @@ module CalCentralPages
     text_area(:end_date_input, :id => 'cc-page-widget-profile-work-experience-end-date')
     paragraph(:date_validation_error, :xpath => '//p[contains(text(),"Please use mm/dd/yyyy date format")]')
     text_area(:title_input, :id => 'cc-page-widget-profile-work-experience-job-title')
-    elements(:fraction_radio_button, :radio_button, :xpath => '//div[@data-ng-repeat="value in employFracValues"]//input')
+    radio_button(:full_time_radio, :xpath => '//span[text()="Full Time"]/preceding-sibling::input')
+    radio_button(:three_quarter_time_radio, :xpath => '//span[text()="3/4 Time"]/preceding-sibling::input')
+    radio_button(:half_time_radio, :xpath => '//span[text()="Half Time"]/preceding-sibling::input')
+    radio_button(:one_quarter_time_radio, :xpath => '//span[text()="1/4 Time"]/preceding-sibling::input')
     text_area(:pay_rate_input, :id => 'cc-page-widget-profile-work-experience-ending-pay-rate')
     select_list(:currency_select, :id => 'cc-page-widget-profile-work-experience-currency-type')
     text_area(:hours_per_week_input, :id => 'cc-page-widget-profile-work-experience-hours-per-week')
@@ -27,11 +30,6 @@ module CalCentralPages
     button(:save, :xpath => '//button[contains(.,"Save")]')
     button(:cancel, :xpath => '//button[contains(.,"Cancel")]')
     button(:delete, :xpath => '//button[text()="Delete work experience"]')
-
-    radio_button(:full_time_radio, :xpath => '//span[text()="Full Time"]/preceding-sibling::input')
-    radio_button(:three_quarter_time_radio, :xpath => '//span[text()="3/4 Time"]/preceding-sibling::input')
-    radio_button(:half_time_radio, :xpath => '//span[text()="Half Time"]/preceding-sibling::input')
-    radio_button(:one_quarter_time_radio, :xpath => '//span[text()="1/4 Time"]/preceding-sibling::input')
 
     def load_page
       logger.debug 'Loading profile work experience page'
@@ -42,16 +40,28 @@ module CalCentralPages
       employer_elements.map &:text
     end
 
+    def get_job_index(jobs_added, job)
+      wait_until(WebDriverUtils.page_load_timeout) { employer_elements.any? }
+      sorted_jobs(jobs_added).index job
+    end
+
+    def sorted_jobs(jobs_added)
+      # Jobs without start dates come before jobs with dates
+      jobs_without_dates = (jobs_added.select { |j| job_data(j)[:start_date].blank? }).sort_by { |j| job_data(j)[:index] }
+      jobs_with_dates = (jobs_added.select { |j| !job_data(j)[:start_date].blank? }).sort_by { |j| DateTime.strptime(job_data(j)[:start_date], '%m/%d/%Y') }
+      jobs_without_dates.reverse + jobs_with_dates.reverse
+    end
+
     def fraction_radio(job_data)
       case job_data[:fraction]
         when '100'
-          fraction_radio_button_elements[0]
+          full_time_radio_element
         when '75'
-          fraction_radio_button_elements[1]
+          three_quarter_time_radio_element
         when '50'
-          fraction_radio_button_elements[2]
+          half_time_radio_element
         when '25'
-          fraction_radio_button_elements[3]
+          one_quarter_time_radio_element
         else
           nil
       end
@@ -72,6 +82,8 @@ module CalCentralPages
     def click_save
       save_element.when_visible WebDriverUtils.page_event_timeout
       click_element save_element
+      # Wait for transaction to complete
+      sleep WebDriverUtils.page_event_timeout
     end
 
     def click_cancel
@@ -123,7 +135,7 @@ module CalCentralPages
       clear_and_type(hours_per_week_input_element, job_data[:hours])
       self.currency_select = job_data[:currency]
       clear_and_type(pay_rate_input_element, job_data[:rate])
-      self.pay_frequency_select = job_data[:pay_frequency]
+      self.pay_frequency_select = job_data[:pay_frequency] unless job_data[:pay_frequency].blank?
     end
 
     def trimmed_input(field_max, input)
@@ -132,22 +144,72 @@ module CalCentralPages
     end
 
     def verify_job(job_data, index, inputs)
-      logger.info 'Verifying job'
-      wait_until(WebDriverUtils.page_event_timeout, "Visible employer at index #{index} is #{employer_elements[index].text}") do
-        employer_elements[index].text == trimmed_input(inputs_max(inputs)[:employer], job_data[:employer])
+      logger.info "Verifying job with employer #{job_data[:employer]} at index #{index}"
+      logger.debug "The current sort order of jobs in the UI is '#{all_employers}'"
+
+      # Employer has max char
+      expected_employer = trimmed_input(inputs_max(inputs)[:employer], job_data[:employer])
+      wait_until(1, "Expected '#{expected_employer}' but got '#{employer_elements[index].text}'") do
+        employer_elements[index].text == expected_employer
       end
+
       # TODO: verify the start / end dates on the work experience list
+
       click_edit index
-      wait_until(1) { employer_input == trimmed_input(inputs_max(inputs)[:employer], job_data[:employer]) }
-      wait_until(1) { country_select == job_data[:country] }
-      wait_until(1) { phone_input == trimmed_input(inputs_max(inputs)[:phone], job_data[:phone]) }
+
+      # Employer is required, has max char
+      wait_until(1, "Expected '#{expected_employer}' but got '#{employer_input}'") do
+        employer_input == expected_employer
+      end
+
+      # Country is required, defaults to US
+      expected_country = job_data[:country]
+      wait_until(1, "Expected '#{expected_country}' but got '#{country_select}'") do
+        expected_country.blank? ? country_select == 'United States' : country_select == expected_country
+      end
+
+      # Phone is optional, has max char
+      expected_phone = trimmed_input(inputs_max(inputs)[:phone], job_data[:phone])
+      wait_until(1, "Expected '#{expected_phone}' but got '#{phone_input}'") do
+        expected_phone.blank? ? phone_input.blank? : phone_input == expected_phone
+      end
+
       # TODO: verify the start / end dates on the work experience edit form
-      wait_until(1) { title_input == trimmed_input(inputs_max(inputs)[:title], job_data[:title]) }
-      wait_until(1) { fraction_radio(job_data).selected? }
-      wait_until(1) { pay_rate_input == job_data[:rate] }
-      wait_until(1) { currency_select == job_data[:currency] }
-      wait_until(1) { hours_per_week_input == job_data[:hours] }
-      wait_until(1) { pay_frequency_select == job_data[:pay_frequency] }
+
+      # Job title is optional, has max char
+      expected_title = trimmed_input(inputs_max(inputs)[:title], job_data[:title])
+      wait_until(1, "Expected '#{expected_title}' but got '#{title_input}'") do
+        expected_title.blank? ? title_input.blank? : title_input == expected_title
+      end
+
+      # Time fraction is optional
+      wait_until(1) do
+        fraction_radio(job_data).selected? unless job_data[:fraction].blank?
+      end
+
+      # Pay rate is optional
+      expected_rate = job_data[:rate]
+      wait_until(1, "Expected '#{expected_rate} but got '#{pay_rate_input}'") do
+        expected_rate.blank? ? pay_rate_input.blank? : pay_rate_input == expected_rate
+      end
+
+      # Currency is required, defaults to USD
+      expected_currency = job_data[:currency]
+      wait_until(1, "Expected '#{expected_currency}' but got '#{currency_select}'") do
+        expected_currency.blank? ? currency_select == 'USD - US Dollar' : currency_select == expected_currency
+      end
+
+      # Hours is optional
+      expected_hours = job_data[:hours]
+      wait_until(1, "Expected '#{expected_hours}' but got '#{hours_per_week_input}'") do
+        hours_per_week_input == expected_hours
+      end
+
+      # Pay frequency is required, defaults to Month
+      expected_pay_frequency = job_data[:pay_frequency]
+      wait_until(1, "Expected '#{expected_pay_frequency}' but got '#{pay_frequency_select}'") do
+        expected_pay_frequency.blank? ? pay_frequency_select == 'Month' : pay_frequency_select == expected_pay_frequency
+      end
     end
 
     def add_new_job(jobs_added, job)
@@ -158,7 +220,9 @@ module CalCentralPages
       click_save
       # Add the new job to the collection of jobs added thus far
       jobs_added << job
-      job_data
+      jobs_now = sorted_jobs jobs_added
+      logger.info "The current sort order of jobs should be: #{jobs_now.map { |j| job_data(j)[:employer] }}"
+      jobs_now
     end
 
     def edit_job(jobs_added, existing_job, edited_job)
@@ -166,11 +230,13 @@ module CalCentralPages
       job_data = job_data edited_job
       index = get_job_index(jobs_added, existing_job)
       click_edit index
-      enter_job job_data edited_job
+      enter_job job_data
       click_save
       # To keep track of jobs in the UI, replace the original job with the edited job
       jobs_added.map! { |j| j == existing_job ? edited_job : j }
-      job_data
+      jobs_now = sorted_jobs jobs_added
+      logger.info "The current sort order of jobs should be: #{jobs_now.map { |j| job_data(j)[:employer] }}"
+      jobs_now
     end
 
     def delete_job(index)
@@ -189,24 +255,6 @@ module CalCentralPages
         job_count = employer_elements.length
         delete_job 0
       end
-    end
-
-    def get_job_index(jobs_added, job)
-      wait_until(WebDriverUtils.page_load_timeout) { employer_elements.any? }
-      sorted_jobs(jobs_added).index job
-    end
-
-    def sorted_jobs(jobs_added)
-      # Jobs with start dates are sorted by start date descending
-      jobs_with_dates = (jobs_added.select { |j| !job_data(j)[:start_date].blank? }).sort_by { |j| job_data(j)[:start_date] }
-      jobs_with_dates.reverse!
-      # Jobs with nil start dates are sorted by creation date descending
-      jobs_without_dates = (jobs_added.select { |j| job_data(j)[:start_date].blank? }).sort_by { |j| job_data(j)[:index] }
-      jobs_without_dates.reverse!
-      # Jobs without start dates come before jobs with dates
-      sorted_jobs = jobs_without_dates + jobs_with_dates
-      logger.info "Expected employer sequence in the UI is #{sorted_jobs.map { |j| job_data(j)[:employer] }}"
-      sorted_jobs
     end
 
   end

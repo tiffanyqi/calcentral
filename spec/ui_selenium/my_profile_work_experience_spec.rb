@@ -49,6 +49,9 @@ describe 'Profile work experience card', :testui => true, :order => :defined do
         it 'requires the user to complete certain fields for the new entry' do
           @work_experience_card.click_add_job
           @work_experience_card.clear_and_type(@work_experience_card.employer_input_element, 'foo')
+          expect(@work_experience_card.country_select).to eql('United States')
+          expect(@work_experience_card.currency_select).to eql('USD - US Dollar')
+          expect(@work_experience_card.pay_frequency_select).to eql('Month')
           expect(@work_experience_card.save_element.attribute('disabled')).to be_nil
           @work_experience_card.clear_and_type(@work_experience_card.employer_input_element, '')
           expect(@work_experience_card.save_element.attribute('disabled')).to eql('true')
@@ -61,11 +64,12 @@ describe 'Profile work experience card', :testui => true, :order => :defined do
         end
 
         # Add each of the 'adding' jobs in the test data file
-        adding_test_jobs = work_experience['jobs'].select { |j| j['test'] == 'adding' }
-        adding_test_jobs.each do |job_to_add|
+        jobs_to_test_adds = work_experience['jobs'].select { |j| j['test'] == 'adding' }
+        jobs_to_test_adds.each do |job_to_add|
 
-          it "allows the user to add employer #{adding_test_jobs.index job_to_add}" do
-            job_data = @work_experience_card.add_new_job(jobs_added, job_to_add)
+          it "allows the user to add employer #{jobs_to_test_adds.index job_to_add}" do
+            job_data = @work_experience_card.job_data job_to_add
+            jobs_added = @work_experience_card.add_new_job(jobs_added, job_to_add)
             index = @work_experience_card.get_job_index(jobs_added, job_to_add)
             @work_experience_card.verify_job(job_data, index, inputs_max)
           end
@@ -76,12 +80,13 @@ describe 'Profile work experience card', :testui => true, :order => :defined do
       describe 'editing existing work experience' do
 
         # Replace the first job in the UI with each of the 'editing' jobs in the test data file
-        editing_test_jobs = work_experience['jobs'].select { |j| j['test'] == 'editing' }
-        editing_test_jobs.each do |edited_job|
+        jobs_to_test_edits = work_experience['jobs'].select { |j| j['test'] == 'editing' }
+        jobs_to_test_edits.each do |edited_job|
 
-          it "allows the user to edit #{editing_test_jobs.index edited_job}" do
-            job_data = @work_experience_card.edit_job(jobs_added, jobs_added[0], edited_job)
-            index = @work_experience_card.get_job_index(editing_test_jobs, edited_job)
+          it "allows the user to edit employer #{jobs_to_test_edits.index edited_job}" do
+            job_data = @work_experience_card.job_data edited_job
+            jobs_added = @work_experience_card.edit_job(jobs_added, jobs_added.first, edited_job)
+            index = @work_experience_card.get_job_index(jobs_added, edited_job)
             @work_experience_card.verify_job(job_data, index, inputs_max)
           end
 
