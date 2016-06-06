@@ -73,9 +73,7 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
   var getPerson = profileFactory.getPerson;
 
   var parseCalResidency = function(residency) {
-    if (!residency.code) {
-      return;
-    }
+    residency.fromTerm = _.get(residency, 'fromTerm.name');
 
     residency.description = calResidencyCode[residency.code];
     angular.merge($scope.residency, residency);
@@ -84,7 +82,9 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
   var parsePerson = function(data) {
     var residency = _.get(data, 'data.feed.student.residency.tuition');
 
-    residency.fromTerm = _.get(data, 'data.feed.student.residency.fromTerm.name');
+    if (!residency) {
+      return;
+    }
 
     parseCalResidency(residency);
   };
