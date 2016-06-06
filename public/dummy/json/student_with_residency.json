@@ -1,0 +1,307 @@
+{
+  "feed": {
+    "student": {
+      "addresses": [
+        {
+          "addrField1": "",
+          "addrField2": "",
+          "addrField3": "",
+          "address1": "260 Aldrich Hall",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "city": "Irvine",
+          "country": "USA",
+          "countryName": "United States",
+          "county": "",
+          "disclose": false,
+          "formattedAddress": "260 Aldrich Hall\\nIrvine, California 92697",
+          "fromDate": "2015-08-06",
+          "houseType": "",
+          "num1": "",
+          "num2": "",
+          "postal": "92697",
+          "state": "CA",
+          "stateName": "Primary",
+          "type": {
+            "code": "HOME",
+            "description": "Home"
+          },
+          "uiControl": {
+            "code": "U",
+            "description": "Edit - No Delete"
+          }
+        },
+        {
+          "addrField1": "",
+          "addrField2": "",
+          "addrField3": "",
+          "address1": "2850 TELEGRAPH AVE #400",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "city": "BERKELEY",
+          "country": "USA",
+          "countryName": "United States",
+          "county": "",
+          "disclose": false,
+          "formattedAddress": "2850 TELEGRAPH AVE #400\\nBERKELEY, California 94705",
+          "fromDate": "2015-08-06",
+          "houseType": "",
+          "num1": "",
+          "num2": "",
+          "postal": "94705",
+          "state": "CA",
+          "stateName": "Primary",
+          "type": {
+            "code": "LOCL",
+            "description": "Local"
+          },
+          "uiControl": {
+            "code": "U",
+            "description": "Edit - No Delete"
+          }
+        }
+      ],
+      "affiliations": [
+        {
+          "detail": "Active",
+          "fromDate": "2016-04-19",
+          "status": {
+            "code": "ACT",
+            "description": "Active"
+          },
+          "type": {
+            "code": "EMPLOYEE",
+            "description": "Employee"
+          }
+        },
+        {
+          "detail": "Active",
+          "fromDate": "2015-12-18",
+          "status": {
+            "code": "ACT",
+            "description": "Active"
+          },
+          "type": {
+            "code": "GRADUATE",
+            "description": "Graduate Student"
+          }
+        },
+        {
+          "detail": "",
+          "fromDate": "2015-12-18",
+          "status": {
+            "code": "ACT",
+            "description": "Active"
+          },
+          "type": {
+            "code": "STUDENT",
+            "description": ""
+          }
+        }
+      ],
+      "confidential": false,
+      "emails": [
+        {
+          "disclose": false,
+          "emailAddress": "petertheanteater@berkeley.edu",
+          "primary": true,
+          "type": {
+            "code": "CAMP",
+            "description": "Campus"
+          },
+          "uiControl": {
+            "code": "D",
+            "description": "Display Only"
+          }
+        },
+        {
+          "disclose": false,
+          "emailAddress": "PETERTHEANTEATER@GMAIL.COM",
+          "primary": false,
+          "type": {
+            "code": "OTHR",
+            "description": "Other"
+          },
+          "uiControl": {
+            "code": "F",
+            "description": "Full Edit"
+          }
+        }
+      ],
+      "emergencyContacts": [],
+      "ethnicities": [],
+      "identifiers": [
+        {
+          "disclose": false,
+          "id": "123456789",
+          "type": "student-id"
+        },
+        {
+          "disclose": false,
+          "id": "12345",
+          "type": "campus-uid"
+        },
+        {
+          "disclose": false,
+          "id": "***-**-****",
+          "type": "Social Security Number"
+        },
+        {
+          "disclose": false,
+          "fromDate": "1902-02-01",
+          "id": "123456789",
+          "type": "DB2"
+        },
+        {
+          "disclose": false,
+          "fromDate": "2015-08-06",
+          "id": "09876543",
+          "type": "HCM System"
+        }
+      ],
+      "languages": [],
+      "names": [
+        {
+          "disclose": false,
+          "familyName": "Anteater",
+          "formattedName": "Peter T Anteater ",
+          "fromDate": "1902-02-01",
+          "givenName": "Peter",
+          "middleName": "T",
+          "preferred": true,
+          "prefixName": "",
+          "suffixName": "",
+          "type": {
+            "code": "PRF",
+            "description": "Preferred"
+          },
+          "uiControl": {
+            "code": "U",
+            "description": "Edit - No Delete"
+          }
+        },
+        {
+          "disclose": false,
+          "familyName": "Anteater",
+          "formattedName": "Peter The Anteater ",
+          "fromDate": "2015-08-06",
+          "givenName": "Peter",
+          "middleName": "The",
+          "preferred": false,
+          "prefixName": "",
+          "suffixName": "",
+          "type": {
+            "code": "PRI",
+            "description": "Primary"
+          },
+          "uiControl": {
+            "code": "D",
+            "description": "Display Only"
+          }
+        }
+      ],
+      "phones": [
+        {
+          "countryCode": "",
+          "disclose": false,
+          "extension": "",
+          "number": "510/643-9221",
+          "primary": false,
+          "type": {
+            "code": "CELL",
+            "description": "Mobile"
+          },
+          "uiControl": {
+            "code": "F",
+            "description": "Full Edit"
+          }
+        },
+        {
+          "countryCode": "",
+          "disclose": false,
+          "extension": "",
+          "number": "949/824-5011",
+          "primary": false,
+          "type": {
+            "code": "HOME",
+            "description": "Home/Permanent"
+          },
+          "uiControl": {
+            "code": "F",
+            "description": "Full Edit"
+          }
+        },
+        {
+          "countryCode": "",
+          "disclose": false,
+          "extension": "",
+          "number": "510/643-9040",
+          "primary": true,
+          "type": {
+            "code": "LOCL",
+            "description": "Local"
+          },
+          "uiControl": {
+            "code": "F",
+            "description": "Full Edit"
+          }
+        }
+      ],
+      "residency": {
+        "comments": "",
+        "countryCode": "USA",
+        "county": "",
+        "financialAid": {
+          "code": "RES",
+          "description": "Resident"
+        },
+        "financialAidException": {
+          "code": "RA",
+          "description": "AB540"
+        },
+        "fromDate": "2016-01-12",
+        "fromTerm": {
+          "academicYear": "2016",
+          "beginDate": "2016-01-12",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "endDate": "2016-05-13",
+          "id": "2162",
+          "name": "2016 Spring"
+        },
+        "official": {
+          "code": "NON",
+          "description": "Non-Resident"
+        },
+        "postalCode": "",
+        "source": {
+          "code": "Official"
+        },
+        "stateCode": "",
+        "statementOfLegalResidenceStatus": {
+          "code": "",
+          "description": ""
+        },
+        "tuition": {
+          "code": "RES",
+          "description": "Resident"
+        },
+        "tuitionException": {
+          "code": "RA",
+          "description": "AB540"
+        }
+      },
+      "urls": [],
+      "usaCountry": {
+        "citizenshipStatus": {
+          "code": "1"
+        }
+      }
+    }
+  },
+  "statusCode": 200
+}

@@ -411,6 +411,33 @@
                 }
               }
             ],
+            "residency": {
+              "source": {
+                "code": "Official"
+              },
+              "fromTerm": {
+                "id": "2145",
+                "name": "2014 Summer"
+              },
+              "fromDate": "2014-05-27",
+              "financialAid": {
+                "code": "NON",
+                "description": "Non-Resident"
+              },
+              "official": {
+                "code": "NON",
+                "description": "Non-Resident"
+              },
+              "tuition": {
+                "code": "NON",
+                "description": "Non-Resident"
+              },
+              "county": "",
+              "stateCode": "",
+              "countryCode": "USA",
+              "postalCode": "",
+              "comments": ""
+            },
             "urls": [],
             "usaCountry": {
               "citizenshipStatus": {
