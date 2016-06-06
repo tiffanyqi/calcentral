@@ -107,6 +107,10 @@
                 "code": "NON",
                 "description": "Non-Resident"
               },
+              "official": {
+                "code": "NON",
+                "description": "Non-Resident"
+              },
               "tuition": {
                 "code": "NON",
                 "description": "Non-Resident"

@@ -80,7 +80,7 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
   };
 
   var parsePerson = function(data) {
-    var residency = _.get(data, 'data.feed.student.residency.tuition');
+    var residency = _.get(data, 'data.feed.student.residency.official');
 
     if (!residency) {
       return;
