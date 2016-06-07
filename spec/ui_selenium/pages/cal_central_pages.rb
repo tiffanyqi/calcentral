@@ -36,22 +36,32 @@ module CalCentralPages
   h4(:status_popover_heading, :xpath => '//div[@class="cc-popover-title"]/h4')
   div(:no_status_alert, :xpath => '//div[@class="cc-popover-noitems ng-scope"]')
   image(:no_status_alert_icon, :xpath => '//div[@class="cc-popover-noitems ng-scope"]/i[@class="cc-left fa fa-check-circle cc-icon-green"]')
+
   div(:reg_status_alert, :xpath => '//li[contains(@data-ng-if,"regStatus")]//div')
   link(:reg_status_alert_link, :xpath => '//li[contains(@data-ng-if,"regStatus")]/a')
   image(:reg_status_alert_icon, :xpath => '//li[contains(@data-ng-if,"regStatus")]//i[@class="cc-left fa fa-exclamation-circle cc-icon-red"]')
+
   div(:block_status_alert, :xpath => '//li[@data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)"]//div')
   span(:block_status_alert_number, :xpath => '//li[@data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)"]//span[@data-ng-bind="studentInfo.regBlock.activeBlocks"]')
   link(:block_status_alert_link, :xpath => '//li[@data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)"]//a')
   image(:block_status_alert_icon, :xpath => '//li[@data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)"]//i[@class="cc-left fa fa-exclamation-circle cc-icon-red"]')
+
+  div(:hold_status_alert, :xpath => '//li[contains(@data-ng-if, "csHolds")]//div')
+  span(:hold_status_alert_number, :xpath => '//li[contains(@data-ng-if, "csHolds")]//span')
+  link(:hold_status_alert_link, :xpath => '//li[contains(@data-ng-if, "csHolds")]/a')
+  image(:hold_status_alert_icon, :xpath => '//li[contains(@data-ng-if, "csHolds")]//i[@class="fa fa-exclamation-circle cc-icon-red"]')
+
   div(:amount_due_status_alert, :xpath => '//li[@data-ng-if="minimumAmountDue && minimumAmountDue > 0"]//div')
   span(:amount_due_amount, :xpath => '//li[@data-ng-if="minimumAmountDue && minimumAmountDue > 0"]//span[@data-ng-bind="minimumAmountDue | currency"]')
   link(:amount_due_status_alert_link, :xpath => '//li[@data-ng-if="minimumAmountDue && minimumAmountDue > 0"]//a')
   image(:amount_due_status_alert_icon, :xpath => '//li[@data-ng-if="minimumAmountDue && minimumAmountDue > 0"]//i[@class="cc-left fa fa-exclamation-triangle cc-icon-gold"]')
   image(:amount_overdue_status_alert_icon, :xpath => '//li[@data-ng-if="minimumAmountDue && minimumAmountDue > 0"]//i[@class="cc-left fa fa-exclamation-circle cc-icon-red"]')
+
   div(:finaid_status_alert, :xpath => '//li[@data-ng-if="countUndatedFinaid > 0"]//div')
   link(:finaid_status_alert_link, :xpath => '//li[@data-ng-if="countUndatedFinaid > 0"]//a')
   image(:finaid_status_alert_icon, :xpath => '//li[@data-ng-if="countUndatedFinaid > 0"]//i[@class="fa fa-exclamation-circle cc-icon-red"]')
   span(:finaid_status_alert_count, :xpath => '//li[@data-ng-if="countUndatedFinaid > 0"]//span[@data-ng-bind="countUndatedFinaid"]')
+
   button(:profile_link, :xpath => '//button[contains(text(),"Profile")]')
   button(:logout_link, :xpath => '//button[contains(text(),"Log out")]')
 
@@ -117,6 +127,10 @@ module CalCentralPages
 
   def click_block_status_alert
     WebDriverUtils.wait_for_element_and_click block_status_alert_element
+  end
+
+  def click_hold_status_alert
+    WebDriverUtils.wait_for_element_and_click hold_status_alert_element
   end
 
   def click_amt_due_alert

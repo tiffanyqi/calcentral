@@ -6,11 +6,11 @@ class ApiCSHoldsPage
   def get_json(driver)
     logger.info 'Fetching data from /api/campus_solutions/holds'
     navigate_to "#{WebDriverUtils.base_url}/api/campus_solutions/holds"
-    @parsed = JSON.parse driver.find_element(:xpath => '//pre')
+    @parsed = JSON.parse driver.find_element(:xpath => '//pre').text
   end
 
   def holds
-    @parsed['feed']['serviceIndicators']
+    @parsed['feed'] && @parsed['feed']['serviceIndicators']
   end
 
   def hold_reasons
@@ -20,24 +20,22 @@ class ApiCSHoldsPage
   def hold_dates
     holds.map do |hold|
       # Shows the start term if there is no start date
-      hold['startDate'].nil? ?
-          hold['startTermDesc'] :
-          WebDriverUtils.ui_numeric_date_format(Time.strptime(hold['startDate']['epoch'], '%s'))
+      hold['startDate'].blank? ?
+          hold_term(hold) :
+          Time.strptime(hold['startDate']['epoch'].to_s, '%s').strftime('%m/%d/%y')
     end
   end
 
-  def hold_terms
-    holds.map { |hold| hold['startTermDesc'] }
+  def hold_term(hold)
+    hold['startTermDescr']
   end
 
-  def hold_contacts
-    contacts = holds.map { |hold| hold['contactName'] }
-    contacts.compact
+  def hold_contacts(hold)
+    hold['contactName']
   end
 
-  def hold_instructions
-    instructions = holds.map { |hold| hold['instructions'] }
-    instructions.compact
+  def hold_instructions(hold)
+    hold['instructions']
   end
 
 end
