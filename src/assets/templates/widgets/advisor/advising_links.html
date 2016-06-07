@@ -31,6 +31,24 @@
       data-text="GTE Forms"
     ></div>
   </li>
+  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.eformsCenter.url">
+    <a
+      data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.eformsCenter.url}}"
+      data-ng-bind="ucAdvisingResources.ucAdvisingLinks.eformsCenter.name"
+    ></a>
+  </li>
+  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.eformsWorkList.url">
+    <a
+      data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.eformsWorkList.url}}"
+      data-ng-bind="ucAdvisingResources.ucAdvisingLinks.eformsWorkList.name"
+    ></a>
+  </li>
+  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.webNowDocuments.url">
+    <a
+      data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.webNowDocuments.url}}"
+      data-ng-bind="ucAdvisingResources.ucAdvisingLinks.webNowDocuments.name"
+    ></a>
+  </li>
   <!-- This URL is mislabelled in the API, it's in fact the scheduler view link -->
   <li data-ng-if="api.user.profile.features.csAdvisingSchedulerView && ucAdvisingResources.ucAdvisingLinks.classSearch.url">
     <div
@@ -51,12 +69,6 @@
     <a
       data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.multiYearAcademicPlannerGeneric.url}}"
       data-ng-bind="ucAdvisingResources.ucAdvisingLinks.multiYearAcademicPlannerGeneric.name"
-    ></a>
-  </li>
-  <li data-ng-if="ucAdvisingResources.ucAdvisingLinks.webNowDocuments.url">
-    <a
-      data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.webNowDocuments.url}}"
-      data-ng-bind="ucAdvisingResources.ucAdvisingLinks.webNowDocuments.name"
     ></a>
   </li>
 </ul>
