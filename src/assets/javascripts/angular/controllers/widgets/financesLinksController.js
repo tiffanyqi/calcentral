@@ -1,14 +1,19 @@
 'use strict';
 
 var angular = require('angular');
+var _ = require('lodash');
 
 /**
  * Footer controller
  */
 angular.module('calcentral.controllers').controller('FinancesLinksController', function(apiService, campusLinksFactory, financesLinksFactory, $scope) {
   $scope.isLoading = true;
-  $scope.campuslinks = {
-    data: {}
+  $scope.campusLinks = {
+    data: {},
+    linkOrder: ['Payment Options', 'Tuition and Fees', 'Billing FAQ', 'FAFSA', 'Dream Act Application', 'Financial Aid & Scholarships Office',
+                'MyFinAid (aid prior to Fall 2016)', 'Cost of Attendance', 'Graduate Financial Support', 'Work-Study', 'Financial Literacy',
+                'National Student Loan Database System', 'Loan Repayment Calculator', 'Federal Student Loans', 'Student Advocates Office',
+                'Berkeley International Office', 'Have a loan?', 'Withdrawing or Canceling?', 'Schedule & Deadlines', 'Summer Session', 'Cal Student Central']
   };
   $scope.delegateAccess = {
     title: 'Authorize others to access your billing information'
@@ -46,8 +51,24 @@ angular.module('calcentral.controllers').controller('FinancesLinksController', f
     }
   };
 
+  var matchLinks = function(campusLinks, matchLink) {
+    return _.find(campusLinks, function(link) {
+      return link.name === matchLink;
+    });
+  };
+
+  var sortCampusLinks = function(campusLinks) {
+    var orderedLinks = [];
+    for (var i = 0; i < $scope.campusLinks.linkOrder.length; i++) {
+      var matchedLink = matchLinks(campusLinks, $scope.campusLinks.linkOrder[i]);
+      orderedLinks.push(matchedLink);
+    }
+    $scope.campusLinks.data.links = orderedLinks;
+  };
+
   var parseCampusLinks = function(data) {
-    angular.extend($scope.campuslinks.data, data);
+    angular.extend($scope.campusLinks.data, data);
+    sortCampusLinks($scope.campusLinks.data.links);
   };
 
   /**

@@ -3,13 +3,11 @@
     <h2>Financial Resources</h2>
   </div>
   <div data-cc-spinner-directive="isLoading">
-    <div class="cc-list-link-container" data-ng-repeat="subcategory in campuslinks.data.subcategories">
+    <div class="cc-list-link-container" data-ng-repeat="subcategory in campusLinks.data.subcategories">
       <h3>{{subcategory}}</h3>
       <ul class="cc-list-links">
-        <li data-ng-repeat="link in campuslinks.data.links | orderBy:'name' | campusLinksSubcategoryFilter:subcategory">
-          <a data-ng-href="{{link.url}}"
-            data-ng-click="api.analytics.trackExternalLink('Campus links', subcategory, link.url)"
-            title="{{link.description}}">{{link.name}}</a>
+        <li data-ng-if="subcategory === 'Billing & Payments'">
+          <a data-ng-href="/profile/delegate" data-ng-attr-title="{{$parent.delegateAccess.title}}">Delegate Access</a>
         </li>
         <li data-ng-if="subcategory === 'Billing & Payments'">
           <a data-ng-href="{{$parent.eft.eftLink.url}}" data-ng-attr-title="{{$parent.eft.eftLink.title}}">Electronic Funds Transfer / EFT </a>
@@ -30,7 +28,12 @@
             <strong>Manage Account</strong>
           </a>
         </li>
-        <li data-ng-if="subcategory === 'Billing & Payments'">
+        <li data-ng-repeat-start="link in campusLinks.data.links | campusLinksSubcategoryFilter:subcategory">
+          <a data-ng-href="{{link.url}}"
+            data-ng-click="api.analytics.trackExternalLink('Campus links', subcategory, link.url)"
+            title="{{link.description}}">{{link.name}}</a>
+        </li>
+        <li data-ng-if="subcategory === 'Billing & Payments' && $index === 1">
           <a data-ng-href="{{$parent.fpp.fppLink.url}}" data-ng-attr-title="{{$parent.fpp.fppLink.title}}">Tuition and Fees Payment Plan</a>
           <a class="cc-list-links-nested-dash"
               data-ng-href="{{$parent.fpp.data.fppEnrollUrl.url}}"
@@ -38,10 +41,7 @@
               data-ng-if="$parent.fpp.data.fppEnrollUrl.url"><strong>Activate Plan</strong>
           </a>
         </li>
-        <li data-ng-if="subcategory === 'Billing & Payments'">
-          <a data-ng-href="/profile/delegate" data-ng-attr-title="{{$parent.delegateAccess.title}}">Delegate Access</a>
-        </li>
-        <li data-ng-if="subcategory === 'Billing & Payments'">
+        <li data-ng-repeat-end data-ng-if="subcategory === 'Billing & Payments' && $index === 1">
           <a data-ng-href="{{$parent.taxForm.taxFormLink.url}}" data-ng-attr-title="{{$parent.taxForm.taxFormLink.title}}">Tax 1098-T Form</a>
           <a class="cc-list-links-nested-dash"
              data-ng-href="{{$parent.taxForm.viewFormLink.url}}"
