@@ -26,7 +26,7 @@ describe 'Delegated access', :testui => true do
 
       # Academics UI
       @academic_profile_card = CalCentralPages::MyAcademicsProfileCard.new @driver
-      @status_card = CalCentralPages::MyAcademicsStatusAndBlocksCard.new @driver
+      @status_card = CalCentralPages::MyAcademicsStatusBlocksHoldsCard.new @driver
       @semester_card = CalCentralPages::MyAcademicsSemestersCard.new @driver
       @final_exams_card = CalCentralPages::MyAcademicsFinalExamsCard.new @driver
       @advising_card = CalCentralPages::MyAcademicsAdvisingCard.new @driver

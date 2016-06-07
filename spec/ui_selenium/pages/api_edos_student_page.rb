@@ -19,7 +19,7 @@ class ApiEdosStudentPage
   end
 
   def residency
-    student['residency'] && student['residency']['tuition']
+    student['residency'] && student['residency']['official']
   end
 
   def residency_desc
