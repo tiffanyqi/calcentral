@@ -35,7 +35,7 @@ module MyClasses
 
     def filter_for_view_as(feed)
       if authentication_state.authenticated_as_advisor?
-        feed[:classes].delete_if {|t| t[:emitter] == 'bCourses'}
+        feed[:classes].delete_if {|t| t[:emitter] == 'bCourses' || t[:role] == 'Instructor'}
       end
       feed
     end
