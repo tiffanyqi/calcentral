@@ -10,6 +10,9 @@ angular.module('calcentral.controllers').controller('FinancesLinksController', f
   $scope.campuslinks = {
     data: {}
   };
+  $scope.delegateAccess = {
+    title: 'Authorize others to access your billing information'
+  };
   $scope.eft = {
     data: {},
     studentActive: true,
@@ -30,6 +33,16 @@ angular.module('calcentral.controllers').controller('FinancesLinksController', f
     },
     activatePlanLink: {
       title: 'Activate your tuition and fees payment plan'
+    }
+  };
+  $scope.taxForm = {
+    taxFormLink: {
+      url: 'http://studentbilling.berkeley.edu/taxpayer.htm',
+      title: 'Reduce your federal income tax based upon qualified tuition and fees paid'
+    },
+    viewFormLink: {
+      url: 'https://www.1098t.com/',
+      title: 'Start here to access your 1098-T form'
     }
   };
 
