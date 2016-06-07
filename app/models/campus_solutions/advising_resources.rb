@@ -35,10 +35,12 @@ module CampusSolutions
       if links
         # The following links are hard-coded, for now. Ideally they would be served by CS API but there is an urgent need
         # thus we manage the content via CalCentral settings.
+        add_cs_link links, :eforms_center, 'EFORMS_CENTER', 'eForms Center'
+        add_cs_link links, :eforms_work_list, 'EFORMS_WORK_LIST', 'eForms Work List'
+        add_cs_link links, :web_now_documents, 'WEB_NOW_DOCUMENTS', 'WebNow Documents'
         add_cs_link links, :multi_year_academic_planner_generic, 'MULTI_YEAR_ACADEMIC_PLANNER_GENERIC', 'Multi-Year Planner'
         add_cs_link links, :multi_year_academic_planner, 'MULTI_YEAR_ACADEMIC_PLANNER_STUDENT_SPECIFIC', 'Multi-Year Planner', "?UCemplid=#{lookup_student_id}"
         add_cs_link links, :schedule_planner, 'SCHEDULE_PLANNER_STUDENT_SPECIFIC', 'Schedule Planner', "?EMPLID=#{lookup_student_id}"
-        add_cs_link links, :web_now_documents, 'WEB_NOW_DOCUMENTS', 'WebNow Documents'
       end
       feed
     end

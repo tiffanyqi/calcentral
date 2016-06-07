@@ -428,6 +428,8 @@ campus_solutions_links:
     multi_year_academic_planner: ''
     schedule_planner: ''
     web_now_documents: ''
+    eforms_center: ''
+    eforms_work_list: ''
 
 # A feature will be disabled if the corresponding feature-flag is false or nil.
 features:
