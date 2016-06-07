@@ -38,6 +38,16 @@
               data-ng-if="$parent.fpp.data.fppEnrollUrl.url"><strong>Activate Plan</strong>
           </a>
         </li>
+        <li data-ng-if="subcategory === 'Billing & Payments'">
+          <a data-ng-href="/profile/delegate" data-ng-attr-title="{{$parent.delegateAccess.title}}">Delegate Access</a>
+        </li>
+        <li data-ng-if="subcategory === 'Billing & Payments'">
+          <a data-ng-href="{{$parent.taxForm.taxFormLink.url}}" data-ng-attr-title="{{$parent.taxForm.taxFormLink.title}}">Tax 1098-T Form</a>
+          <a class="cc-list-links-nested-dash"
+             data-ng-href="{{$parent.taxForm.viewFormLink.url}}"
+             data-ng-attr-title="{{$parent.taxForm.viewFormLink.title}}"><strong>View Form</strong>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="cc-widget-text" data-ng-if="campuslinks.data.links.length === 0">There are no links available.</div>
