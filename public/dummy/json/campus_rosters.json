@@ -26,6 +26,10 @@
       "id": "11111111",
       "last_name": "TITTEFWT",
       "login_id": "11111111",
+      "majors": [
+        "Education PhD",
+        "Education MA"
+      ],
       "photo": "/campus/econ-100b-2016-D/photo/11111111",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=11111111",
       "section_ccns": [
@@ -53,6 +57,9 @@
       "id": "222222222",
       "last_name": "SEFTT",
       "login_id": "222222222",
+      "majors": [
+        "Journalism MJ"
+      ],
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=222222222",
       "section_ccns": [
         "14299",
@@ -80,6 +87,9 @@
       "id": "333333",
       "last_name": "LBBERRR",
       "login_id": "333333",
+      "majors": [
+        "Landscape Architecture BA"
+      ],
       "photo": "/campus/econ-100b-2016-D/photo/333333",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=333333",
       "section_ccns": [
@@ -107,6 +117,9 @@
       "id": "444444",
       "last_name": "Vidarr",
       "login_id": "444444",
+      "majors": [
+        "Business Administration MBA"
+      ],
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=444444",
       "section_ccns": [
@@ -130,6 +143,9 @@
       "id": "555555",
       "last_name": "Bonecrusher",
       "login_id": "555555",
+      "majors": [
+        "Non-UC Campus Visitor GR"
+      ],
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=555555",
       "section_ccns": [
@@ -154,6 +170,10 @@
       "id": "666666",
       "last_name": "MURANDDEO",
       "login_id": "666666",
+      "majors": [
+        "Rhetoric PhD",
+        "Rhetoric MA"
+      ],
       "photo": "/campus/econ-100b-2016-D/photo/666666",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=666666",
       "section_ccns": [
@@ -181,6 +201,12 @@
       "id": "777777",
       "last_name": "McDerpDerpoo",
       "login_id": "777777",
+      "majors": [
+        "Ethnic Studies PhD",
+        "Ethnic Studies MA",
+        "Psychology PhD",
+        "Psychology MA"
+      ],
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=777777",
       "section_ccns": [
@@ -209,6 +235,10 @@
       "id": "888888",
       "last_name": "Hurroooo",
       "login_id": "888888",
+      "majors": [
+        "Psychology PhD",
+        "Psychology MA"
+      ],
       "photo": "/campus/econ-100b-2016-D/photo/888888",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=888888",
       "section_ccns": [
@@ -236,6 +266,10 @@
       "id": "999999",
       "last_name": "Servoinda",
       "login_id": "999999",
+      "majors": [
+        "Education PhD",
+        "Education MA"
+      ],
       "photo": "/campus/econ-100b-2016-D/photo/999999",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=999999",
       "section_ccns": [
@@ -263,6 +297,9 @@
       "id": "989898",
       "last_name": "Servoinda",
       "login_id": "989898",
+      "majors": [
+        "Journalism MJ"
+      ],
       "photo": "/campus/econ-100b-2016-D/photo/989898",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=989898",
       "section_ccns": [
@@ -290,6 +327,9 @@
       "id": "979797",
       "last_name": "Kerschen",
       "login_id": "979797",
+      "majors": [
+        "Physical Sci Field Major BA"
+      ],
       "photo": "/campus/econ-100b-2016-D/photo/979797",
       "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=979797",
       "section_ccns": [

@@ -281,6 +281,28 @@ module EdoOracle
       SQL
     end
 
+    # Extended version of #get_enrolled_students used for rosters
+    def self.get_rosters(section_id, term_id)
+      safe_query <<-SQL
+        SELECT DISTINCT
+          enroll."CAMPUS_UID" AS ldap_uid,
+          enroll."STUDENT_ID" AS student_id,
+          enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
+          enroll."WAITLISTPOSITION" AS waitlist_position,
+          enroll."UNITS_TAKEN" AS units,
+          TRIM(enroll."GRADING_BASIS_CODE") AS grading_basis,
+          plan."ACADPLAN_DESCR" AS major
+        FROM SISEDO.ENROLLMENTV00_VW enroll
+        LEFT OUTER JOIN
+          SISEDO.STUDENT_PLAN_CC_V00_VW plan ON enroll."STUDENT_ID" = plan."STUDENT_ID" AND
+          plan."ACADPLAN_TYPE_CODE" = 'MAJ'
+        WHERE
+          enroll."CLASS_SECTION_ID" = '#{section_id}'
+          AND enroll."TERM_ID" = '#{term_id}'
+          AND enroll."STDNT_ENRL_STATUS_CODE" != 'D'
+      SQL
+    end
+
     # EDO equivalent of CampusOracle::Queries.has_instructor_history?
     def self.has_instructor_history?(ldap_uid, instructor_terms = nil)
       if instructor_terms.to_a.any?

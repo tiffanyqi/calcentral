@@ -202,6 +202,16 @@ describe EdoOracle::Queries, :ignore => true do
     end
   end
 
+  describe '.get_rosters', :testext => true do
+    let(:expected_keys) { %w(ldap_uid student_id enroll_status waitlist_position units grading_basis) }
+    it 'returns enrollments for section' do
+      results = EdoOracle::Queries.get_rosters(section_ids[0], fall_term_id)
+      results.each do |enrollment|
+        expect(enrollment).to have_keys(expected_keys)
+      end
+    end
+  end
+
   describe '.has_instructor_history?', :testext => true do
     subject { EdoOracle::Queries.has_instructor_history?(ldap_uid, terms) }
     context 'when user is an instructor' do

@@ -135,4 +135,131 @@ describe Rosters::Common do
     end
   end
 
+  describe '#get_enrollments' do
+    context 'when term is legacy sis' do
+      let(:legacy_enrollments) {
+        [
+          {
+            'ldap_uid' => '111111',
+            'enroll_status' => 'E',
+            'pnp_flag' => 'N',
+            'first_name' => 'JIM',
+            'last_name' => 'HALPERT',
+            'student_email_address' => 'jhalpert@berkeley.edu',
+            'student_id' => '22200999',
+            'affiliations' => 'STUDENT-TYPE-REGISTERED'
+          },
+          {
+            'ldap_uid' => '222222',
+            'enroll_status' => 'W',
+            'pnp_flag' => 'N',
+            'first_name' => 'DWIGHT',
+            'last_name' => 'SCHRUTE',
+            'student_email_address' => 'dschrute@berkeley.edu',
+            'student_id' => '22200777',
+            'affiliations' => 'STUDENT-TYPE-REGISTERED'
+          }
+        ]
+      }
+      before do
+        allow(Berkeley::Terms).to receive(:legacy?).and_return(true)
+        allow(CampusOracle::Queries).to receive(:get_enrolled_students).and_return(legacy_enrollments)
+      end
+      it 'returns student basic attributes and enrollment status' do
+        enrollments = subject.get_enrollments(course_id, '2016', 'D')
+        expect(enrollments.count).to eq 2
+        expect(enrollments[1][:ldap_uid]).to eq '222222'
+        expect(enrollments[1][:student_id]).to eq '22200777'
+        expect(enrollments[1][:first_name]).to eq 'DWIGHT'
+        expect(enrollments[1][:last_name]).to eq 'SCHRUTE'
+        expect(enrollments[1][:email]).to eq 'dschrute@berkeley.edu'
+        expect(enrollments[1][:enroll_status]).to eq 'W'
+      end
+    end
+    context 'when term is campus solutions' do
+      let(:cs_enrollments) {
+        [
+          {
+            'ldap_uid' => '333333',
+            'student_id' => '22200666',
+            'enroll_status' => 'E',
+            'waitlist_position' => nil,
+            'units' => 4,
+            'grading_basis' => 'GRD',
+            'major' => 'Cognitive Science BA',
+          },
+          {
+            'ldap_uid' => '333333',
+            'student_id' => '22200666',
+            'enroll_status' => 'E',
+            'waitlist_position' => nil,
+            'units' => 4,
+            'grading_basis' => 'GRD',
+            'major' => 'Computer Science BA',
+          },
+          {
+            'ldap_uid' => '444444',
+            'student_id' => '22200555',
+            'enroll_status' => 'E',
+            'waitlist_position' => nil,
+            'units' => 4,
+            'grading_basis' => 'PNP',
+            'major' => 'Computer Science BA',
+          },
+          {
+            'ldap_uid' => '555555',
+            'student_id' => '22200444',
+            'enroll_status' => 'W',
+            'waitlist_position' => '25',
+            'units' => 4,
+            'grading_basis' => 'GRD',
+            'major' => 'Nose Picking BA',
+          }
+        ]
+      }
+      let(:user_attributes) {
+        [
+          {:ldap_uid => '333333', :email_address => 'pambeesly@berkeley.edu'},
+          {:ldap_uid => '444444', :email_address => 'kellykapoor@berkeley.edu'},
+          {:ldap_uid => '555555', :email_address => 'kevinmalone@berkeley.edu'},
+        ]
+      }
+      let(:enrollments) { subject.get_enrollments(course_id, '2016', 'D') }
+      before do
+        allow(Berkeley::Terms).to receive(:legacy?).and_return(false)
+        allow(EdoOracle::Queries).to receive(:get_rosters).and_return(cs_enrollments)
+        expect(User::BasicAttributes).to receive(:attributes_for_uids).with(["333333", "444444", "555555"]).and_return(user_attributes)
+      end
+      it 'returns student basic attributes and enrollment status' do
+        expect(enrollments[0][:email]).to eq 'pambeesly@berkeley.edu'
+        expect(enrollments[0][:enroll_status]).to eq 'E'
+        expect(enrollments[0][:units]).to eq '4'
+        expect(enrollments[1][:email]).to eq 'kellykapoor@berkeley.edu'
+        expect(enrollments[1][:enroll_status]).to eq 'E'
+        expect(enrollments[1][:units]).to eq '4'
+        expect(enrollments[2][:email]).to eq 'kevinmalone@berkeley.edu'
+        expect(enrollments[2][:enroll_status]).to eq 'W'
+        expect(enrollments[2][:units]).to eq '4'
+      end
+
+      it 'converts grade option to string version' do
+        expect(enrollments[0][:grade_option]).to eq 'Letter'
+        expect(enrollments[1][:grade_option]).to eq 'P/NP'
+        expect(enrollments[2][:grade_option]).to eq 'Letter'
+      end
+
+      it 'converts waitlist position to integer when present' do
+        expect(enrollments[0][:waitlist_position]).to eq nil
+        expect(enrollments[1][:waitlist_position]).to eq nil
+        expect(enrollments[2][:waitlist_position]).to eq 25
+      end
+
+      it 'merges majors into single enrollment for student' do
+        expect(enrollments[0][:majors]).to eq ['Cognitive Science BA', 'Computer Science BA']
+        expect(enrollments[1][:majors]).to eq ['Computer Science BA']
+        expect(enrollments[2][:majors]).to eq ['Nose Picking BA']
+      end
+    end
+  end
+
 end
