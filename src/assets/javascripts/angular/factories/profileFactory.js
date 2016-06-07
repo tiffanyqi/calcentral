@@ -9,7 +9,6 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
   var urlAddressFields = '/api/campus_solutions/address_label';
   var urlCountries = '/api/campus_solutions/country';
   var urlDeleteLanguage = '/api/campus_solutions/language';
-  // var urlEmergencyContacts = '/dummy/json/emergency_contacts.json';
   var urlEmergencyContacts = '/api/campus_solutions/emergency_contacts';
   // var urlLanguageCodes = '/dummy/json/language_codes.json';
   var urlLanguageCodes = '/api/campus_solutions/language_code';
@@ -42,14 +41,10 @@ angular.module('calcentral.factories').factory('profileFactory', function(apiSer
     return $http.delete(urlPostEmail + '/' + options.type, options);
   };
   var deleteEmergencyContact = function(options) {
-    console.log(options)
-
     return $http.delete(urlPostEmergencyContact + '/' + options.contactName, options);
   };
   var deleteEmergencyPhone = function(options) {
-    console.log(options)
-
-    return $http.delete(urlPostEmergencyPhone + '/' + options.contactName, options);
+    return $http.delete(urlPostEmergencyPhone + '/' + options.contactName + '/' + options.phoneType, options);
   };
   var deleteLanguage = function(options) {
     return $http.delete(urlDeleteLanguage + '/' + options.languageCode, options);

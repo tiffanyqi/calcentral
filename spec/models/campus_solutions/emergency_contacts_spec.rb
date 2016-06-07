@@ -12,7 +12,9 @@ describe CampusSolutions::EmergencyContacts do
 
       # Guard against the empty feed when testing against real proxy with testext context
       students_feed = subject[:feed][:students]
-      if students_feed
+
+      if students_feed && students_feed[:student][:emergencyContacts]
+
         emergency_contacts = students_feed[:student][:emergencyContacts][:emergencyContact]
         expect(emergency_contacts.length).to be
 
@@ -39,7 +41,24 @@ describe CampusSolutions::EmergencyContacts do
 
   context 'mock proxy' do
     let(:fake_proxy) { true }
-    it_should_behave_like 'a proxy that gets data'
+    before do
+      allow_any_instance_of(CampusSolutions::EmergencyContacts).to receive(:xml_filename).and_return filename
+    end
+
+    context 'empty contacts' do
+      let(:filename) { 'emergency_contacts_empty.xml'}
+      it_should_behave_like 'a proxy that gets data'
+    end
+
+    context 'single contact' do
+      let(:filename) { 'emergency_contacts_single.xml'}
+      it_should_behave_like 'a proxy that gets data'
+    end
+
+    context 'multiple contacts' do
+      let(:filename) { 'emergency_contacts.xml'}
+      it_should_behave_like 'a proxy that gets data'
+    end
   end
 
   context 'real proxy', testext: true do

@@ -1,32 +1,32 @@
 <div class="cc-page-widget-profile-section-content">
   <div data-ng-repeat="phone in currentObject.data.emergencyPhones">
+
     <div class="cc-page-widget-profile-section-content-item" data-ng-if="$first">
-      <div data-ng-include="'widgets/profile/emergency_phone_editor_fields.html'"></div>
+      <div data-ng-include="'widgets/profile/emergency_phone_fields.html'"></div>
     </div>
-    <!-- edit subsequent phones in separate editing contexts -->
+
     <div class="cc-page-widget-profile-section-content-item" data-ng-if="!$first">
       <div data-ng-include="'widgets/profile/emergency_phone_editor.html'" data-ng-if="emergencyPhone.items.editorEnabled && phone.isModifying"></div>
-      <div data-ng-if="!phone.isModifying">
+      <div class="cc-widget-vertical-padding" data-ng-if="!phone.isModifying || !emergencyPhone.items.editorEnabled">
         <div>
           <strong data-ng-bind="phone.phoneTypeDescr"></strong>
         </div>
-        <div data-ng-bind="phone.phone"></div>
         <div>
-          <span data-ng-if="phone.extension">Extension:</span> <span data-ng-bind="phone.extension"></span>
+          <span data-ng-bind="phone.phone"></span>
+          <strong data-ng-if="phone.extension">ext:</strong> <span data-ng-bind="phone.extension"></span>
         </div>
         <div>
-          <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showEdit(phone)">Edit</button> | <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.deletePhone(phone)">Delete</button>
+          <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showEdit(phone)" data-ng-disabled="emergencyPhone.isAdding || (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Edit</button> | <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.deletePhone(phone)" data-ng-disabled="emergencyPhone.isAdding || (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Delete</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- show empty fieldset if adding a phone -->
   <div class="cc-page-widget-profile-section-content-item">
-    <div data-ng-include="'widgets/profile/emergency_phone_editor.html'" data-ng-if="emergencyPhone.items.editorEnabled && emergencyPhone.currentObject.isAdding"></div>
+    <div data-ng-include="'widgets/profile/emergency_phone_editor.html'" data-ng-if="emergencyPhone.items.editorEnabled && emergencyPhone.isAdding"></div>
   </div>
 
-  <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showAdd()" data-ng-disabled="emergencyPhone.items.editorEnabled" data-ng-if="emergencyPhone.items.length">
+  <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showAdd()" data-ng-disabled="emergencyPhone.items.editorEnabled || currentObject.isAdding">
     <i class="fa fa-plus cc-text-small"></i> Add additional phone number
   </button>
 </div>

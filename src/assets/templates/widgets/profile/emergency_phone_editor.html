@@ -1,8 +1,14 @@
-<div class="cc-page-widget-profile-section-content-item-editing">
-  <div data-ng-include="'widgets/profile/emergency_phone_editor_fields.html'"></div>
-  <button class="cc-button cc-button-blue" type="button" data-ng-disabled="emergencyPhone.isSaving || emergencyPhone.isDeleting" data-ng-click="emergencyPhone.savePhone(phone)">
-    <span data-ng-if="!isSaving">Save</span>
-    <span data-ng-if="isSaving">Updating&hellip;</span>
-  </button>
-  <button class="cc-button" type="button" data-ng-click="emergencyPhone.cancelEdit(phone)" data-ng-disabled="emergencyPhone.isSaving || emergencyPhone.isDeleting">Cancel</button>
+<div class="cc-page-widget-profile-section-content-item">
+  <div data-ng-include="'widgets/profile/emergency_phone_fields.html'"></div>
+  <div class="cc-page-widget-profile-section-error cc-text-red cc-padded" data-ng-if="emergencyPhone.errorMessage">
+    <i class="cc-icon-red fa fa-exclamation-circle"></i>
+    <span data-ng-bind="emergencyPhone.errorMessage"></span>
+  </div>
+  <div class="cc-widget-vertical-padding">
+    <button class="cc-button cc-button-blue" type="button" data-ng-disabled="emergencyPhone.isSaving || emergencyPhone.isDeleting" data-ng-click="emergencyPhone.save(phone || emergencyPhone.currentObject.data)">
+      <span data-ng-if="!emergencyPhone.isSaving">Save</span>
+      <span data-ng-if="emergencyPhone.isSaving">Updating&hellip;</span>
+    </button>
+    <button class="cc-button" type="button" data-ng-click="emergencyPhone.cancelEdit()" data-ng-disabled="emergencyPhone.isSaving || emergencyPhone.isDeleting">Cancel</button>
+  </div>
 </div>

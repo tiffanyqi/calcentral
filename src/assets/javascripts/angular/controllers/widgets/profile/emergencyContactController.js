@@ -25,12 +25,6 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
     }
   });
 
-  // DEBUG - REMOVE BEFORE COMMITTING
-  var inspect = function(item) {
-    console.info(item);
-    return;
-  };
-
   /**
    * Emergency contact editor controls.
    */
@@ -109,6 +103,8 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   };
 
   $scope.showAdd = function() {
+    $scope.emptyObject.emergencyPhones = [angular.copy($scope.emergencyPhone.emptyObject)];
+
     apiService.profile.showAdd($scope, $scope.emptyObject);
   };
 
@@ -132,60 +128,60 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
         countryCode: ''
       },
       errorMessage: '',
+      isAdding: false,
+      isDeleting: false,
       isLoading: true,
       isSaving: false,
       items: {
         content: [],
         editorEnabled: false
       },
-      phoneTypes: {
-        // Map phoneTypes to match Campus Solutions emergency phoneTypes.
-        'BUSN': 'Business',
-        'CAMP': 'Campus',
-        'HOME': 'Home/Permanent',
-        'INTL': 'International',
-        'LOCL': 'Local',
-        'CELL': 'Mobile',
-        'OTR': 'Other'
-      }
+      phoneTypes: {}
     }
   });
 
-  var emergencyPhoneActionCompleted = function(data) {
+  var phoneActionCompleted = function(data) {
     apiService.profile.actionCompleted($scope.emergencyPhone, data, loadInformation);
   };
 
-  var emergencyPhoneDeleteCompleted = function(data) {
+  var phoneDeleteCompleted = function(data) {
     $scope.emergencyPhone.isDeleting = false;
-    emergencyPhoneActionCompleted(data);
+    phoneActionCompleted(data);
   };
 
-  var emergencyPhoneSaveCompleted = function(data) {
+  var phoneSaveCompleted = function(data) {
     $scope.emergencyPhone.isSaving = false;
-    emergencyPhoneActionCompleted(data);
+    phoneActionCompleted(data);
   };
 
-  $scope.emergencyPhone.cancelEdit = function(item) {
-    if (item) {
-      item.isModifying = false;
-    }
+  $scope.emergencyPhone.cancelEdit = function() {
+    var item = $scope.emergencyPhone.currentObject.data;
     $scope.emergencyPhone.isSaving = false;
     $scope.emergencyPhone.closeEditor();
+
+    // Code smell: manual cleanup of isModifying on parent scoped phone.
+    _.each($scope.currentObject.data.emergencyPhones, function(phone) {
+      if (phone.contactName === item.contactName && phone.phoneType === item.phoneType) {
+        phone.isModifying = false;
+      }
+    });
   };
 
   $scope.emergencyPhone.closeEditor = function() {
+    $scope.emergencyPhone.isAdding = false;
     apiService.profile.closeEditor($scope.emergencyPhone);
   };
 
   $scope.emergencyPhone.deletePhone = function(item) {
-    inspect(item)
     return apiService.profile.delete($scope, profileFactory.deleteEmergencyPhone, {
       contactName: item.contactName,
       phoneType: item.phoneType
-    }).then(emergencyPhoneDeleteCompleted);
+    }).then(phoneDeleteCompleted);
   };
 
-  $scope.emergencyPhone.savePhone = function(item) {
+  $scope.emergencyPhone.save = function(item) {
+    item.contactName = item.contactName || $scope.currentObject.data.contactName;
+
     return apiService.profile.save($scope, profileFactory.postEmergencyPhone, {
       // Let Campus Solutions growl about any required field errors.
       contactName: item.contactName,
@@ -194,11 +190,12 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       // Allow these items to be empty strings.
       extension: sanitizeContactData(item.extension),
       countryCode: sanitizeContactData(item.countryCode)
-    }).then(emergencyPhoneSaveCompleted);
+    }).then(phoneSaveCompleted);
   };
 
   $scope.emergencyPhone.showAdd = function() {
     apiService.profile.showAdd($scope.emergencyPhone, $scope.emergencyPhone.emptyObject);
+    $scope.emergencyPhone.isAdding = true;
   };
 
   $scope.emergencyPhone.showEdit = function(item) {
@@ -213,10 +210,12 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
    * @param {Array} emergencyContacts The user's emergencyContacts list.
    */
   var parseEmergencyPhones = function(emergencyContacts) {
+    $scope.emergencyPhone.isLoading = true;
+
     var phones = _.map(emergencyContacts, function(contact) {
       if (_.isEmpty(contact.emergencyPhones)) {
-        // Provide an empty phone to display, if no emergency phones have been
-        // added yet. This keeps scopes in sync.
+        // Provides an empty phone to display, if no emergency phones have been
+        // added yet. This enables contact editor to show empty phone inputs.
         contact.emergencyPhones = [angular.copy($scope.emergencyPhone.emptyObject)];
       }
 
@@ -229,6 +228,11 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
 
     $scope.emergencyPhone.items.content = _.flattenDeep(phones);
     $scope.emergencyPhone.isLoading = false;
+  };
+
+  var getTypesPhone = profileFactory.getTypesPhone;
+  var parseTypesPhone = function(data) {
+    $scope.emergencyPhone.phoneTypes = apiService.profile.filterTypes(_.get(data, 'data.feed.xlatvalues.values'), $scope.emergencyPhone.items);
   };
 
   /**
@@ -255,13 +259,11 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   };
 
   var getTypesRelationship = profileFactory.getTypesRelationship;
-
   var parseTypesRelationship = function(data) {
     var relationshipTypes = apiService.profile.filterTypes(_.get(data, 'data.feed.xlatvalues.values'), $scope.items);
 
     $scope.relationshipTypes = sortRelationshipTypes(relationshipTypes);
   };
-
   /**
    * Sort relationshipTypes array in ascending order by description (text
    * displayed in select element), while pushing options representing "Other
@@ -269,15 +271,15 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
    * @return {Array} The sorted array of relationship types.
    */
   var sortRelationshipTypes = function(types) {
-    var RE_RELATIONSHIP_OTHER = /^(O|R)$/;
+    var OTHER_RELATIONSHIP = ['O', 'R'];
 
     return types.sort(function(a, b) {
       var left = a.fieldvalue;
       var right = b.fieldvalue;
 
-      if (RE_RELATIONSHIP_OTHER.test(left)) {
+      if (OTHER_RELATIONSHIP.indexOf(left) !== -1) {
         return 1;
-      } else if (RE_RELATIONSHIP_OTHER.test(right)) {
+      } else if (OTHER_RELATIONSHIP.indexOf(right) !== -1) {
         return -1;
       } else {
         return a.xlatlongname > b.xlatlongname;
@@ -286,7 +288,6 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   };
 
   var getCountries = profileFactory.getCountries;
-
   var parseCountries = function(data) {
     $scope.countries = _.sortBy(_.filter(_.get(data, 'data.feed.countries'), {
       hasAddressFields: true
@@ -334,7 +335,40 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
     countryWatcher = $scope.$watch('currentObject.data.country', countryWatch);
   };
 
+  /**
+   *  If we're in the contact editor and we've updated a secondary emergency
+   *  phone in the phone editor, then we need to grab the current contact being
+   *  edited and match it with the updated item returned by the refreshed feed,
+   *  and then pass the updated item to `showEdit` which repopulates the form
+   *  with the updated information.
+   */
+  var refreshContactEditor = function() {
+    var editingContact = $scope.currentObject.data;
+
+    if (!editingContact) {
+      return;
+    }
+
+    $scope.closeEditor();
+
+    _.some($scope.items.content, function(contact) {
+      var test = editingContact.contactName === contact.contactName && editingContact.relationship === contact.relationship;
+      if (test) {
+        editingContact = contact;
+      }
+      return test;
+    });
+
+    // Unset these so the contact editor controls are enabled.
+    $scope.isSaving = false;
+    $scope.isDeleting = false;
+
+    $scope.showEdit(editingContact);
+  };
+
   var loadInformation = function() {
+    $scope.isLoading = true;
+
     // If we were previously watching a country, we need to remove that
     if (countryWatcher) {
       countryWatcher();
@@ -346,9 +380,12 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
     .then(parseEmergencyContacts)
     .then(getTypesRelationship)
     .then(parseTypesRelationship)
+    .then(getTypesPhone)
+    .then(parseTypesPhone)
     .then(getCountries)
     .then(parseCountries)
     .then(startCountryWatcher)
+    .then(refreshContactEditor)
     .then(function() {
       $scope.isLoading = false;
     });
