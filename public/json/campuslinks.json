@@ -2681,24 +2681,6 @@
       ]
     },
     {
-      "name": "Registration Fees",
-      "description": "Required Berkeley fees to be a Registered Student",
-      "url": "http://registrar.berkeley.edu/Registration/feesched.html",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Finances",
-          "subcategory": "Billing \u0026 Payments"
-        }
-      ]
-    },
-    {
       "name": "Research",
       "description": "Directory of UC Berkeley research programs",
       "url": "http://berkeley.edu/research/",
