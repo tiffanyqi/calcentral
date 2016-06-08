@@ -1,5 +1,5 @@
-module Calendar
-  class Queries < CampusOracle::Connection
+module CampusOracle
+  class Calendar < CampusOracle::Connection
     include ActiveRecordHelper
 
     def self.get_all_courses

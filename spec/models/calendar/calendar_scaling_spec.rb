@@ -20,8 +20,8 @@ describe 'Calendar Integration Scaling Test', ignore: true do
       }
     end
 
-    Calendar::Queries.stub(:get_all_courses).and_return(courses)
-    Calendar::Queries.stub(:get_whitelisted_students_in_course).and_return(
+    CampusOracle::Calendar.stub(:get_all_courses).and_return(courses)
+    CampusOracle::Calendar.stub(:get_whitelisted_students_in_course).and_return(
       [{
          'ldap_uid' => '904715',
          'official_bmail_address' => 'michelincat74@gmail.com'
@@ -62,7 +62,7 @@ describe 'Calendar Integration Scaling Test', ignore: true do
       # now take the user off the whitelist
       user = Calendar::User.where({uid: '904715'})[0]
       user.delete
-      Calendar::Queries.stub(:get_whitelisted_students_in_course).and_return([])
+      CampusOracle::Calendar.stub(:get_whitelisted_students_in_course).and_return([])
 
       # now preprocess again. This should produce a DELETE transaction for the existing event.
       queued = Calendar::Preprocessor.new.get_entries

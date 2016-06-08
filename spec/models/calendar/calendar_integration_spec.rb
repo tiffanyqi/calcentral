@@ -1,6 +1,6 @@
 describe 'Calendar Integration Full Stack', testext: true do
   before do
-    Calendar::Queries.stub(:get_all_courses).and_return(
+    CampusOracle::Calendar.stub(:get_all_courses).and_return(
       [{
          'term_yr' => 2013,
          'term_cd' => 'D',
@@ -15,7 +15,7 @@ describe 'Calendar Integration Full Stack', testext: true do
          'meeting_end_time' => '0300',
          'meeting_end_time_ampm_flag' => 'P'
        }])
-    Calendar::Queries.stub(:get_whitelisted_students_in_course).and_return(
+    CampusOracle::Calendar.stub(:get_whitelisted_students_in_course).and_return(
       [{
          'ldap_uid' => '904715',
          'official_bmail_address' => 'ctweney@testg.berkeley.edu.test-google-a.com'
@@ -67,7 +67,7 @@ describe 'Calendar Integration Full Stack', testext: true do
 
       # EVENT UPDATES ------------------------------------------------------------------------------------
       # change the class location and time
-      Calendar::Queries.stub(:get_all_courses).and_return(
+      CampusOracle::Calendar.stub(:get_all_courses).and_return(
         [{
            'term_yr' => 2013,
            'term_cd' => 'D',
@@ -116,7 +116,7 @@ describe 'Calendar Integration Full Stack', testext: true do
 
       # EVENT SECOND UPDATES --------------------------------------------------------------------------------
       # now change the class location once more and make sure it succeeds.
-      Calendar::Queries.stub(:get_all_courses).and_return(
+      CampusOracle::Calendar.stub(:get_all_courses).and_return(
         [{
            'term_yr' => 2013,
            'term_cd' => 'D',
@@ -167,7 +167,7 @@ describe 'Calendar Integration Full Stack', testext: true do
       # now take the user off the whitelist
       user = Calendar::User.where({uid: '904715'})[0]
       user.delete
-      Calendar::Queries.stub(:get_whitelisted_students_in_course).and_return([])
+      CampusOracle::Calendar.stub(:get_whitelisted_students_in_course).and_return([])
 
       # now preprocess again. This should produce a DELETE transaction for the existing event.
       queued = Calendar::Preprocessor.new.get_entries

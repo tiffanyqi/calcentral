@@ -1,16 +1,16 @@
-describe Calendar::Queries do
+describe CampusOracle::Calendar do
 
   describe '#get_all_courses' do
     context 'getting all courses regardless of enrollment' do
-      subject { Calendar::Queries.get_all_courses }
+      subject { CampusOracle::Calendar.get_all_courses }
       it 'returns a list of courses in the configured departments' do
         expect(subject).to be
-        if Calendar::Queries.test_data?
+        if CampusOracle::Calendar.test_data?
           expect(subject.length).to be >= 1
         end
       end
       it 'should respect business rule about print_cd of A in class schedule data' do
-        if Calendar::Queries.test_data?
+        if CampusOracle::Calendar.test_data?
           expect(subject.length).to eq 5
         end
       end
@@ -18,7 +18,7 @@ describe Calendar::Queries do
   end
 
   describe '#get_whitelisted_students_in_course' do
-    subject { Calendar::Queries.get_whitelisted_students_in_course(users, term_yr, term_cd, ccn) }
+    subject { CampusOracle::Calendar.get_whitelisted_students_in_course(users, term_yr, term_cd, ccn) }
     let(:term_yr) { 2013 }
     let(:term_cd) { 'D' }
     let(:ccn) { 7309 }
@@ -30,14 +30,14 @@ describe Calendar::Queries do
       }
       it 'returns a list of email addresses for whitelisted users in the specified course' do
         expect(subject).to be
-        if Calendar::Queries.test_data?
+        if CampusOracle::Calendar.test_data?
           expect(subject.length).to be >= 1
         end
       end
     end
 
     context 'with an empty whitelist' do
-      subject { Calendar::Queries.get_whitelisted_students_in_course([], term_yr, term_cd, ccn) }
+      subject { CampusOracle::Calendar.get_whitelisted_students_in_course([], term_yr, term_cd, ccn) }
       it 'returns an empty list' do
         expect(subject).to be_empty
       end
@@ -45,7 +45,7 @@ describe Calendar::Queries do
   end
 
   describe '#terms' do
-    subject { Calendar::Queries.terms }
+    subject { CampusOracle::Calendar.terms }
     context 'in Spring 2013' do
       before(:each) { Settings.terms.stub(:fake_now).and_return(DateTime.parse('2013-03-10')) }
       it 'should return Spring 2013 and Fall 2013' do
@@ -77,7 +77,7 @@ describe Calendar::Queries do
         expect(subject[0].slug).to eq 'summer-2016'
       end
       it 'should screen out nil values for terms not in database' do
-        if Calendar::Queries.test_data?
+        if CampusOracle::Calendar.test_data?
           expect(subject).to have(1).item
         end
       end
