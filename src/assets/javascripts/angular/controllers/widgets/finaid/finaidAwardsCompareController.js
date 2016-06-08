@@ -133,12 +133,35 @@ angular.module('calcentral.controllers').controller('FinaidAwardsCompareControll
     return _.map(titles, function(title) {
       var item = itemsByTitle[title];
       if (item) {
-        return {
-          title: item.title,
-          values: item.values || [{
-            subvalue: [item.value]
-          }]
-        };
+        switch (title) {
+          case 'Enrollment': {
+            _.forEach(item.values, function(value) {
+              value.subvalue = [value.subvalue[0] + ': ' + value.subvalue[1] + ' units'];
+            });
+            return {
+              title: item.title,
+              values: item.values
+            };
+          }
+          case 'Expected Family Contribution (EFC)':
+          case 'Berkeley Parent Contribution': {
+            return {
+              title: item.title,
+              values: [{
+                isAmount: !_.isNaN(_.toNumber(item.value)),
+                subvalue: [item.value]
+              }]
+            };
+          }
+          default: {
+            return {
+              title: item.title,
+              values: item.values || [{
+                subvalue: [item.value]
+              }]
+            };
+          }
+        }
       }
       return {
         title: title,

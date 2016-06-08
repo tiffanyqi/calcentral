@@ -7,7 +7,13 @@
     <div data-ng-if="item.values">
       <div data-ng-repeat="value in item.values track by $index" class="cc-text-right">
         <div>
-          <span data-ng-bind="'&nbsp;' + value.subvalue.join(' &bull; ')"></span>
+          <span data-ng-if="!value.isAmount">
+            <span data-ng-repeat="subvalue in value.subvalue">
+              <span data-ng-bind="subvalue"></span>
+              <span data-ng-if="!$last"> &bull; </span>
+            </span>
+          </span>
+          <span data-ng-if="!!value.isAmount" data-cc-amount-directive="value.subvalue[0]" data-cc-amount-directive-color="false"></span>
           <span data-ng-if="$first" data-cc-amount-change-symbol-directive="item.change"></span>
           <span data-ng-if="!$first" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
         </div>
