@@ -10,92 +10,75 @@ class ApiMyFinancialsPage
   end
 
   def has_cars_data?
-    if @parsed['statusCode'] == 400 || @parsed['statusCode'] == 404
-      logger.info('User has no CARS data')
-      return false
-    end
-    true
+    true unless (@parsed['statusCode'] == 400 || @parsed['statusCode'] == 404)
+  end
+
+  # ACCOUNT SUMMARY
+
+  def summary
+    @parsed['summary']
   end
 
   def account_balance
-    @parsed['summary']['accountBalance']
-  end
-
-  def account_balance_str
-    (sprintf '%.2f', self.account_balance).to_s
-  end
-
-  def last_statement_balance_str
-    last_statement_balance = @parsed['summary']['lastStatementBalance']
-    (sprintf '%.2f', last_statement_balance).to_s
+    summary['accountBalance']
   end
 
   def min_amt_due
-    @parsed['summary']['minimumAmountDue']
-  end
-
-  def min_amt_due_str
-    (sprintf '%.2f', self.min_amt_due).to_s
+    summary['minimumAmountDue']
   end
 
   def total_current_balance
-    @parsed['summary']['totalCurrentBalance']
-  end
-
-  def total_current_balance_str
-    (sprintf '%.2f', self.total_current_balance).to_s
+    summary['totalCurrentBalance']
   end
 
   def past_due_amt
-    @parsed['summary']['totalPastDueAmount']
-  end
-
-  def past_due_amt_str
-    (sprintf '%.2f', self.past_due_amt).to_s
+    summary['totalPastDueAmount']
   end
 
   def future_activity
-    @parsed['summary']['futureActivity']
-  end
-
-  def future_activity_str
-    (sprintf '%.2f', self.future_activity).to_s
+    summary['futureActivity']
   end
 
   def is_on_dpp?
-    @parsed['summary']['isOnDPP']
+    summary['isOnDPP']
   end
 
   def is_dpp_past_due?
-    @parsed['summary']['isDppPastDue']
+    summary['isDppPastDue']
   end
 
   def dpp_balance
-    @parsed['summary']['dppBalance']
-  end
-
-  def dpp_balance_str
-    (sprintf '%.2f', self.dpp_balance).to_s
+    summary['dppBalance']
   end
 
   def dpp_norm_install_amt
-    @parsed['summary']['dppNormalInstallmentAmount']
+    summary['dppNormalInstallmentAmount']
   end
 
-  def dpp_norm_install_amt_str
-    (sprintf '%.2f', self.dpp_norm_install_amt).to_s
+  def last_statement_balance
+    summary['lastStatementBalance']
   end
 
-  def trans_amt_str(item)
-    (sprintf '%.2f', item['transAmount'])
+  # TRANSACTIONS
+
+  def all_transactions
+    @parsed['activity']
   end
 
-  def trans_balance_str(item)
-    (sprintf '%.2f', item['transBalance'])
+  def trans_amt(item)
+    item['transAmount']
+  end
+
+  def trans_balance(item)
+    item['transBalance']
   end
 
   def trans_date(item)
     item['transDate']
+  end
+
+  def trans_date_as_date(item)
+    Date.parse trans_date(item)
   end
 
   def trans_dept(item)
@@ -132,7 +115,7 @@ class ApiMyFinancialsPage
 
   def trans_disburse_date(item)
     disburse_date = item['transPotentialDisbursementDate']
-    (disburse_date == '') ? nil : Date.parse(disburse_date).strftime("%m/%d/%y")
+    disburse_date.blank? ? nil : Date.parse(disburse_date).strftime("%m/%d/%y")
   end
 
   def trans_disputed(item)
@@ -155,14 +138,26 @@ class ApiMyFinancialsPage
     item['transPaymentVoidDate']
   end
 
-  def all_transactions
-    @parsed['activity']
+  def transactions_by_type(transactions, type)
+    transactions.select { |item| trans_type(item) == type }
   end
 
-  def all_transactions_by_type(type)
+  def transactions_by_id(transactions, id)
+    transactions.select { |trans| trans_id(trans) == id }
+  end
+
+  def transactions_by_term(transactions, term)
+    transactions.select { |item| trans_term(item) == term }
+  end
+
+  def transactions_by_date_range(start_date, end_date)
     all_transactions.select do |item|
-      trans_type(item) == type
+      Date.strptime(start_date, '%m/%d/%Y') <= trans_date_as_date(item) && Date.strptime(end_date, '%m/%d/%Y') >= trans_date_as_date(item)
     end
+  end
+
+  def transactions_sum(transactions)
+    transactions.inject(BigDecimal.new('0')) { |acc, bal| acc + BigDecimal.new(amt_to_s(trans_balance(bal))) }
   end
 
   def open_transactions
@@ -172,54 +167,20 @@ class ApiMyFinancialsPage
     end
   end
 
-  def open_transactions_sum
-    open_transactions.inject(BigDecimal.new('0')) { |acc, bal| acc + BigDecimal.new(trans_balance_str(bal).to_s) }
-  end
-
-  def open_transactions_sum_str
-    (sprintf '%.2f', self.open_transactions_sum).to_s
-  end
-
   def open_charges
-    all_transactions_by_type('Charge') & open_transactions
+    transactions_by_type(all_transactions, 'Charge') & open_transactions
   end
 
-  def past_due_charges
-    open_charges.select do |item|
-      trans_status(item) == 'Past due'
-    end
+  def last_update_date
+    Time.strptime(summary['lastUpdateDate'], '%Y-%m-%d').strftime('%m/%d/%y')
   end
 
-  def current_charges
-    open_charges.select do |item|
-      trans_status(item) == 'Current'
-    end
+  def amt_to_s(amount)
+    (sprintf '%.2f', amount).to_s
   end
 
-  def future_charges
-    open_charges.select do |item|
-      trans_status(item) == 'Future'
-    end
+  def formatted_date(date_string)
+    Time.parse(date_string).strftime('%m/%d/%y')
   end
 
-  def open_charges_sum_str
-    sum = open_charges.inject(BigDecimal.new('0')) { |acc, bal| acc + BigDecimal.new(trans_balance_str(bal).to_s) }
-    (sprintf '%.2f', sum).to_s
-  end
-
-  def term_transactions(term)
-    all_transactions.select do |item|
-      trans_term(item) == term
-    end
-  end
-
-  def date_range_transactions(start_date, end_date)
-    all_transactions.select do |item|
-      Time.strptime(start_date, '%m/%d/%Y') <= Time.parse(trans_date(item)) && Time.strptime(end_date, '%m/%d/%Y') >= Time.parse(trans_date(item))
-    end
-  end
-
-  def last_update_date_str
-    @parsed['summary']['lastUpdateDate']
-  end
 end

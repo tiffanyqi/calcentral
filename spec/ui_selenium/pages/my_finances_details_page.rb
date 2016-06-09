@@ -32,6 +32,7 @@ module CalCentralPages
       table(:transaction_table, :xpath => '//div[@class="cc-table cc-table-sortable cc-page-myfinances-table cc-table-finances"]/table')
       link(:transaction_table_row_one, :xpath => '//div[@class="cc-table cc-table-sortable cc-page-myfinances-table cc-table-finances"]/table/tbody')
 
+      # The following are elements from the first transaction in the UI
       span(:trans_date, :xpath => '//span[@data-ng-bind="item.transDate | date:\'MM/dd/yy\'"]')
       div(:trans_desc, :xpath => '//div[@data-ng-bind="item.transDesc"]')
       td(:trans_amt, :xpath => '//td[@data-cc-amount-directive="item.transBalanceAmount"]')
@@ -54,49 +55,40 @@ module CalCentralPages
       paragraph(:zero_balance_text, :xpath => '//p[contains(text(),"You do not owe anything at this time. Please select a different filter to view activity details.")]')
       paragraph(:credit_balance_text, :xpath => '//p[contains(text(),"You have an over-payment on your account. You do not owe anything at this time. Please select a different filter to view activity details.")]')
 
-      button(:show_more_button, :xpath => '//button[@class="cc-button cc-widget-show-more"]')
+      button(:show_more_button, :class => 'cc-widget-show-more')
 
       span(:last_update_date, :xpath => '//span[@data-ng-bind="myfinances.summary.lastUpdateDate | date:\'MM/dd/yy\'"]')
 
       def load_page
-        logger.info('Loading My Finances details page')
+        logger.info 'Loading My Finances details page'
+        sleep 1
         navigate_to "#{WebDriverUtils.base_url}/finances/details"
-        if activity_spinner_element.visible?
-          activity_spinner_element.when_not_visible(timeout=WebDriverUtils.page_load_timeout)
-        end
+        activity_spinner_element.when_not_visible WebDriverUtils.page_load_timeout if activity_spinner_element.visible?
       end
 
       # VISIBLE TRANSACTIONS
 
       def visible_transaction_count
-        transaction_table_element.rows - 1
+        transaction_table_element.exists? ? (transaction_table_element.rows - 1) : 0
       end
 
       def visible_transaction_dates
-        date_strings = []
-        transaction_table_element.each { |row| date_strings.push(row[0].text) }
-        dates_minus_heading = date_strings.drop(1)
         dates = []
-        dates_minus_heading.each { |date| dates.push(Time.strptime(date, '%m/%d/%y')) }
-        dates
+        transaction_table_element.each { |row| dates << row[0].text }
+        dates_minus_heading = dates.drop 1
+        dates_minus_heading.map { |date| Date.strptime(date, '%m/%d/%y') }
       end
 
-      def visible_transaction_descrip
-        descriptions = Array.new
-        transaction_table_element.each do |row|
-          description = row[1].text
-          descriptions.push(description)
-        end
-        descriptions.drop(1)
+      def visible_transaction_descrips
+        descriptions = []
+        transaction_table_element.each { |row| descriptions << row[1].text }
+        descriptions.drop 1
       end
 
       def visible_transaction_amts_str
-        amounts = Array.new
-        transaction_table_element.each do |row|
-          amount = row[2].text.delete('$, ')
-          amounts.push(amount)
-        end
-        amounts.drop(1)
+        amounts = []
+        transaction_table_element.each { |row| amounts << row[2].text.delete('$, ') }
+        amounts.drop 1
       end
 
       def visible_transaction_amts
@@ -109,79 +101,82 @@ module CalCentralPages
       end
 
       def visible_transaction_types
-        trans_types = Array.new
-        transaction_table_element.each do |row|
-          trans_type = row[4].text
-          trans_types.push(trans_type)
-        end
-        trans_types.drop(1)
+        trans_types = []
+        transaction_table_element.each { |row| trans_types << row[4].text }
+        trans_types.drop 1
       end
 
-      def keep_showing_more
-        while show_more_button_element.visible?
-          show_more_button
-        end
+      def show_all
+        show_more_button while show_more_button_element.visible?
       end
 
       def toggle_first_trans_detail
         transaction_table_row_one
       end
 
-      def search_by_dates_and_string(start_date, end_date, string)
-        WebDriverUtils.wait_for_element_and_type(search_start_date_input_element, start_date)
-        WebDriverUtils.wait_for_element_and_type(search_end_date_input_element, end_date)
+      # TRANSACTION FILTERING
+
+      def search(activity, term, start_date, end_date, string)
+        activity_filter_select_element.when_visible WebDriverUtils.page_load_timeout
+        self.activity_filter_select = activity
+        self.activity_filter_term_select = term unless term.nil?
+        if activity == 'Date Range'
+          WebDriverUtils.wait_for_element_and_type(search_start_date_input_element, start_date)
+          WebDriverUtils.wait_for_element_and_type(search_end_date_input_element, end_date)
+        end
         WebDriverUtils.wait_for_element_and_type(search_string_input_element, string)
       end
 
       # TRANSACTION SORTING
 
       def sort_by_date_asc
-        logger.info('Sorting by date ascending')
+        logger.info 'Sorting by date ascending'
         sort_by_date
         sort_by_date if sort_descending?
       end
 
       def sort_by_date_desc
-        logger.info('Sorting by date descending')
+        logger.info 'Sorting by date descending'
         sort_by_date
         sort_by_date if sort_ascending?
       end
 
       def sort_by_descrip_asc
-        logger.info('Sorting by description ascending')
+        logger.info 'Sorting by description ascending'
         sort_by_descrip
         sort_by_descrip if sort_descending?
       end
 
       def sort_by_descrip_desc
-        logger.info('Sorting by description descending')
+        logger.info 'Sorting by description descending'
         sort_by_descrip
         sort_by_descrip if sort_ascending?
       end
 
       def sort_by_amount_asc
-        logger.info('Sorting by amount ascending')
+        logger.info 'Sorting by amount ascending'
         sort_by_amount
         sort_by_amount if sort_descending?
       end
 
       def sort_by_amount_desc
-        logger.info('Sorting by amount descending')
+        logger.info 'Sorting by amount descending'
         sort_by_amount
         sort_by_amount if sort_ascending?
       end
 
       def sort_by_trans_type_asc
-        logger.info('Sorting by transaction type ascending')
+        logger.info 'Sorting by transaction type ascending'
         sort_by_trans_type
         sort_by_trans_type if sort_descending?
       end
 
       def sort_by_trans_type_desc
-        logger.info('Sorting by transaction type descending')
+        logger.info 'Sorting by transaction type descending'
         sort_by_trans_type
         sort_by_trans_type if sort_ascending?
       end
+
     end
   end
 end
