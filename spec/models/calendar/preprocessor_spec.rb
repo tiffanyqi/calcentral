@@ -36,7 +36,7 @@ describe Calendar::Preprocessor do
         expect(subject).to be
       end
     end
-    context 'when the user whitelist is empty, but an event was created before the whitelist became empty', if: Calendar::Queries.test_data? do
+    context 'when the user whitelist is empty, but an event was created before the whitelist became empty', if: CampusOracle::Calendar.test_data? do
       before do
         Calendar::LoggedEntry.create(
           {
@@ -53,7 +53,7 @@ describe Calendar::Preprocessor do
         expect(subject[0].event_id).to eq 'abcdef'
       end
     end
-    context 'when the whitelist has an enrolled student on it', if: Calendar::Queries.test_data? do
+    context 'when the whitelist has an enrolled student on it', if: CampusOracle::Calendar.test_data? do
       before do
         Calendar::User.create({uid: '300939'})
 
@@ -76,7 +76,7 @@ describe Calendar::Preprocessor do
         expect(subject[0].transaction_type).to eq 'U'
       end
     end
-    context 'when a student on the whitelist is enrolled in a summer course', if: Calendar::Queries.test_data? do
+    context 'when a student on the whitelist is enrolled in a summer course', if: CampusOracle::Calendar.test_data? do
       before(:each) {
         Calendar::User.create({uid: '300939'})
         Settings.terms.stub(:fake_now).and_return(DateTime.parse('2014-03-10'))
@@ -92,7 +92,7 @@ describe Calendar::Preprocessor do
       end
       it_behaves_like 'it has a non-empty array of ClassCalendarQueue entries'
     end
-    context 'when a preprocess task has been run twice without running export', if: Calendar::Queries.test_data? do
+    context 'when a preprocess task has been run twice without running export', if: CampusOracle::Calendar.test_data? do
       let!(:old_entry_id) {
         old_entry = Calendar::QueuedEntry.create(
           {
@@ -110,7 +110,7 @@ describe Calendar::Preprocessor do
         expect(subject[0].id).to eq old_entry_id
       end
     end
-    context 'when the user whitelist has an enrolled student on it with an alternate email for test purposes', if: Calendar::Queries.test_data? do
+    context 'when the user whitelist has an enrolled student on it with an alternate email for test purposes', if: CampusOracle::Calendar.test_data? do
       before do
         Calendar::User.create({uid: '300939', alternate_email: 'ctweney@testg.berkeley.edu.test-google-a.com'})
       end
@@ -144,7 +144,7 @@ describe Calendar::Preprocessor do
     end
     context 'when a course exists but its term cant be found' do
       before do
-        Calendar::Queries.stub(:get_all_courses).and_return([{
+        CampusOracle::Calendar.stub(:get_all_courses).and_return([{
                                                                'term_yr' => 5070,
                                                                'term_cd' => 'B',
                                                                'course_cntl_num' => 12345
@@ -157,7 +157,7 @@ describe Calendar::Preprocessor do
     end
     context 'when a course exists but it has no schedule' do
       before do
-        Calendar::Queries.stub(:get_all_courses).and_return(
+        CampusOracle::Calendar.stub(:get_all_courses).and_return(
           [{
              'term_yr' => 2013,
              'term_cd' => 'D',
@@ -168,7 +168,7 @@ describe Calendar::Preprocessor do
              'room_number' => '117',
              'meeting_days' => ''
            }])
-        Calendar::Queries.stub(:get_whitelisted_students_in_course).and_return(
+        CampusOracle::Calendar.stub(:get_whitelisted_students_in_course).and_return(
           [{
              'ldap_uid' => '1234',
              'official_bmail_address' => 'foo@foo.com'

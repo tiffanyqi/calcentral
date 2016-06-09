@@ -12,7 +12,7 @@ module Calendar
 
     def get_entries
       entries = []
-      courses = Calendar::Queries.get_all_courses
+      courses = CampusOracle::Calendar.get_all_courses
       courses.each do |course|
         this_term_slug = Berkeley::TermCodes.to_slug(course['term_yr'], course['term_cd'])
         term = Berkeley::Terms.fetch.campus[this_term_slug]
@@ -111,7 +111,7 @@ module Calendar
       # get list of attendee emails, from the official Oracle listing (calcentral_person_info_vw.alternateid)
       # or from the test override table in Postgres, class_calendar_users.alternate_email.
       emails = []
-      enrollments = Calendar::Queries.get_whitelisted_students_in_course(@users, term_yr, term_cd, ccn)
+      enrollments = CampusOracle::Calendar.get_whitelisted_students_in_course(@users, term_yr, term_cd, ccn)
       enrollments.each do |person|
         email = person['official_bmail_address']
         if @users_with_alternate_email[person['ldap_uid']].present?
