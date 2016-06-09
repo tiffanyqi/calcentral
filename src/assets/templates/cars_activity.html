@@ -18,15 +18,15 @@
         </div>
         <div class="cc-left cc-page-myfinances-filter-form">
           <div class="cc-page-myfinances-filter-content">
-            <div class="cc-left cc-select cc-page-myfinances-filter-element">
-              <select id="cc-page-myfinances-account-choices" data-ng-model="choice" data-ng-options="c.value as c.label for c in choices" data-ng-change="choiceChange()">
+            <div class="cc-left cc-page-myfinances-filter-element">
+              <select id="cc-page-myfinances-account-choices" class="cc-inline-select" data-ng-model="choice" data-ng-options="c.value as c.label for c in choices" data-ng-change="choiceChange()">
               </select>
             </div>
-            <div class="cc-left cc-select cc-page-myfinances-filter-element" data-ng-if="choice === 'term'">
+            <div class="cc-left cc-page-myfinances-filter-element" data-ng-if="choice === 'term'">
               <label for="cc-page-myfinances-select-term" class="cc-visuallyhidden">
                 Term
               </label>
-              <select data-ng-model="search.transTerm" id="cc-page-myfinances-select-term" data-ng-options="t.value as t.label for t in myfinances.terms" data-ng-change="searchTerm = search.transTerm">
+              <select data-ng-model="search.transTerm" id="cc-page-myfinances-select-term" class="cc-inline-select" data-ng-options="t.value as t.label for t in myfinances.terms" data-ng-change="searchTerm = search.transTerm">
               </select>
             </div>
             <div class="cc-left cc-page-myfinances-filter-element" data-ng-show="choice === 'daterange'">

@@ -1,9 +1,17 @@
 <div class="cc-widget">
   <div class="cc-widget-title">
     <h2 class="cc-left" data-ng-bind="title"></h2>
-    <div class="cc-select cc-right cc-academics-class-enrollment-select">
+    <div class="cc-academics-class-enrollment-options cc-right">
+      <a class="cc-button">
+        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+        Email to List
+      </a>
+      <a class="cc-button">
+        <i class="fa fa-download" aria-hidden="true"></i>
+        Export
+      </a>
       <label for="section-select" class="cc-visuallyhidden">Filter by Section</label>
-      <select id="section-select" class="cc-roster-select bc-canvas-embedded-roster-select"
+      <select id="section-select" class="cc-inline-select bc-canvas-embedded-roster-select"
               data-ng-options="section as section.name for section in sections track by section.ccn"
               data-ng-model="selectedSection"
               data-ng-change="accessibilityAnnounce('Enrollment filtered by section')">

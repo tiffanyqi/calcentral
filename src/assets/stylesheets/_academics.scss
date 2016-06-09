@@ -67,9 +67,11 @@
   .cc-academics-class-enrollment-notice {
     padding-top: 5px;
   }
-  .cc-academics-class-enrollment-select {
-    margin: 5px;
-    width: 25%;
+  .cc-academics-class-enrollment-options {
+    margin: 7px 0;
+    * {
+      margin-right: 5px;
+    }
   }
   .cc-academics-class-enrollment-table {
     border: 2px solid $cc-color-lightest-grey;
