@@ -36,9 +36,13 @@
         <li data-ng-if="subcategory === 'Billing & Payments' && $index === 1">
           <a data-ng-href="{{$parent.fpp.fppLink.url}}" data-ng-attr-title="{{$parent.fpp.fppLink.title}}">Tuition and Fees Payment Plan</a>
           <a class="cc-list-links-nested-dash"
-              data-ng-href="{{$parent.fpp.data.fppEnrollUrl.url}}"
-              data-ng-attr-title="{{$parent.fpp.activatePlanLink.title}}"
-              data-ng-if="$parent.fpp.data.fppEnrollUrl.url"><strong>Activate Plan</strong>
+             data-cc-campus-solutions-link-directive="$parent.fpp.data.fppEnrollUrl.url"
+             data-cc-campus-solutions-link-directive-enabled="{{$parent.fpp.data.fppEnrollUrl.isCsLink}}"
+             data-cc-campus-solutions-link-directive-text="fpp.activatePlanLink.backToText"
+             data-cc-campus-solutions-link-directive-cache="'finances'"
+             data-cc-outbound-enabled="false"
+             data-ng-attr-title="{{$parent.fpp.activatePlanLink.title}}"
+             data-ng-if="$parent.fpp.data.fppEnrollUrl.url"><strong>Activate Plan</strong>
           </a>
         </li>
         <li data-ng-repeat-end data-ng-if="subcategory === 'Billing & Payments' && $index === 1">
