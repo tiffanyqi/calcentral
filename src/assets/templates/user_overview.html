@@ -7,6 +7,7 @@
       <div data-ng-include="'widgets/toolbox/user_preview.html'"></div>
     </div>
     <div class="medium-4 columns cc-column-2">
+      <div data-ng-include src="'academics_semesters.html'" data-ng-if="semesters.length"></div>
       <div data-ng-include="'widgets/student_university_requirements.html'" data-ng-if="targetUser.isLoading || !targetUser.campusSolutionsStudent && targetUser.roles.undergrad"></div>
     </div>
     <div class="medium-4 columns cc-column-3">

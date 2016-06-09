@@ -1,194 +1,165 @@
 {
-  "attributes":{
-    "campusSolutionsStudent":false,
-    "sisProfileVisible":true,
-    "roles":{
-      "student":true,
-      "registered":true,
-      "exStudent":false,
-      "faculty":false,
-      "staff":false,
-      "guest":false,
-      "concurrentEnrollmentStudent":false,
-      "undergrad":true,
-      "expiredAccount":false
-    },
-    "defaultName":"Jeanne d'Arc",
-    "firstName":"Jeanne",
-    "lastName":"d'Arc",
-    "givenFirstName":"Jeanne",
-    "familyName":"d'Arc",
-    "studentId":"1234567890",
-    "campusSolutionsId":"1234567890",
-    "primaryEmailAddress":"joanie@berkeley.edu",
-    "officialBmailAddress":"joanie@berkeley.edu",
-    "educationAbroad":false
+  "collegeAndLevel":{
+    "careers":[
+      "Undergraduate"
+    ],
+    "level":"Senior",
+    "futureTelebearsLevel":"Senior",
+    "majors":[
+      {
+        "college":"College of Letters & Science",
+        "major":"Undeclared"
+      }
+    ],
+    "nonApLevel":"Junior",
+    "termName":"Spring 2016"
   },
-  "academics":{
-    "collegeAndLevel":{
-      "careers":[
-        "Undergraduate"
-      ],
-      "level":"Senior",
-      "futureTelebearsLevel":"Senior",
-      "majors":[
+  "transitionTerm":null,
+  "gpaUnits":{
+    "cumulativeGpa":"3.187",
+    "totalUnits":114.3,
+    "totalUnitsAttempted":38
+  },
+  "requirements":[
+    {
+      "name":"UC Entry Level Writing",
+      "status":"met"
+    },
+    {
+      "name":"American History",
+      "status":"met"
+    },
+    {
+      "name":"American Institutions",
+      "status":"met"
+    },
+    {
+      "name":"American Cultures",
+      "status":"met"
+    }
+  ],
+  "regblocks":{
+    "activeBlocks":[ ],
+    "inactiveBlocks":[ ]
+  },
+  "errors":[
+    "MyAcademics::Semesters",
+    "MyAcademics::Teaching"
+  ],
+  "examSchedule":[
+    {
+      "date":{
+        "epoch":1462777200,
+        "dateTime":"2016-05-09T00:00:00-07:00",
+        "dateString":"Mon May 9"
+      },
+      "time":"8:00 AM",
+      "locations":[
         {
-          "college":"College of Letters & Science",
-          "major":"Undeclared"
+          "raw":" RSF FLDHOUSE",
+          "display":"RSF Field House",
+          "lat":"37.86923",
+          "lon":"-122.262211",
+          "roomNumber":""
         }
       ],
-      "nonApLevel":"Junior",
-      "termName":"Spring 2016"
+      "course_code":"Biology 001"
     },
-    "transitionTerm":null,
-    "gpaUnits":{
-      "cumulativeGpa":"3.187",
-      "totalUnits":114.3,
-      "totalUnitsAttempted":38
+    {
+      "date":{
+        "epoch":1462777200,
+        "dateTime":"2016-05-09T00:00:00-07:00",
+        "dateString":"Mon May 9"
+      },
+      "time":"7:00 PM",
+      "locations":[
+        {
+          "raw":"2040 VALLEY LSB (Instructor: SMITH, S) ",
+          "display":"Valley Life Sciences Building",
+          "lat":"37.871479999999998",
+          "lon":"-122.26211000000001",
+          "roomNumber":"2040"
+        },
+        {
+          "raw":"2060 VALLEY LSB (Instructor: SMITH, S) ",
+          "display":"Valley Life Sciences Building",
+          "lat":"37.871479999999998",
+          "lon":"-122.26211000000001",
+          "roomNumber":"2060"
+        }
+      ],
+      "course_code":"Sociology 001"
     },
-    "requirements":[
-      {
-        "name":"UC Entry Level Writing",
-        "status":"met"
+    {
+      "date":{
+        "epoch":1462950000,
+        "dateTime":"2016-05-11T00:00:00-07:00",
+        "dateString":"Wed May 11"
       },
-      {
-        "name":"American History",
-        "status":"met"
-      },
-      {
-        "name":"American Institutions",
-        "status":"met"
-      },
-      {
-        "name":"American Cultures",
-        "status":"met"
-      }
-    ],
-    "regblocks":{
-      "activeBlocks":[ ],
-      "inactiveBlocks":[ ]
+      "time":"11:30 AM",
+      "locations":[
+        {
+          "raw":" RSF FLDHOUSE",
+          "display":"RSF Field House",
+          "lat":"37.86923",
+          "lon":"-122.262211",
+          "roomNumber":""
+        }
+      ],
+      "course_code":"Molecular and Cell Biology C061"
     },
-    "errors":[
-      "MyAcademics::Semesters",
-      "MyAcademics::Teaching"
-    ],
-    "examSchedule":[
-      {
-        "date":{
-          "epoch":1462777200,
-          "dateTime":"2016-05-09T00:00:00-07:00",
-          "dateString":"Mon May 9"
-        },
-        "time":"8:00 AM",
-        "locations":[
-          {
-            "raw":" RSF FLDHOUSE",
-            "display":"RSF Field House",
-            "lat":"37.86923",
-            "lon":"-122.262211",
-            "roomNumber":""
-          }
-        ],
-        "course_code":"Biology 001"
+    {
+      "date":{
+        "epoch":1462950000,
+        "dateTime":"2016-05-11T00:00:00-07:00",
+        "dateString":"Wed May 11"
       },
-      {
-        "date":{
-          "epoch":1462777200,
-          "dateTime":"2016-05-09T00:00:00-07:00",
-          "dateString":"Mon May 9"
+      "time":"3:00 PM",
+      "locations":[
+        {
+          "raw":" RSF FLDHOUSE",
+          "display":"RSF Field House",
+          "lat":"37.86923",
+          "lon":"-122.262211",
+          "roomNumber":""
+        }
+      ],
+      "course_code":"Public Policy C103"
+    }
+  ],
+  "telebears":[ ],
+  "otherSiteMemberships":[
+    {
+      "name":"Fall 2013",
+      "slug":"fall-2013",
+      "termCode":"D",
+      "termYear":"2013",
+      "sites":[
+        {
+          "emitter":"bCourses",
+          "id":"767330",
+          "name":"API101",
+          "shortDescription":"API Testing and Design 101",
+          "site_url":"https://ucberkeley.beta.instructure.com/courses/767330",
+          "siteType":"course"
         },
-        "time":"7:00 PM",
-        "locations":[
-          {
-            "raw":"2040 VALLEY LSB (Instructor: SMITH, S) ",
-            "display":"Valley Life Sciences Building",
-            "lat":"37.871479999999998",
-            "lon":"-122.26211000000001",
-            "roomNumber":"2040"
-          },
-          {
-            "raw":"2060 VALLEY LSB (Instructor: SMITH, S) ",
-            "display":"Valley Life Sciences Building",
-            "lat":"37.871479999999998",
-            "lon":"-122.26211000000001",
-            "roomNumber":"2060"
-          }
-        ],
-        "course_code":"Sociology 001"
-      },
-      {
-        "date":{
-          "epoch":1462950000,
-          "dateTime":"2016-05-11T00:00:00-07:00",
-          "dateString":"Wed May 11"
-        },
-        "time":"11:30 AM",
-        "locations":[
-          {
-            "raw":" RSF FLDHOUSE",
-            "display":"RSF Field House",
-            "lat":"37.86923",
-            "lon":"-122.262211",
-            "roomNumber":""
-          }
-        ],
-        "course_code":"Molecular and Cell Biology C061"
-      },
-      {
-        "date":{
-          "epoch":1462950000,
-          "dateTime":"2016-05-11T00:00:00-07:00",
-          "dateString":"Wed May 11"
-        },
-        "time":"3:00 PM",
-        "locations":[
-          {
-            "raw":" RSF FLDHOUSE",
-            "display":"RSF Field House",
-            "lat":"37.86923",
-            "lon":"-122.262211",
-            "roomNumber":""
-          }
-        ],
-        "course_code":"Public Policy C103"
-      }
-    ],
-    "telebears":[ ],
-    "otherSiteMemberships":[
-      {
-        "name":"Fall 2013",
-        "slug":"fall-2013",
-        "termCode":"D",
-        "termYear":"2013",
-        "sites":[
-          {
-            "emitter":"bCourses",
-            "id":"767330",
-            "name":"API101",
-            "shortDescription":"API Testing and Design 101",
-            "site_url":"https://ucberkeley.beta.instructure.com/courses/767330",
-            "siteType":"course"
-          },
-          {
-            "emitter":"bCourses",
-            "id":"833382",
-            "name":"EE 20N",
-            "shortDescription":"Structure and Interpretation of Systems and Signals",
-            "site_url":"https://ucberkeley.beta.instructure.com/courses/833382",
-            "siteType":"course"
-          }
-        ]
-      }
-    ],
-    "lastModified":{
-      "hash":"ffabb092eb078bba9c5717705bfb543166b3305e",
-      "timestamp":{
-        "epoch":1459449726,
-        "dateTime":"2016-03-31T11:42:06-07:00",
-        "dateString":"3/31"
-      }
-    },
-    "feedName":"MyAcademics::Merged"
-  },
-  "examSchedule":[]
+        {
+          "emitter":"bCourses",
+          "id":"833382",
+          "name":"EE 20N",
+          "shortDescription":"Structure and Interpretation of Systems and Signals",
+          "site_url":"https://ucberkeley.beta.instructure.com/courses/833382",
+          "siteType":"course"
+        }
+      ]
+    }
+  ],
+  "lastModified":{
+    "hash":"ffabb092eb078bba9c5717705bfb543166b3305e",
+    "timestamp":{
+      "epoch":1459449726,
+      "dateTime":"2016-03-31T11:42:06-07:00",
+      "dateString":"3/31"
+    }
+  }
 }

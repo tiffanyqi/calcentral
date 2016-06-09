@@ -18,10 +18,7 @@ class AdvisingStudentController < ApplicationController
   end
 
   def academics
-    student_uid = student_uid_param
-    render json: {
-      academics: MyAcademics::Merged.new(student_uid).get_feed
-    }
+    render json: filtered_academics.to_json
   end
 
   def enrollment_term
@@ -56,6 +53,27 @@ class AdvisingStudentController < ApplicationController
   end
 
   private
+
+  def filtered_academics
+    feed = MyAcademics::Merged.from_session('user_id' => student_uid_param).get_feed
+    if (semesters = feed[:semesters])
+      semesters.each do |s|
+        s.delete :slug
+        (classes = s[:classes]) && classes.each do |c|
+          c.delete :slug
+          c.delete :url
+          (sections = c[:sections]) && sections.each do |section|
+            section.delete :url
+          end
+        end
+      end
+    end
+    (memberships = feed[:otherSiteMemberships]) && memberships.each do |membership|
+      membership.delete :slug
+      membership[:sites].each { |site| site.delete :site_url } if membership[:sites]
+    end
+    feed
+  end
 
   def academic_plan_by_student_uid
     model = CampusSolutions::MyAcademicPlan.new student_uid_param

@@ -1,0 +1,258 @@
+{
+  "collegeAndLevel": {
+    "careers": [
+      "Undergraduate"
+    ],
+    "level": "Senior",
+    "futureTelebearsLevel": "",
+    "majors": [
+      {
+        "college": "College of Letters & Science",
+        "major": "Undeclared"
+      }
+    ],
+    "termName": "Fall 2016",
+    "isCurrent": true
+  },
+  "transitionTerm": {
+    "registered": false,
+    "termName": "Summer 2016",
+    "isProfileCurrent": true
+  },
+  "gpaUnits": {
+    "cumulativeGpa": "3.198",
+    "totalUnits": 130.3,
+    "totalUnitsAttempted": 54.0
+  },
+  "requirements": [
+    {
+      "name": "UC Entry Level Writing",
+      "status": "met"
+    },
+    {
+      "name": "American History",
+      "status": "met"
+    },
+    {
+      "name": "American Institutions",
+      "status": "met"
+    },
+    {
+      "name": "American Cultures",
+      "status": "met"
+    }
+  ],
+  "regblocks": {
+    "activeBlocks": [],
+    "inactiveBlocks": []
+  },
+  "semesters": [
+    {
+      "name": "Fall 2016",
+      "slug": "fall-2016",
+      "termCode": "D",
+      "termYear": "2016",
+      "timeBucket": "future",
+      "campusSolutionsTerm": true,
+      "gradingInProgress": false,
+      "classes": [
+        {
+          "role": "Student",
+          "sections": [
+            {
+              "ccn": "15954",
+              "instruction_format": "LEC",
+              "is_primary_section": true,
+              "section_label": "LEC 001",
+              "section_number": "001",
+              "units": "4.0",
+              "grading_basis": "GRD",
+              "instructors": [
+                {
+                  "name": "David I Beecher",
+                  "role": "PI",
+                  "uid": "226088"
+                }
+              ],
+              "schedules": [
+                {
+                  "buildingName": "Dwinelle",
+                  "roomNumber": "145",
+                  "schedule": "TuTh 11:00A-12:29P"
+                }
+              ],
+              "gradeOption": "Letter"
+            },
+            {
+              "ccn": "15937",
+              "instruction_format": "DIS",
+              "is_primary_section": false,
+              "section_label": "DIS 103",
+              "section_number": "103",
+              "associated_primary_id": "15954.0",
+              "instructors": [],
+              "schedules": [
+                {
+                  "buildingName": "Hearst Field Annex",
+                  "roomNumber": "B1",
+                  "schedule": "M 2:00P-2:59P"
+                }
+              ]
+            }
+          ],
+          "slug": "ias-45",
+          "title": "Survey of World History",
+          "url": "/academics/semester/fall-2016/class/ias-45",
+          "course_code": "IAS 45",
+          "dept": "IAS",
+          "courseCatalog": "45",
+          "course_id": "ias-45-2016-D"
+        },
+        {
+          "role": "Student",
+          "sections": [
+            {
+              "ccn": "30128",
+              "instruction_format": "LEC",
+              "is_primary_section": true,
+              "section_label": "LEC 001",
+              "section_number": "001",
+              "units": "3.0",
+              "grading_basis": "GRD",
+              "waitlisted": true,
+              "waitlistPosition": 7,
+              "enroll_limit": 150,
+              "instructors": [
+                {
+                  "name": "Malcolm POTTS",
+                  "role": "PI",
+                  "uid": "12909"
+                }
+              ],
+              "schedules": [
+                {
+                  "buildingName": "LeConte",
+                  "roomNumber": "4",
+                  "schedule": "M 4:00P-5:59P"
+                }
+              ],
+              "gradeOption": "Letter"
+            },
+            {
+              "ccn": "30129",
+              "instruction_format": "DIS",
+              "is_primary_section": false,
+              "section_label": "DIS 101",
+              "section_number": "101",
+              "associated_primary_id": "30128.0",
+              "waitlisted": true,
+              "waitlistPosition": 0,
+              "enroll_limit": 40,
+              "instructors": [],
+              "schedules": [
+                {
+                  "buildingName": "Genetics & Plant Bio",
+                  "roomNumber": "103",
+                  "schedule": "W 10:00A-10:59A"
+                }
+              ]
+            }
+          ],
+          "slug": "pb_hlth-181",
+          "title": "Poverty and Population",
+          "url": "/academics/semester/fall-2016/class/pb_hlth-181",
+          "course_code": "PB HLTH 181",
+          "dept": "PB HLTH",
+          "courseCatalog": "181",
+          "course_id": "pb_hlth-181-2016-D"
+        },
+        {
+          "role": "Student",
+          "sections": [
+            {
+              "ccn": "10604",
+              "instruction_format": "LEC",
+              "is_primary_section": true,
+              "section_label": "LEC 001",
+              "section_number": "001",
+              "units": "3.0",
+              "grading_basis": "GRD",
+              "waitlisted": true,
+              "waitlistPosition": 8,
+              "enroll_limit": 130,
+              "instructors": [
+                {
+                  "name": "Todd Fitch",
+                  "role": "PI",
+                  "uid": "244090"
+                }
+              ],
+              "schedules": [
+                {
+                  "buildingName": "Cheit",
+                  "roomNumber": "C230",
+                  "schedule": "TuTh 12:30P-1:59P"
+                }
+              ],
+              "gradeOption": "Letter"
+            },
+            {
+              "ccn": "10607",
+              "instruction_format": "DIS",
+              "is_primary_section": false,
+              "section_label": "DIS 101",
+              "section_number": "101",
+              "associated_primary_id": "10604.0",
+              "waitlisted": true,
+              "waitlistPosition": 0,
+              "enroll_limit": 62,
+              "instructors": [],
+              "schedules": [
+                {
+                  "buildingName": "Cheit",
+                  "roomNumber": "C125",
+                  "schedule": "F 8:00A-9:29A"
+                }
+              ]
+            }
+          ],
+          "slug": "ugba-101a",
+          "title": "Microeconomic Analysis for Business Decisions",
+          "url": "/academics/semester/fall-2016/class/ugba-101a",
+          "course_code": "UGBA 101A",
+          "dept": "UGBA",
+          "courseCatalog": "101A",
+          "course_id": "ugba-101a-2016-D"
+        }
+      ],
+      "hasEnrollmentData": true
+    }
+  ],
+  "telebears": [],
+  "otherSiteMemberships": [
+    {
+      "name": "Fall 2013",
+      "slug": "fall-2013",
+      "termCode": "D",
+      "termYear": "2013",
+      "sites": [
+        {
+          "emitter": "bCourses",
+          "id": "767330",
+          "name": "API101",
+          "shortDescription": "API Testing and Design 101",
+          "site_url": "http://localhost:12345/courses/767330",
+          "siteType": "course"
+        },
+        {
+          "emitter": "bCourses",
+          "id": "833382",
+          "name": "EE 20N",
+          "shortDescription": "Structure and Interpretation of Systems and Signals",
+          "site_url": "http://localhost:12345/courses/833382",
+          "siteType": "course"
+        }
+      ]
+    }
+  ]
+}
