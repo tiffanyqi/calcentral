@@ -19,31 +19,26 @@ module CampusSolutions
     end
 
     def normalize_response(response)
-      # Perform several checks and transforms on the response because the campus_solutions API
-      # returns inconsistently structured data.
-
+      # Make sure response is well-structured.
       container = response.parsed_response['STUDENTS']['STUDENT']['EMERGENCY_CONTACTS']
       return response if container.blank?
 
-      contacts = container['EMERGENCY_CONTACT']
+      # Make emergency_contact into an array.
+      contacts = container['EMERGENCY_CONTACT'] = Array.wrap container['EMERGENCY_CONTACT']
 
-      contacts.sort! do |left, right|
-        # Put the primary_contact with 'Y' at the head position, values being either 'Y' or 'N'
-        right['PRIMARY_CONTACT'] <=> left['PRIMARY_CONTACT']
+      # Make emergency_phones into an array.
+      contacts.each do |contact|
+        phones = contact['EMERGENCY_PHONES']
+        if phones
+          contact['EMERGENCY_PHONES'] = Array.wrap phones['EMERGENCY_PHONE']
+        else
+          contact['EMERGENCY_PHONES'] = []
+        end
       end
 
-      contacts.each do |item|
-        # The campus_solutions API returns the following structure:
-        # When a contact has one phone, emergency_phone points to that phone;
-        # When a contact has more than one phone, then emergency_phone points to an array of phones;
-        # We fix that by making emergency_phone into an array, always.
-        phones = item['EMERGENCY_PHONES']
-
-        if phones
-          phones['EMERGENCY_PHONE'] = Array.wrap phones['EMERGENCY_PHONE']
-        else
-          item['EMERGENCY_PHONES'] = {"EMERGENCY_PHONE" => []}
-        end
+      # Put the primary_contact with 'Y' at the head position, values being either 'Y' or 'N'
+      contacts.sort! do |left, right|
+        right['PRIMARY_CONTACT'] <=> left['PRIMARY_CONTACT']
       end
 
       response
