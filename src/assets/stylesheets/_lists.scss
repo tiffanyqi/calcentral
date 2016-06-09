@@ -30,6 +30,14 @@
       content: '\2013';
     }
   }
+  .cc-list-links-text {
+    margin-left: 16px;
+    &:before {
+      float: left;
+      margin-top: -2px;
+      padding-right: 10px;
+    }
+  }
 }
 .cc-list-link-container {
   padding: 0 15px;
