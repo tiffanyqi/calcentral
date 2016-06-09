@@ -42,4 +42,13 @@ class OracleBase < ActiveRecord::Base
   def self.stringified_columns
     []
   end
+
+  # Oracle has a limit of 1000 terms per expression, so whitelist predicates with more than 1000 entries must be
+  # constructed in chunks joined with OR.
+  def self.chunked_whitelist(column_name, terms=[])
+    predicates = terms.each_slice(1000).map do |slice|
+      "#{column_name} IN (#{slice.join ','})"
+    end
+    "AND (#{predicates.join ' OR '})"
+  end
 end

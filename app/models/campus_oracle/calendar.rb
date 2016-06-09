@@ -34,7 +34,7 @@ module CampusOracle
       end
 
       result = []
-      users_clause = users_in_chunks users
+      users_clause = chunked_whitelist('r.student_ldap_uid', users.map(&:uid))
 
       use_pooled_connection {
         sql = <<-SQL
@@ -61,24 +61,7 @@ module CampusOracle
         Berkeley::Terms.fetch.current,
         Berkeley::Terms.fetch.next,
         Berkeley::Terms.fetch.future
-      ].compact
-    end
-
-    private
-
-    # Oracle has a limit of 1000 terms per expression, so do CCN filtering as a series of OR statements with up to
-    # 1000 user ids per chunk.
-    def self.users_in_chunks(users=[])
-      slice = 0
-      statement = 'and ( '
-      users.each_slice(1000) { |chunk|
-        uids = chunk.map &:uid
-        statement += ' or ' if slice > 0
-        statement += "r.student_ldap_uid IN ( #{uids.join(',')} )"
-        slice += 1
-      }
-      statement += ')'
-      statement
+      ].select { |term| term && term.legacy? }
     end
 
   end
