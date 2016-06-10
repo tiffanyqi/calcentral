@@ -48,7 +48,12 @@ module EdoOracle
       if meeting['location'] == 'Requested General Assignment'
         building_name = 'Room not yet assigned'
       else
-        building_name, room_number = meeting['location'].rpartition(/\s+/).reject &:blank?
+        # See spec for behavior of this regex.
+        if (partitioned = meeting['location'].match /\A(.*)\s+(\w*\d[^\s]*)\Z/)
+          building_name, room_number = partitioned[1].to_s, partitioned[2].to_s
+        else
+          building_name = meeting['location']
+        end
       end
       {
         buildingName: building_name,
