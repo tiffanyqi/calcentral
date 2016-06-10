@@ -10,7 +10,7 @@ class ApiMyFinancialsPage
   end
 
   def has_cars_data?
-    true unless (@parsed['statusCode'] == 400 || @parsed['statusCode'] == 404)
+    ![400, 404].include? @parsed['statusCode']
   end
 
   # ACCOUNT SUMMARY
@@ -162,7 +162,7 @@ class ApiMyFinancialsPage
 
   def open_transactions
     all_transactions.select do |item|
-      (trans_status(item) == 'Current' || trans_status(item) == 'Past due' || trans_status(item) == 'Future' || trans_status(item) == 'Installment') && !trans_disputed(item) ||
+      (['Current', 'Past due', 'Future', 'Installment'].include? trans_status(item)) && !trans_disputed(item) ||
           (trans_type(item) == 'Payment' && trans_status(item) == 'Unapplied')
     end
   end

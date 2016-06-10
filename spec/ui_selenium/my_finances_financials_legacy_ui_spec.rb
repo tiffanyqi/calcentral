@@ -6,6 +6,7 @@ describe 'My Finances details page', :testui => true do
 
     timeout = WebDriverUtils.page_event_timeout
     test_user = UserUtils.load_test_users.find { |user| user['financesUi'] }
+    logger.info "Test UID is #{test_user['uid']}"
 
     before(:all) do
       @driver = WebDriverUtils.launch_browser

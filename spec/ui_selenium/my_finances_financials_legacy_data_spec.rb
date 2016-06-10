@@ -56,10 +56,9 @@ describe 'My Finances legacy student financials', :testui => true do
           my_fin_no_cars_msg = @my_finances.no_cars_data_msg?
           has_finances_tab = @status_api.has_finances_tab?
 
-          if fin_api.has_cars_data?
+          if (has_cars_data = fin_api.has_cars_data?)
 
             testable_users << uid
-            has_cars_data = true
 
             # ACCOUNT SUMMARY CARD
 
