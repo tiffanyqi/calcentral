@@ -363,7 +363,7 @@ describe 'Delegated access', :testui => true do
                     @finances_page.load_page
 
                     # Billing Summary
-                    sees_billing_summary = WebDriverUtils.verify_block { @finances_page.account_balance_element_element.when_visible timeout }
+                    sees_billing_summary = WebDriverUtils.verify_block { @finances_page.account_bal_element.when_visible timeout }
                     sees_payment_button = @finances_page.make_payment_link?
                     if @financials_api.has_cars_data?
                       it ("shows delegate UID #{uid} the billing summary for UID #{student_uid}") { expect(sees_billing_summary).to be true }
