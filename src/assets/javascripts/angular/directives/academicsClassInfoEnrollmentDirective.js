@@ -1,6 +1,7 @@
 /* jshint camelcase: false */
 'use strict';
 
+var _ = require('lodash');
 var angular = require('angular');
 
 angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmentDirective', function() {
@@ -24,15 +25,7 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
         if (!scope.selectedSection) {
           return scope.students;
         }
-
-        var students = [];
-        angular.forEach(scope.students, function(student) {
-          if (isStudentInSection(student)) {
-            this.push(student);
-          }
-        }, students);
-
-        return students;
+        return _.filter(scope.students, isStudentInSection);
       };
 
       /*
@@ -51,11 +44,11 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
       scope.studentsInSectionEmailList = function() {
         var students = studentsInSelectedSection();
         if (students) {
-          var studentEmails = [];
-          angular.forEach(students, function(student) {
-            this.push(student.email);
-          }, studentEmails);
-          return studentEmails.join(',');
+          return _.map(students, function(student) {
+            return student.email;
+          }).join(',');
+        } else {
+          return '';
         }
       };
 
