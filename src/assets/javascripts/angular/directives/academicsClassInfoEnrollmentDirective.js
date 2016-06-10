@@ -7,8 +7,56 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
   return {
     scope: true,
     link: function(scope, elem, attrs) {
+
+      /*
+       * Returns true if student is in the selected section
+       * @returns {Boolean}
+       */
+      var isStudentInSection = function(student) {
+        return (student.section_ccns.indexOf(scope.selectedSection.ccn) !== -1);
+      };
+
+      /*
+       * Returns students in selected section
+       * @returns {Array}
+       */
+      var studentsInSelectedSection = function() {
+        if (!scope.selectedSection) {
+          return scope.students;
+        }
+
+        var students = [];
+        angular.forEach(scope.students, function(student) {
+          if (isStudentInSection(student)) {
+            this.push(student);
+          }
+        }, students);
+
+        return students;
+      };
+
+      /*
+       * Returns true if no section selected, or if student is in the selected section
+       * @param {object} student - A student object
+       * @returns {Boolean}
+       */
       scope.studentInSectionFilter = function(student) {
-        return (!scope.selectedSection || student.section_ccns.indexOf(scope.selectedSection.ccn) !== -1);
+        return (!scope.selectedSection || isStudentInSection(student));
+      };
+
+      /*
+       * Returns list of student email addresses for the currently selected section
+       * @returns {string}
+       */
+      scope.studentsInSectionEmailList = function() {
+        var students = studentsInSelectedSection();
+        if (students) {
+          var studentEmails = [];
+          angular.forEach(students, function(student) {
+            this.push(student.email);
+          }, studentEmails);
+          return studentEmails.join(',');
+        }
       };
 
       scope.$watch(
