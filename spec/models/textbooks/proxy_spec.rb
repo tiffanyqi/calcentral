@@ -15,15 +15,24 @@ describe Textbooks::Proxy do
     expect(first_book[:author]).to be_present
   end
 
-  describe '#get' do
-    describe 'live testext tests enabled for order-independent expectations', testext: true, ignore: true do
-      subject { Textbooks::Proxy.new({
-        course_catalog: course_catalog,
-        dept: dept,
-        section_numbers: section_numbers,
-        slug: slug
-      }).get }
+  let(:course_catalog) { '109G' }
+  let(:dept) { 'POL SCI' }
+  let(:section_numbers) { ['001'] }
+  let(:slug) { 'fall-2013' }
+  let(:proxy) do
+    Textbooks::Proxy.new(
+      course_catalog: course_catalog,
+      dept: dept,
+      fake: fake,
+      section_numbers: section_numbers,
+      slug: slug
+    )
+  end
 
+  describe '#get' do
+    subject { proxy.get }
+    describe 'live testext tests enabled for order-independent expectations', testext: true, ignore: true do
+      let(:fake) { false }
       context 'valid section numbers and term slug' do
         let(:course_catalog) { 'R1A' }
         let(:dept) { 'COLWRIT' }
@@ -66,10 +75,7 @@ describe Textbooks::Proxy do
     end
 
     context 'fake proxy' do
-      let(:fake_proxy) do
-        Textbooks::Proxy.new(fake: true, course_catalog: '109G', dept: 'POL SCI', section_numbers: ['001'], slug: 'fall-2014')
-      end
-      subject { fake_proxy.get }
+      let(:fake) { true }
 
       context 'good fixture data' do
         it 'properly transforms bookstore feed' do
@@ -83,7 +89,7 @@ describe Textbooks::Proxy do
 
       context 'feed including malformed item' do
         before do
-          fake_proxy.override_json do |json|
+          proxy.override_json do |json|
             json.first['materials'][3] = {
               ean: 'No Number Nonsense',
               title: ' ()',
@@ -97,18 +103,37 @@ describe Textbooks::Proxy do
           expect(subject[:books][:items]).to have(3).items
         end
       end
+
+      context 'course catalog with fewer than three characters' do
+        before { allow_any_instance_of(Berkeley::Term).to receive(:legacy?).and_return legacy }
+        let(:course_catalog) { '1A' }
+        let(:url) { proxy.bookstore_link section_numbers }
+
+        def encoded_course_param(value)
+          "%22course%22:%22#{value}%22"
+        end
+
+        context 'legacy term' do
+          let(:legacy) { true }
+          it 'does not zero-pad course catalog' do
+            expect(url).to include encoded_course_param('1A')
+          end
+        end
+        context 'Campus Solutions term' do
+          let(:legacy) { false }
+          it 'zero-pads course catalog' do
+            expect(url).to include encoded_course_param('01A')
+          end
+        end
+      end
     end
   end
 
   describe '#get_as_json' do
-    include_context 'it writes to the cache'
+    include_context 'it writes to the cache at least once'
+    let(:fake) { false }
+    let(:json) { proxy.get_as_json }
     it 'returns proper JSON' do
-      json = Textbooks::Proxy.new({
-        course_catalog: '109G',
-        dept: 'POL SCI',
-        section_numbers: ['001'],
-        slug: 'fall-2014'
-      }).get_as_json
       expect(json).to be_present
       parsed = JSON.parse(json)
       expect(parsed).to be
@@ -121,13 +146,6 @@ describe Textbooks::Proxy do
         stub_request(:any, /#{Regexp.quote(Settings.textbooks_proxy.base_url)}.*/).to_raise(Errno::EHOSTUNREACH)
       end
       it 'returns a error status code and message' do
-        json = Textbooks::Proxy.new({
-          course_catalog: '109G',
-          dept: 'POL SCI',
-          section_numbers: ['001'],
-          slug: 'fall-2014',
-          fake: false
-        }).get_as_json
         parsed = JSON.parse(json)
         expect(parsed['statusCode']).to be >= 400
         expect(parsed['body']).to be_present
@@ -135,15 +153,7 @@ describe Textbooks::Proxy do
     end
 
     it_should_behave_like 'a proxy logging errors' do
-      subject do
-        Textbooks::Proxy.new({
-          course_catalog: '109G',
-          dept: 'POL SCI',
-          section_numbers: ['001'],
-          slug: 'fall-2014',
-          fake: false
-        }).get_as_json
-      end
+      subject { json }
     end
   end
 
