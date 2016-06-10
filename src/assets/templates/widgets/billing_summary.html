@@ -2,7 +2,7 @@
   <div class="cc-widget-title">
     <h2 class="cc-left">
       Billing Summary
-      <span class="cc-widget-title-sub cc-text-uppercase" data-ng-bind="billing.data.summary.currentTerm"></span>
+      <span class="cc-widget-title-sub cc-text-uppercase" data-ng-if="billing.fallSubheader" data-ng-bind="billing.fallSubheader"></span>
     </h2>
     <a data-ng-if="!billingDetails && billing.data.activity" class="cc-right cc-widget-title-link" href="/billing/details">
       <strong>Details</strong>
@@ -43,13 +43,15 @@
       </li>
       <li data-ng-if="billing.data.summary.accountBalance !== '0.00'">
         <div class="cc-page-myfinances-account-summary-buttons cc-print-hide" data-ng-if="billing.data.summary.accountBalance !== '0.00'">
-          <a class="cc-button" data-cc-outbound-enabled="true" href="/higher_one/higher_one_url">Make Payment for <span data-ng-bind="billing.data.summary.currentTerm"></span></a>
+          <a class="cc-button" data-cc-outbound-enabled="true" href="/higher_one/higher_one_url">Make Payment
+            <span data-ng-if="billing.fallSubheader" data-ng-bind-template="for {{billing.fallSubheader}}"></span>
+          </a>
         </div>
       </li>
     </ul>
     <div data-cc-spinner-directive="billing.isLoadingCars">
-      <div class="cc-page-myfinances-billing-summary-footnote cc-text-center" data-ng-if=" billingDetails && billing.hasCarsActivity">
-        <a href="/finances/details">View transactions prior to <span data-ng-bind="billing.data.summary.currentTerm"></span>.</a>
+      <div class="cc-page-myfinances-billing-summary-footnote cc-text-center" data-ng-if="billingDetails && billing.hasCarsActivity && billing.fallSubheader">
+        <a href="/finances/details">View transactions prior to <span data-ng-bind="billing.fallSubheader"></span>.</a>
       </div>
     </div>
   </div>

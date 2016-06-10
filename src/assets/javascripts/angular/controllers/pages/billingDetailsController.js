@@ -5,12 +5,16 @@ var angular = require('angular');
 angular.module('calcentral.controllers').controller('BillingDetailsController', function(apiService, financesFactory, $scope) {
   apiService.util.setTitle('My Finances');
   $scope.billingTerm = {
-    currentTerm: '',
+    // We want to show this text only during the transition period, so we'll remove this for GL7.
+    fallText: null,
     isLoading: true
   };
 
   var getCurrentTerm = function(data) {
-    $scope.billingTerm.currentTerm = data.data.feed.summary.currentTerm;
+    // Toggles the "Fall 2016" text needed for transition period, remove this for GL7.
+    if (data.data.feed.summary.currentTerm === 'Summer 2016' || data.data.feed.summary.currentTerm === 'Fall 2016') {
+      $scope.billingTerm.fallText = 'Fall 2016';
+    }
   };
 
   var loadBillingInfo = function() {
