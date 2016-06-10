@@ -16,17 +16,15 @@ describe EdoOracle::CourseSections do
         expect(result[:roomNumber]).to eq room_number
       end
     end
-    pending do
-      it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
-        let(:location) { 'Pauley Ballroom' }
-        let(:building_name) { 'Pauley Ballroom' }
-        let(:room_number) { nil }
-      end
-      it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
-        let(:location) { 'Off Campus' }
-        let(:building_name) { 'Off Campus' }
-        let(:room_number) { nil }
-      end
+    it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+      let(:location) { 'Pauley Ballroom' }
+      let(:building_name) { 'Pauley Ballroom' }
+      let(:room_number) { nil }
+    end
+    it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+      let(:location) { 'Off Campus' }
+      let(:building_name) { 'Off Campus' }
+      let(:room_number) { nil }
     end
     it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
       let(:location) { 'Internet/Online' }
@@ -47,6 +45,11 @@ describe EdoOracle::CourseSections do
       let(:location) { 'Unit 3 Spens-Black 3' }
       let(:building_name) { 'Unit 3 Spens-Black' }
       let(:room_number) { '3' }
+    end
+    it_should_behave_like 'an intelligent parser of EDO db \'location\'' do
+      let(:location) { 'Hearst Field Annex C57' }
+      let(:building_name) { 'Hearst Field Annex' }
+      let(:room_number) { 'C57' }
     end
   end
 
