@@ -234,24 +234,32 @@ angular.module('calcentral.services').service('academicsService', function() {
   };
 
   var textbookRequestInfo = function(course, semester) {
-    // Collect unique section numbers (e.g, "001") of primary sections only.
     var primarySectionNumbers = [];
+    var primaryCcns = [];
     for (var i = 0; i < course.sections.length; i++) {
       var section = course.sections[i];
+      // Request textbooks for primary sections only.
       if (section.is_primary_section) {
         var sectionNumber = section.section_number;
-        // We check for uniqueness because a cross-listed course will have sections
-        // with different CCNs and catalog IDs, but each matching section number
-        // (such as "L & S C30T LEC 001" and "PSYCH C19 LEC 001") will fetch the
-        // same bookstore list.
+        // We check for uniqueness on three-digit section_number. A cross-listed course
+        // will have sections with different CCNs and catalog IDs, but each matching
+        // section_number (such as "L & S C30T LEC 001" and "PSYCH C19 LEC 001") will fetch
+        // the same bookstore list.
         if (primarySectionNumbers.indexOf(sectionNumber) === -1) {
           primarySectionNumbers.push(sectionNumber);
+          if (semester.campusSolutionsTerm) {
+            primaryCcns.push(section.ccn);
+          }
         }
       }
     }
-    if (primarySectionNumbers.length) {
+    // For pre-Campus Solutions terms, the textbooks API expects three-digit
+    // "section_numbers" (e.g., "001"). For Campus Solutions terms, the textbooks API
+    // expects five-digit course ids, called "ccn" in the academics feed.
+    var sectionNumbers = semester.campusSolutionsTerm ? primaryCcns : primarySectionNumbers;
+    if (sectionNumbers.length) {
       var courseInfo = {
-        'sectionNumbers[]': primarySectionNumbers,
+        'sectionNumbers[]': sectionNumbers,
         'department': course.dept,
         'courseCatalog': course.courseCatalog,
         'slug': semester.slug

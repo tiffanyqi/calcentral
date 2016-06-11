@@ -9,15 +9,23 @@ module Textbooks
 
     def initialize(options = {})
       @section_numbers = options[:section_numbers]
-      @course_catalog = options[:course_catalog]
       @dept = options[:dept]
       @slug = options[:slug]
-      @term = get_term(@slug)
+      @course_catalog = format_course_catalog options[:course_catalog]
+      @term = get_term @slug
 
       super(Settings.textbooks_proxy, options)
       initialize_mocks if @fake
     end
 
+    def format_course_catalog(course_catalog)
+      if Berkeley::Terms.fetch.campus[@slug].legacy?
+        course_catalog
+      else
+        # For Campus Solutions terms, course catalogs must be zero-padded to at least three characters.
+        course_catalog.rjust(3, '0')
+      end
+    end
 
     def google_book(isbn)
       google_book_url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn

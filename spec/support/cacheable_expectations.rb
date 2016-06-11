@@ -4,6 +4,12 @@ shared_context 'it writes to the cache' do
   end
 end
 
+shared_context 'it writes to the cache at least once' do
+  before do
+    expect(Rails.cache).to receive(:write).at_least :once
+  end
+end
+
 shared_context 'short-lived cache write of NilClass on failures' do
   before do
     Rails.cache.should_receive(:write).with(
