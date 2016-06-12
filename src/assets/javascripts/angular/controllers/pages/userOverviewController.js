@@ -60,11 +60,9 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     advisingFactory.getStudentAcademics({
       uid: $routeParams.uid
     }).success(function(data) {
-      angular.extend($scope.academics, _.get(data, 'academics'));
-      $scope.collegeAndLevel = $scope.academics.collegeAndLevel;
-      $scope.examSchedule = $scope.academics.examSchedule;
-      // The university_requirements widget is also used on My Academics.
-      $scope.academics.universityRequirements = $scope.academics.requirements;
+      angular.extend($scope, data);
+      // We use aliases in scope because the user overview page has cards that are shared with My Academics, etc.
+      $scope.academics.universityRequirements = $scope.requirements;
     }).error(function(data, status) {
       $scope.academics.error = errorReport(status, data.error);
     }).finally(function() {
@@ -78,7 +76,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
 
   $scope.$on('calcentral.api.user.isAuthenticated', function(event, isAuthenticated) {
     if (isAuthenticated) {
-      // Refresh user properties because the actAsOptions.canSeeCSLinks property is sensitive to the /user/overview route.
+      // Refresh user properties because the canSeeCSLinks property is sensitive to the current route.
       apiService.user.fetch()
       .then(loadProfile)
       .then(loadAcademics);
