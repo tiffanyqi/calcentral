@@ -26,7 +26,7 @@
     <div data-ng-include="'widgets/profile/emergency_phone_editor.html'" data-ng-if="emergencyPhone.items.editorEnabled && emergencyPhone.isAdding"></div>
   </div>
 
-  <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showAdd()" data-ng-disabled="emergencyPhone.items.editorEnabled || currentObject.isAdding">
+  <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showAdd()" data-ng-disabled="emergencyPhone.items.editorEnabled || currentObject.isAdding" data-ng-if="currentObject.data.emergencyPhones.length < currentObject.data.addPhoneLimit">
     <i class="fa fa-plus cc-text-small"></i> Add additional phone number
   </button>
 </div>
