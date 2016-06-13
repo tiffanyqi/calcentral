@@ -1281,6 +1281,24 @@
       ]
     },
     {
+      "name": "Change of Course Load",
+      "description": "Fill the Change of Course Load form to increase or decrease a maximum or minimum unit limit.",
+      "url": "https://bcsweb.is.berkeley.edu/psp/bcsprd/EMPLOYEE/HRMS//s/WEBLIB_PTAL.ISCRIPT1.FieldFormula.IScript_PTAL_DASHBOARD?tab=G3WORKCENTER&FolderPath=PORTAL_ROOT_OBJECT.G3WORKCENTER_LINK&IsFolder=false&IgnoreParamTempl=FolderPath%2cIsFolder",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": true,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Student Forms",
+          "subcategory": "Forms"
+        }
+      ]
+    },
+    {
       "name": "Child Care",
       "description": "Campus child care services",
       "url": "http://www.housing.berkeley.edu/child/",
@@ -3479,6 +3497,24 @@
       ]
     },
     {
+      "name": "Veteran's Benefits",
+      "description": "Apply to gain veteran's educational benefits.",
+      "url": "https://bcsweb.is.berkeley.edu/psp/bcsprd/EMPLOYEE/HRMS/s/WEBLIB_PTAL.ISCRIPT1.FieldFormula.IScript_PTAL_DASHBOARD?tab=G3WORKCENTER&FolderPath=PORTAL_ROOT_OBJECT.G3WORKCENTER_LINK&IsFolder=false&IgnoreParamTempl=FolderPath%2cIsFolder",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Student Forms",
+          "subcategory": "Forms"
+        }
+      ]
+    },
+    {
       "name": "Wisdom Caf\u00e9",
       "description": "Where Berkeley staff learn \u0026 share",
       "url": "http://wisdomcafe.berkeley.edu/",
@@ -3632,6 +3668,15 @@
         {
           "id": "supportservices",
           "name": "Support Services"
+        }
+      ]
+    },
+    {
+      "label": "Forms",
+      "categories": [
+        {
+          "id": "studentforms",
+          "name": "Student Forms"
         }
       ]
     },
