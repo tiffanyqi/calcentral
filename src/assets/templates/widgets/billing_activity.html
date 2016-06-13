@@ -124,9 +124,9 @@
                      data-ng-class="{'fa-plus':(item.itemLineAmount > 0),'fa-minus':(item.itemLineAmount < 0)}"></i>
                 </div>
               </td>
-              <td class="cc-page-myfinances-due-date cc-table-center" data-ng-if="item.itemDueFlag">
+              <td class="cc-page-myfinances-due-date cc-table-center">
                 <div class="hide-for-small cc-print-show">
-                  <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'"></span>
+                  <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'" data-ng-if="item.itemDueFlag"></span>
                   <i class="fa cc-page-myfinances-due-date-icons-medium-up" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.itemDueFlag === 'OVER_DUE'),'fa-exclamation':(item.itemDueFlag === 'DUE_NOW'),'fa-arrow-right':(item.itemDueFlag === 'FUTURE_DUE')}"></i>
                 </div>
                 <div class="hide-for-medium-up cc-print-hide" aria-hidden>
