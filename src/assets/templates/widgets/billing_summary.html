@@ -33,7 +33,7 @@
           </div>
         </section>
       </li>
-      <li class="cc-page-myfinances-account-summary-item cc-clearfix-container" data-ng-if="billing.data.summary.accountBalance !== '0.00'">
+      <li class="cc-page-myfinances-account-summary-item cc-clearfix-container" data-ng-if="billing.data.summary.accountBalance">
         <div class="small-8 columns cc-print-width-auto">Account Balance
           <div class="cc-page-myfinances-account-summary-subtitle cc-page-myfinances-light">Includes charges not yet due</div>
         </div>
@@ -41,12 +41,17 @@
           <div class="cc-page-myfinances-amount" data-cc-amount-directive="billing.data.summary.accountBalance"></div>
         </div>
       </li>
-      <li data-ng-if="billing.data.summary.accountBalance !== '0.00'">
-        <div class="cc-page-myfinances-account-summary-buttons cc-print-hide" data-ng-if="billing.data.summary.accountBalance !== '0.00'">
+      <li data-ng-if="billing.data.summary.accountBalance > 0">
+        <div class="cc-page-myfinances-account-summary-buttons cc-print-hide">
           <a class="cc-button" data-cc-outbound-enabled="true" href="/higher_one/higher_one_url">Make Payment
             <span data-ng-if="billing.fallSubheader" data-ng-bind-template="for {{billing.fallSubheader}}"></span>
           </a>
         </div>
+      </li>
+      <li data-ng-if="billing.data.summary.accountBalance <= 0">
+        <a class="cc-page-myfinances-account-summary-item" data-cc-outbound-enabled="true" href="/higher_one/higher_one_url">
+          View Official Monthly Statement
+        </a>
       </li>
     </ul>
     <div data-cc-spinner-directive="billing.isLoadingCars">
