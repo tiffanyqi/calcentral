@@ -1288,7 +1288,7 @@
         "student": true,
         "applicant": true,
         "staff": true,
-        "faculty": false,
+        "faculty": true,
         "exStudent": true
       },
       "categories": [
@@ -3503,8 +3503,8 @@
       "roles": {
         "student": true,
         "applicant": true,
-        "staff": false,
-        "faculty": false,
+        "staff": true,
+        "faculty": true,
         "exStudent": true
       },
       "categories": [
