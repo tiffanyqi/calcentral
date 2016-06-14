@@ -24,11 +24,12 @@ describe 'CampusOracle::CourseSections' do
       expect(data[:instructors][0][:name]).to be_present
       expect(data[:instructors][0][:uid]).to eq '238382'
       expect(data[:instructors][0][:instructor_func]).to eq '1'
-      expect(data[:schedules]).to have(2).items
-      expect(data[:schedules][0][:schedule]).to eq 'TuTh 2:00P-3:30P'
-      expect(data[:schedules][0][:buildingName]).to eq 'WHEELER'
-      expect(data[:schedules][1][:schedule]).to eq 'W 4:00P-5:30P'
-      expect(data[:schedules][1][:buildingName]).to eq 'DWINELLE'
+      expect(data[:schedules][:oneTime]).to be_empty
+      expect(data[:schedules][:recurring]).to have(2).items
+      expect(data[:schedules][:recurring][0][:schedule]).to eq 'TuTh 2:00P-3:30P'
+      expect(data[:schedules][:recurring][0][:buildingName]).to eq 'WHEELER'
+      expect(data[:schedules][:recurring][1][:schedule]).to eq 'W 4:00P-5:30P'
+      expect(data[:schedules][:recurring][1][:buildingName]).to eq 'DWINELLE'
     end
 
     it 'should filter out the empty schedules' do
@@ -41,10 +42,7 @@ describe 'CampusOracle::CourseSections' do
       CampusOracle::Queries.should_receive(:get_section_schedules).and_return(stubbed_schedules)
       #allow(CampusOracle::Queries).to receive(:get_section_schedules).and_return(stubbed_schedules)
       result = client.get_section_data
-
-      expect(result).to be_an_instance_of Hash
-      expect(result).to have_key :schedules
-      expect(result[:schedules]).to have(1).items
+      expect(result[:schedules][:recurring]).to have(1).items
     end
 
     it 'should strip leading zeros from room_number' do
@@ -57,8 +55,8 @@ describe 'CampusOracle::CourseSections' do
       CampusOracle::Queries.should_receive(:get_section_schedules).and_return(stubbed_schedules)
       #allow(CampusOracle::Queries).to receive(:get_section_schedules).and_return(stubbed_schedules)
       result = client.get_section_data
-      expect(result[:schedules][0][:roomNumber]).to be_nil
-      expect(result[:schedules][1][:roomNumber]).to eq '1'
+      expect(result[:schedules][:recurring][0][:roomNumber]).to be_nil
+      expect(result[:schedules][:recurring][1][:roomNumber]).to eq '1'
     end
 
   end

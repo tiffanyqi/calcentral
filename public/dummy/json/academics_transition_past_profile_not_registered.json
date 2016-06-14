@@ -469,11 +469,15 @@
       "termCode": "B",
       "termYear": "2014",
       "timeBucket": "future",
+      "hasEnrollmentData": true,
       "campusSolutionsTerm": false,
       "classes": [
         {
+          "courseCatalog": "1A",
           "course_code": "BIOLOGY 1A",
+          "course_id": "biology-1a-2014-B",
           "dept": "BIOLOGY",
+          "dept_desc": "Biology",
           "slug": "biology-1a",
           "title": "General Biology Lecture",
           "sections": [
@@ -484,7 +488,10 @@
               "instruction_format": "LEC",
               "instructors": [],
               "is_primary_section": true,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "section_label": "LEC 003",
               "section_number": "003",
               "units": "5.0",
@@ -496,7 +503,10 @@
               "instruction_format": "DIS",
               "instructors": [],
               "is_primary_section": false,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "section_label": "DIS 005",
               "section_number": "005",
               "waitlisted": true,
@@ -507,7 +517,10 @@
               "instruction_format": "LEC",
               "instructors": [],
               "is_primary_section": false,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "section_label": "LEC 004",
               "section_number": "004"
             }
@@ -523,10 +536,14 @@
       "termYear": "2013",
       "timeBucket": "current",
       "campusSolutionsTerm": false,
+      "hasEnrollmentData": true,
       "classes": [
         {
+          "courseCatalog": "1A",
           "course_code": "BIOLOGY 1A",
+          "course_id": "biology-1a-2013-D",
           "dept": "BIOLOGY",
+          "dept_desc": "Biology",
           "slug": "biology-1a",
           "title": "General Biology Lecture",
           "sections": [
@@ -547,13 +564,16 @@
                   "uid": "904715"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "VALLEY LSB",
-                  "roomNumber": "2030",
-                  "schedule": "M 4:00P-5:00P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Valley Life Sciences",
+                    "roomNumber": "2030",
+                    "schedule": "M 4:00P-5:00P"
+                  }
+                ]
+              },
               "units": "5.0"
             },
             {
@@ -569,20 +589,26 @@
                   "uid": "978966"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "PIMENTAL",
-                  "roomNumber": "1",
-                  "schedule": "M 2:00P-3:00P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Pimentel",
+                    "roomNumber": "1",
+                    "schedule": "M 2:00P-3:00P"
+                  }
+                ]
+              }
             }
           ],
           "url": "/academics/semester/fall-2013/class/biology-1a"
         },
         {
+          "courseCatalog": "C147",
           "course_code": "COG SCI C147",
+          "course_id": "cog_sci-c147-2013-D",
           "dept": "COG SCI",
+          "dept_desc": "Cognitive Science",
           "slug": "cog_sci-c147",
           "title": "Language Disorders",
           "sections": [
@@ -599,26 +625,33 @@
                   "uid": "238382"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "WHEELER",
-                  "roomNumber": "0210",
-                  "schedule": "TuTh 2:00P-3:30P"
-                },
-                {
-                  "buildingName": "DWINELLE",
-                  "roomNumber": "117",
-                  "schedule": "W 4:00P-5:30P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Wheeler",
+                    "roomNumber": "0210",
+                    "schedule": "TuTh 2:00P-3:30P"
+                  },
+                  {
+                    "buildingName": "Dwinelle",
+                    "roomNumber": "117",
+                    "schedule": "W 4:00P-5:30P"
+                  }
+                ]
+              },
               "units": "3.0"
             }
           ],
           "url": "/academics/semester/fall-2013/class/cog_sci-c147"
         },
         {
+          "courseCatalog": "1",
           "course_code": "PHYS ED 1",
+          "course_id": "phys_ed-1-2013-d",
           "dept": "PHYS ED",
+          "dept_desc": "Physical Education",
+          "multiplePrimaries": true,
           "slug": "phys_ed-1",
           "title": "Physical Education Activities",
           "sections": [
@@ -629,13 +662,19 @@
               "is_primary_section": true,
               "section_label": "LAB 002",
               "section_number": "002",
-              "schedules": [
-                {
-
-                  "buildingName": "HEARST GYM",
-                  "roomNumber": "234",
-                  "schedule": "MTuWTh 8:30A-10:00A"
-                }
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "HEARST GYM",
+                    "roomNumber": "234",
+                    "schedule": "MTuWTh 8:30A-10:00A"
+                  }
+                ]
+              },
+              "slug": "lab-002",
+              "siteIds": [
+                "11108107"
               ],
               "instructors": [
                 {
@@ -643,7 +682,8 @@
                   "uid": "938382"
                 }
               ],
-              "units": ".5"
+              "units": ".5",
+              "url": "/academics/semester/fall-2013/class/phys_ed-1/lab-002"
             },
             {
               "ccn": "72945",
@@ -652,23 +692,103 @@
               "is_primary_section": true,
               "section_label": "LAB 104",
               "section_number": "104",
-              "schedules": [
-                {
-                  "buildingName": "HEARST GYM",
-                  "roomNumber": "230",
-                  "schedule": "TuWTh 5:00P-7:00P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "HEARST GYM",
+                    "roomNumber": "230",
+                    "schedule": "TuWTh 5:00P-7:00P"
+                  }
+                ]
+              },
+              "slug": "lab-104",
               "instructors": [
                 {
                   "name": "Richard Emanuel IVES",
                   "uid": "38383737"
                 }
               ],
-              "units": "1.5"
+              "units": "1.5",
+              "url": "/academics/semester/fall-2013/class/phys_ed-1/lab-104"
+            },
+            {
+              "ccn": "72946",
+              "instruction_format": "IND",
+              "is_primary_section": false,
+              "section_label": "IND 201",
+              "section_number": "201",
+              "associatedWithPrimary": "lab-002",
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
+              "instructors": [
+                {
+                  "name": "Louis Pasteur",
+                  "uid": "938382"
+                }
+              ]
+            }
+          ],
+          "class_sites": [
+            {
+              "id": "11108107",
+              "shortDescription": "Lift With Louis",
+              "name": "PHYS ED 1 LAB 002",
+              "emitter": "bCourses",
+              "site_url": "https://ucberkeley.beta.instructure.com/courses/11108107"
             }
           ],
           "url": "/academics/semester/fall-2013/class/phys_ed-1"
+        }
+      ]
+    },
+    {
+      "name": "Spring 2013",
+      "notation": "Education Abroad",
+      "slug": "spring-2013",
+      "termCode": "B",
+      "termYear": "2013",
+      "timeBucket": "past",
+      "campusSolutionsTerm": false,
+      "hasEnrollmentData": false,
+      "classes": [
+        {
+          "courseCatalog": "105",
+          "course_code": "EGYPT 105",
+          "dept": "EGYPT",
+          "title": "MIDDLE KINGDOM HIST & CULT",
+          "transcript": [
+            {
+              "units": "5.0",
+              "grade": "A-"
+            }
+          ]
+        },
+        {
+          "courseCatalog": "50B",
+          "course_code": "ARABIC 50B",
+          "dept": "ARABIC",
+          "title": "INT MOD ARABIC",
+          "transcript": [
+            {
+              "units": "4.5",
+              "grade": "A"
+            }
+          ]
+        },
+        {
+          "courseCatalog": "399",
+          "course_code": "ARCH 399",
+          "dept": "ARCH",
+          "title": "FIELD EXCAVATION",
+          "transcript": [
+            {
+              "units": "3.9",
+              "grade": "P"
+            }
+          ]
         }
       ]
     },
@@ -678,11 +798,14 @@
       "termCode": "B",
       "termYear": "2012",
       "timeBucket": "past",
-      "campusSolutionsTerm": false,
+      "hasEnrollmentData": true,
       "classes": [
         {
+          "courseCatalog": "1A",
           "course_code": "BIOLOGY 1A",
+          "course_id": "biology-1a-2012-B",
           "dept": "BIOLOGY",
+          "dept_desc": "Biology",
           "slug": "biology-1a",
           "title": "General Biology Lecture",
           "class_sites": [
@@ -702,7 +825,10 @@
               "is_primary_section": true,
               "section_label": "DIS 201",
               "section_number": "201",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "instructors": [
                 {
                   "name": "Bernadette Geuy",
@@ -721,8 +847,11 @@
           "url": "/academics/semester/spring-2012/class/biology-1a"
         },
         {
+          "courseCatalog": "C147",
           "course_code": "COG SCI C147",
+          "course_id": "cog_sci-c147-2012-B",
           "dept": "COG SCI",
+          "dept_desc": "Cognitive Science",
           "slug": "cog_sci-c147",
           "title": "Language Disorders",
           "sections": [
@@ -733,7 +862,10 @@
               "is_primary_section": true,
               "section_label": "LEC 001",
               "section_number": "001",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "instructors": [
                 {
                   "name": "Bernadette Geuy",
@@ -752,8 +884,12 @@
           "url": "/academics/semester/spring-2012/class/cog_sci-c147"
         },
         {
+          "courseCatalog": "297",
           "course_code": "PB HLTH 297",
+          "course_id": "pb_hlth-297-2012-B",
           "dept": "PB HLTH",
+          "dept_desc": "Public Health",
+          "multiplePrimaries": true,
           "slug": "pb_hlth-297",
           "title": "Field Study in Public Health",
           "sections": [
@@ -764,14 +900,19 @@
               "is_primary_section": true,
               "section_label": "FLD 004",
               "section_number": "004",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
+              "slug": "fld-004",
               "instructors": [
                 {
                   "name": "Louis Pasteur",
                   "uid": "938382"
                 }
               ],
-              "units": "3.0"
+              "units": "3.0",
+              "url": "/academics/semester/spring-2012/class/pb_hlth-297/fld-004"
             },
             {
               "ccn": "78172",
@@ -780,14 +921,19 @@
               "is_primary_section": true,
               "section_label": "FLD 015",
               "section_number": "015",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
+              "slug": "fld-015",
               "instructors": [
                 {
                   "name": "Jean-Joseph Henri Toussaint",
                   "uid": "938383"
                 }
               ],
-              "units": "2.0"
+              "units": "2.0",
+              "url": "/academics/semester/spring-2012/class/pb_hlth-297/fld-015"
             }
           ],
           "transcript": [
@@ -847,6 +993,8 @@
               ]
             }
           ],
+          "enrollLimit": 150,
+          "waitlistLimit": 10,
           "scheduledSectionCount": 3,
           "scheduledSections": [
             {
@@ -866,17 +1014,22 @@
             {
               "ccn": "27606",
               "courseCode": "BIOLOGY 123A",
+              "enroll_limit": 150,
+              "waitlist_limit": 10,
               "instruction_format": "LEC",
               "section_label": "LEC 002",
               "section_number": "002",
               "is_primary_section": true,
-              "schedules": [
-                {
-                  "buildingName": "PIMENTAL",
-                  "roomNumber": "1",
-                  "schedule": "MWF 8:00A-9:00A"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Pimentel",
+                    "roomNumber": "1",
+                    "schedule": "MWF 8:00A-9:00A"
+                  }
+                ]
+              },
               "instructors": [
                 {
                   "name": "Mary Salinger",
@@ -888,6 +1041,8 @@
             {
               "ccn": "27619",
               "courseCode": "BIOLOGY 123A",
+              "enroll_limit": 40,
+              "waitlist_limit": 5,
               "instruction_format": "LAB",
               "section_label": "LAB 201",
               "section_number": "201",
@@ -899,22 +1054,30 @@
                   "uid": "9898989"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "LECONTE",
-                  "roomNumber": "0004",
-                  "schedule": "F 12:00P-1:00P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "LeConte",
+                    "roomNumber": "0004",
+                    "schedule": "F 12:00P-1:00P"
+                  }
+                ]
+              }
             },
             {
               "section_label": "DIS 008",
               "ccn": "49713",
               "courseCode": "BIOLOGY 123A",
+              "enroll_limit": 40,
+              "waitlist_limit": 5,
               "instruction_format": "DIS",
               "section_number": "008",
               "is_primary_section": false,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "instructors": [
                 {
                   "name": "Oski Bear",
@@ -931,18 +1094,23 @@
             {
               "ccn": "37606",
               "courseCode": "INTEGBI 183A",
+              "enroll_limit": 150,
+              "waitlist_limit": 10,
               "instruction_format": "LEC",
               "section_label": "LEC 002",
               "section_number": "002",
               "scheduledWithCcn": "27606",
               "is_primary_section": true,
-              "schedules": [
-                {
-                  "buildingName": "PIMENTAL",
-                  "roomNumber": "1",
-                  "schedule": "MWF 8:00A-9:00A"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Pimentel",
+                    "roomNumber": "1",
+                    "schedule": "MWF 8:00A-9:00A"
+                  }
+                ]
+              },
               "instructors": [
                 {
                   "name": "Mary Salinger",
@@ -956,6 +1124,8 @@
               "courseCode": "INTEGBI 183A",
               "instruction_format": "LAB",
               "section_label": "LAB 201",
+              "enroll_limit": 40,
+              "waitlist_limit": 5,
               "section_number": "201",
               "scheduledWithCcn": "29713",
               "is_primary_section": false,
@@ -966,13 +1136,16 @@
                   "uid": "9898989"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "LECONTE",
-                  "roomNumber": "0004",
-                  "schedule": "F 12:00P-1:00P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "LeConte",
+                    "roomNumber": "0004",
+                    "schedule": "F 12:00P-1:00P"
+                  }
+                ]
+              }
             },
             {
               "section_label": "DIS 008",
@@ -980,8 +1153,13 @@
               "courseCode": "INTEGBI 183A",
               "instruction_format": "DIS",
               "section_number": "008",
+              "enroll_limit": 40,
+              "waitlist_limit": 5,
               "is_primary_section": false,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "scheduledWithCcn": "49713",
               "instructors": [
                 {
@@ -1032,6 +1210,8 @@
               "instruction_format": "LEC",
               "section_label": "LEC 003",
               "section_number": "003",
+              "enroll_limit": 150,
+              "waitlist_limit": 10,
               "is_primary_section": false,
               "instructors": [
                 {
@@ -1040,13 +1220,16 @@
                   "uid": "9898989"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "PIMENTAL",
-                  "roomNumber": "12",
-                  "schedule": "MWF 11:00A-12:00P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Pimentel",
+                    "roomNumber": "12",
+                    "schedule": "MWF 11:00A-12:00P"
+                  }
+                ]
+              }
             }
           ],
           "url": "/academics/teaching-semester/fall-2013/class/bio-123a"

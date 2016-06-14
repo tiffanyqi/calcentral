@@ -133,6 +133,7 @@ module EdoOracle
     #   - 'meeting_end_time_ampm_flag' is included in 'meeting_end_time' timestamp
     #   - 'multi_entry_cd' obsolete now that multiple meetings directly associated with section
     #   - 'print_cd' replaced with 'print_in_schedule_of_classes' boolean
+    #   - 'meeting_start_date' and 'meeting_end_date' added
     def self.get_section_meetings(term_id, section_id)
       safe_query <<-SQL
         SELECT DISTINCT
@@ -143,7 +144,9 @@ module EdoOracle
           mtg."location-descr" AS location,
           mtg."meetsDays" AS meeting_days,
           mtg."startTime" AS meeting_start_time,
-          mtg."endTime" AS meeting_end_time
+          mtg."endTime" AS meeting_end_time,
+          mtg."startDate" AS meeting_start_date,
+          mtg."endDate" AS meeting_end_date
         FROM
           SISEDO.MEETINGV00_VW mtg
         JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
@@ -157,8 +160,7 @@ module EdoOracle
           sec."printInScheduleOfClasses" = 'Y' AND
           sec."term-id" = '#{term_id}' AND
           sec."id" = '#{section_id}' AND
-          mtg."location-code" IS NOT NULL AND
-          mtg."startDate" != mtg."endDate"
+          mtg."location-code" IS NOT NULL
       SQL
     end
 

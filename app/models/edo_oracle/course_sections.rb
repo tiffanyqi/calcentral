@@ -20,12 +20,20 @@ module EdoOracle
     private
 
     def get_section_schedules
-      schedules = EdoOracle::Queries.get_section_meetings(@term_id, @course_id).map do |meeting|
-        if meeting && meeting['meeting_days'].present?
-          translate_location(meeting).merge(translate_schedule(meeting))
+      schedules = {
+        oneTime: [],
+        recurring: []
+      }
+      EdoOracle::Queries.get_section_meetings(@term_id, @course_id).each do |meeting|
+        if meeting && meeting['meeting_days'].present? && (location = translate_location meeting)
+          if meeting['meeting_start_date'] == meeting['meeting_end_date']
+            schedules[:oneTime] << location.merge(one_time_session meeting)
+          else
+            schedules[:recurring] << location.merge(recurring_schedule meeting)
+          end
         end
       end
-      schedules.compact
+      schedules
     end
 
     def get_section_instructors
@@ -61,29 +69,52 @@ module EdoOracle
       }
     end
 
-    def translate_schedule(meeting)
-      schedule = ''
-      if meeting['meeting_days'].present?
-        meeting['meeting_days'].chars.each_slice(2).inject(schedule) do |schedule, day_chars|
-          schedule << case day_chars.join
-            when 'SU' then 'Su'
-            when 'MO' then 'M'
-            when 'TU' then 'Tu'
-            when 'WE' then 'W'
-            when 'TH' then 'Th'
-            when 'FR' then 'F'
-            when 'SA' then 'Sa'
-            else ''
-          end
-        end
-      end
-      if meeting['meeting_start_time'].present?
-        schedule << " #{translate_time meeting['meeting_start_time']}"
-        schedule << "-#{translate_time meeting['meeting_end_time']}" unless meeting['meeting_end_time'].blank?
-      end
+    def one_time_session(meeting)
+      date = [
+        translate_meeting_days(meeting['meeting_days']),
+        meeting['meeting_start_date'].strftime('%-m/%d')
+      ].join(' ')
+      {
+        date: date,
+        time: translate_meeting_time(meeting)
+      }
+    end
+
+    def recurring_schedule(meeting)
+      schedule = [
+        translate_meeting_days(meeting['meeting_days']),
+        translate_meeting_time(meeting)
+      ].join(' ')
       {
         schedule: schedule
       }
+    end
+
+    def translate_meeting_days(days)
+      translated = ''
+      if days.present?
+        days.chars.each_slice(2).inject(translated) do |translated, day_chars|
+          translated << case day_chars.join
+                          when 'SU' then 'Su'
+                          when 'MO' then 'M'
+                          when 'TU' then 'Tu'
+                          when 'WE' then 'W'
+                          when 'TH' then 'Th'
+                          when 'FR' then 'F'
+                          when 'SA' then 'Sa'
+                          else ''
+                        end
+        end
+      end
+      translated
+    end
+
+    def translate_meeting_time(meeting)
+      if meeting['meeting_start_time'].present?
+        translated = translate_time meeting['meeting_start_time']
+        translated << "-#{translate_time meeting['meeting_end_time']}" unless meeting['meeting_end_time'].blank?
+      end
+      translated
     end
 
     def translate_time(time)

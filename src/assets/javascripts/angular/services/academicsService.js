@@ -37,8 +37,8 @@ angular.module('calcentral.services').service('academicsService', function() {
       // If called without a second argument, return a simple count of sections ignoring crosslistings.
       if (!sectionItem) {
         count += 1;
-      } else if (section[sectionItem] && section[sectionItem].length) {
-        count += section[sectionItem].length;
+      } else {
+        count += _.size(_.get(section, sectionItem));
       }
     }
     return count;

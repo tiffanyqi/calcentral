@@ -38,8 +38,8 @@ describe CampusOracle::UserCourses::All do
           section[:units].should eq 3
           section[:instructors].length.should == 1
           section[:instructors][0][:name].present?.should be_truthy
-          section[:schedules][0][:schedule].should == "TuTh 2:00P-3:30P"
-          section[:schedules][0][:buildingName].should == "WHEELER"
+          section[:schedules][:recurring][0][:schedule].should == "TuTh 2:00P-3:30P"
+          section[:schedules][:recurring][0][:buildingName].should == "WHEELER"
         end
         if section[:ccn] == '7366'
           section[:is_primary_section].should be_falsey

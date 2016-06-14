@@ -53,55 +53,80 @@ describe EdoOracle::CourseSections do
     end
   end
 
+  shared_context 'an empty result set' do
+    its([:instructors]) { should eq [] }
+    its([:schedules]) { should eq(oneTime: [], recurring: []) }
+  end
+
   context 'working EDO connection' do
     before do
       expect(EdoOracle::Queries).to receive(:get_section_meetings).with(term_id, course_id).and_return meetings
       expect(EdoOracle::Queries).to receive(:get_section_instructors).with(term_id, course_id).and_return instructors
     end
 
-    let(:instructors) { [] }
-    let(:meetings) { [] }
-
     context 'no instructors or meetings found' do
-      its([:instructors]) { should be_empty }
-      its([:schedules]) { should be_empty }
+      let(:instructors) { [] }
+      let(:meetings) { [] }
+      it_behaves_like 'an empty result set'
     end
 
     context 'meeting data' do
+      let(:instructors) { [] }
       let(:meetings) do
         [
           {
             'location' => 'WHEELER 0233',
             'meeting_days' => 'MOWEFR',
             'meeting_start_time' => '09:30',
-            'meeting_end_time' => '10:59'
+            'meeting_end_time' => '10:59',
+            'meeting_start_date' => Time.parse('2016-08-24 00:00:00 UTC'),
+            'meeting_end_date' => Time.parse('2016-12-09 00:00:00 UTC')
           },
           {
             'location' => 'Requested General Assignment',
             'meeting_days' => 'TUTH',
             'meeting_start_time' => '14:00',
-            'meeting_end_time' => '14:59'
+            'meeting_end_time' => '14:59',
+            'meeting_start_date' => Time.parse('2016-08-24 00:00:00 UTC'),
+            'meeting_end_date' => Time.parse('2016-12-09 00:00:00 UTC')
+          },
+          {
+            'location' => 'Midterm Exam',
+            'meeting_days' => 'WE',
+            'meeting_start_time' => '16:00',
+            'meeting_end_time' => '17:59',
+            'meeting_start_date' => Time.parse('2016-09-28 00:00:00 UTC'),
+            'meeting_end_date' => Time.parse('2016-09-28 00:00:00 UTC')
           },
           {
             'location' => nil,
             'meeting_days' => nil,
             'meeting_start_time' => nil,
-            'meeting_end_time' => nil
+            'meeting_end_time' => nil,
+            'meeting_start_date' => nil,
+            'meeting_end_date' => nil
           }
         ]
       end
-      it 'ignores empty rows' do
-        expect(subject[:schedules]).to have(2).items
+      it 'sorts recurring and one-time schedules, ignoring empty rows' do
+        expect(subject[:schedules][:oneTime]).to have(1).items
+        expect(subject[:schedules][:recurring]).to have(2).items
       end
-      it 'translates time' do
-        expect(subject[:schedules][0][:schedule]).to eq 'MWF 9:30A-10:59A'
-        expect(subject[:schedules][1][:schedule]).to eq 'TuTh 2:00P-2:59P'
+      it 'translates one-time meetings' do
+        expect(subject[:schedules][:oneTime][0][:date]).to eq 'W 9/28'
+        expect(subject[:schedules][:oneTime][0][:time]).to eq '4:00P-5:59P'
+      end
+      it 'translates recurring schedules' do
+        expect(subject[:schedules][:recurring][0][:schedule]).to eq 'MWF 9:30A-10:59A'
+        expect(subject[:schedules][:recurring][1][:schedule]).to eq 'TuTh 2:00P-2:59P'
       end
       it 'translates space' do
-        expect(subject[:schedules][0][:buildingName]).to eq 'WHEELER'
-        expect(subject[:schedules][0][:roomNumber]).to eq '233'
-        expect(subject[:schedules][1][:buildingName]).to eq 'Room not yet assigned'
-        expect(subject[:schedules][1][:roomNumber]).to be_blank
+        expect(subject[:schedules][:oneTime][0][:buildingName]).to eq 'Midterm Exam'
+        expect(subject[:schedules][:oneTime][0][:roomNumber]).to be_blank
+        expect(subject[:schedules][:recurring][0][:buildingName]).to eq 'WHEELER'
+        expect(subject[:schedules][:recurring][0][:roomNumber]).to eq '233'
+        expect(subject[:schedules][:recurring][1][:buildingName]).to eq 'Room not yet assigned'
+        expect(subject[:schedules][:recurring][1][:roomNumber]).to be_blank
       end
     end
 
@@ -120,6 +145,7 @@ describe EdoOracle::CourseSections do
           }
         ]
       end
+      let(:meetings) { [] }
       it 'translates attributes' do
         expect(subject[:instructors]).to eq [
           {
@@ -143,10 +169,10 @@ describe EdoOracle::CourseSections do
       allow_any_instance_of(ActiveRecord::ConnectionAdapters::JdbcAdapter).to receive(:select_all)
         .and_raise ActiveRecord::JDBCError, 'Primary key swiped by highwaymen'
     end
-    it 'logs errors and returns empty results' do
+    it_behaves_like 'an empty result set'
+    it 'logs errors' do
       expect(Rails.logger).to receive(:error).with(/JDBCError/).at_least :once
-      expect(subject[:instructors]).to be_empty
-      expect(subject[:schedules]).to be_empty
+      subject
     end
   end
 end

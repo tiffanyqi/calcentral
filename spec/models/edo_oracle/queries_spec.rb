@@ -142,7 +142,7 @@ describe EdoOracle::Queries, :ignore => true do
     it 'returns meetings for section id specified' do
       results = EdoOracle::Queries.get_section_meetings(fall_term_id, section_ids[0])
       expect(results.count).to eq 1
-      expected_keys = %w(section_id term_id session_id location meeting_days meeting_start_time meeting_end_time print_in_schedule_of_classes)
+      expected_keys = %w(section_id term_id session_id location meeting_days meeting_start_time meeting_end_time print_in_schedule_of_classes meeting_start_date meeting_end_date)
       results.each do |result|
         expect(result['section_id']).to eq '26340'
         expect(result['term_id']).to eq '2168'

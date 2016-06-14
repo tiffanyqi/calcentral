@@ -31,10 +31,10 @@
         </td>
         <td class="bc-template-sections-table-cell-section-ccn" data-ng-bind="section.ccn"></td>
         <td class="bc-template-sections-table-cell-section-timestamps show-for-medium-up" >
-          <div data-ng-repeat="schedule in section.schedules" data-ng-bind="schedule.schedule"></div>
+          <div data-ng-repeat="schedule in section.schedules.recurring" data-ng-bind="schedule.schedule"></div>
         </td>
         <td class="bc-template-sections-table-cell-section-locations show-for-medium-up" >
-          <div data-ng-repeat="schedule in section.schedules" data-ng-bind-template="{{schedule.buildingName}} {{schedule.roomNumber}}"></div>
+          <div data-ng-repeat="schedule in section.schedules.recurring" data-ng-bind-template="{{schedule.buildingName}} {{schedule.roomNumber}}"></div>
          </td>
         <td class="bc-template-sections-table-cell-section-instructors show-for-large-up" >
           <div data-ng-repeat="instructor in section.instructors" data-ng-bind="instructor.name"></div>

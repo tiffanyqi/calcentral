@@ -135,7 +135,8 @@ module MyAcademics
         if (target_section = target_course[:sections].find { |t| t[:section_label] == source_section[:section_label] })
           source_section[:scheduledWithCcn] = target_section[:ccn]
           target_section[:instructors] = target_section[:instructors] | source_section[:instructors]
-          target_section[:schedules] = target_section[:schedules] | source_section[:schedules]
+          target_section[:schedules][:oneTime] = target_section[:schedules][:oneTime] | source_section[:schedules][:oneTime]
+          target_section[:schedules][:recurring] = target_section[:schedules][:recurring] | source_section[:schedules][:recurring]
         end
       end
       target_course[:sections].concat source_course[:sections]

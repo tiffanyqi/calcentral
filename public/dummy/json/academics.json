@@ -503,7 +503,10 @@
               "instruction_format": "LEC",
               "instructors": [],
               "is_primary_section": true,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "section_label": "LEC 003",
               "section_number": "003",
               "units": "5.0",
@@ -515,7 +518,10 @@
               "instruction_format": "DIS",
               "instructors": [],
               "is_primary_section": false,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "section_label": "DIS 005",
               "section_number": "005",
               "waitlisted": true,
@@ -526,7 +532,10 @@
               "instruction_format": "LEC",
               "instructors": [],
               "is_primary_section": false,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "section_label": "LEC 004",
               "section_number": "004"
             }
@@ -570,13 +579,16 @@
                   "uid": "904715"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "VALLEY LSB",
-                  "roomNumber": "2030",
-                  "schedule": "M 4:00P-5:00P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Valley Life Sciences",
+                    "roomNumber": "2030",
+                    "schedule": "M 4:00P-5:00P"
+                  }
+                ]
+              },
               "units": "5.0"
             },
             {
@@ -592,13 +604,16 @@
                   "uid": "978966"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "PIMENTAL",
-                  "roomNumber": "1",
-                  "schedule": "M 2:00P-3:00P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Pimentel",
+                    "roomNumber": "1",
+                    "schedule": "M 2:00P-3:00P"
+                  }
+                ]
+              }
             }
           ],
           "url": "/academics/semester/fall-2013/class/biology-1a"
@@ -625,18 +640,21 @@
                   "uid": "238382"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "WHEELER",
-                  "roomNumber": "0210",
-                  "schedule": "TuTh 2:00P-3:30P"
-                },
-                {
-                  "buildingName": "DWINELLE",
-                  "roomNumber": "117",
-                  "schedule": "W 4:00P-5:30P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Wheeler",
+                    "roomNumber": "0210",
+                    "schedule": "TuTh 2:00P-3:30P"
+                  },
+                  {
+                    "buildingName": "Dwinelle",
+                    "roomNumber": "117",
+                    "schedule": "W 4:00P-5:30P"
+                  }
+                ]
+              },
               "units": "3.0"
             }
           ],
@@ -659,13 +677,16 @@
               "is_primary_section": true,
               "section_label": "LAB 002",
               "section_number": "002",
-              "schedules": [
-                {
-                  "buildingName": "HEARST GYM",
-                  "roomNumber": "234",
-                  "schedule": "MTuWTh 8:30A-10:00A"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "HEARST GYM",
+                    "roomNumber": "234",
+                    "schedule": "MTuWTh 8:30A-10:00A"
+                  }
+                ]
+              },
               "slug": "lab-002",
               "siteIds": [
                 "11108107"
@@ -686,13 +707,16 @@
               "is_primary_section": true,
               "section_label": "LAB 104",
               "section_number": "104",
-              "schedules": [
-                {
-                  "buildingName": "HEARST GYM",
-                  "roomNumber": "230",
-                  "schedule": "TuWTh 5:00P-7:00P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "HEARST GYM",
+                    "roomNumber": "230",
+                    "schedule": "TuWTh 5:00P-7:00P"
+                  }
+                ]
+              },
               "slug": "lab-104",
               "instructors": [
                 {
@@ -710,7 +734,10 @@
               "section_label": "IND 201",
               "section_number": "201",
               "associatedWithPrimary": "lab-002",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "instructors": [
                 {
                   "name": "Louis Pasteur",
@@ -813,7 +840,10 @@
               "is_primary_section": true,
               "section_label": "DIS 201",
               "section_number": "201",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "instructors": [
                 {
                   "name": "Bernadette Geuy",
@@ -847,7 +877,10 @@
               "is_primary_section": true,
               "section_label": "LEC 001",
               "section_number": "001",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "instructors": [
                 {
                   "name": "Bernadette Geuy",
@@ -882,7 +915,10 @@
               "is_primary_section": true,
               "section_label": "FLD 004",
               "section_number": "004",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "slug": "fld-004",
               "instructors": [
                 {
@@ -900,7 +936,10 @@
               "is_primary_section": true,
               "section_label": "FLD 015",
               "section_number": "015",
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "slug": "fld-015",
               "instructors": [
                 {
@@ -996,13 +1035,16 @@
               "section_label": "LEC 002",
               "section_number": "002",
               "is_primary_section": true,
-              "schedules": [
-                {
-                  "buildingName": "PIMENTAL",
-                  "roomNumber": "1",
-                  "schedule": "MWF 8:00A-9:00A"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Pimentel",
+                    "roomNumber": "1",
+                    "schedule": "MWF 8:00A-9:00A"
+                  }
+                ]
+              },
               "instructors": [
                 {
                   "name": "Mary Salinger",
@@ -1027,13 +1069,16 @@
                   "uid": "9898989"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "LECONTE",
-                  "roomNumber": "0004",
-                  "schedule": "F 12:00P-1:00P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "LeConte",
+                    "roomNumber": "0004",
+                    "schedule": "F 12:00P-1:00P"
+                  }
+                ]
+              }
             },
             {
               "section_label": "DIS 008",
@@ -1044,7 +1089,10 @@
               "instruction_format": "DIS",
               "section_number": "008",
               "is_primary_section": false,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "instructors": [
                 {
                   "name": "Oski Bear",
@@ -1068,13 +1116,16 @@
               "section_number": "002",
               "scheduledWithCcn": "27606",
               "is_primary_section": true,
-              "schedules": [
-                {
-                  "buildingName": "PIMENTAL",
-                  "roomNumber": "1",
-                  "schedule": "MWF 8:00A-9:00A"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Pimentel",
+                    "roomNumber": "1",
+                    "schedule": "MWF 8:00A-9:00A"
+                  }
+                ]
+              },
               "instructors": [
                 {
                   "name": "Mary Salinger",
@@ -1100,13 +1151,16 @@
                   "uid": "9898989"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "LECONTE",
-                  "roomNumber": "0004",
-                  "schedule": "F 12:00P-1:00P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "LeConte",
+                    "roomNumber": "0004",
+                    "schedule": "F 12:00P-1:00P"
+                  }
+                ]
+              }
             },
             {
               "section_label": "DIS 008",
@@ -1117,7 +1171,10 @@
               "enroll_limit": 40,
               "waitlist_limit": 5,
               "is_primary_section": false,
-              "schedules": [],
+              "schedules": {
+                "oneTime": [],
+                "recurring": []
+              },
               "scheduledWithCcn": "49713",
               "instructors": [
                 {
@@ -1178,13 +1235,16 @@
                   "uid": "9898989"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "PIMENTAL",
-                  "roomNumber": "12",
-                  "schedule": "MWF 11:00A-12:00P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Pimentel",
+                    "roomNumber": "12",
+                    "schedule": "MWF 11:00A-12:00P"
+                  }
+                ]
+              }
             }
           ],
           "url": "/academics/teaching-semester/fall-2013/class/bio-123a"
