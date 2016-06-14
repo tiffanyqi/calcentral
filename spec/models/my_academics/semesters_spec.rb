@@ -73,11 +73,14 @@ describe MyAcademics::Semesters do
       section_number: section_number,
       units: (is_primary_section ? rand(1.0..5.0).round(1) : 0.0),
       grade: (is_primary_section ? random_grade : nil),
-      schedules: [{
-        buildingName: random_string(10),
-        roomNumber: rand(9).to_s,
-        schedule: 'MWF 11:00A-12:00P'
-      }],
+      schedules: {
+        oneTime: [],
+        recurring: [{
+          buildingName: random_string(10),
+          roomNumber: rand(9).to_s,
+          schedule: 'MWF 11:00A-12:00P'
+        }]
+      },
       instructors: [{name: random_name, uid: random_id}]
     }
     if opts[:edo_source]

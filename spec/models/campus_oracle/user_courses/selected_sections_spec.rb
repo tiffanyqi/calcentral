@@ -6,7 +6,7 @@ describe CampusOracle::UserCourses::SelectedSections do
     sections = courses['2013-D'].first[:sections]
     expect(sections.size).to eq 1
     expect(sections.first[:ccn]).to eq '07309'
-    expect(sections.first[:schedules].size).to eq 2
+    expect(sections.first[:schedules][:recurring].size).to eq 2
   end
 
 end

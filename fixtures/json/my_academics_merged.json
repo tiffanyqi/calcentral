@@ -74,13 +74,16 @@
                   "uid": "226088"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "Dwinelle",
-                  "roomNumber": "145",
-                  "schedule": "TuTh 11:00A-12:29P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Dwinelle",
+                    "roomNumber": "145",
+                    "schedule": "TuTh 11:00A-12:29P"
+                  }
+                ]
+              },
               "gradeOption": "Letter"
             },
             {
@@ -91,13 +94,16 @@
               "section_number": "103",
               "associated_primary_id": "15954.0",
               "instructors": [],
-              "schedules": [
-                {
-                  "buildingName": "Hearst Field Annex",
-                  "roomNumber": "B1",
-                  "schedule": "M 2:00P-2:59P"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Hearst Field Annex",
+                    "roomNumber": "B1",
+                    "schedule": "M 2:00P-2:59P"
+                  }
+                ]
+              }
             }
           ],
           "slug": "ias-45",
@@ -129,13 +135,16 @@
                   "uid": "12909"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "LeConte",
-                  "roomNumber": "4",
-                  "schedule": "M 4:00P-5:59P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "LeConte",
+                    "roomNumber": "4",
+                    "schedule": "M 4:00P-5:59P"
+                  }
+                ]
+              },
               "gradeOption": "Letter"
             },
             {
@@ -149,13 +158,16 @@
               "waitlistPosition": 0,
               "enroll_limit": 40,
               "instructors": [],
-              "schedules": [
-                {
-                  "buildingName": "Genetics & Plant Bio",
-                  "roomNumber": "103",
-                  "schedule": "W 10:00A-10:59A"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Genetics & Plant Bio",
+                    "roomNumber": "103",
+                    "schedule": "W 10:00A-10:59A"
+                  }
+                ]
+              }
             }
           ],
           "slug": "pb_hlth-181",
@@ -187,13 +199,16 @@
                   "uid": "244090"
                 }
               ],
-              "schedules": [
-                {
-                  "buildingName": "Cheit",
-                  "roomNumber": "C230",
-                  "schedule": "TuTh 12:30P-1:59P"
-                }
-              ],
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Cheit",
+                    "roomNumber": "C230",
+                    "schedule": "TuTh 12:30P-1:59P"
+                  }
+                ]
+              },
               "gradeOption": "Letter"
             },
             {
@@ -207,13 +222,16 @@
               "waitlistPosition": 0,
               "enroll_limit": 62,
               "instructors": [],
-              "schedules": [
-                {
-                  "buildingName": "Cheit",
-                  "roomNumber": "C125",
-                  "schedule": "F 8:00A-9:29A"
-                }
-              ]
+              "schedules": {
+                "oneTime": [],
+                "recurring": [
+                  {
+                    "buildingName": "Cheit",
+                    "roomNumber": "C125",
+                    "schedule": "F 8:00A-9:29A"
+                  }
+                ]
+              }
             }
           ],
           "slug": "ugba-101a",

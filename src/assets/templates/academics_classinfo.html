@@ -87,18 +87,36 @@
             </table>
           </div>
 
-          <h3 data-ng-if="isInstructorOrGsi && selectedCourseCountSchedules">Section Schedules</h3>
-          <h4 data-ng-if="!isInstructorOrGsi && selectedCourseCountSchedules">Section Schedules</h4>
+          <h3 data-ng-if="isInstructorOrGsi && classScheduleCount.total">Section Schedules</h3>
+          <h4 data-ng-if="!isInstructorOrGsi && classScheduleCount.total">Section Schedules</h4>
 
-          <div class="row collapse" data-ng-repeat="section in selectedCourse.sections" data-ng-if="!section.scheduledWithCcn">
-            <div class="small-3 columns" data-ng-if="section.schedules && section.schedules.length" data-ng-bind="section.section_label"></div>
-            <div class="small-9 columns">
-              <div data-ng-repeat="schedule in section.schedules" data-ng-if="section.schedules" class="cc-academics-schedule-room">
-                <span data-ng-bind="schedule.schedule"></span> |
-                <span data-ng-bind="schedule.roomNumber"></span> <span data-ng-bind="schedule.buildingName"></span> <br>
+          <div class="cc-academics-schedules" data-ng-if="classScheduleCount.recurring">
+            <div class="cc-academics-column-labels cc-academics-schedule-label">Recurring Schedules</div>
+            <div class="row collapse" data-ng-repeat="section in selectedCourse.sections" data-ng-if="!section.scheduledWithCcn">
+              <div class="small-3 columns" data-ng-if="section.schedules.recurring.length" data-ng-bind="section.section_label"></div>
+              <div class="small-9 columns">
+                <div data-ng-repeat="schedule in section.schedules.recurring" data-ng-if="section.schedules.recurring" class="cc-academics-schedule-room">
+                  <span data-ng-bind="schedule.schedule"></span> |
+                  <span data-ng-bind="schedule.roomNumber"></span> <span data-ng-bind="schedule.buildingName"></span> <br>
+                </div>
               </div>
             </div>
           </div>
+
+          <div class="cc-academics-schedules" data-ng-if="classScheduleCount.oneTime">
+            <div class="cc-academics-column-labels cc-academics-schedule-label">Individual Sessions</div>
+            <div class="row collapse" data-ng-repeat="section in selectedCourse.sections" data-ng-if="!section.scheduledWithCcn">
+              <div class="small-3 columns" data-ng-if="section.schedules.oneTime.length" data-ng-bind="section.section_label"></div>
+              <div class="small-9 columns">
+                <div data-ng-repeat="schedule in section.schedules.oneTime" data-ng-if="section.schedules.oneTime" class="cc-academics-schedule-room">
+                  <span data-ng-bind="schedule.date"></span> |
+                  <span data-ng-bind="schedule.time"></span> |
+                  <span data-ng-bind="schedule.roomNumber"></span> <span data-ng-bind="schedule.buildingName"></span> <br>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
       <div data-ng-if="selectedCourseLongInstructorsList" data-ng-include="'academics_class_sites.html'" ></div>

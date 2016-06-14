@@ -78,7 +78,11 @@ module CampusOracle
           end
         end
       end
-      feed.merge!({:schedules => schedules})
+      feed[:schedules] = {
+        # Empty array for compatibility with newer EdoOracle feeds that may include one-time meetings.
+        oneTime: [],
+        recurring: schedules
+      }
     end
 
     def add_instructors_to_feed!(feed)

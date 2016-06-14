@@ -139,10 +139,16 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
         return;
       }
       $scope.selectedCourseCountInstructors = academicsService.countSectionItem($scope.selectedCourse, 'instructors');
-      $scope.selectedCourseCountSchedules = academicsService.countSectionItem($scope.selectedCourse, 'schedules');
       $scope.selectedCourseCountScheduledSections = academicsService.countSectionItem($scope.selectedCourse);
       $scope.selectedCourseLongInstructorsList = ($scope.selectedCourseCountScheduledSections > 5) || ($scope.selectedCourseCountInstructors > 10);
 
+      var recurringCount = academicsService.countSectionItem($scope.selectedCourse, 'schedules.recurring');
+      var oneTimeCount = academicsService.countSectionItem($scope.selectedCourse, 'schedules.oneTime');
+      $scope.classScheduleCount = {
+        oneTime: oneTimeCount,
+        recurring: recurringCount,
+        total: oneTimeCount + recurringCount
+      };
       setClassInfoCategories(selectedTeachingSemester);
     }
   };

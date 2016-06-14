@@ -115,6 +115,7 @@ describe MyAcademics::Teaching do
                 enroll_limit: 50,
                 instruction_format: 'LEC',
                 is_primary_section: true,
+                schedules: {oneTime: [], recurring: []},
                 section_label: 'LEC 003',
                 section_number: '003',
                 waitlist_limit: 10
@@ -124,6 +125,7 @@ describe MyAcademics::Teaching do
                 enroll_limit: 25,
                 instruction_format: 'DIS',
                 is_primary_section: false,
+                schedules: {oneTime: [], recurring: []},
                 section_label: 'DIS 201',
                 section_number: '201',
                 waitlist_limit: 5
@@ -133,6 +135,7 @@ describe MyAcademics::Teaching do
                 enroll_limit: 25,
                 instruction_format: 'DIS',
                 is_primary_section: false,
+                schedules: {oneTime: [], recurring: []},
                 section_label: 'DIS 202',
                 section_number: '202',
                 waitlist_limit: 5
@@ -160,6 +163,7 @@ describe MyAcademics::Teaching do
                 enroll_limit: 30,
                 instruction_format: 'LEC',
                 is_primary_section: true,
+                schedules: {oneTime: [], recurring: []},
                 section_label: 'LEC 001',
                 section_number: '001',
                 waitlist_limit: 0,
@@ -187,6 +191,7 @@ describe MyAcademics::Teaching do
                 ccn: '16171',
                 instruction_format: 'LEC',
                 is_primary_section: true,
+                schedules: {oneTime: [], recurring: []},
                 section_label: 'LEC 001',
                 section_number: '001',
                 enroll_limit: 30,
@@ -218,6 +223,7 @@ describe MyAcademics::Teaching do
                 enroll_limit: 25,
                 instruction_format: 'DIS',
                 is_primary_section: false,
+                schedules: {oneTime: [], recurring: []},
                 section_label: 'DIS 201',
                 section_number: '201',
                 waitlist_limit: 5,
@@ -242,6 +248,7 @@ describe MyAcademics::Teaching do
                 ccn: '16171',
                 instruction_format: 'LEC',
                 is_primary_section: true,
+                schedules: {oneTime: [], recurring: []},
                 section_label: 'LEC 001',
                 section_number: '001',
                 enroll_limit: 30,
@@ -339,6 +346,7 @@ describe MyAcademics::Teaching do
                   ccn: '07309',
                   instruction_format: 'LEC',
                   is_primary_section: true,
+                  schedules: {oneTime: [], recurring: []},
                   section_label: 'LEC 003',
                   section_number: '003'
                 },
@@ -346,6 +354,7 @@ describe MyAcademics::Teaching do
                   ccn: '07366',
                   instruction_format: 'DIS',
                   is_primary_section: false,
+                  schedules: {oneTime: [], recurring: []},
                   section_label: 'DIS 201',
                   section_number: '201'
                 }
@@ -369,6 +378,7 @@ describe MyAcademics::Teaching do
                   ccn: '16171',
                   instruction_format: 'LEC',
                   is_primary_section: true,
+                  schedules: {oneTime: [], recurring: []},
                   section_label: 'LEC 001',
                   section_number: '001'
                 }

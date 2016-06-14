@@ -18,12 +18,21 @@
           "ccn": "12345",
           "instruction_format": "LEC",
           "section_number": "001",
-          "schedules": [
-            {"buildingName": "DOE LIBRARY", "roomNumber": "0425", "schedule": "MTuWTh 12:00P-2:00P"}
-          ],
+          "schedules": {
+            "oneTime": [],
+            "recurring": [
+              {
+                "buildingName": "DOE LIBRARY",
+                "roomNumber": "0425",
+                "schedule": "MTuWTh 12:00P-2:00P"
+              }
+            ]
+          }
+        ]
+        },
           "instructors": [{"name": "Dr. X", "uid": "999"}]},
         {"ccn": "12346", "instruction_format": "DIS", "section_number": "101",
-          "schedules": [], "instructors": [{"name": "Gee Esai", "uid": "1111"}]}
+          "schedules": {"oneTime": [], "recurring": [], "instructors": [{"name": "Gee Esai", "uid": "1111"}]}
       ],
       "role": "Student",
       "waitlisted": true,
@@ -49,7 +58,7 @@
           "ccn": "04567",
           "instruction_format": "SEM",
           "section_number": "009",
-          "schedules": [],
+          "schedules": {"oneTime": [], "recurring": []},
           "instructors": [{"name": "Fritz Lang", "uid": "9992"}]
         }
       ],
@@ -75,7 +84,7 @@
           "ccn": "04568",
           "instruction_format": "LAB",
           "section_number": "004",
-          "schedules": [],
+          "schedules": {"oneTime": [], "recurring": []},
           "instructors": [{"name": "Max Schreck", "uid": "9992"}]
         }
       ],
@@ -101,7 +110,7 @@
           "ccn": "04569",
           "instruction_format": "LAB",
           "section_number": "022",
-          "schedules": [],
+          "schedules": {"oneTime": [], "recurring": []},
           "instructors": [{"name": "Lon Chaney", "uid": "9993"}]
         }
       ],
@@ -166,13 +175,16 @@
           "section_label": "LEC 002",
           "section_number": "002",
           "is_primary_section": true,
-          "schedules": [
-            {
-              "buildingName": "PIMENTAL",
-              "roomNumber": "1",
-              "schedule": "MWF 8:00A-9:00A"
-            }
-          ],
+          "schedules": {
+            "oneTime": [],
+            "recurring": [
+              {
+                "buildingName": "Pimentel",
+                "roomNumber": "1",
+                "schedule": "MWF 8:00A-9:00A"
+              }
+            ]
+          },
           "instructors": [
             {
               "name": "Mary Salinger",
@@ -195,13 +207,16 @@
               "uid": "9898989"
             }
           ],
-          "schedules": [
-            {
-              "buildingName": "LECONTE",
-              "roomNumber": "0004",
-              "schedule": "F 12:00P-1:00P"
-            }
-          ]
+          "schedules": {
+            "oneTime": [],
+            "recurring": [
+              {
+                "buildingName": "LeConte",
+                "roomNumber": "0004",
+                "schedule": "F 12:00P-1:00P"
+              }
+            ]
+          }
         },
         {
           "section_label": "DIS 008",
@@ -210,7 +225,7 @@
           "instruction_format": "DIS",
           "section_number": "008",
           "is_primary_section": false,
-          "schedules": [],
+          "schedules": {"oneTime": [], "recurring": []},
           "instructors": [
             {
               "name": "Oski Bear",
@@ -232,13 +247,16 @@
           "section_number": "002",
           "scheduledWithCcn": "27606",
           "is_primary_section": true,
-          "schedules": [
-            {
-              "buildingName": "PIMENTAL",
-              "roomNumber": "1",
-              "schedule": "MWF 8:00A-9:00A"
-            }
-          ],
+          "schedules": {
+            "oneTime": [],
+            "recurring": [
+              {
+                "buildingName": "Pimentel",
+                "roomNumber": "1",
+                "schedule": "MWF 8:00A-9:00A"
+              }
+            ]
+          },
           "instructors": [
             {
               "name": "Mary Salinger",
@@ -262,13 +280,16 @@
               "uid": "9898989"
             }
           ],
-          "schedules": [
-            {
-              "buildingName": "LECONTE",
-              "roomNumber": "0004",
-              "schedule": "F 12:00P-1:00P"
-            }
-          ]
+          "schedules": {
+            "oneTime": [],
+            "recurring": [
+              {
+                "buildingName": "LeConte",
+                "roomNumber": "0004",
+                "schedule": "F 12:00P-1:00P"
+              }
+            ]
+          }
         },
         {
           "section_label": "DIS 008",
@@ -277,7 +298,7 @@
           "instruction_format": "DIS",
           "section_number": "008",
           "is_primary_section": false,
-          "schedules": [],
+          "schedules": {"oneTime": [], "recurring": []},
           "scheduledWithCcn": "49713",
           "instructors": [
             {
