@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ROOT>
+  <GET_MESSAGE_CAT_DEFN>
+    <MESSAGE_SET_NBR>28001</MESSAGE_SET_NBR>
+    <MESSAGE_NBR>2005</MESSAGE_NBR>
+    <MESSAGE_TEXT>Submitted &amp; Completed &amp; Non-Resident &amp; Excs</MESSAGE_TEXT>
+    <MSG_SEVERITY>M</MSG_SEVERITY>
+    <DESCRLONG>Although you are classified a non-resident, you are receiving a waiver for non-resident supplemental tuition and paying the equivalent of a resident for tuition purposes. No further action is required to continue receiving this waiver unless notified by the Residence Affairs Unit. For more information please contact our office: orres@berkeley.edu.</DESCRLONG>
+  </GET_MESSAGE_CAT_DEFN>
+</ROOT>
