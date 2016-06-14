@@ -6,14 +6,14 @@ var angular = require('angular');
  * Advising Factory
  */
 angular.module('calcentral.factories').factory('advisingFactory', function(apiService) {
-  // var url = '/dummy/json/advising_resources.json';
   var urlResources = '/api/campus_solutions/advising_resources';
-  // var url = '/dummy/json/advising_student_academics.json';
+  // var urlResources = '/dummy/json/advising_resources.json';
   var urlAdvisingStudent = '/api/advising/student/';
-  // var url = '/dummy/json/advising_student_academics.json';
+  // var urlAdvisingStudent = '/dummy/json/advising_student_academics.json';
   var urlAdvisingAcademics = '/api/advising/academics/';
-  // var url = '/dummy/json/advising_resources.json';
+  // var urlAdvisingAcademics = '/dummy/json/advising_student_academics.json';
   var urlAdvisingResources = '/api/advising/resources/';
+  // var urlAdvisingResources = '/dummy/json/advising_resources.json';
 
   var getResources = function(options) {
     return apiService.http.request(options, urlResources);
