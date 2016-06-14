@@ -187,6 +187,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'GRD',
             'major' => 'Cognitive Science BA',
+            'ugrad_terms_in_attendance_group' => 'R2TA'
           },
           {
             'ldap_uid' => '333333',
@@ -196,6 +197,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'GRD',
             'major' => 'Computer Science BA',
+            'ugrad_terms_in_attendance_group' => 'R2TA'
           },
           {
             'ldap_uid' => '444444',
@@ -205,6 +207,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'PNP',
             'major' => 'Computer Science BA',
+            'ugrad_terms_in_attendance_group' => nil
           },
           {
             'ldap_uid' => '555555',
@@ -214,6 +217,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'GRD',
             'major' => 'Nose Picking BA',
+            'ugrad_terms_in_attendance_group' => 'R8TA'
           }
         ]
       }
@@ -258,6 +262,12 @@ describe Rosters::Common do
         expect(enrollments[0][:majors]).to eq ['Cognitive Science BA', 'Computer Science BA']
         expect(enrollments[1][:majors]).to eq ['Computer Science BA']
         expect(enrollments[2][:majors]).to eq ['Nose Picking BA']
+      end
+
+      it 'converts and includes undergrad terms in attendance count' do
+        expect(enrollments[0][:terms_in_attendance]).to eq '2'
+        expect(enrollments[1][:terms_in_attendance]).to eq nil
+        expect(enrollments[2][:terms_in_attendance]).to eq '8'
       end
     end
   end
