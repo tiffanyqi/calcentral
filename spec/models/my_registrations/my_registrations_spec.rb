@@ -1,48 +1,35 @@
 describe MyRegistrations::MyRegistrations do
+  let(:model) { MyRegistrations::MyRegistrations.new('61889') }
   before(:each) do
-    @model = MyRegistrations::MyRegistrations.new(user_id: '61889')
-    allow(@model).to receive(:get_registrations).and_return ({
+    allow(model).to receive(Settings.terms.legacy_cutoff).and_return 'summer-2016'
+    allow(model).to receive(:get_registrations).and_return ({
       "affiliations" => "GRAD",
       "registrations" => [
-        {
-         "term" => {
-           "id" => 2156,
-           "name" => "2015 Fall",
-           "academicYear" => "2016"
-         }
-       },
-       {
-         "term" => {
-           "id" => 2159,
-           "name" => "2016 Spring",
-           "academicYear" => "2016"
-         }
-       },
        {
          "term" => {
            "id" => 2162,
-           "name" => "2016 Fall",
+           "name" => "2016 Spring",
            "academicYear" => "2017"
          }
        },
        {
          "term" => {
            "id" => 2165,
-           "name" => "2017 Spring",
+           "name" => "2016 Summer",
            "academicYear" => "2017"
          }
        },
        {
          "term" => {
            "id" => 2168,
-           "name" => "2017 Summer",
+           "name" => "2016 Fall",
            "academicYear" => "2017"
          }
        },
        {
        "term" => {
          "id" => 2171,
-         "name" => "2017 Fall",
+         "name" => "2017 Spring",
          "academicYear" => "2018"
        }
      }
@@ -51,97 +38,55 @@ describe MyRegistrations::MyRegistrations do
 
   context 'fully populated berkeley terms' do
     before do
-      allow(@model).to receive(:get_terms).and_return ({
-        :current => 2162,
-        :running => 2162,
-        :sis_current_term => 2165,
-        :next => 2168,
-        :future => 2171,
-        :previous => 2159,
-        :grading_in_progress => 2159
+      allow(model).to receive(:get_terms).and_return ({
+        current: {id: 2165, name: 'Summer 2016'},
+        running: {id: 2165, name: 'Summer 2016'},
+        sis_current_term: {id: 2168, name: 'Fall 2016'},
+        next: {id: 2168, name: 'Fall 2016'},
+        future: {id: 2171, name: 'Spring 2017'}
       })
     end
     it 'returns all matched terms' do
-      matched_terms = @model.get_feed_internal
-      expect(matched_terms[:registrations][:current][0]["term"]["id"]).to eq 2162
-      expect(matched_terms[:registrations][:running][0]["term"]["id"]).to eq 2162
-      expect(matched_terms[:registrations][:sis_current_term][0]["term"]["id"]).to eq 2165
-      expect(matched_terms[:registrations][:next][0]["term"]["id"]).to eq 2168
-      expect(matched_terms[:registrations][:future][0]["term"]["id"]).to eq 2171
-      expect(matched_terms[:registrations][:previous][0]["term"]["id"]).to eq 2159
-      expect(matched_terms[:registrations][:grading_in_progress][0]["term"]["id"]).to eq 2159
+      matched_terms = model.get_feed_internal
+      expect(matched_terms[:registrations][2165][0][:isLegacy]).to eq true
+      expect(matched_terms[:registrations][2168][0]["term"]["id"]).to eq 2168
+      expect(matched_terms[:registrations][2171][0]["term"]["id"]).to eq 2171
     end
   end
 
   context 'some populated berkeley terms' do
     before do
-      allow(@model).to receive(:get_terms).and_return ({
-        :current => [],
-        :running => [],
-        :sis_current_term => [],
-        :next => 2168,
-        :future => 2171,
-        :previous => [],
-        :grading_in_progress => 2159
+      allow(model).to receive(:get_terms).and_return ({
+        current: nil,
+        running: nil,
+        sis_current_term: nil,
+        next: {id: 2168, name: 'Fall 2016'},
+        future: {id: 2171, name: 'Spring 2017'}
       })
     end
     it 'returns all matched terms' do
-      matched_terms = @model.get_feed_internal
-      matched_terms[:registrations][:current].should have(0).items
-      matched_terms[:registrations][:running].should have(0).items
-      matched_terms[:registrations][:sis_current_term].should have(0).items
-      expect(matched_terms[:registrations][:next][0]["term"]["id"]).to eq 2168
-      expect(matched_terms[:registrations][:future][0]["term"]["id"]).to eq 2171
-      matched_terms[:registrations][:previous].should have(0).items
-      expect(matched_terms[:registrations][:grading_in_progress][0]["term"]["id"]).to eq 2159
+      matched_terms = model.get_feed_internal
+      expect(matched_terms[:registrations][2165]).to be_nil
+      expect(matched_terms[:registrations][2168][0]["term"]["id"]).to eq 2168
+      expect(matched_terms[:registrations][2171][0]["term"]["id"]).to eq 2171
     end
   end
 
   context 'no populated berkeley terms' do
     before do
-      allow(@model).to receive(:get_terms).and_return ({
-        :current => [],
-        :running => [],
-        :sis_current_term => [],
-        :next => [],
-        :future => [],
-        :previous => [],
-        :grading_in_progress => []
+      allow(model).to receive(:get_terms).and_return ({
+        current: nil,
+        running: nil,
+        sis_current_term: nil,
+        next: nil,
+        future: nil
       })
     end
     it 'returns no matched terms' do
-      matched_terms = @model.get_feed_internal
-      matched_terms[:registrations][:current].should have(0).items
-      matched_terms[:registrations][:running].should have(0).items
-      matched_terms[:registrations][:sis_current_term].should have(0).items
-      matched_terms[:registrations][:next].should have(0).items
-      matched_terms[:registrations][:future].should have(0).items
-      matched_terms[:registrations][:previous].should have(0).items
-      matched_terms[:registrations][:grading_in_progress].should have(0).items
-    end
-  end
-
-  context 'populated berkeley terms with no matches' do
-    before do
-      allow(@model).to receive(:get_terms).and_return ({
-        :current => 1240,
-        :running => 1240,
-        :sis_current_term => 1243,
-        :next => 1243,
-        :future => 1246,
-        :previous => 1238,
-        :grading_in_progress => 1238
-      })
-    end
-    it 'returns no matched terms' do
-      matched_terms = @model.get_feed_internal
-      matched_terms[:registrations][:current].should have(0).items
-      matched_terms[:registrations][:running].should have(0).items
-      matched_terms[:registrations][:sis_current_term].should have(0).items
-      matched_terms[:registrations][:next].should have(0).items
-      matched_terms[:registrations][:future].should have(0).items
-      matched_terms[:registrations][:previous].should have(0).items
-      matched_terms[:registrations][:grading_in_progress].should have(0).items
+      matched_terms = model.get_feed_internal
+      expect(matched_terms[:registrations][2165]).to be_nil
+      expect(matched_terms[:registrations][2168]).to be_nil
+      expect(matched_terms[:registrations][2171]).to be_nil
     end
   end
 

@@ -20,13 +20,13 @@
               <th class="cc-table-subheader" scope="row">Registration</td>
               <td>
                 <i class="cc-icon fa"
-                   data-ng-class="{true:'fa-check-circle cc-icon-green',false:'fa-exclamation-circle cc-icon-red'}[studentInfo.regStatus.summary=='Registered']" data-ng-if="studentInfo.regStatus.summary === 'Registered' || studentInfo.regStatus.needsAction">
+                   data-ng-class="{true:'fa-check-circle cc-icon-green',false:'fa-exclamation-circle cc-icon-red'}[regStatus.summary=='Registered']" data-ng-if="regStatus.summary === 'Registered' || regStatus.needsAction">
                 </i>
-                <span data-ng-bind="studentInfo.regStatus.summary"></span>
+                <span data-ng-bind="regStatus.summary"></span>
               </td>
             </tr>
             <tr data-ng-if="api.user.profile.features.regstatus">
-              <td colspan="2" data-ng-bind-html="studentInfo.regStatus.explanation"></td>
+              <td colspan="2" data-ng-bind-html="regStatus.explanation"></td>
             </tr>
           </tbody>
         </table>
