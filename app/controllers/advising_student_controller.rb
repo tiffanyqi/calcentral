@@ -13,7 +13,8 @@ class AdvisingStudentController < ApplicationController
     student_uid = student_uid_param
     render json: {
       attributes: User::AggregatedAttributes.new(student_uid).get_feed,
-      contacts: HubEdos::Contacts.new(user_id: student_uid, include_fields: %w(names addresses phones emails)).get
+      contacts: HubEdos::Contacts.new(user_id: student_uid, include_fields: %w(names addresses phones emails)).get,
+      residency: HubEdos::Demographics.new(user_id: student_uid, include_fields: %w(residency)).get
     }
   end
 
@@ -37,6 +38,15 @@ class AdvisingStudentController < ApplicationController
 
   def holds
     render json: CampusSolutions::MyHolds.new(student_uid_param).get_feed_as_json
+  end
+
+  #TODO: Remove by Fall 2016
+  def blocks
+    render json: Bearfacts::Regblocks.new({user_id: student_uid_param}).get
+  end
+
+  def registrations
+    render json: MyRegistrations::MyRegistrations.new(student_uid_param).get_feed_internal
   end
 
   def resources

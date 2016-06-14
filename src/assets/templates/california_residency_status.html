@@ -5,14 +5,14 @@
   <div data-ng-if="residency.tuitionException.description">
     Exception: <span data-ng-bind="residency.tuitionException.description"></span>
   </div>
-  <div class="cc-widget-vertical-padding" data-ng-if="residency.statementOfLegalResidenceStatus.code === 'N'">
+  <div class="cc-widget-vertical-padding" data-ng-if="residency.statementOfLegalResidenceStatus.code === 'N' && slr.deeplink">
     <a data-cc-campus-solutions-link-directive="slr.deeplink.url"
     data-cc-campus-solutions-link-directive-enabled="{{slr.deeplink.isCsLink}}"
     data-cc-campus-solutions-link-directive-text="slr.backToText"
     data-cc-campus-solutions-link-directive-cache="'profile'"
     data-cc-outbound-enabled="false">Submit Statement of Legal Residence</a>
   </div>
-  <div class="cc-widget-vertical-padding" data-ng-if="residency.statementOfLegalResidenceStatus.code !== 'N'">
+  <div class="cc-widget-vertical-padding" data-ng-if="residency.statementOfLegalResidenceStatus.code !== 'N' && slr.deeplink">
     <a data-cc-campus-solutions-link-directive="slr.deeplink.url"
     data-cc-campus-solutions-link-directive-enabled="{{slr.deeplink.isCsLink}}"
     data-cc-campus-solutions-link-directive-text="slr.backToText"
