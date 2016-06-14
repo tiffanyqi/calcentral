@@ -122,6 +122,7 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
     emergencyPhone: {
       currentObject: {},
       emptyObject: {
+        availablePhoneTypes: [],
         phone: '',
         phoneType: '',
         extension: '',
@@ -135,8 +136,7 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       items: {
         content: [],
         editorEnabled: false
-      },
-      phoneTypes: {}
+      }
     }
   });
 
@@ -195,6 +195,23 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
 
   $scope.emergencyPhone.showAdd = function() {
     apiService.profile.showAdd($scope.emergencyPhone, $scope.emergencyPhone.emptyObject);
+
+    // Reduce the possible phone types displayed in the select box in the Add
+    // Phone case where a contact may already have at least one phone with a
+    // phone type.
+    var currentPhones = $scope.currentObject.data.emergencyPhones;
+    var availablePhoneTypes = $scope.emergencyPhone.currentObject.data.availablePhoneTypes;
+    var usingTypes = [];
+
+    $scope.emergencyPhone.currentObject.data.availablePhoneTypes = _.filter(availablePhoneTypes, function(type) {
+      _.forEach(currentPhones, function(phone) {
+        if (type.fieldvalue === phone.phoneType) {
+          usingTypes.push(type.fieldvalue);
+        }
+      });
+      return usingTypes.indexOf(type.fieldvalue) < 0;
+    });
+
     $scope.emergencyPhone.isAdding = true;
   };
 
@@ -231,8 +248,41 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   };
 
   var getTypesPhone = profileFactory.getTypesPhone;
+
   var parseTypesPhone = function(data) {
-    $scope.emergencyPhone.phoneTypes = apiService.profile.filterTypes(_.get(data, 'data.feed.xlatvalues.values'), $scope.emergencyPhone.items);
+    var allowedTypes = _.get(data, 'data.feed.xlatvalues.values');
+    _.forEach($scope.items.content, function(contact) {
+      var phones = contact.emergencyPhones;
+
+      // In the Campus Solutions interface, the first phone in the list for a
+      // contact is not always assigned a phoneType. This block creates a custom
+      // property, addPhoneLimit, on each contact, in order to allow the first
+      // phone to continue to have no phoneType, and allow the user to add an
+      // additional phone beyond the number of "allowed" phone types for each
+      // contact.
+      var addPhoneLimit = allowedTypes.length;
+      if (phones.length && !phones[0].phoneType) {
+        addPhoneLimit += 1;
+      }
+      contact.addPhoneLimit = addPhoneLimit;
+
+      // This block creates a custom property, availablePhoneTypes, on each
+      // phone as a list of types available to be assigned to that phone from
+      // the select box. A type is "available" if the type is _not_ used by
+      // another phone in a contact's phone list, or if the type matches that of
+      // the phone being examined during iteration.
+      var usingTypes = _.map(phones, function(phone) {
+        return phone.phoneType;
+      });
+      _.forEach(phones, function(phone) {
+        phone.availablePhoneTypes = _.filter(allowedTypes, function(type) {
+          return usingTypes.indexOf(type.fieldvalue) < 0 || type.fieldvalue === phone.phoneType;
+        });
+      });
+    });
+
+    // Make allowedTypes available to the select box for the Add Contact case.
+    $scope.emergencyPhone.emptyObject.availablePhoneTypes = allowedTypes;
   };
 
   /**
