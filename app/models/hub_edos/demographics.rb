@@ -28,13 +28,18 @@ module HubEdos
       return response if response['student'].blank?
       return response if response['student']['residency'].blank?
 
-      # Adds residency.message.code to the response
-      slr_status = get_residency_item(response['student']['residency']['statementOfLegalResidenceStatus'])
-      residency_status = get_residency_item(response['student']['residency']['official'])
-      tuition_exception = get_residency_item(response['student']['residency']['tuitionException'])
+      residency = response['student']['residency']
 
+      # Add residency.fromTerm.label to the response
+      residency['fromTerm']['label'] = Berkeley::TermCodes.normalized_english(residency['fromTerm']['name'])
+
+      # Add residency.message.code to the response
+      slr_status = get_residency_item(residency['statementOfLegalResidenceStatus'])
+      residency_status = get_residency_item(residency['official'])
+      tuition_exception = get_residency_item(residency['tuitionException'])
       message_code = Berkeley::ResidencyMessageCode.residency_message_code(slr_status, residency_status, tuition_exception)
-      response['student']['residency']['message'] = {'code' => message_code}
+      residency['message'] = {'code' => message_code}
+
       response
     end
 

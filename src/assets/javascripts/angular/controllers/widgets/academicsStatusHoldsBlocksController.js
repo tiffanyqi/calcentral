@@ -6,7 +6,7 @@ var _ = require('lodash');
 /**
  * Academics status, holds & blocks controller
  */
-angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksController', function(apiService, profileFactory, slrDeeplinkFactory, $q, $scope) {
+angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksController', function(apiService, profileFactory, slrDeeplinkFactory, residencyMessageFactory, $scope) {
   // Data for studentInfo and csHolds are pulled by the AcademicsController that
   // governs the academics template. The statusHoldsBlocks segment watches those
   // for changes in order to display the corresponding UI elements.
@@ -59,28 +59,39 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
   // Request-and-parse sequence on the student feed for California Residency status.
   angular.extend($scope, {
     residency: {
-      isLoading: true
+      isLoading: true,
+      message: {}
     }
   });
-
-  var calResidencyCode = {
-    '': 'Not Yet Submitted',
-    'PEND': 'Pending',
-    'NON': 'Non-Resident',
-    'RES': 'Resident'
-  };
 
   var getPerson = profileFactory.getPerson;
 
   var parseCalResidency = function(residency) {
-    residency.fromTerm = _.get(residency, 'fromTerm.name');
-
-    residency.description = calResidencyCode[residency.code];
     angular.merge($scope.residency, residency);
+
+    var messageCode = _.get(residency, 'message.code');
+    if (messageCode) {
+      var getResidencyMessage = function(options) {
+        return residencyMessageFactory.getMessage(options);
+      };
+
+      getResidencyMessage({
+        messageNbr: messageCode
+      })
+      .then(function(data) {
+        var messageCatDefn = _.get(data, 'data.feed.root.getMessageCatDefn');
+        if (messageCatDefn) {
+          angular.merge($scope.residency.message, {
+            description: messageCatDefn.descrlong,
+            label: messageCatDefn.messageText
+          });
+        }
+      });
+    }
   };
 
   var parsePerson = function(data) {
-    var residency = _.get(data, 'data.feed.student.residency.official');
+    var residency = _.get(data, 'data.feed.student.residency');
 
     if (!residency) {
       return;
