@@ -1,6 +1,7 @@
 // Select
 // We need to wrap a select in a <div> to have consistent styling
 // Based on http://jsbin.com/maxufesi/1
+// TODO: Replace usage of this with cc-inline-select below
 .cc-select {
   background: linear-gradient($cc-color-white, $cc-color-button-regular), $cc-color-white;
   border: 1px solid $cc-color-button-border;
@@ -40,6 +41,21 @@
   background-color: $cc-color-white;
   pointer-events: none;
   z-index: 1;
+}
+
+// TODO: Apply this to entire application to replace cc-select
+.cc-inline-select {
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  background: url('../images/svg/select_arrow_20x28.svg') no-repeat right center, linear-gradient($cc-color-white, $cc-color-button-regular);
+  border: 1px solid $cc-color-button-border;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline;
+  height: 25px;
+  overflow: hidden;
+  padding: 4px 25px 5px 10px;
+  width: auto;
 }
 
 @media print {

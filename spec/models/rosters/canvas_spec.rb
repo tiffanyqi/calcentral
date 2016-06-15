@@ -301,7 +301,7 @@ describe Rosters::Canvas do
     let(:term_id) { Berkeley::TermCodes.to_edo_id('2013', 'C') }
     before do
       allow(Berkeley::Terms).to receive(:legacy?).and_return false
-      expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(lecture_section_ccn, term_id).and_return(
+      expect(EdoOracle::Queries).to receive(:get_rosters).with(lecture_section_ccn, term_id).and_return(
         [
           {
             'ldap_uid' => student_in_discussion_section_login_id,
@@ -315,7 +315,7 @@ describe Rosters::Canvas do
           }
         ]
       )
-      expect(EdoOracle::Queries).to receive(:get_enrolled_students).with(discussion_section_ccn, term_id).and_return(
+      expect(EdoOracle::Queries).to receive(:get_rosters).with(discussion_section_ccn, term_id).and_return(
         [
           {
             'ldap_uid' => student_in_discussion_section_login_id,

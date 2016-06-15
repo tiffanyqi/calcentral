@@ -73,10 +73,12 @@ module Rosters
         end
       else
         term_id = Berkeley::TermCodes.to_edo_id(term_yr, term_cd)
-        enrollments_by_uid = EdoOracle::Queries.get_enrolled_students(course_id, term_id).group_by { |row| row['ldap_uid'] }
+        enrollments_by_uid = EdoOracle::Queries.get_rosters(course_id, term_id).group_by { |row| row['ldap_uid'] }
         User::BasicAttributes.attributes_for_uids(enrollments_by_uid.keys).each do |attrs|
           attrs[:email] = attrs.delete :email_address
+          attrs[:majors] = enrollments_by_uid[attrs[:ldap_uid]].collect { |e| e['major'] }
           if (enrollment_row = enrollments_by_uid[attrs[:ldap_uid]].first)
+            attrs[:terms_in_attendance] = enrollment_row['ugrad_terms_in_attendance_group'].try(:[], 1)
             attrs[:enroll_status] = enrollment_row['enroll_status']
             attrs[:grade_option] = Berkeley::GradeOptions.grade_option_from_basis enrollment_row['grading_basis']
             attrs[:units] = enrollment_row['units'].to_s
@@ -87,6 +89,5 @@ module Rosters
         end
       end
     end
-
   end
 end

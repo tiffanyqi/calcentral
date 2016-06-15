@@ -479,13 +479,13 @@
   },
   "semesters": [
     {
-      "name": "Spring 2014",
-      "slug": "spring-2014",
+      "name": "Spring 2016",
+      "slug": "spring-2016",
       "termCode": "B",
-      "termYear": "2014",
+      "termYear": "2016",
       "timeBucket": "future",
       "hasEnrollmentData": true,
-      "campusSolutionsTerm": false,
+      "campusSolutionsTerm": true,
       "classes": [
         {
           "courseCatalog": "1A",
@@ -540,17 +540,17 @@
               "section_number": "004"
             }
           ],
-          "url": "/academics/semester/spring-2014/class/biology-1a"
+          "url": "/academics/semester/spring-2016/class/biology-1a"
         }
       ]
     },
     {
-      "name": "Fall 2013",
-      "slug": "fall-2013",
+      "name": "Fall 2016",
+      "slug": "fall-2016",
       "termCode": "D",
-      "termYear": "2013",
+      "termYear": "2016",
       "timeBucket": "current",
-      "campusSolutionsTerm": false,
+      "campusSolutionsTerm": true,
       "hasEnrollmentData": true,
       "classes": [
         {
@@ -616,7 +616,7 @@
               }
             }
           ],
-          "url": "/academics/semester/fall-2013/class/biology-1a"
+          "url": "/academics/semester/fall-2016/class/biology-1a"
         },
         {
           "courseCatalog": "C147",
@@ -658,7 +658,7 @@
               "units": "3.0"
             }
           ],
-          "url": "/academics/semester/fall-2013/class/cog_sci-c147"
+          "url": "/academics/semester/fall-2016/class/cog_sci-c147"
         },
         {
           "courseCatalog": "1",
@@ -698,7 +698,7 @@
                 }
               ],
               "units": ".5",
-              "url": "/academics/semester/fall-2013/class/phys_ed-1/lab-002"
+              "url": "/academics/semester/fall-2016/class/phys_ed-1/lab-002"
             },
             {
               "ccn": "72945",
@@ -755,16 +755,16 @@
               "site_url": "https://ucberkeley.beta.instructure.com/courses/11108107"
             }
           ],
-          "url": "/academics/semester/fall-2013/class/phys_ed-1"
+          "url": "/academics/semester/fall-2016/class/phys_ed-1"
         }
       ]
     },
     {
-      "name": "Spring 2013",
+      "name": "Spring 2016",
       "notation": "Education Abroad",
       "slug": "spring-2013",
       "termCode": "B",
-      "termYear": "2013",
+      "termYear": "2016",
       "timeBucket": "past",
       "campusSolutionsTerm": false,
       "hasEnrollmentData": false,
@@ -968,11 +968,11 @@
   ],
   "teachingSemesters": [
     {
-      "name": "Summer 2013",
-      "slug": "summer-2013",
-      "termCode": "C",
-      "termYear": "2013",
-      "campusSolutionsTerm": false,
+      "name": "Fall 2016",
+      "slug": "fall-2016",
+      "termCode": "D",
+      "termYear": "2016",
+      "campusSolutionsTerm": true,
       "classes": [
         {
           "role": "GSI",
@@ -1190,15 +1190,15 @@
               ]
             }
           ],
-          "url": "/academics/teaching-semester/summer-2013/class/biology-123a"
+          "url": "/academics/teaching-semester/fall-2016/class/biology-123a"
         }
       ]
     },
     {
-      "name": "Fall 2013",
-      "slug": "fall-2013",
-      "termCode": "D",
-      "termYear": "2013",
+      "name": "Summer 2016",
+      "slug": "summer-2016",
+      "termCode": "C",
+      "termYear": "2016",
       "campusSolutionsTerm": false,
       "classes": [
         {
@@ -1247,7 +1247,7 @@
               }
             }
           ],
-          "url": "/academics/teaching-semester/fall-2013/class/bio-123a"
+          "url": "/academics/teaching-semester/summer-2016/class/bio-123a"
         }
       ]
     }

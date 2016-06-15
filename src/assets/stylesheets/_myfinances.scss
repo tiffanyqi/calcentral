@@ -16,9 +16,6 @@
       max-height: 24px;
       max-width: 130px;
     }
-    i {
-      margin-right: 10px;
-    }
   }
   .cc-page-myfinances-account-summary-alert {
     margin: 15px 20px 0 15px;
@@ -71,10 +68,11 @@
     margin-left: 45px;
   }
   .cc-page-myfinances-filter-element {
-    margin-top: 10px;
+    margin: 0 10px 0 0;
     input[type="text"] {
       margin: 0;
       max-width: 130px;
+      padding: 4px 5px;
     }
   }
   .cc-page-myfinances-filter-form {
