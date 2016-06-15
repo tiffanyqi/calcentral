@@ -45,7 +45,6 @@ class AdvisingStudentController < ApplicationController
     if links
       # Advisors get only a subset of links
       keys = [:ucServiceIndicator, :ucStudentAdvisor, :multiYearAcademicPlannerStudentSpecific, :schedulePlannerStudentSpecific]
-      keys << :ucGteformsWorkcenter if Settings.features.cs_advising_gte_forms
       advising_links = links.select { |key| keys.include? key }
       json[:feed][:ucAdvisingResources][:ucAdvisingLinks] = advising_links
     end

@@ -444,7 +444,6 @@ features:
   cs_academic_planner: false
   cs_academic_profile_prefers_legacy: true
   cs_academic_progress_report: false
-  cs_advising_gte_forms: false
   cs_advising_scheduler_view: false
   cs_advising_show_advisors: false
   cs_advisor_student_lookup: false

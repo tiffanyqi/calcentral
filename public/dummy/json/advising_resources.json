@@ -43,11 +43,6 @@
           "name": "Enrollment Limit",
           "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/MANAGE_ACADEMIC_RECORDS.STDNT_ACTIVATION.GBL?EMPLID=17154428"
         },
-        "ucGteformsWorkcenter": {
-          "isCsLink": true,
-          "name": "GT eForms Work Center",
-          "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/s/WEBLIB_PTAL.ISCRIPT1.FieldFormula.IScript_PTAL_DASHBOARD?tab=G3WORKCENTER"
-        },
         "ucReportingCenter": {
           "isCsLink": true,
           "name": "Reporting Center",
