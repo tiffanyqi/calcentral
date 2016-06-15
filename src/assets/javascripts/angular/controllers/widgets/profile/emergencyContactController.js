@@ -74,8 +74,9 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       contactName: item.contactName,
       isPrimaryContact: item.primaryContact,
       relationship: item.relationship,
-      isSameAddressEmpl: item.sameAddressEmpl,
-      isSamePhoneEmpl: item.samePhoneEmpl,
+      // Override these to false to allow any address changes.
+      isSameAddressEmpl: 'N',
+      isSamePhoneEmpl: 'N',
       // Allow these items to be empty strings.
       addrField1: sanitizeContactData(item.addrField1),
       addrField2: sanitizeContactData(item.addrField2),
