@@ -12,6 +12,7 @@ describe HubEdos::Demographics do
       expect(subject[:feed]['student']['ethnicities'][0]['group']['code']).to eq '2'
       expect(subject[:feed]['student']['usaCountry']).to be
       expect(subject[:feed]['student']['residency']['official']).to be
+      expect(subject[:feed]['student']['residency']['message']['code']).to eq "2005"
     end
   end
 

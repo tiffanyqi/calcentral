@@ -115,6 +115,14 @@
                 "code": "NON",
                 "description": "Non-Resident"
               },
+              "tuitionException": {
+                "code": "RV",
+                "description": "Veteran/Dependent of Veteran"
+              },
+              "statementOfLegalResidenceStatus": {
+                "code": "D",
+                "description": "Auto Residency Determined"
+              },
               "county": "",
               "stateCode": "",
               "countryCode": "USA",
