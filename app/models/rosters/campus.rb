@@ -71,7 +71,7 @@ module Rosters
         campus_student = campus_enrollment_map[id]
         campus_student[:id] = id
         campus_student[:login_id] = id
-        campus_student[:profile_url] = 'https://calnet.berkeley.edu/directory/details.pl?uid=' + id
+        campus_student[:profile_url] = 'http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=' + id
         campus_student[:sections] = []
         campus_student[:section_ccns].each do |section_ccn|
           campus_student[:sections].push(sections_index[section_ccn])
