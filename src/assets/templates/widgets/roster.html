@@ -22,7 +22,7 @@
       </div>
       <div class="cc-right">
         <a class="cc-button cc-button-spaced" target="_self"
-          data-ng-disabled="allStudentsCount() === 0"
+          data-ng-disabled="!students.length"
           data-ng-href="/api/academics/rosters/{{context}}/csv/{{courseId}}.csv">
           <i class="fa fa-download" aria-hidden="true"></i> Export
         </a>
