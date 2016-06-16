@@ -51,7 +51,7 @@ module Rosters
               end
               campus_enrollment_map[enr[:ldap_uid]][:section_ccns] |= [section[:ccn]]
             else
-              campus_enrollment_map[enr[:ldap_uid]] = enr.slice(:student_id, :first_name, :last_name, :email, :enroll_status).merge({
+              campus_enrollment_map[enr[:ldap_uid]] = enr.slice(:student_id, :first_name, :last_name, :email, :enroll_status, :majors, :terms_in_attendance).merge({
                 section_ccns: [section[:ccn]]
               })
             end

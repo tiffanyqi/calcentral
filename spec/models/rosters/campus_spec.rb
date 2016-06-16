@@ -1,6 +1,7 @@
 describe Rosters::Campus do
   let(:term_yr) {'2014'}
   let(:term_cd) {'B'}
+  let(:cs_term_id) {'2142'}
   let(:term_slug) {"#{term_yr}-#{term_cd}"}
   let(:user_id) {rand(99999).to_s}
   let(:student_user_id) {rand(99999).to_s}
@@ -36,27 +37,6 @@ describe Rosters::Campus do
     }
   end
 
-  let(:fake_campus_student) do
-    {
-      "#{term_slug}" => [{
-        id: campus_course_id,
-        term_yr: term_yr,
-        term_cd: term_cd,
-        catid: catid,
-        dept: 'INFO',
-        dept_desc: 'Information Science',
-        course_code: "INFO #{catid}",
-        emitter: 'Campus',
-        name: 'Fake Course Name',
-        role: 'Student',
-        sections: [{
-          ccn: ccn1,
-          section_label: 'LEC 001'
-        }]
-      }]
-    }
-  end
-
   shared_examples 'a good and proper roster' do
     it 'should return a list of officially enrolled students for a course ccn' do
       model = Rosters::Campus.new(user_id, course_id: campus_course_id)
@@ -71,6 +51,7 @@ describe Rosters::Campus do
       expect(feed[:students].length).to eq 2
 
       student = feed[:students][0]
+      puts "student: #{student.inspect}"
       expect(student[:id]).to eq enrolled_student_login_id
       expect(student[:student_id]).to eq enrolled_student_student_id
       expect(student[:first_name]).to be_present
@@ -99,20 +80,17 @@ describe Rosters::Campus do
     before do
       expect(Berkeley::Terms).to receive(:legacy?).exactly(2).times.and_return is_legacy
       allow(CampusOracle::UserCourses::All).to receive(:new).with(user_id: user_id).and_return(double(get_all_campus_courses: fake_oracle))
-      allow(CampusOracle::UserCourses::All).to receive(:new).with(user_id: student_user_id).and_return(double(get_all_campus_courses: fake_oracle_student))
       allow(EdoOracle::UserCourses::All).to receive(:new).with(user_id: user_id).and_return(double(get_all_campus_courses: fake_edo))
-      allow(EdoOracle::UserCourses::All).to receive(:new).with(user_id: student_user_id).and_return(double(get_all_campus_courses: fake_edo_student))
     end
 
     context 'two-section course from legacy data' do
       let(:is_legacy) { true }
       let(:fake_oracle) { fake_campus }
-      let(:fake_oracle_student) { fake_campus_student }
       let(:fake_edo) { {} }
-      let(:fake_edo_student) { {} }
       before do
-        expect(CampusOracle::Queries).to receive(:get_enrolled_students).with(ccn1, term_yr, term_cd).and_return(fake_students)
-        expect(CampusOracle::Queries).to receive(:get_enrolled_students).with(ccn2, term_yr, term_cd).and_return(fake_students)
+        [ccn1, ccn2].each do |ccn|
+          expect(CampusOracle::Queries).to receive(:get_enrolled_students).with(ccn, term_yr, term_cd).and_return(fake_students)
+        end
       end
       let(:fake_students) do
         [
@@ -141,9 +119,7 @@ describe Rosters::Campus do
       let(:is_legacy) { false }
       let(:term_id) { Berkeley::TermCodes.to_edo_id(term_yr, term_cd) }
       let(:fake_oracle) { {} }
-      let(:fake_oracle_student) { {} }
       let(:fake_edo) { fake_campus }
-      let(:fake_edo_student) { fake_campus_student }
       before do
         expect(EdoOracle::Queries).to receive(:get_rosters).with(ccn1, term_id).and_return primary_enrollments
         expect(EdoOracle::Queries).to receive(:get_rosters).with(ccn2, term_id).and_return secondary_enrollments
@@ -159,7 +135,21 @@ describe Rosters::Campus do
             'student_id' => enrolled_student_student_id,
             'grading_basis' => 'GRD',
             'units' => 4.0,
-            'waitlist_position' => nil
+            'waitlist_position' => nil,
+            'major' => 'Cognitive Science BA',
+            'academic_program_code' => 'UCLS',
+            'terms_in_attendance_group' => 'R2TA'
+          },
+          {
+            'ldap_uid' => enrolled_student_login_id,
+            'enroll_status' => 'E',
+            'student_id' => enrolled_student_student_id,
+            'grading_basis' => 'GRD',
+            'units' => 4.0,
+            'waitlist_position' => nil,
+            'major' => 'Computer Science BA',
+            'academic_program_code' => 'UCLS',
+            'terms_in_attendance_group' => 'R2TA'
           },
           {
             'ldap_uid' => waitlisted_student_login_id,
@@ -167,7 +157,10 @@ describe Rosters::Campus do
             'student_id' => waitlisted_student_student_id,
             'grading_basis' => 'ESU',
             'units' => 3.0,
-            'waitlist_position' => 9.0
+            'waitlist_position' => 9.0,
+            'major' => 'Break Science BA',
+            'academic_program_code' => 'UCLS',
+            'terms_in_attendance_group' => 'R6TA'
           }
         ]
       end
@@ -179,7 +172,10 @@ describe Rosters::Campus do
             'student_id' => enrolled_student_student_id,
             'grading_basis' => 'NON',
             'units' => 0.0,
-            'waitlist_position' => nil
+            'waitlist_position' => nil,
+            'major' => 'Pizza Science PhD',
+            'academic_program_code' => 'GACAD',
+            'terms_in_attendance_group' => nil
           },
           {
             'ldap_uid' => waitlisted_student_login_id,
@@ -187,7 +183,10 @@ describe Rosters::Campus do
             'student_id' => waitlisted_student_student_id,
             'grading_basis' => 'NON',
             'units' => 0.0,
-            'waitlist_position' => 2.0
+            'waitlist_position' => 2.0,
+            'major' => 'Agricultural Science BA',
+            'academic_program_code' => 'UCLS',
+            'terms_in_attendance_group' => 'R2TA'
           }
         ]
       end
@@ -218,6 +217,14 @@ describe Rosters::Campus do
         expect(feed[:students][1][:grade_option]).to eq 'S/U'
         expect(feed[:students][1][:units]).to eq '3.0'
         expect(feed[:students][1][:waitlist_position]).to eq 9
+      end
+      it 'should include majors and terms in attendance count' do
+        feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed
+        expect(feed[:students][0][:majors][0]).to eq 'Cognitive Science BA'
+        expect(feed[:students][0][:majors][1]).to eq 'Computer Science BA'
+        expect(feed[:students][0][:terms_in_attendance]).to eq '2'
+        expect(feed[:students][1][:majors][0]).to eq 'Break Science BA'
+        expect(feed[:students][1][:terms_in_attendance]).to eq '6'
       end
     end
   end

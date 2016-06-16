@@ -34,6 +34,7 @@
         "Education PhD",
         "Education MA"
       ],
+      "terms_in_attendance": "2",
       "photo": "/campus/econ-100b-2016-D/photo/11111111",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=11111111",
       "section_ccns": [
@@ -64,6 +65,7 @@
       "majors": [
         "Journalism MJ"
       ],
+      "terms_in_attendance": "1",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=222222222",
       "section_ccns": [
         "14299",
@@ -92,8 +94,9 @@
       "last_name": "LBBERRR",
       "login_id": "333333",
       "majors": [
-        "Landscape Architecture BA"
+        "Education PhD"
       ],
+      "terms_in_attendance": "G",
       "photo": "/campus/econ-100b-2016-D/photo/333333",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=333333",
       "section_ccns": [
@@ -124,6 +127,7 @@
       "majors": [
         "Business Administration MBA"
       ],
+      "terms_in_attendance": "4",
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=444444",
       "section_ccns": [
@@ -150,6 +154,7 @@
       "majors": [
         "Non-UC Campus Visitor GR"
       ],
+      "terms_in_attendance": null,
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=555555",
       "section_ccns": [
@@ -178,6 +183,7 @@
         "Rhetoric PhD",
         "Rhetoric MA"
       ],
+      "terms_in_attendance": "2",
       "photo": "/campus/econ-100b-2016-D/photo/666666",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=666666",
       "section_ccns": [
@@ -211,6 +217,7 @@
         "Psychology PhD",
         "Psychology MA"
       ],
+      "terms_in_attendance": "5",
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=777777",
       "section_ccns": [
@@ -243,6 +250,7 @@
         "Psychology PhD",
         "Psychology MA"
       ],
+      "terms_in_attendance": "4",
       "photo": "/campus/econ-100b-2016-D/photo/888888",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=888888",
       "section_ccns": [
@@ -274,6 +282,7 @@
         "Education PhD",
         "Education MA"
       ],
+      "terms_in_attendance": "2",
       "photo": "/campus/econ-100b-2016-D/photo/999999",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=999999",
       "section_ccns": [
@@ -304,6 +313,7 @@
       "majors": [
         "Journalism MJ"
       ],
+      "terms_in_attendance": "2",
       "photo": "/campus/econ-100b-2016-D/photo/989898",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=989898",
       "section_ccns": [
@@ -332,8 +342,9 @@
       "last_name": "Kerschen",
       "login_id": "979797",
       "majors": [
-        "Physical Sci Field Major BA"
+        "UCBX Concurrent Enrollment"
       ],
+      "terms_in_attendance": "\u2014",
       "photo": "/campus/econ-100b-2016-D/photo/979797",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=979797",
       "section_ccns": [

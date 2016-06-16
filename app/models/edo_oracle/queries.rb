@@ -293,7 +293,8 @@ module EdoOracle
           enroll."UNITS_TAKEN" AS units,
           TRIM(enroll."GRADING_BASIS_CODE") AS grading_basis,
           plan."ACADPLAN_DESCR" AS major,
-          stdgroup."STDNT_GROUP" as terms_in_attendance_group
+          plan."ACADPROG_CODE" AS academic_program_code,
+          stdgroup."STDNT_GROUP" AS terms_in_attendance_group
         FROM SISEDO.ENROLLMENTV00_VW enroll
         LEFT OUTER JOIN
           SISEDO.STUDENT_PLAN_CC_V00_VW plan ON enroll."STUDENT_ID" = plan."STUDENT_ID" AND
