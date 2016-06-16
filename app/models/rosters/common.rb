@@ -78,7 +78,7 @@ module Rosters
           attrs[:email] = attrs.delete :email_address
           attrs[:majors] = enrollments_by_uid[attrs[:ldap_uid]].collect { |e| e['major'] }
           if (enrollment_row = enrollments_by_uid[attrs[:ldap_uid]].first)
-            attrs[:terms_in_attendance] = enrollment_row['ugrad_terms_in_attendance_group'].try(:[], 1)
+            attrs[:terms_in_attendance] = enrollment_row['terms_in_attendance_group'].try(:[], 1)
             attrs[:enroll_status] = enrollment_row['enroll_status']
             attrs[:grade_option] = Berkeley::GradeOptions.grade_option_from_basis enrollment_row['grading_basis']
             attrs[:units] = enrollment_row['units'].to_s
