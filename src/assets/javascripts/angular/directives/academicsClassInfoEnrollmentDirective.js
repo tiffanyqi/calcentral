@@ -52,6 +52,10 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
         }
       };
 
+      scope.allStudentsCount = function() {
+        return _.get(scope, 'students.length', 0);
+      };
+
       scope.$watch(
         function() {
           return scope.$eval(attrs.students);

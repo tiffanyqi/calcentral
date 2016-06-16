@@ -1,6 +1,7 @@
 /* jshint camelcase: false */
 'use strict';
 
+var _ = require('lodash');
 var angular = require('angular');
 
 /**
@@ -17,6 +18,10 @@ angular.module('calcentral.controllers').controller('RosterController', function
       return true;
     }
     return (student.section_ccns.indexOf($scope.searchSection.ccn) !== -1);
+  };
+
+  $scope.allStudentsCount = function() {
+    return _.get($scope, 'students.length', 0);
   };
 
   var getRoster = function() {
