@@ -3,6 +3,9 @@ module CampusOracle
     include ActiveRecordHelper
 
     def self.get_all_courses
+      legacy_terms = self.terms
+      return [] if legacy_terms.blank?
+
       result = []
       this_depts_clause = depts_clause('c', Settings.class_calendar.departments)
       use_pooled_connection {
@@ -17,7 +20,7 @@ module CampusOracle
       where c.term_yr = sched.term_yr
         and c.term_cd = sched.term_cd
         and c.course_cntl_num = sched.course_cntl_num
-        #{terms_query_clause('c', terms)}
+        #{terms_query_clause('c', legacy_terms)}
         #{this_depts_clause}
       order by c.course_cntl_num, sched.print_cd asc nulls last, sched.multi_entry_cd
         SQL
@@ -27,7 +30,7 @@ module CampusOracle
       stringify_ints! result
     end
 
-    def self.get_whitelisted_students_in_course(users = [], term_yr, term_cd, ccn)
+    def self.get_whitelisted_students(users = [], term_yr, term_cd, ccn)
       # fail safer: don't return results if whitelist is empty
       if users.empty?
         return []
