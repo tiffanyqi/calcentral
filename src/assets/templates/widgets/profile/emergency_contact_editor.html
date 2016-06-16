@@ -37,8 +37,8 @@
     </div>
 
     <div class="cc-select">
-      <select id="cc_page_widget_profile_emergency_contact_country" required aria-required="true" data-ng-if="countries" data-ng-model="currentObject.data.country" data-ng-options="country.country as country.descr for country in countries">
-        <option value="" disabled selected>Choose&hellip;</option>
+      <select id="cc_page_widget_profile_emergency_contact_country" data-ng-if="countries" data-ng-model="currentObject.data.country" data-ng-options="country.country as country.descr for country in countries">
+        <option value="" selected>Choose&hellip;</option>
       </select>
     </div>
 
@@ -55,7 +55,7 @@
         <div data-ng-if="field.field === 'state' && states.length">
           <div class="cc-select">
             <select data-ng-options="state.state as state.descr for state in states" data-ng-attr-id="cc_page_widget_emergency_contact_state" data-ng-model="currentObject.data.state">
-              <option value="" disabled selected>Choose {{field.label}}&hellip;</option>
+              <option value="" selected>Choose {{field.label}}&hellip;</option>
             </select>
           </div>
         </div>
