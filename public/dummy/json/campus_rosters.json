@@ -31,7 +31,7 @@
         "Education MA"
       ],
       "photo": "/campus/econ-100b-2016-D/photo/11111111",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=11111111",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=11111111",
       "section_ccns": [
         "14299",
         "14300"
@@ -60,7 +60,7 @@
       "majors": [
         "Journalism MJ"
       ],
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=222222222",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=222222222",
       "section_ccns": [
         "14299",
         "14300"
@@ -91,7 +91,7 @@
         "Landscape Architecture BA"
       ],
       "photo": "/campus/econ-100b-2016-D/photo/333333",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=333333",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=333333",
       "section_ccns": [
         "14299",
         "14301"
@@ -121,7 +121,7 @@
         "Business Administration MBA"
       ],
       "photo": "/images/sample_student_72x96.jpg",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=444444",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=444444",
       "section_ccns": [
         "14301"
       ],
@@ -147,7 +147,7 @@
         "Non-UC Campus Visitor GR"
       ],
       "photo": "/images/sample_student_72x96.jpg",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=555555",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=555555",
       "section_ccns": [
         "14299",
         "14301"
@@ -175,7 +175,7 @@
         "Rhetoric MA"
       ],
       "photo": "/campus/econ-100b-2016-D/photo/666666",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=666666",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=666666",
       "section_ccns": [
         "14299",
         "14301"
@@ -208,7 +208,7 @@
         "Psychology MA"
       ],
       "photo": "/images/sample_student_72x96.jpg",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=777777",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=777777",
       "section_ccns": [
         "14299",
         "14301"
@@ -240,7 +240,7 @@
         "Psychology MA"
       ],
       "photo": "/campus/econ-100b-2016-D/photo/888888",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=888888",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=888888",
       "section_ccns": [
         "14299",
         "14301"
@@ -271,7 +271,7 @@
         "Education MA"
       ],
       "photo": "/campus/econ-100b-2016-D/photo/999999",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=999999",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=999999",
       "section_ccns": [
         "14299",
         "14301"
@@ -301,7 +301,7 @@
         "Journalism MJ"
       ],
       "photo": "/campus/econ-100b-2016-D/photo/989898",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=989898",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=989898",
       "section_ccns": [
         "14299",
         "14301"
@@ -331,7 +331,7 @@
         "Physical Sci Field Major BA"
       ],
       "photo": "/campus/econ-100b-2016-D/photo/979797",
-      "profile_url": "https://calnet.berkeley.edu/directory/details.pl?uid=979797",
+      "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=979797",
       "section_ccns": [
         "14299",
         "14301"
