@@ -187,7 +187,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'GRD',
             'major' => 'Cognitive Science BA',
-            'ugrad_terms_in_attendance_group' => 'R2TA'
+            'terms_in_attendance_group' => 'R2TA'
           },
           {
             'ldap_uid' => '333333',
@@ -197,7 +197,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'GRD',
             'major' => 'Computer Science BA',
-            'ugrad_terms_in_attendance_group' => 'R2TA'
+            'terms_in_attendance_group' => 'R2TA'
           },
           {
             'ldap_uid' => '444444',
@@ -207,7 +207,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'PNP',
             'major' => 'Computer Science BA',
-            'ugrad_terms_in_attendance_group' => nil
+            'terms_in_attendance_group' => nil
           },
           {
             'ldap_uid' => '555555',
@@ -217,7 +217,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'GRD',
             'major' => 'Nose Picking BA',
-            'ugrad_terms_in_attendance_group' => 'R8TA'
+            'terms_in_attendance_group' => 'R8TA'
           }
         ]
       }
