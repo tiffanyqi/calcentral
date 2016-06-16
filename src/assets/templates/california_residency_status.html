@@ -1,19 +1,23 @@
-<div data-cc-spinner-directive="residency.isLoading">
-  <span data-ng-if="residency.code === 'NON'">
-    Please check your email for your determination letter. To learn more, read about <a href="http://registrar.berkeley.edu/tuition-fees-residency">residency information</a>.
-  </span>
-  <span data-ng-if="residency.code === ''">
-    Please submit your <a data-cc-campus-solutions-link-directive="slr.deeplink.url"
+<div class="cc-widget-vertical-padding"  data-cc-spinner-directive="residency.isLoading">
+  <div data-ng-if="residency.fromTerm.label">
+    Term applied: <span data-ng-bind="residency.fromTerm.label"></span>
+  </div>
+  <div data-ng-if="residency.tuitionException.description">
+    Exception: <span data-ng-bind="residency.tuitionException.description"></span>
+  </div>
+  <div class="cc-widget-vertical-padding" data-ng-if="residency.statementOfLegalResidenceStatus.code === 'N'">
+    <a data-cc-campus-solutions-link-directive="slr.deeplink.url"
     data-cc-campus-solutions-link-directive-enabled="{{slr.deeplink.isCsLink}}"
     data-cc-campus-solutions-link-directive-text="slr.backToText"
     data-cc-campus-solutions-link-directive-cache="'profile'"
-    data-cc-outbound-enabled="false">Statement of Legal Residence</a>. To learn more, read about <a href="http://registrar.berkeley.edu/tuition-fees-residency/residency-tuition-purposes/how-apply-state-tuition">residency information</a>.
-  </span>
-  <span data-ng-if="residency.code === 'PEND'">
-    Your Statement of Legal Residence is in review. Please <a data-cc-campus-solutions-link-directive="slr.deeplink.url"
+    data-cc-outbound-enabled="false">Submit Statement of Legal Residence</a>
+  </div>
+  <div class="cc-widget-vertical-padding" data-ng-if="residency.statementOfLegalResidenceStatus.code !== 'N'">
+    <a data-cc-campus-solutions-link-directive="slr.deeplink.url"
     data-cc-campus-solutions-link-directive-enabled="{{slr.deeplink.isCsLink}}"
     data-cc-campus-solutions-link-directive-text="slr.backToText"
     data-cc-campus-solutions-link-directive-cache="'profile'"
-    data-cc-outbound-enabled="false">check the status of your submission</a>. To learn more, read about <a href="http://registrar.berkeley.edu/tuition-fees-residency/residency-tuition-purposes/how-apply-state-tuition">residency information</a>.
-  </span>
+    data-cc-outbound-enabled="false">Access Statement of Legal Residence</a>
+  </div>
+  <div class="cc-widget-vertical-padding" data-ng-bind-html="residency.message.description"></div>
 </div>

@@ -5,15 +5,14 @@
   </div>
 
   <div class="cc-widget-padding">
-
-    <div data-ng-if="statusHoldsBlocks.enabledSections.indexOf('Status') !== -1">
+    <div class="cc-widget-academic-residency-status">
       <h3>Status</h3>
-      <div class="cc-table">
+      <div class="cc-table" data-ng-if="statusHoldsBlocks.enabledSections.indexOf('Status') !== -1">
         <table class="cc-academics-status-holds-blocks-status-table">
           <thead>
             <tr>
               <th scope="col" width="130px">Type</th>
-              <th scope="col">Status</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -30,28 +29,25 @@
               <td colspan="2" data-ng-bind-html="studentInfo.regStatus.explanation"></td>
             </tr>
           </tbody>
-          <tbody data-ng-if="residency.isLoading">
-            <tr>
-              <td colspan="2">
-                <div data-cc-spinner-directive="residency.isLoading"></div>
-              </td>
-            </tr>
-          </tbody>
-          <tbody data-ng-if="!residency.isLoading">
-            <tr>
-              <th class="cc-table-subheader" scope="row">California Residency</th>
-              <td>
-                <i class="cc-icon fa fa-exclamation-circle cc-icon-red" aria-hidden="true" data-ng-if="residency.code === ''"></i>
-                <i class="cc-icon fa fa-warning cc-icon-gold" aria-hidden="true" data-ng-if="residency.code === 'PEND'"></i>
-                <i class="cc-icon fa fa-check-circle cc-icon-green" aria-hidden="true" data-ng-if="residency.code === 'NON' || residency.code === 'RES'"></i>
-               <span data-ng-bind="residency.description"></span>
-              </td>
-            </tr>
-            <tr data-ng-if="slr.deeplink">
-              <td colspan="2" data-ng-include="'california_residency_status.html'"></td>
-            </tr>
-          </tbody>
         </table>
+      </div>
+
+      <div class="cc-academics-status-holds-blocks-status-table">
+        <div data-ng-if="residency.isLoading">
+          <div data-cc-spinner-directive="residency.isLoading"></div>
+        </div>
+        <div data-ng-if="!residency.isLoading">
+          <div>
+            <span>California Residency</span>
+            <span>
+              <i class="cc-icon fa fa-exclamation-circle cc-icon-red" aria-hidden="true" data-ng-if="residency.official.code === ''"></i>
+              <i class="cc-icon fa fa-warning cc-icon-gold" aria-hidden="true" data-ng-if="residency.official.code === 'PEND'"></i>
+              <i class="cc-icon fa fa-check-circle cc-icon-green" aria-hidden="true" data-ng-if="residency.official.code === 'NON' || residency.official.code === 'RES'"></i>
+             <span data-ng-bind="residency.official.description"></span>
+           </span>
+          </div>
+          <div data-ng-include="'california_residency_status.html'" data-ng-if="slr.deeplink"></div>
+        </div>
       </div>
     </div>
 

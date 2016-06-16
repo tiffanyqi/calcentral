@@ -13,6 +13,7 @@ describe HubEdos::Demographics do
       expect(subject[:feed]['student']['usaCountry']).to be
       expect(subject[:feed]['student']['residency']['official']).to be
       expect(subject[:feed]['student']['residency']['message']['code']).to eq "2005"
+      expect(subject[:feed]['student']['residency']['fromTerm']['label']).to eq "Summer 2014"
     end
   end
 
