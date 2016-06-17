@@ -7,12 +7,12 @@ var _ = require('lodash');
  * Emergency Contact controller
  */
 angular.module('calcentral.controllers').controller('EmergencyContactController', function(apiService, profileFactory, $scope) {
+  var defaultCountry = 'USA';
 
   angular.extend($scope, {
     currentObject: {},
-    defaultCountry: 'USA',
     emptyObject: {
-      country: this.defaultCountry,
+      country: defaultCountry,
       primaryContact: 'N',
       sameAddressEmpl: 'N',
       samePhoneEmpl: 'N'
@@ -114,7 +114,7 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
     // edited.
     _.forEach(item, function(v, k) {
       if (!v && k === 'country') {
-        item[k] = $scope.defaultCountry;
+        item[k] = defaultCountry;
       } else {
         item[k] = sanitizeContactData(v);
       }
