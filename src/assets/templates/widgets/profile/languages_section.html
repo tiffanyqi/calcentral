@@ -1,6 +1,6 @@
 <div class="cc-page-widget-profile-section" data-ng-controller="LanguagesSectionController" data-cc-spinner-directive="isLoading">
   <div class="cc-page-widget-profile-section-label">
-    <button class="cc-button-link" data-ng-click="showAdd()" data-ng-if="!items.content.length && !items.editorEnabled">
+    <button class="cc-button-link" data-ng-click="showAdd()" data-ng-disabled="!api.user.profile.actAsOptions.canPost" data-ng-if="!items.content.length && !items.editorEnabled">
       <i class="fa fa-plus cc-text-small"></i> Add Language
     </button>
     <span data-ng-if="items.content.length || items.editorEnabled" data-ng-pluralize count="items.content.length" when="{'1': 'Language', 'other': 'Languages'}"></span>
@@ -9,7 +9,7 @@
     <div class="cc-page-widget-profile-section-content-item" data-ng-if="items.editorEnabled">
       <div data-ng-include="'widgets/profile/languages_section_editor.html'"></div>
     </div>
-    <div class="cc-page-widget-profile-section-add" data-ng-if="items.content.length && !items.editorEnabled">
+    <div class="cc-page-widget-profile-section-add" data-ng-disabled="!api.user.profile.actAsOptions.canPost" data-ng-if="items.content.length && !items.editorEnabled">
       <button class="cc-button-link cc-right" data-ng-click="showAdd()">
         <i class="fa fa-plus cc-text-small"></i> Add <span class="cc-visuallyhidden">Language</span>
       </button>
@@ -24,7 +24,7 @@
       <div data-ng-if="item.speakingProficiency.description" data-ng-bind-template="Speaking Proficiency: {{item.speakingProficiency.description}}"></div>
       <div data-ng-if="item.readingProficiency.description" data-ng-bind-template="Reading Proficiency: {{item.readingProficiency.description}}"></div>
       <div data-ng-if="item.writingProficiency.description" data-ng-bind-template="Writing Proficiency: {{item.writingProficiency.description}}"></div>
-      <button class="cc-button-link" data-ng-click="showEdit(item)">
+      <button class="cc-button-link" data-ng-disabled="!api.user.profile.actAsOptions.canPost" data-ng-click="showEdit(item)">
         Edit <span class="cc-visuallyhidden" data-ng-bind-template="{{item.name}} credential"></span>
       </button>
     </div>
