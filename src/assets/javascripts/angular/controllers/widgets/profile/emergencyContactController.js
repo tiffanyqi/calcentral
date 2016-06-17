@@ -10,8 +10,9 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
 
   angular.extend($scope, {
     currentObject: {},
+    defaultCountry: 'USA',
     emptyObject: {
-      country: 'USA',
+      country: this.defaultCountry,
       primaryContact: 'N',
       sameAddressEmpl: 'N',
       samePhoneEmpl: 'N'
@@ -70,36 +71,35 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
     var phone = item.emergencyPhones[0];
 
     apiService.profile.save($scope, profileFactory.postEmergencyContact, {
+      // Override these to false to allow any address changes.
+      isSameAddressEmpl: 'N',
+      isSamePhoneEmpl: 'N',
       // Let Campus Solutions growl about any required field errors.
       contactName: item.contactName,
       isPrimaryContact: item.primaryContact,
       relationship: item.relationship,
-      // Override these to false to allow any address changes.
-      isSameAddressEmpl: 'N',
-      isSamePhoneEmpl: 'N',
-      // Allow these items to be empty strings.
-      addrField1: sanitizeContactData(item.addrField1),
-      addrField2: sanitizeContactData(item.addrField2),
-      addrField3: sanitizeContactData(item.addrField3),
-      address1: sanitizeContactData(item.address1),
-      address2: sanitizeContactData(item.address2),
-      address3: sanitizeContactData(item.address3),
-      address4: sanitizeContactData(item.address4),
-      addressType: sanitizeContactData(item.addressType),
-      city: sanitizeContactData(item.city),
-      country: sanitizeContactData(item.country),
-      county: sanitizeContactData(item.county),
-      emailAddr: sanitizeContactData(item.emailAddr),
-      geoCode: sanitizeContactData(item.geoCode),
-      houseType: sanitizeContactData(item.houseType),
-      inCityLimit: sanitizeContactData(item.inCityLimit),
-      num1: sanitizeContactData(item.num1),
-      num2: sanitizeContactData(item.num2),
-      phone: sanitizeContactData(phone.phone),
-      phoneType: sanitizeContactData(phone.phoneType),
-      extension: sanitizeContactData(phone.extension),
-      postal: sanitizeContactData(item.postal),
-      state: sanitizeContactData(item.state)
+      addrField1: item.addrField1,
+      addrField2: item.addrField2,
+      addrField3: item.addrField3,
+      address1: item.address1,
+      address2: item.address2,
+      address3: item.address3,
+      address4: item.address4,
+      addressType: item.addressType,
+      city: item.city,
+      country: item.country,
+      county: item.county,
+      emailAddr: item.emailAddr,
+      geoCode: item.geoCode,
+      houseType: item.houseType,
+      inCityLimit: item.inCityLimit,
+      num1: item.num1,
+      num2: item.num2,
+      phone: phone.phone,
+      phoneType: phone.phoneType,
+      extension: phone.extension,
+      postal: item.postal,
+      state: item.state
     }).then(saveCompleted);
   };
 
@@ -110,6 +110,15 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   };
 
   $scope.showEdit = function(item) {
+    // Insert safe defaults for any null or undefined values on the item to be
+    // edited.
+    _.forEach(item, function(v, k) {
+      if (!v && k === 'country') {
+        item[k] = $scope.defaultCountry;
+      } else {
+        item[k] = sanitizeContactData(v);
+      }
+    });
     apiService.profile.showEdit($scope, item);
   };
 
@@ -188,9 +197,8 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       contactName: item.contactName,
       phone: item.phone,
       phoneType: item.phoneType,
-      // Allow these items to be empty strings.
-      extension: sanitizeContactData(item.extension),
-      countryCode: sanitizeContactData(item.countryCode)
+      extension: item.extension,
+      countryCode: item.countryCode
     }).then(phoneSaveCompleted);
   };
 
@@ -217,6 +225,11 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   };
 
   $scope.emergencyPhone.showEdit = function(item) {
+    // Insert safe defaults for any null or undefined values on the item to be
+    // edited.
+    _.forEach(item, function(v, k) {
+      item[k] = sanitizeContactData(v);
+    });
     apiService.profile.showEdit($scope.emergencyPhone, item);
   };
 
