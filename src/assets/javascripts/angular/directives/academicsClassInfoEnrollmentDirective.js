@@ -8,6 +8,9 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
   return {
     scope: true,
     link: function(scope, elem, attrs) {
+      scope.toggleAddresses = function(boolValue) {
+        scope.showAddresses = boolValue;
+      };
 
       /*
        * Returns true if student is in the selected section
@@ -67,6 +70,7 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
         }
       );
 
+      scope.toggleAddresses(false);
       scope.seatsLimit = scope.$eval(attrs.seatsLimit);
       scope.showPosition = scope.$eval(attrs.showPosition);
       scope.studentRole = (attrs.title === 'Wait List') ? 'waitlisted' : 'enrolled';
