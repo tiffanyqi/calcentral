@@ -3,12 +3,12 @@
     <h2 class="cc-left" data-ng-bind="title"></h2>
     <div class="cc-academics-class-enrollment-options cc-right">
       <a class="cc-button"
-        data-ng-disabled="studentsInSectionEmailList().length === 0 || showAddresses"
-        data-ng-click="toggleAddresses(true)">
+          data-ng-disabled="studentsInSectionEmailList().length === 0 || showAddresses"
+          data-ng-click="toggleAddresses(true)">
         <i class="fa fa-clipboard" aria-hidden="true"></i>
-        Copy Addresses
+        <span class="hidden-for-small-only">Copy Addresses</span>
       </a>
-      <a class="cc-button" target="_self"
+      <a class="cc-button hidden-for-small-only" target="_self"
         data-ng-disabled="!students.length"
         data-ng-href="/api/academics/rosters/campus/csv/{{campusCourseId}}.csv">
         <i class="fa fa-download" aria-hidden="true"></i>
