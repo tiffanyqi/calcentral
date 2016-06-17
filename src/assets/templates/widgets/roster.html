@@ -68,9 +68,11 @@
         <span class="cc-visuallyhidden">Student ID: </span>
         <span data-ng-bind="student.student_id"></span>
       </div>
-      <div class="cc-page-roster-student-terms" data-ng-bind-template="Terms: {{student.terms_in_attendance}}"></div>
+      <div class="cc-page-roster-student-terms"
+          data-ng-if="student.terms_in_attendance"
+          data-ng-bind-template="Terms: {{student.terms_in_attendance}}"></div>
       <div class="cc-page-roster-student-majors">
-        <span data-ng-bind="student.majors.join(', ') | limitTo:21"></span>
+        <span data-ng-bind="student.majors.join(', ') | limitTo:50"></span>
       </div>
     </li>
   </ul>
