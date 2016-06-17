@@ -31,19 +31,21 @@
         </table>
       </div>
 
-      <div class="cc-academics-status-holds-blocks-status-table">
+      <div class="cc-academics-status-holds-blocks-status-residency">
         <div data-ng-if="residency.isLoading">
           <div data-cc-spinner-directive="residency.isLoading"></div>
         </div>
         <div data-ng-if="!residency.isLoading">
           <div>
-            <span>California Residency</span>
-            <span>
+            <div class="cc-inline-block" style="width: 130px">
+              California Residency
+            </div>
+            <div class="cc-inline-block">
               <i class="cc-icon fa fa-exclamation-circle cc-icon-red" aria-hidden="true" data-ng-if="residency.official.code === ''"></i>
               <i class="cc-icon fa fa-warning cc-icon-gold" aria-hidden="true" data-ng-if="residency.official.code === 'PEND'"></i>
               <i class="cc-icon fa fa-check-circle cc-icon-green" aria-hidden="true" data-ng-if="residency.official.code === 'NON' || residency.official.code === 'RES'"></i>
              <span data-ng-bind="residency.official.description"></span>
-           </span>
+            </div>
           </div>
           <div data-ng-include="'california_residency_status.html'"></div>
         </div>
