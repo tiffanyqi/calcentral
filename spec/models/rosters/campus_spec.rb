@@ -51,7 +51,6 @@ describe Rosters::Campus do
       expect(feed[:students].length).to eq 2
 
       student = feed[:students][0]
-      puts "student: #{student.inspect}"
       expect(student[:id]).to eq enrolled_student_login_id
       expect(student[:student_id]).to eq enrolled_student_student_id
       expect(student[:first_name]).to be_present
