@@ -6,7 +6,7 @@
     <div class="cc-list-link-container" data-ng-repeat="subcategory in campusLinks.data.subcategories">
       <h3 data-ng-bind="subcategory"></h3>
       <ul class="cc-list-links">
-        <li data-ng-if="subcategory === 'Billing & Payments'">
+        <li data-ng-if="subcategory === 'Billing & Payments' && !api.user.profile.delegateActingAsUid">
           <a data-ng-href="/profile/delegate" data-ng-attr-title="{{$parent.delegateAccess.title}}">Delegate Access</a>
         </li>
         <li data-ng-if="subcategory === 'Billing & Payments'">
