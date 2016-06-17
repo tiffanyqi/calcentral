@@ -1,165 +1,158 @@
 {
-  "affiliations":[
+  "affiliations": [
     {
-      "type":{
-        "code":"STUDENT",
-        "description":""
+      "type": {
+        "code": "STUDENT",
+        "description": ""
       },
-      "detail":"",
-      "status":{
-        "code":"ACT",
-        "description":"Active"
+      "detail": "",
+      "status": {
+        "code": "ACT",
+        "description": "Active"
       },
-      "fromDate":"2015-12-17"
+      "fromDate": "2015-12-14"
     },
     {
-      "type":{
-        "code":"UNDERGRAD",
-        "description":"Undergraduate Student"
+      "type": {
+        "code": "UNDERGRAD",
+        "description": "Undergraduate Student"
       },
-      "detail":"Active",
-      "status":{
-        "code":"ACT",
-        "description":"Active"
+      "detail": "Active",
+      "status": {
+        "code": "ACT",
+        "description": "Active"
       },
-      "fromDate":"2015-12-17"
+      "fromDate": "2015-12-14"
     }
   ],
-  "registrations":{
-    "current":[],
-    "running":[],
-    "sis_current_term":[],
-    "next":[
+  "terms": {
+    "current": {
+      "id": "2165",
+      "name": "Summer 2016"
+    },
+    "running": {
+      "id": "2165",
+      "name": "Summer 2016"
+    },
+    "sis_current_term": {
+      "id": "2168",
+      "name": "Fall 2016"
+    },
+    "next": {
+      "id": "2168",
+      "name": "Fall 2016"
+    },
+    "future": null,
+    "grading_in_progress": null
+  },
+  "registrations": {
+    "2165": [
       {
-        "term":{
-          "id":"2168",
-          "name":"2016 Fall",
-          "academicYear":"2017"
+        "is_legacy": true,
+        "reg_status": {
+          "code": "S",
+          "summary": "Registered",
+          "explanation": "You are officially registered for this term and are entitled to access campus services.",
+          "needsAction": false,
+          "education_level": "Senior ",
+          "transitionTerm": true
         },
-        "academicCareer":{
-          "code":"GRAD",
-          "description":"Graduate"
-        },
-        "eligibleToRegister":true,
-        "registered":true,
-        "disabled":false,
-        "athlete":false,
-        "intendsToGraduate":false,
-        "academicLevel":{
-          "level":{
-            "code":"GR",
-            "description":"Graduate"
-          }
-        },
-        "termUnits":[
-          {
-            "type":{
-              "description":"Total"
-            },
-            "unitsMin":0,
-            "unitsMax":0,
-            "unitsEnrolled":0,
-            "unitsWaitlisted":0
-          },
-          {
-            "type":{
-              "description":"For GPA"
-            },
-            "unitsEnrolled":1,
-            "unitsWaitlisted":0
-          },
-          {
-            "type":{
-              "description":"Not For GPA"
-            },
-            "unitsEnrolled":0,
-            "unitsWaitlisted":0
-          }
-        ],
-        "termGPA":{
-          "type":{
-            "description":"Term GPA"
-          },
-          "average":0
-        },
-        "specialStudyPrograms":[],
-        "withdrawalCancel":{
-          "type":{},
-          "reason":{}
-        },
-        "new":true
-      },
-      {
-        "term":{
-          "id":"2168",
-          "name":"2016 Fall",
-          "academicYear":"2017"
-        },
-        "academicCareer":{
-          "code":"UGRD",
-          "description":"Undergraduate"
-        },
-        "eligibleToRegister":true,
-        "registered":true,
-        "disabled":false,
-        "athlete":false,
-        "intendsToGraduate":false,
-        "academicLevel":{
-          "level":{
-            "code":"10",
-            "description":"Freshman"
-          }
-        },
-        "termUnits":[
-          {
-            "type":{
-              "description":"Total"
-            },
-            "unitsMin":0,
-            "unitsMax":0,
-            "unitsEnrolled":0,
-            "unitsWaitlisted":0
-          },
-          {
-            "type":{
-              "description":"For GPA"
-            },
-            "unitsEnrolled":4,
-            "unitsWaitlisted":0
-          },
-          {
-            "type":{
-              "description":"Not For GPA"
-            },
-            "unitsEnrolled":0,
-            "unitsWaitlisted":0
-          }
-        ],
-        "termGPA":{
-          "type":{
-            "description":"Term GPA"
-          },
-          "average":0
-        },
-        "specialStudyPrograms":[],
-        "withdrawalCancel":{
-          "type":{},
-          "reason":{}
-        },
-        "new":false
+        "roles": {
+          "student": true,
+          "registered": true,
+          "exStudent": false,
+          "faculty": false,
+          "staff": true,
+          "guest": false,
+          "concurrentEnrollmentStudent": false,
+          "undergrad": true,
+          "expiredAccount": false
+        }
       }
     ],
-    "future":[],
-    "previous":[],
-    "grading_in_progress":[]
-  },
-  "lastModified":{
-    "hash":"5e333cacd0fb52f9cac1d5e429453172e29dafdd",
-    "timestamp":{
-      "epoch":1464024101,
-      "dateTime":"2016-05-23T10:21:41-07:00",
-      "dateString":"5/23"
-    }
-  },
-  "feedName":"MyRegistrations::MyRegistrations"
+    "2168": [
+      {
+        "term": {
+          "id": "2168",
+          "name": "2016 Fall",
+          "academicYear": "2017"
+        },
+        "academicCareer": {
+          "code": "UGRD",
+          "description": "Undergraduate"
+        },
+        "eligibleToRegister": true,
+        "registered": true,
+        "disabled": false,
+        "athlete": false,
+        "intendsToGraduate": false,
+        "academicLevel": {
+          "level": {
+            "code": "30",
+            "description": "Junior"
+          }
+        },
+        "termUnits": [
+          {
+            "type": {
+              "code": "Total",
+              "description": "Total"
+            },
+            "unitsMin": 0,
+            "unitsMax": 0,
+            "unitsEnrolled": 0,
+            "unitsWaitlisted": 0,
+            "unitsTaken": 0,
+            "unitsPassed": 0,
+            "unitsIncomplete": 0,
+            "unitsTransferEarned": 0,
+            "unitsTransferAccepted": 0,
+            "unitsTest": 0,
+            "unitsOther": 0
+          },
+          {
+            "type": {
+              "code": "For GPA",
+              "description": "For GPA"
+            },
+            "unitsMin": 0,
+            "unitsMax": 0,
+            "unitsEnrolled": 4,
+            "unitsWaitlisted": 0,
+            "unitsTaken": 0,
+            "unitsPassed": 0,
+            "unitsIncomplete": 0,
+            "unitsTransferEarned": 0
+          },
+          {
+            "type": {
+              "code": "Not For GPA",
+              "description": "Not For GPA"
+            },
+            "unitsMin": 0,
+            "unitsMax": 0,
+            "unitsEnrolled": 0,
+            "unitsWaitlisted": 0,
+            "unitsTaken": 0,
+            "unitsPassed": 0,
+            "unitsIncomplete": 0,
+            "unitsTransferEarned": 0
+          }
+        ],
+        "termGPA": {
+          "type": {
+            "description": "Term GPA"
+          },
+          "average": 0,
+          "source": "UCB"
+        },
+        "specialStudyPrograms": [],
+        "withdrawalCancel": {
+          "type": {},
+          "reason": {}
+        },
+        "new": false
+      }
+    ]
+  }
 }

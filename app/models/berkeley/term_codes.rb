@@ -35,6 +35,11 @@ module Berkeley
       self.from_edo_id(edo_term_id).values_at(:term_yr, :term_cd).join '-'
     end
 
+    def slug_to_edo_id(slug)
+      code = self.from_slug slug
+      self.to_edo_id(code[:term_yr], code[:term_cd])
+    end
+
     # Campus Solutions tends to call terms '2016 Fall' instead of the more idiomatic 'Fall 2016'.
     def normalized_english(term_name)
       if term_name.present? && (m = term_name.strip.match /\A(\d{4})\s(\w+)\Z/)
