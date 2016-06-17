@@ -21,6 +21,11 @@ describe Rosters::Common do
           :first_name => 'Jack',
           :last_name => 'Nicholson',
           :email => 'jnicholson@example.com',
+          :majors => [
+            'Computer Science BA',
+            'Cognitive Science BA'
+          ],
+          :terms_in_attendance => '3',
           :sections => [
             {:ccn => section_id_one, :name => 'COMPSCI 9G SLF 001'}
           ],
@@ -37,6 +42,8 @@ describe Rosters::Common do
           :first_name => 'Seth',
           :last_name => 'Rogen',
           :email => 'srogen@example.com',
+          :majors => ['Chemistry PhD'],
+          :terms_in_attendance => 'G',
           :sections => [
             {:ccn => section_id_one, :name => 'COMPSCI 9G SLF 001'},
             {:ccn => section_id_two, :name => 'COMPSCI 9G SLF 002'}
@@ -54,6 +61,8 @@ describe Rosters::Common do
           :first_name => 'Michael',
           :last_name => 'Fox',
           :email => 'mfox@example.com',
+          :majors => ['Flux Capacitance BA'],
+          :terms_in_attendance => '6',
           :sections => [
             {:ccn => section_id_three, :name => 'COMPSCI 9G SLF 003'}
           ],
@@ -82,6 +91,8 @@ describe Rosters::Common do
         expect(rosters_csv[0]['User ID']).to eq '789124'
         expect(rosters_csv[0]['Student ID']).to eq '289017'
         expect(rosters_csv[0]['Email Address']).to eq 'jnicholson@example.com'
+        expect(rosters_csv[0]['Majors']).to eq 'Cognitive Science BA, Computer Science BA'
+        expect(rosters_csv[0]['Terms in Attendance']).to eq '3'
         expect(rosters_csv[0]['Role']).to eq 'Student'
         expect(rosters_csv[0]['Sections']).to eq 'COMPSCI 9G SLF 001'
 
@@ -90,6 +101,8 @@ describe Rosters::Common do
         expect(rosters_csv[1]['User ID']).to eq '789125'
         expect(rosters_csv[1]['Student ID']).to eq '289018'
         expect(rosters_csv[1]['Email Address']).to eq 'srogen@example.com'
+        expect(rosters_csv[1]['Majors']).to eq 'Chemistry PhD'
+        expect(rosters_csv[1]['Terms in Attendance']).to eq 'G'
         expect(rosters_csv[1]['Role']).to eq 'Waitlist Student'
         expect(rosters_csv[1]['Sections']).to eq 'COMPSCI 9G SLF 001, COMPSCI 9G SLF 002'
 
@@ -98,6 +111,8 @@ describe Rosters::Common do
         expect(rosters_csv[2]['User ID']).to eq '789164'
         expect(rosters_csv[2]['Student ID']).to eq '289019'
         expect(rosters_csv[2]['Email Address']).to eq 'mfox@example.com'
+        expect(rosters_csv[2]['Majors']).to eq 'Flux Capacitance BA'
+        expect(rosters_csv[2]['Terms in Attendance']).to eq '6'
         expect(rosters_csv[2]['Role']).to eq 'Concurrent Student'
         expect(rosters_csv[2]['Sections']).to eq 'COMPSCI 9G SLF 003'
       end

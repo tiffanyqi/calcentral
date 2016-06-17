@@ -34,7 +34,7 @@
         "Education PhD",
         "Education MA"
       ],
-      "terms_in_attendance": "2",
+      "terms_in_attendance": "G",
       "photo": "/campus/econ-100b-2016-D/photo/11111111",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=11111111",
       "section_ccns": [
@@ -127,7 +127,7 @@
       "majors": [
         "Business Administration MBA"
       ],
-      "terms_in_attendance": "4",
+      "terms_in_attendance": "G",
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=444444",
       "section_ccns": [
@@ -154,7 +154,7 @@
       "majors": [
         "Non-UC Campus Visitor GR"
       ],
-      "terms_in_attendance": null,
+      "terms_in_attendance": "G",
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=555555",
       "section_ccns": [
@@ -183,7 +183,7 @@
         "Rhetoric PhD",
         "Rhetoric MA"
       ],
-      "terms_in_attendance": "2",
+      "terms_in_attendance": "G",
       "photo": "/campus/econ-100b-2016-D/photo/666666",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=666666",
       "section_ccns": [
@@ -217,7 +217,7 @@
         "Psychology PhD",
         "Psychology MA"
       ],
-      "terms_in_attendance": "5",
+      "terms_in_attendance": "G",
       "photo": "/images/sample_student_72x96.jpg",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=777777",
       "section_ccns": [
@@ -250,7 +250,7 @@
         "Psychology PhD",
         "Psychology MA"
       ],
-      "terms_in_attendance": "4",
+      "terms_in_attendance": "G",
       "photo": "/campus/econ-100b-2016-D/photo/888888",
       "profile_url": "http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term=888888",
       "section_ccns": [
@@ -279,8 +279,7 @@
       "last_name": "Servoinda",
       "login_id": "999999",
       "majors": [
-        "Education PhD",
-        "Education MA"
+        "Education BA"
       ],
       "terms_in_attendance": "2",
       "photo": "/campus/econ-100b-2016-D/photo/999999",
