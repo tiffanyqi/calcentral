@@ -56,10 +56,11 @@
             <th data-ng-show="showPosition" data-cc-sortable-column-directive="waitlist_position" data-column-heading="Pos"></th>
             <th data-cc-sortable-column-directive="last_name" data-column-heading="Name"></th>
             <th data-cc-sortable-column-directive="email" data-column-heading="Email"></th>
-            <th data-cc-sortable-column-directive="majors" data-column-heading="Majors"></th>
-            <th data-cc-sortable-column-directive="units" data-column-heading="Units"></th>
-            <th data-cc-sortable-column-directive="grade_option" data-column-heading="Grade"></th>
-            <th data-cc-sortable-column-directive="student_id" data-column-heading="SID"></th>
+            <th data-cc-sortable-column-directive="majors" data-column-heading="Majors" class="show-for-medium-up"></th>
+            <th data-cc-sortable-column-directive="terms_in_attendance" data-column-heading="Terms" class="show-for-large-up"></th>
+            <th data-cc-sortable-column-directive="units" data-column-heading="Units" class="show-for-large-up"></th>
+            <th data-cc-sortable-column-directive="grade_option" data-column-heading="Grade" class="show-for-large-up"></th>
+            <th data-cc-sortable-column-directive="student_id" data-column-heading="SID" class="show-for-large-up"></th>
           </thead>
           <tbody data-ng-repeat="student in filteredStudents = (students | filter:studentInSectionFilter | orderBy:tableSort.column:tableSort.reverse)"
                  data-ng-class-even="'cc-academics-even'"
@@ -75,15 +76,15 @@
               <td>
                 <a data-ng-if="student.email" data-ng-bind="student.email" data-ng-href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to={{student.email}}"></a>
               </td>
-              <td>
+              <td class="show-for-medium-up">
                 <span data-ng-repeat="major in student.majors">
                   <span data-ng-bind="major"></span><br>
                 </span>
               </td>
-              <td data-ng-bind="student.terms_in_attendance"></td>
-              <td data-ng-bind="student.units"></td>
-              <td data-ng-bind="student.grade_option"></td>
-              <td data-ng-bind="student.student_id"></td>
+              <td data-ng-bind="student.terms_in_attendance" class="show-for-large-up"></td>
+              <td data-ng-bind="student.units" class="show-for-large-up"></td>
+              <td data-ng-bind="student.grade_option" class="show-for-large-up"></td>
+              <td data-ng-bind="student.student_id" class="show-for-large-up"></td>
             </tr>
           </tbody>
         </table>
