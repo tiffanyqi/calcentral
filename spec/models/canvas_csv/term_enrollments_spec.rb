@@ -335,7 +335,6 @@ describe CanvasCsv::TermEnrollments do
     it 'returns empty array when no enrollments available for specified section' do
       subject.export_enrollments_to_csv_set
       result = subject.cached_canvas_section_enrollments('SEC:2014-C-25999')
-      puts "result: #{result.inspect}"
       expect(result).to be_an_instance_of Array
       expect(result.count).to eq 0
     end

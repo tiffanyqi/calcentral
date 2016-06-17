@@ -187,6 +187,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'GRD',
             'major' => 'Cognitive Science BA',
+            'academic_program_code' => 'UCLS',
             'terms_in_attendance_group' => 'R2TA'
           },
           {
@@ -197,6 +198,7 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'GRD',
             'major' => 'Computer Science BA',
+            'academic_program_code' => 'UCLS',
             'terms_in_attendance_group' => 'R2TA'
           },
           {
@@ -207,7 +209,8 @@ describe Rosters::Common do
             'units' => 4,
             'grading_basis' => 'PNP',
             'major' => 'Computer Science BA',
-            'terms_in_attendance_group' => nil
+            'academic_program_code' => 'UCLS',
+            'terms_in_attendance_group' => 'R8TA'
           },
           {
             'ldap_uid' => '555555',
@@ -216,8 +219,29 @@ describe Rosters::Common do
             'waitlist_position' => '25',
             'units' => 4,
             'grading_basis' => 'GRD',
-            'major' => 'Nose Picking BA',
-            'terms_in_attendance_group' => 'R8TA'
+            'major' => 'Chemistry PhD',
+            'academic_program_code' => 'GACAD',
+            'terms_in_attendance_group' => nil
+          },
+          {
+            'ldap_uid' => '666666',
+            'student_id' => '22200333',
+            'enroll_status' => 'E',
+            'units' => 4,
+            'grading_basis' => 'GRD',
+            'major' => 'UCBX Concurrent Enrollment',
+            'academic_program_code' => 'XCCRT',
+            'terms_in_attendance_group' => nil
+          },
+          {
+            'ldap_uid' => '777777',
+            'student_id' => '22200222',
+            'enroll_status' => 'E',
+            'units' => 4,
+            'grading_basis' => 'GRD',
+            'major' => 'Pizza Science BA',
+            'academic_program_code' => 'ABCDEF',
+            'terms_in_attendance_group' => nil
           }
         ]
       }
@@ -226,13 +250,15 @@ describe Rosters::Common do
           {:ldap_uid => '333333', :email_address => 'pambeesly@berkeley.edu'},
           {:ldap_uid => '444444', :email_address => 'kellykapoor@berkeley.edu'},
           {:ldap_uid => '555555', :email_address => 'kevinmalone@berkeley.edu'},
+          {:ldap_uid => '666666', :email_address => 'tobyflenderson@berkeley.edu'},
+          {:ldap_uid => '777777', :email_address => 'shudson@berkeley.edu'},
         ]
       }
       let(:enrollments) { subject.get_enrollments(course_id, '2016', 'D') }
       before do
         allow(Berkeley::Terms).to receive(:legacy?).and_return(false)
         allow(EdoOracle::Queries).to receive(:get_rosters).and_return(cs_enrollments)
-        expect(User::BasicAttributes).to receive(:attributes_for_uids).with(["333333", "444444", "555555"]).and_return(user_attributes)
+        expect(User::BasicAttributes).to receive(:attributes_for_uids).with(['333333', '444444', '555555', '666666', '777777']).and_return(user_attributes)
       end
       it 'returns student basic attributes and enrollment status' do
         expect(enrollments[0][:email]).to eq 'pambeesly@berkeley.edu'
@@ -261,13 +287,17 @@ describe Rosters::Common do
       it 'merges majors into single enrollment for student' do
         expect(enrollments[0][:majors]).to eq ['Cognitive Science BA', 'Computer Science BA']
         expect(enrollments[1][:majors]).to eq ['Computer Science BA']
-        expect(enrollments[2][:majors]).to eq ['Nose Picking BA']
+        expect(enrollments[2][:majors]).to eq ['Chemistry PhD']
+        expect(enrollments[3][:majors]).to eq ['UCBX Concurrent Enrollment']
+        expect(enrollments[4][:majors]).to eq ['Pizza Science BA']
       end
 
-      it 'converts and includes undergrad terms in attendance count' do
+      it 'converts and includes terms in attendance code' do
         expect(enrollments[0][:terms_in_attendance]).to eq '2'
-        expect(enrollments[1][:terms_in_attendance]).to eq nil
-        expect(enrollments[2][:terms_in_attendance]).to eq '8'
+        expect(enrollments[1][:terms_in_attendance]).to eq '8'
+        expect(enrollments[2][:terms_in_attendance]).to eq 'G'
+        expect(enrollments[3][:terms_in_attendance]).to eq "\u2014"
+        expect(enrollments[4][:terms_in_attendance]).to eq nil
       end
     end
   end
