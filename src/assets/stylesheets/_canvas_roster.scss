@@ -3,6 +3,11 @@
   .cc-page-roster .cc-roster-search .cc-right {
     margin-top: 8px;
   }
+  .cc-page-roster-list {
+    li {
+      height: auto;
+    }
+  }
 }
 
 .cc-roster-input {
@@ -41,6 +46,7 @@
     li {
       display: block;
       float: left;
+      height: 240px;
       padding: 5px;
       text-align: center;
       width: 173px;
