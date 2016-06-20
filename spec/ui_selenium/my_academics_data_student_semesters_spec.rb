@@ -1,4 +1,4 @@
-describe 'My Academics enrollments', :testui => true do
+describe 'My Academics student semesters UI', :testui => true do
 
   if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
 
@@ -11,7 +11,8 @@ describe 'My Academics enrollments', :testui => true do
       test_users = UserUtils.load_test_users
       testable_users = []
       test_output_heading = ['UID', 'Semester', 'CCN', 'Course Code', 'Course Title', 'Section', 'Primary?',
-                             'Grade Option', 'Grade', 'Units', 'Schedule', 'Wait List Position', 'Associated Sections?']
+                             'Grade Option', 'Grade', 'Units', 'Recurring Schedule', 'One-time Schedules',
+                             'Wait List Position', 'Associated Sections?']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       test_users.each do |user|
@@ -71,12 +72,11 @@ describe 'My Academics enrollments', :testui => true do
                   begin
                     semester_name = academics_api_page.semester_name(semester)
                     semester_courses = academics_api_page.semester_courses(semester)
-                    semester_card_courses = academics_api_page.semester_card_courses(semester, semester_courses)
+                    wait_list_courses = academics_api_page.wait_list_courses(semester_courses)
+                    enrolled_courses = (semester_courses - wait_list_courses)
+                    semester_card_courses = academics_api_page.semester_card_courses(semester, enrolled_courses)
 
-                    api_course_codes = academics_api_page.semester_card_course_codes(all_semesters, semester)
                     api_course_titles = academics_api_page.course_titles(semester_card_courses)
-                    api_units = academics_api_page.semester_card_units(semester_courses)
-                    api_grades = academics_api_page.semester_card_grades(all_semesters, semester_courses, semester)
 
                     academics_page_course_codes = my_academics.prim_sec_course_codes(driver, semester_name)
                     academics_page_course_titles = my_academics.course_titles(driver, semester_name)
@@ -84,7 +84,7 @@ describe 'My Academics enrollments', :testui => true do
                     academics_page_course_grades = my_academics.grades(driver, semester_name)
 
                     it "shows the course codes for #{semester_name} for UID #{uid}" do
-                      expect(academics_page_course_codes).to eql(api_course_codes)
+                      expect(academics_page_course_codes).to eql(academics_api_page.semester_card_course_codes(all_semesters, semester, enrolled_courses))
                       expect(academics_page_course_codes.all? &:blank?).to be false
                     end
                     it "shows the course titles for #{semester_name} for UID #{uid}" do
@@ -92,11 +92,11 @@ describe 'My Academics enrollments', :testui => true do
                       expect(academics_page_course_titles.all? &:blank?).to be false
                     end
                     it "shows the course units for #{semester_name} for UID #{uid}" do
-                      expect(academics_page_course_units).to eql(api_units)
+                      expect(academics_page_course_units).to eql(academics_api_page.semester_card_units(enrolled_courses))
                       expect(academics_page_course_units.all? &:blank?).to be false
                     end
                     it "shows the grades for #{semester_name} for UID #{uid}" do
-                      expect(academics_page_course_grades).to eql(api_grades)
+                      expect(academics_page_course_grades).to eql(academics_api_page.semester_card_grades(all_semesters, semester_courses, semester))
                     end
 
                     # SEMESTER PAGES
@@ -104,17 +104,9 @@ describe 'My Academics enrollments', :testui => true do
                     if academics_api_page.has_enrollment_data?(semester)
                       my_academics.click_student_semester_link semester_name
                       semester_page = CalCentralPages::MyAcademicsPage::MyAcademicsClassesCard.new(driver)
-                      wait_list_courses = academics_api_page.wait_list_courses(semester_courses)
-                      enrolled_courses = (semester_courses - wait_list_courses)
                       semester_page_enrolled_courses = academics_api_page.courses_by_primary_section(enrolled_courses)
 
                       # ENROLLED COURSES
-
-                      api_enrolled_course_codes = academics_api_page.course_codes(semester_page_enrolled_courses)
-                      api_enrolled_course_titles = academics_api_page.course_titles(semester_page_enrolled_courses)
-                      api_enrolled_grade_options = academics_api_page.grade_options(enrolled_courses)
-                      api_enrolled_units = academics_api_page.units_by_enrollment(enrolled_courses)
-                      api_enrolled_section_labels = academics_api_page.courses_section_labels(enrolled_courses)
 
                       semester_page_codes = semester_page.all_enrolled_course_codes
                       semester_page_titles = semester_page.all_enrolled_course_titles
@@ -123,19 +115,19 @@ describe 'My Academics enrollments', :testui => true do
                       semester_page_sections = semester_page.all_enrolled_sections
 
                       it "shows the enrolled course codes on the #{semester_name} semester page for UID #{uid}" do
-                        expect(semester_page_codes).to eql(api_enrolled_course_codes)
+                        expect(semester_page_codes).to eql(academics_api_page.course_codes semester_page_enrolled_courses)
                       end
                       it "shows the enrolled course titles on the #{semester_name} semester page for UID #{uid}" do
-                        expect(semester_page_titles).to eql(api_enrolled_course_titles)
+                        expect(semester_page_titles).to eql(academics_api_page.course_titles semester_page_enrolled_courses)
                       end
                       it "shows the enrolled course grade options on the #{semester_name} semester page for UID #{uid}" do
-                        expect(semester_page_grade_options).to eql(api_enrolled_grade_options)
+                        expect(semester_page_grade_options).to eql(academics_api_page.grade_options enrolled_courses)
                       end
                       it "shows the enrolled course units on the #{semester_name} semester page for UID #{uid}" do
-                        expect(semester_page_units).to eql(api_enrolled_units)
+                        expect(semester_page_units).to eql(academics_api_page.units_by_enrollment enrolled_courses)
                       end
                       it "shows the enrolled section labels on the #{semester_name} semester page for UID #{uid}" do
-                        expect(semester_page_sections.sort!).to eql(api_enrolled_section_labels.sort!)
+                        expect(semester_page_sections.sort!).to eql(academics_api_page.courses_section_labels(enrolled_courses).sort!)
                       end
 
                       if enrolled_courses.empty?
@@ -148,12 +140,7 @@ describe 'My Academics enrollments', :testui => true do
                       # WAIT LIST COURSES
 
                       if wait_list_courses.any?
-                        api_wait_list_course_codes = academics_api_page.wait_list_course_codes(wait_list_courses)
-                        api_wait_list_course_titles = academics_api_page.wait_list_course_titles(wait_list_courses)
-                        api_wait_list_section_labels = academics_api_page.courses_section_labels(wait_list_courses)
                         api_wait_list_primary_sections = academics_api_page.wait_list_primary_sections(wait_list_courses)
-                        api_wait_list_positions = academics_api_page.wait_list_positions api_wait_list_primary_sections
-                        api_wait_list_sizes = academics_api_page.enrollment_limits(wait_list_courses)
 
                         sem_page_wait_list_codes = semester_page.all_waitlist_course_codes
                         sem_page_wait_list_titles = semester_page.all_waitlist_course_titles
@@ -162,23 +149,23 @@ describe 'My Academics enrollments', :testui => true do
                         sem_page_wait_list_sizes = semester_page.all_waitlist_class_sizes
 
                         it "shows the wait list course codes on the #{semester_name} semester page for UID #{uid}" do
-                          expect(sem_page_wait_list_codes).to eql(api_wait_list_course_codes)
+                          expect(sem_page_wait_list_codes).to eql(academics_api_page.wait_list_course_codes wait_list_courses)
                           expect(sem_page_wait_list_codes.all? &:blank?).to be false
                         end
                         it "shows the wait list course titles on the #{semester_name} semester page for UID #{uid}" do
-                          expect(sem_page_wait_list_titles).to eql(api_wait_list_course_titles)
+                          expect(sem_page_wait_list_titles).to eql(academics_api_page.wait_list_course_titles wait_list_courses)
                           expect(sem_page_wait_list_titles.all? &:blank?).to be false
                         end
                         it "shows the wait list sections on the #{semester_name} semester page for UID #{uid}" do
-                          expect(sem_page_wait_list_sections).to eql(api_wait_list_section_labels)
+                          expect(sem_page_wait_list_sections).to eql(academics_api_page.courses_section_labels wait_list_courses)
                           expect(sem_page_wait_list_sections.all? &:blank?).to be false
                         end
                         it "shows the wait list positions on the #{semester_name} semester page for UID #{uid}" do
-                          expect(sem_page_wait_list_positions).to eql(api_wait_list_positions)
+                          expect(sem_page_wait_list_positions).to eql(academics_api_page.wait_list_positions api_wait_list_primary_sections)
                           expect(sem_page_wait_list_positions.all? &:blank?).to be false
                         end
                         it "shows the wait list sizes on the #{semester_name} semester page for UID #{uid}" do
-                          expect(sem_page_wait_list_sizes).to eql(api_wait_list_sizes)
+                          expect(sem_page_wait_list_sizes).to eql(academics_api_page.enrollment_limits wait_list_courses)
                           expect(sem_page_wait_list_sizes.all? &:blank?).to be false
                         end
                       end
@@ -200,9 +187,9 @@ describe 'My Academics enrollments', :testui => true do
                               api_sections = academics_api_page.associated_sections(course, prim_section)
                               api_section_labels = academics_api_page.sections_labels(api_sections)
                               api_section_ccns = academics_api_page.sections_ccns(api_sections)
-                              api_section_instructors = academics_api_page.sections_instructor_names(api_sections)
                               api_section_units = academics_api_page.sections_units(api_sections)
-                              api_section_schedules = academics_api_page.sections_schedules(api_sections)
+                              api_recurring_section_scheds = academics_api_page.concatenated_schedules(academics_api_page.course_schedules_recurring api_sections)
+                              api_one_time_section_scheds = academics_api_page.concatenated_schedules(academics_api_page.course_schedules_one_time api_sections)
                               api_grade_options = academics_api_page.sections_grade_options(api_sections)
 
                               class_page_url = academics_api_page.section_url(prim_section)
@@ -213,11 +200,12 @@ describe 'My Academics enrollments', :testui => true do
                               class_page_breadcrumb = class_page.class_breadcrumb
                               class_page_course_title = class_page.course_title
                               class_page_course_role = class_page.role
-                              class_page_section_labels = class_page.all_section_schedule_labels
+                              class_page_section_labels = class_page.all_student_section_labels
                               class_page_section_ccns = class_page.all_student_section_ccns
                               class_page_section_units = class_page.all_section_units
                               class_page_grade_options = class_page.all_section_grade_options
-                              class_page_section_schedules = class_page.all_student_section_schedules
+                              class_page_recurring_scheds = class_page.all_recurring_schedules
+                              class_page_one_time_scheds = class_page.all_one_time_schedules
                               class_page_course_instructors = class_page.all_section_instructors(driver, api_section_labels)
 
                               it "shows #{api_course_code} in the class page breadcrumb for #{semester_name} for UID #{uid}" do
@@ -230,23 +218,12 @@ describe 'My Academics enrollments', :testui => true do
                               it "shows the student role on the #{semester_name} #{api_course_code} multi-primary class page for UID #{uid}" do
                                 expect(class_page_course_role).to eql('Student')
                               end
-                              if api_section_labels.length == api_section_schedules.length
-                                it "shows the enrolled section labels on the #{semester_name} #{api_course_code} multi-primary class page for UID #{uid}" do
-                                  expect(class_page_section_labels).to eql(api_section_labels)
-                                  expect(class_page_section_labels.all? &:blank?).to be false
-                                end
-                              elsif api_section_labels.length < api_section_schedules.length
-                                it "shows no duplicate enrolled section labels on #{semester_name} #{api_course_code} multi-primary class page for UID #{uid}" do
-                                  expect(class_page_section_labels.length).to be < class_page_section_schedules.length
-                                  expect(class_page_section_labels).to eql(class_page_section_labels.uniq)
-                                end
-                              else
-                                it "shows no enrolled section labels without schedules on the #{semester_name} #{api_course_code} multi-primary class page for UID #{uid}" do
-                                  expect(class_page_section_labels.length).to eql(class_page_section_schedules.length)
-                                end
+                              it "shows the section labels on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
+                                expect(class_page_section_labels).to eql(api_section_labels)
+                                expect(class_page_section_labels.all? &:blank?).to be false
                               end
                               it "shows the section instructors on the #{semester_name} #{api_course_code} multi-primary class page for UID #{uid}" do
-                                expect(class_page_course_instructors).to eql(api_section_instructors)
+                                expect(class_page_course_instructors).to eql(academics_api_page.sections_instructor_names api_sections)
                               end
                               it "shows the enrolled section CCNs on the #{semester_name} #{api_course_code} multi-primary class page for UID #{uid}" do
                                 expect(class_page_section_ccns).to eql(api_section_ccns)
@@ -261,15 +238,20 @@ describe 'My Academics enrollments', :testui => true do
                                 expect(class_page_grade_options).to eql(api_grade_options)
                                 expect(class_page_grade_options.all? &:blank?).to be false
                               end
-                              it "shows the section schedules on the #{semester_name} #{api_course_code} multi-primary class page for UID #{uid}" do
-                                expect(class_page_section_schedules).to eql(api_section_schedules)
+                              it "shows the recurring section schedules on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
+                                expect(class_page_recurring_scheds).to eql(api_recurring_section_scheds)
+                              end
+                              it "shows the one-time section schedules on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
+                                expect(class_page_one_time_scheds).to eql(api_one_time_section_scheds)
                               end
 
                               api_sections.each do |api_section|
                                 i = api_sections.index(api_section)
                                 test_output_row = [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
-                                                   academics_api_page.primary_section?(api_section), api_grade_options[i], api_section_units[i],
-                                                   nil, api_section_schedules[i], academics_api_page.wait_list_position(api_section)]
+                                                   academics_api_page.primary_section?(api_section), api_grade_options[i], nil, api_section_units[i],
+                                                   academics_api_page.concatenated_schedules(academics_api_page.section_schedules_recurring api_section) * ' ',
+                                                   academics_api_page.concatenated_schedules(academics_api_page.section_schedules_one_time api_section) * ' ',
+                                                   academics_api_page.wait_list_position(api_section)]
                                 UserUtils.add_csv_row(test_output, test_output_row)
                               end
 
@@ -281,9 +263,9 @@ describe 'My Academics enrollments', :testui => true do
                             api_sections = academics_api_page.course_sections(course)
                             api_section_labels = academics_api_page.sections_labels(api_sections)
                             api_section_ccns = academics_api_page.sections_ccns(api_sections)
-                            api_section_instructors = academics_api_page.sections_instructor_names(api_sections)
                             api_section_units = academics_api_page.sections_units(api_sections)
-                            api_section_schedules = academics_api_page.sections_schedules(api_sections)
+                            api_recurring_section_scheds = academics_api_page.concatenated_schedules(academics_api_page.course_schedules_recurring api_sections)
+                            api_one_time_section_scheds = academics_api_page.concatenated_schedules(academics_api_page.course_schedules_one_time api_sections)
                             api_grade_options = academics_api_page.sections_grade_options(api_sections)
 
                             class_page_url = academics_api_page.course_url(course)
@@ -294,11 +276,12 @@ describe 'My Academics enrollments', :testui => true do
                             class_page_breadcrumb = class_page.class_breadcrumb
                             class_page_course_title = class_page.course_title
                             class_page_course_role = class_page.role
-                            class_page_section_labels = class_page.all_section_schedule_labels
+                            class_page_section_labels = class_page.all_student_section_labels
                             class_page_section_ccns = class_page.all_student_section_ccns
                             class_page_section_units = class_page.all_section_units
                             class_page_grade_options = class_page.all_section_grade_options
-                            class_page_section_schedules = class_page.all_student_section_schedules
+                            class_page_recurring_scheds = class_page.all_recurring_schedules
+                            class_page_one_time_scheds = class_page.all_one_time_schedules
                             class_page_course_instructors = class_page.all_section_instructors(driver, api_section_labels)
 
                             it "shows #{api_course_code} in the class page breadcrumb for #{semester_name} for UID #{uid}" do
@@ -311,27 +294,15 @@ describe 'My Academics enrollments', :testui => true do
                             it "shows the student role on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
                               expect(class_page_course_role).to eql('Student')
                             end
-                            if api_section_labels.length == api_section_schedules.length
-                              it "shows the enrolled section labels on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
-                                expect(class_page_section_labels).to eql(api_section_labels)
-                                expect(class_page_section_labels.all? &:blank?).to be false
-                              end
-                            elsif api_section_labels.length < api_section_schedules.length
-                              it "shows no duplicate enrolled section labels on #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
-                                expect(class_page_section_labels.length).to be < class_page_section_schedules.length
-                                expect(class_page_section_labels).to eql(class_page_section_labels.uniq)
-                              end
-                            else
-                              it "shows no enrolled section labels without schedules on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
-                                expect(class_page_section_labels.length).to eql(class_page_section_schedules.length)
-                              end
-                            end
                             it "shows the section instructors on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
-                              expect(class_page_course_instructors).to eql(api_section_instructors)
+                              expect(class_page_course_instructors).to eql(academics_api_page.sections_instructor_names api_sections)
+                            end
+                            it "shows the section labels on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
+                              expect(class_page_section_labels).to eql(api_section_labels)
+                              expect(class_page_section_labels.all? &:blank?).to be false
                             end
                             it "shows the enrolled section CCNs on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
                               expect(class_page_section_ccns).to eql(api_section_ccns)
-                              expect(class_page_section_ccns.length).to eql(api_section_ccns.length)
                               expect(class_page_section_ccns.all? &:blank?).to be false
                             end
                             it "shows the section units on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
@@ -342,15 +313,20 @@ describe 'My Academics enrollments', :testui => true do
                               expect(class_page_grade_options).to eql(api_grade_options)
                               expect(class_page_grade_options.all? &:blank?).to be false
                             end
-                            it "shows the section schedules on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
-                              expect(class_page_section_schedules).to eql(api_section_schedules)
+                            it "shows the recurring section schedules on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
+                              expect(class_page_recurring_scheds).to eql(api_recurring_section_scheds)
+                            end
+                            it "shows the one-time section schedules on the #{semester_name} #{api_course_code} single primary class page for UID #{uid}" do
+                              expect(class_page_one_time_scheds).to eql(api_one_time_section_scheds)
                             end
 
                             api_sections.each do |api_section|
                               i = api_sections.index(api_section)
                               test_output_row = [uid, semester_name, api_section_ccns[i], api_course_code, api_course_title, api_section_labels[i],
                                                  academics_api_page.primary_section?(api_section), api_grade_options[i], nil, api_section_units[i],
-                                                 api_section_schedules[i], academics_api_page.wait_list_position(api_section), nil]
+                                                 academics_api_page.concatenated_schedules(academics_api_page.section_schedules_recurring api_section) * ' ',
+                                                 academics_api_page.concatenated_schedules(academics_api_page.section_schedules_one_time api_section) * ' ',
+                                                 academics_api_page.wait_list_position(api_section), nil]
                               UserUtils.add_csv_row(test_output, test_output_row)
                             end
 
@@ -366,8 +342,8 @@ describe 'My Academics enrollments', :testui => true do
                       logger.info "Found non-official enrollments for #{semester_name}"
                       semester_card_courses.each do |course|
                         i = semester_card_courses.index(course)
-                        test_output_row = [uid, semester_name, nil, api_course_codes[i], api_course_titles[i], nil,
-                                           nil, nil, api_grades[i], api_units[i], nil, nil, nil]
+                        test_output_row = [uid, semester_name, nil, academics_api_page.semester_card_course_codes(all_semesters, semester, enrolled_courses)[i],
+                                           api_course_titles[i], nil, nil, nil, nil, academics_api_page.semester_card_units(semester_courses)[i], nil, nil, nil]
                         UserUtils.add_csv_row(test_output, test_output_row)
                       end
                     end

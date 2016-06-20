@@ -1,4 +1,4 @@
-describe 'My Academics teaching', :testui => true do
+describe 'My Academics teaching semesters UI', :testui => true do
 
   if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
 
@@ -143,7 +143,7 @@ describe 'My Academics teaching', :testui => true do
                         api_course_title = academics_api_page.course_title(course)
                         api_sections = academics_api_page.sections_by_listing(course)
                         api_section_schedule_labels = academics_api_page.section_schedule_labels(api_sections)
-                        api_section_schedules = academics_api_page.sections_schedules(api_sections)
+                        api_section_schedules = academics_api_page.concatenated_schedules(api_sections)
                         api_section_instructor_labels = academics_api_page.sections_labels(api_sections)
                         api_section_instructors = academics_api_page.sections_instructor_names(api_sections)
 
