@@ -63,6 +63,7 @@ describe CampusOracle::Queries do
     expect(students).to be_an_instance_of Array
     if CampusOracle::Queries.test_data?
       # we will only have predictable enrollments in our fake Oracle db.
+      expect(students).to have(1).items
       expect(students[0]['ldap_uid']).to eq '300939'
       expect(students[0]['enroll_status']).to eq 'E'
       expect(students[0]['pnp_flag']).to eq 'N'
@@ -75,6 +76,31 @@ describe CampusOracle::Queries do
     students.each do |student_row|
       expect(student_row['enroll_status']).to_not be_blank
       expect(student_row['student_id']).to_not be_blank
+    end
+  end
+
+  it 'should find some enrollments in multiple sections' do
+    enrollments = CampusOracle::Queries.get_enrolled_students_for_ccns(%w(7309 7366 16171), '2013', 'D')
+    if CampusOracle::Queries.test_data?
+      # we will only have predictable enrollments in our fake Oracle db.
+      expect(enrollments).to have(3).items
+      expect(enrollments[0]['ldap_uid']).to eq '300939'
+      expect(enrollments[0]['course_cntl_num']).to eq '07309'
+      expect(enrollments[0]['enroll_status']).to eq 'E'
+      expect(enrollments[0]['pnp_flag']).to eq 'N'
+      expect(enrollments[0]['first_name']).to eq 'STUDENT'
+      expect(enrollments[0]['last_name']).to eq 'TEST-300939'
+      expect(enrollments[0]['student_email_address']).to eq 'test-300939@berkeley.edu'
+      expect(enrollments[0]['student_id']).to eq '22300939'
+      expect(enrollments[0]['affiliations']).to eq 'STUDENT-TYPE-REGISTERED'
+      expect(enrollments[1]['ldap_uid']).to eq '300939'
+      expect(enrollments[1]['course_cntl_num']).to eq '07366'
+      expect(enrollments[2]['ldap_uid']).to eq '300939'
+      expect(enrollments[2]['course_cntl_num']).to eq '16171'
+    end
+    enrollments.each do |enrollment_row|
+      expect(enrollment_row['enroll_status']).to be_present
+      expect(enrollment_row['student_id']).to be_present
     end
   end
 
