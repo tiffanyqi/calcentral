@@ -175,7 +175,10 @@
     </div>
   </div>
 
-  <div data-ng-switch-when="Enrollment" role="tabpanel" aria-live="polite" class="cc-clearfix" data-ng-controller="ClassInfoEnrollmentController" data-cc-spinner-directive>
+  <div data-ng-switch-when="Enrollment" role="tabpanel" aria-live="polite" class="cc-clearfix"
+      data-ng-controller="ClassInfoEnrollmentController"
+      data-cc-spinner-directive
+      data-cc-spinner-directive-message="Downloading sections. This may take a minute for larger classes.">
     <div class="column cc-academics-row-margin"
          data-cc-academics-class-info-enrollment-directive
          data-seats-limit="selectedCourse.waitlistLimit"

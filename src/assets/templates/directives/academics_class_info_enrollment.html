@@ -74,7 +74,7 @@
                 <span data-ng-bind="student.first_name"></span>
               </td>
               <td>
-                <a data-ng-if="student.email" data-ng-bind="student.email" data-ng-href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to={{student.email}}"></a>
+                <a data-ng-if="student.email" data-ng-bind="student.email" data-ng-href="{{bmailLink(student.email)}}"></a>
               </td>
               <td class="show-for-medium-up">
                 <span data-ng-repeat="major in student.majors">

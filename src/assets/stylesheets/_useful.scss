@@ -131,6 +131,11 @@ $cc-spinner-uneven: 17px;
   }
 }
 
+.cc-spinner-message {
+  margin: 15px 0;
+  text-align: center;
+}
+
 // Popover
 .cc-popover {
   background: $cc-color-popover-background;
