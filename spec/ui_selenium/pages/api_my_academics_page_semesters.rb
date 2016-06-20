@@ -107,9 +107,8 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
   end
 
   # Semester cards show course codes differently depending on enrollment data, primary sections, and transcript data
-  def semester_card_course_codes(semesters, semester)
+  def semester_card_course_codes(semesters, semester, courses)
     codes = []
-    courses = semester_courses(semester)
     courses.each do |course|
       if has_enrollment_data?(semester)
         if past_semesters(semesters).include?(semester)
@@ -303,46 +302,56 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
     section['schedules']
   end
 
-  def section_buildings(section)
-    buildings = []
-    section_schedules(section).each { |schedule| buildings << schedule['buildingName'] }
-    buildings
+  def section_schedules_recurring(section)
+    section_schedules(section)['recurring']
   end
 
-  def section_rooms(section)
-    rooms = []
-    section_schedules(section).each { |schedule| rooms << schedule['roomNumber'] }
-    rooms
+  def section_schedules_one_time(section)
+    section_schedules(section)['oneTime']
   end
 
-  def section_times(section)
-    times = []
-    section_schedules(section).each { |schedule| times << schedule['schedule'] }
-    times
+  def section_building(schedule)
+    schedule['buildingName']
   end
 
-  def sections_schedules(sections)
-    schedules = []
-    sections.each do |section|
-      section_schedules(section).each do |schedule|
-        index = section_schedules(section).index(schedule)
-        section_schedule = String.new
-        unless section_times(section)[index].nil? || section_times(section)[index].blank?
-          section_schedule.concat("#{section_times(section)[index]} ")
-        end
-        unless section_times(section)[index].nil? && section_buildings(section)[index].nil?
-          section_schedule.concat('| ')
-        end
-        unless section_rooms(section)[index].nil?
-          section_schedule.concat("#{section_rooms(section)[index].strip} ")
-        end
-        unless section_buildings(section)[index].nil?
-          section_schedule.concat("#{section_buildings(section)[index].strip}")
-        end
-        schedules << section_schedule.gsub(/\s+/, ' ')
-      end
+  def section_room(schedule)
+    schedule['roomNumber']
+  end
+
+  def section_date_time(schedule)
+    schedule['schedule']
+  end
+
+  def section_date(schedule)
+    schedule['date']
+  end
+
+  def section_time(schedule)
+    schedule['time']
+  end
+
+  def course_schedules_recurring(sections)
+    schedules = sections.map { |section| section_schedules_recurring section }
+    schedules.flatten
+  end
+
+  def course_schedules_one_time(sections)
+    schedules = sections.map { |section| section_schedules_one_time section }
+    schedules.flatten
+  end
+
+  def concatenated_schedules(schedules)
+    course_schedules = schedules.map do |schedule|
+      section_schedule = ''
+      section_schedule += "#{section_date_time schedule} " unless section_date_time(schedule).blank?
+      section_schedule += "#{section_date schedule} | " unless section_date(schedule).blank?
+      section_schedule += "#{section_time schedule} " unless section_time(schedule).blank?
+      section_schedule += '| ' unless (section_time(schedule).nil? && section_building(schedule).nil? && section_date_time(schedule).nil?)
+      section_schedule += "#{section_room(schedule).strip} " unless section_room(schedule).nil?
+      section_schedule += "#{section_building(schedule).strip}" unless section_building(schedule).nil?
+      section_schedule.gsub(/\s+/, ' ')
     end
-    schedules
+    course_schedules.reject { |schedule| schedule.blank? }
   end
 
   def section_instructor_names(section)

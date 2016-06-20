@@ -16,6 +16,11 @@ module CalCentralPages
     elements(:student_section_ccn, :td, :xpath => '//h3[text()="My Enrollment"]/following-sibling::div[@data-ng-if="selectedCourse.sections.length && !isInstructorOrGsi"]//td[@data-ng-bind="sec.ccn"]')
     elements(:section_units, :td, :xpath => '//h3[text()="Class Info"]/following-sibling::div[@data-ng-if="!isInstructorOrGsi"]//td[@data-ng-if="section.units"]')
     elements(:section_grade_option, :td, :xpath => '//h4[text()="Course Offering"]/following-sibling::div[@data-ng-if="!isInstructorOrGsi"]//td[@data-ng-bind="section.gradeOption"]')
+    elements(:recurring_schedule_label, :div, :xpath => '//div[@data-ng-if="section.schedules.recurring.length"][@data-ng-bind="section.section_label"]')
+    elements(:recurring_schedule, :div, :xpath => '//div[@data-ng-repeat="schedule in section.schedules.recurring"]')
+    elements(:one_time_schedule_label, :div, :xpath => '//div[@data-ng-if="section.schedules.oneTime.length"][@data-ng-bind="section.section_label"]')
+    elements(:one_time_schedule, :div, :xpath => '//div[@data-ng-repeat="schedule in section.schedules.oneTime"]')
+
     elements(:section_schedule_label, :div, :xpath => '//div[@data-ng-repeat="section in selectedCourse.sections"]/div[@data-ng-bind="section.section_label"]')
     elements(:student_section_schedule, :div, :xpath => '//h4[text()="Section Schedules"]/following-sibling::div[@data-ng-repeat="section in selectedCourse.sections"]//div[@data-ng-repeat="schedule in section.schedules"]')
     elements(:teaching_section_schedule, :div, :xpath => '//h3[text()="Section Schedules"]/following-sibling::div[@data-ng-repeat="section in selectedCourse.sections"]//div[@data-ng-repeat="schedule in section.schedules"]')
@@ -48,39 +53,35 @@ module CalCentralPages
     h2(:textbooks_heading, :xpath => '//h2[text()="Textbooks"]')
 
     def all_student_section_labels
-      labels = []
-      student_section_label_elements.each { |label| labels.push(label.text) }
-      labels
+      student_section_label_elements.map { |label| label.text }
     end
 
     def all_student_section_ccns
-      ccns = []
-      student_section_ccn_elements.each { |ccn| ccns.push(ccn.text) }
-      ccns
+      student_section_ccn_elements.map { |ccn| ccn.text }
     end
 
     def all_section_units
-      units = []
-      section_units_elements.each { |unit| units.push(unit.text) }
-      units
+      section_units_elements.map { |unit| unit.text }
     end
 
     def all_section_grade_options
-      options = []
-      section_grade_option_elements.each { |option| options.push(option.text) }
-      options
+      section_grade_option_elements.map { |option| option.text }
     end
 
-    def all_section_schedule_labels
-      labels = []
-      section_schedule_label_elements.each { |label| labels.push(label.text) }
-      labels
+    def all_recurring_schedule_labels
+      recurring_schedule_label_elements.map { |label| label.text }
     end
 
-    def all_student_section_schedules
-      schedules = []
-      student_section_schedule_elements.each { |schedule| schedules.push(schedule.text) }
-      schedules
+    def all_recurring_schedules
+      recurring_schedule_elements.map { |schedule| schedule.text }
+    end
+
+    def all_one_time_schedule_labels
+      one_time_schedule_label_elements.map { |label| label.text }
+    end
+
+    def all_one_time_schedules
+      one_time_schedule_elements.map { |schedule| schedule.text }
     end
 
     def all_teaching_section_schedules
