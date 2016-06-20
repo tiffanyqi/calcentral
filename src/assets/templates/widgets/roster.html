@@ -1,6 +1,6 @@
 <div data-ng-controller="RosterController" data-ng-class="{'cc-page-roster': !isLoading}">
 
-  <div data-cc-spinner-directive>
+  <div data-cc-spinner-directive data-cc-spinner-directive-message="Downloading rosters. This may take a minute for larger classes.">
 
     <h1 class="cc-visuallyhidden">Roster Photos for <span data-ng-bind="canvas_course.name"></span></h1>
 
@@ -62,8 +62,24 @@
           <div data-ng-include="'widgets/roster_photo.html'"></div>
         </a>
       </div>
-      <div class="cc-page-roster-student-name" data-ng-bind="student.first_name"></div>
-      <div class="cc-page-roster-student-name"><strong data-ng-bind="student.last_name"></strong></div>
+      <div data-ng-if="!student.email">
+        <div class="cc-page-roster-student-name" data-ng-bind="student.first_name"></div>
+        <div class="cc-page-roster-student-name">
+          <strong data-ng-bind="student.last_name"></strong>
+        </div>
+      </div>
+      <div data-ng-if="student.email">
+        <div class="cc-page-roster-student-name">
+          <a data-ng-href="{{bmailLink(student.email)}}">
+            <span data-ng-bind="student.first_name"></span>
+          </a>
+        </div>
+        <div class="cc-page-roster-student-name">
+          <a data-ng-href="{{bmailLink(student.email)}}">
+            <strong data-ng-bind="student.last_name"></strong>
+          </a>
+        </div>
+      </div>
       <div class="cc-print-hide">
         <span class="cc-visuallyhidden">Student ID: </span>
         <span data-ng-bind="student.student_id"></span>

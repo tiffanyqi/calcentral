@@ -4,10 +4,12 @@
 var _ = require('lodash');
 var angular = require('angular');
 
-angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmentDirective', function() {
+angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmentDirective', function(rosterService) {
   return {
     scope: true,
     link: function(scope, elem, attrs) {
+      scope.bmailLink = rosterService.bmailLink;
+
       scope.toggleAddresses = function(boolValue) {
         scope.showAddresses = boolValue;
       };
