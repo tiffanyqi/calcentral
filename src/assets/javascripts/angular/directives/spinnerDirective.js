@@ -14,12 +14,25 @@ angular.module('calcentral.directives').directive('ccSpinnerDirective', function
       // Make sure we don't interupt the screenreader
       attrs.$set('aria-live', 'polite');
 
+      if (attrs.ccSpinnerDirectiveMessage) {
+        var messageTemplate = '<p class="cc-spinner-message">' + attrs.ccSpinnerDirectiveMessage + '</p>';
+        var messageElement = angular.element(messageTemplate);
+      }
+
       /**
        * Check whether isLoading has changed
        */
       var watch = function(value) {
         attrs.$set('aria-busy', value);
         elment.toggleClass('cc-spinner', value);
+
+        if (attrs.ccSpinnerDirectiveMessage) {
+          if (value) {
+            elment.after(messageElement);
+          } else {
+            messageElement.remove();
+          }
+        }
       };
 
       // This allows us to watch for a different variable than isLoading
