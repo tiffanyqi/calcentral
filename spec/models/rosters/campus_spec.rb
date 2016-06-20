@@ -77,7 +77,7 @@ describe Rosters::Campus do
 
   context 'a course with two sections' do
     before do
-      expect(Berkeley::Terms).to receive(:legacy?).exactly(2).times.and_return is_legacy
+      expect(Berkeley::Terms).to receive(:legacy?).at_least(1).times.and_return is_legacy
       allow(CampusOracle::UserCourses::All).to receive(:new).with(user_id: user_id).and_return(double(get_all_campus_courses: fake_oracle))
       allow(EdoOracle::UserCourses::All).to receive(:new).with(user_id: user_id).and_return(double(get_all_campus_courses: fake_edo))
     end
@@ -87,13 +87,12 @@ describe Rosters::Campus do
       let(:fake_oracle) { fake_campus }
       let(:fake_edo) { {} }
       before do
-        [ccn1, ccn2].each do |ccn|
-          expect(CampusOracle::Queries).to receive(:get_enrolled_students).with(ccn, term_yr, term_cd).and_return(fake_students)
-        end
+        expect(CampusOracle::Queries).to receive(:get_enrolled_students_for_ccns).with([ccn1, ccn2], term_yr, term_cd).and_return(fake_enrollments)
       end
-      let(:fake_students) do
+      let(:fake_enrollments) do
         [
           {
+            'course_cntl_num' => ccn1,
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'E',
             'student_id' => enrolled_student_student_id,
@@ -102,6 +101,25 @@ describe Rosters::Campus do
             'student_email_address' => "#{enrolled_student_login_id}@example.com",
           },
           {
+            'course_cntl_num' => ccn1,
+            'ldap_uid' => waitlisted_student_login_id,
+            'enroll_status' => 'W',
+            'student_id' => waitlisted_student_student_id,
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'student_email_address' => "#{waitlisted_student_login_id}@example.com",
+          },
+          {
+            'course_cntl_num' => ccn2,
+            'ldap_uid' => enrolled_student_login_id,
+            'enroll_status' => 'E',
+            'student_id' => enrolled_student_student_id,
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'student_email_address' => "#{enrolled_student_login_id}@example.com",
+          },
+          {
+            'course_cntl_num' => ccn2,
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
             'student_id' => waitlisted_student_student_id,
@@ -120,15 +138,34 @@ describe Rosters::Campus do
       let(:fake_oracle) { {} }
       let(:fake_edo) { fake_campus }
       before do
-        expect(EdoOracle::Queries).to receive(:get_rosters).with(ccn1, term_id).and_return primary_enrollments
-        expect(EdoOracle::Queries).to receive(:get_rosters).with(ccn2, term_id).and_return secondary_enrollments
+        expect(EdoOracle::Queries).to receive(:get_rosters).with([ccn1, ccn2], term_id).and_return enrollments
+        # A method rather than a let so that modifications during a test don't persist.
+        def attributes
+          [
+            {
+              ldap_uid: enrolled_student_login_id,
+              student_id: enrolled_student_student_id,
+              first_name: 'First Name',
+              last_name: 'Last Name',
+              email_address: "#{enrolled_student_login_id}@example.com"
+            },
+            {
+              ldap_uid: waitlisted_student_login_id,
+              student_id: enrolled_student_student_id,
+              first_name: 'First Name',
+              last_name: 'Last Name',
+              email_address: "#{waitlisted_student_login_id}@example.com"
+            }
+          ]
+        end
         expect(User::BasicAttributes).to receive(:attributes_for_uids)
           .with([enrolled_student_login_id, waitlisted_student_login_id])
-          .exactly(2).times.and_return attributes
+          .exactly(2).times.and_return(attributes, attributes)
       end
-      let(:primary_enrollments) do
+      let(:enrollments) do
         [
           {
+            'section_id' => ccn1,
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'E',
             'student_id' => enrolled_student_student_id,
@@ -140,6 +177,7 @@ describe Rosters::Campus do
             'terms_in_attendance_group' => 'R2TA'
           },
           {
+            'section_id' => ccn1,
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'E',
             'student_id' => enrolled_student_student_id,
@@ -151,6 +189,7 @@ describe Rosters::Campus do
             'terms_in_attendance_group' => 'R2TA'
           },
           {
+            'section_id' => ccn1,
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
             'student_id' => waitlisted_student_student_id,
@@ -160,50 +199,42 @@ describe Rosters::Campus do
             'major' => 'Break Science BA',
             'academic_program_code' => 'UCLS',
             'terms_in_attendance_group' => 'R6TA'
-          }
-        ]
-      end
-      let(:secondary_enrollments) do
-        [
+          },
           {
+            'section_id' => ccn2,
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'E',
             'student_id' => enrolled_student_student_id,
-            'grading_basis' => 'NON',
-            'units' => 0.0,
+            'grading_basis' => 'GRD',
+            'units' => 4.0,
             'waitlist_position' => nil,
-            'major' => 'Pizza Science PhD',
-            'academic_program_code' => 'GACAD',
-            'terms_in_attendance_group' => nil
+            'major' => 'Cognitive Science BA',
+            'academic_program_code' => 'UCLS',
+            'terms_in_attendance_group' => 'R2TA'
           },
           {
+            'section_id' => ccn2,
+            'ldap_uid' => enrolled_student_login_id,
+            'enroll_status' => 'E',
+            'student_id' => enrolled_student_student_id,
+            'grading_basis' => 'GRD',
+            'units' => 4.0,
+            'waitlist_position' => nil,
+            'major' => 'Computer Science BA',
+            'academic_program_code' => 'UCLS',
+            'terms_in_attendance_group' => 'R2TA'
+          },
+          {
+            'section_id' => ccn2,
             'ldap_uid' => waitlisted_student_login_id,
             'enroll_status' => 'W',
             'student_id' => waitlisted_student_student_id,
-            'grading_basis' => 'NON',
-            'units' => 0.0,
-            'waitlist_position' => 2.0,
-            'major' => 'Agricultural Science BA',
+            'grading_basis' => 'ESU',
+            'units' => 3.0,
+            'waitlist_position' => 9.0,
+            'major' => 'Break Science BA',
             'academic_program_code' => 'UCLS',
-            'terms_in_attendance_group' => 'R2TA'
-          }
-        ]
-      end
-      let(:attributes) do
-        [
-          {
-            ldap_uid: enrolled_student_login_id,
-            student_id: enrolled_student_student_id,
-            first_name: 'First Name',
-            last_name: 'Last Name',
-            email_address: "#{enrolled_student_login_id}@example.com"
-          },
-          {
-            ldap_uid: waitlisted_student_login_id,
-            student_id: enrolled_student_student_id,
-            first_name: 'First Name',
-            last_name: 'Last Name',
-            email_address: "#{waitlisted_student_login_id}@example.com"
+            'terms_in_attendance_group' => 'R6TA'
           }
         ]
       end

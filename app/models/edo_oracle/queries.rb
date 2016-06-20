@@ -283,9 +283,10 @@ module EdoOracle
     end
 
     # Extended version of #get_enrolled_students used for rosters
-    def self.get_rosters(section_id, term_id)
+    def self.get_rosters(ccns, term_id)
       safe_query <<-SQL
         SELECT DISTINCT
+          enroll."CLASS_SECTION_ID" AS section_id,
           enroll."CAMPUS_UID" AS ldap_uid,
           enroll."STUDENT_ID" AS student_id,
           enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
@@ -303,7 +304,7 @@ module EdoOracle
           SISEDO.STUDENT_GROUPV00_VW stdgroup ON enroll."STUDENT_ID" = stdgroup."STUDENT_ID" AND
           stdgroup."STDNT_GROUP" IN ('R1TA', 'R2TA', 'R3TA', 'R4TA', 'R5TA', 'R6TA', 'R7TA', 'R8TA')
         WHERE
-          enroll."CLASS_SECTION_ID" = '#{section_id}'
+          enroll."CLASS_SECTION_ID" IN ('#{ccns.join "','"}')
           AND enroll."TERM_ID" = '#{term_id}'
           AND enroll."STDNT_ENRL_STATUS_CODE" != 'D'
       SQL

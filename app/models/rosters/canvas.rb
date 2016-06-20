@@ -18,6 +18,11 @@ module Rosters
       # Look up Canvas course sections associated with official campus sections.
       official_sections = ::Canvas::CourseSections.new(course_id: @canvas_course_id).official_section_identifiers
       return feed unless official_sections
+
+      term_yr, term_cd = official_sections.first.values_at(:term_yr, :term_cd)
+      ccns = official_sections.map { |section| section[:ccn] }
+      section_enrollments = get_enrollments(ccns, term_yr, term_cd)
+
       official_sections.each do |official_section|
         section_ccn = official_section[:ccn]
         sis_id = official_section['sis_section_id']
@@ -26,9 +31,7 @@ module Rosters
           name: official_section['name'],
           sis_id: sis_id
         }
-
-        section_enrollments = get_enrollments(official_section[:ccn], official_section[:term_yr], official_section[:term_cd])
-        section_enrollments.each do |enr|
+        section_enrollments[section_ccn].try(:each) do |enr|
           if (existing_entry = campus_enrollment_map[enr[:ldap_uid]])
             existing_entry[:sections] << {id: section_ccn}
             existing_entry[:section_ccns] << section_ccn

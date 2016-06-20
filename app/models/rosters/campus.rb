@@ -22,6 +22,8 @@ module Rosters
       end
 
       return feed if selected_course.nil?
+      term_yr, term_cd = selected_term.split '-'
+
       feed[:campus_course].merge!(name: selected_course[:name])
 
       crosslisted_courses = []
@@ -35,14 +37,16 @@ module Rosters
       end
 
       campus_enrollment_map = {}
+      ccns = crosslisted_courses.map { |course| course[:sections].map { |section| section[:ccn] } }.flatten
+      enrollments = get_enrollments(ccns, term_yr, term_cd)
+
       crosslisted_courses.each do |course|
         course[:sections].each do |section|
           feed[:sections] << {
             ccn: section[:ccn],
             name: "#{course[:dept]} #{course[:catid]} #{section[:section_label]}"
           }
-          section_enrollments = get_enrollments(section[:ccn], course[:term_yr], course[:term_cd])
-          section_enrollments.each do |enr|
+          enrollments[section[:ccn]].try(:each) do |enr|
             if (existing_entry = campus_enrollment_map[enr[:ldap_uid]])
               # We include waitlisted students in the roster. However, we do not show the official photo if the student
               # is waitlisted in ALL sections.

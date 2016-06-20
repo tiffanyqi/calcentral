@@ -111,9 +111,10 @@ describe Rosters::Canvas do
   context 'legacy data source' do
     before do
       allow(Berkeley::Terms).to receive(:legacy?).and_return true
-      allow(CampusOracle::Queries).to receive(:get_enrolled_students).with(lecture_section_ccn, '2013', 'C').and_return(
+      allow(CampusOracle::Queries).to receive(:get_enrolled_students_for_ccns).with([lecture_section_ccn, discussion_section_ccn], '2013', 'C').and_return(
         [
           {
+            'course_cntl_num' => lecture_section_ccn,
             'ldap_uid' => student_in_discussion_section_login_id,
             'enroll_status' => 'E',
             'student_id' => student_in_discussion_section_student_id,
@@ -122,18 +123,16 @@ describe Rosters::Canvas do
             'student_email_address' => "#{student_in_discussion_section_login_id}@example.com"
           },
           {
+            'course_cntl_num' => lecture_section_ccn,
             'ldap_uid' => student_not_in_discussion_section_login_id,
             'enroll_status' => 'E',
             'student_id' => student_not_in_discussion_section_student_id,
             'first_name' => 'Clarence',
             'last_name' => "Williams #{student_not_in_discussion_section_login_id}",
             'student_email_address' => "#{student_not_in_discussion_section_login_id}@example.com"
-          }
-        ]
-      )
-      allow(CampusOracle::Queries).to receive(:get_enrolled_students).with(discussion_section_ccn, '2013', 'C').and_return(
-        [
+          },
           {
+            'course_cntl_num' => discussion_section_ccn,
             'ldap_uid' => student_in_discussion_section_login_id,
             'enroll_status' => 'E',
             'student_id' => student_in_discussion_section_student_id,
@@ -180,28 +179,28 @@ describe Rosters::Canvas do
           )
 
         # A student may be waitlisted in a secondary section but enrolled in a primary section.
-        allow(CampusOracle::Queries).to receive(:get_enrolled_students).with(lecture_section_ccn, '2013', 'C').and_return(
+        allow(CampusOracle::Queries).to receive(:get_enrolled_students_for_ccns).with([lecture_section_ccn, discussion_section_ccn], '2013', 'C').and_return(
             [
               {
+                'course_cntl_num' => lecture_section_ccn,
                 'ldap_uid' => enrolled_student_login_id,
                 'enroll_status' => 'E',
                 'student_id' => enrolled_student_student_id
               },
               {
+                'course_cntl_num' => lecture_section_ccn,
                 'ldap_uid' => waitlisted_student_login_id,
                 'enroll_status' => 'W',
                 'student_id' => waitlisted_student_student_id
-              }
-            ]
-          )
-        allow(CampusOracle::Queries).to receive(:get_enrolled_students).with(discussion_section_ccn, '2013', 'C').and_return(
-            [
+              },
               {
+                'course_cntl_num' => discussion_section_ccn,
                 'ldap_uid' => enrolled_student_login_id,
                 'enroll_status' => 'W',
                 'student_id' => enrolled_student_student_id
               },
               {
+                'course_cntl_num' => discussion_section_ccn,
                 'ldap_uid' => waitlisted_student_login_id,
                 'enroll_status' => 'W',
                 'student_id' => waitlisted_student_student_id
@@ -236,14 +235,16 @@ describe Rosters::Canvas do
               }
             ]
           )
-        allow(CampusOracle::Queries).to receive(:get_enrolled_students).with(lecture_section_ccn, '2013', 'C').and_return(
+        allow(CampusOracle::Queries).to receive(:get_enrolled_students_for_ccns).with([lecture_section_ccn], '2013', 'C').and_return(
             [
               {
+                'course_cntl_num' => lecture_section_ccn,
                 'ldap_uid' => enrolled_student_login_id,
                 'enroll_status' => 'E',
                 'student_id' => enrolled_student_student_id
               },
               {
+                'course_cntl_num' => lecture_section_ccn,
                 'ldap_uid' => waitlisted_student_login_id,
                 'enroll_status' => 'W',
                 'student_id' => waitlisted_student_student_id
@@ -301,23 +302,22 @@ describe Rosters::Canvas do
     let(:term_id) { Berkeley::TermCodes.to_edo_id('2013', 'C') }
     before do
       allow(Berkeley::Terms).to receive(:legacy?).and_return false
-      expect(EdoOracle::Queries).to receive(:get_rosters).with(lecture_section_ccn, term_id).and_return(
+      expect(EdoOracle::Queries).to receive(:get_rosters).with([lecture_section_ccn, discussion_section_ccn], term_id).and_return(
         [
           {
+            'section_id' => lecture_section_ccn,
             'ldap_uid' => student_in_discussion_section_login_id,
             'enroll_status' => 'E',
             'student_id' => student_in_discussion_section_student_id
           },
           {
+            'section_id' => lecture_section_ccn,
             'ldap_uid' => student_not_in_discussion_section_login_id,
             'enroll_status' => 'E',
             'student_id' => student_not_in_discussion_section_student_id
-          }
-        ]
-      )
-      expect(EdoOracle::Queries).to receive(:get_rosters).with(discussion_section_ccn, term_id).and_return(
-        [
+          },
           {
+            'section_id' => discussion_section_ccn,
             'ldap_uid' => student_in_discussion_section_login_id,
             'enroll_status' => 'E',
             'student_id' => student_in_discussion_section_student_id,
