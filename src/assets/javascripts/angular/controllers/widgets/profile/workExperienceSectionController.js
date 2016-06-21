@@ -68,7 +68,7 @@ angular.module('calcentral.controllers').controller('WorkExperienceSectionContro
     if (!data) {
       return;
     }
-    var toFormatDates = ['payFrequency.fromDate', 'payFrequency.toDate'];
+    var toFormatDates = ['fromDate', 'toDate'];
 
     _.map(data, function(dataElement) {
       _.each(toFormatDates, function(toFormatDate) {
@@ -233,8 +233,8 @@ angular.module('calcentral.controllers').controller('WorkExperienceSectionContro
       employmentDescr: item.employer,
       country: item.address.countryCode || 'USA',
       phone: item.phone.number,
-      startDt: item.payFrequency.fromDate || '',
-      endDt: item.payFrequency.toDate || '',
+      startDt: item.fromDate || '',
+      endDt: item.toDate || '',
       titleLong: item.jobTitle,
       employFrac: item.fullTimePercentage,
       hoursPerWeek: item.weeklyHours || '',
