@@ -170,7 +170,7 @@ module CampusOracle
       result = []
       use_pooled_connection {
         sql = <<-SQL
-      select roster.student_ldap_uid ldap_uid, roster.enroll_status, trim(roster.pnp_flag) as pnp_flag,
+      select roster.student_ldap_uid as ldap_uid, roster.enroll_status, trim(roster.pnp_flag) as pnp_flag,
         trim(person.first_name) as first_name, trim(person.last_name) as last_name, person.student_email_address, person.student_id, person.affiliations
       from calcentral_class_roster_vw roster, calcentral_student_info_vw person
       where roster.term_yr = #{term_yr.to_i}
@@ -178,6 +178,26 @@ module CampusOracle
         and roster.course_cntl_num = #{ccn.to_i}
         and roster.student_ldap_uid = person.student_ldap_uid
         and roster.enroll_status != 'D'
+        SQL
+        result = connection.select_all(sql)
+      }
+      stringify_ints! result
+    end
+
+    # Version of get_enrolled_students for multiple CCNs.
+    def self.get_enrolled_students_for_ccns(ccns, term_yr, term_cd)
+      result = []
+      use_pooled_connection {
+        sql = <<-SQL
+      select roster.course_cntl_num, roster.student_ldap_uid as ldap_uid, roster.enroll_status, trim(roster.pnp_flag) as pnp_flag,
+        trim(person.first_name) as first_name, trim(person.last_name) as last_name, person.student_email_address, person.student_id, person.affiliations
+      from calcentral_class_roster_vw roster, calcentral_student_info_vw person
+      where roster.term_yr = #{term_yr.to_i}
+        and roster.term_cd = #{connection.quote(term_cd)}
+        and roster.course_cntl_num IN (#{ccns.map(&:to_i).join(',')})
+        and roster.student_ldap_uid = person.student_ldap_uid
+        and roster.enroll_status != 'D'
+      order by course_cntl_num, ldap_uid
         SQL
         result = connection.select_all(sql)
       }
