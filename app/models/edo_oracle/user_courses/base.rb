@@ -122,7 +122,7 @@ module EdoOracle
       #   "slug" : URL-friendly ID without term information; used by Academics
       #   "course_code" : the short course name as displayed in the UX
       def course_ids_from_row(row)
-        dept_name, catalog_id = self.class.parse_course_code row
+        dept_name, catalog_id = parse_course_code row
         slug = [dept_name, catalog_id].map { |str| normalize_to_slug str }.join '-'
         term_code = Berkeley::TermCodes.edo_id_to_code row['term_id']
         {
@@ -223,13 +223,14 @@ module EdoOracle
       end
 
       # Our underlying database join between sections and courses is shaky, so we need a series of fallbacks.
-      def self.parse_course_code(row)
+      def parse_course_code(row)
         subject_area, catalog_number = row.values_at('dept_name', 'catalog_id')
         unless subject_area && catalog_number
           display_name = row['course_display_name'] || row['section_display_name']
           subject_area, catalog_number = display_name.rpartition(/\s+/).reject &:blank?
         end
-        subject_area = EdoOracle::SubjectAreas.fetch.decompress subject_area
+        @subject_areas ||= EdoOracle::SubjectAreas.fetch
+        subject_area = @subject_areas.decompress subject_area
         [subject_area, catalog_number]
       end
 

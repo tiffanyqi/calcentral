@@ -380,6 +380,38 @@ describe Oec::SisImportTask do
       end
       it { should eq 'MATH/STAT C51, MATH C151 LEC 001, STAT C151 VOL 001' }
     end
+
+    context 'cross-listed course missing title from database join' do
+      let(:course_codes) do
+        {
+          random_id => {
+            'dept_name' => 'MATH',
+            'catalog_id' => 'C51',
+            'instruction_format' => 'LEC',
+            'section_num' => '001',
+            'course_title_short' => nil
+          },
+          random_id => {
+            'dept_name' => 'STAT',
+            'catalog_id' => 'C51',
+            'instruction_format' => 'LEC',
+            'section_num' => '001',
+            'course_title_short' => 'TWO HANDED REGRESSION'
+          }
+        }
+      end
+      let(:course) do
+        {
+          'COURSE_NAME' => 'MATH C51 LEC 001 ',
+          'CROSS_LISTED_CCNS' => course_codes.keys.join(',')
+        }
+      end
+      it 'should fill in missing title from cross-listing' do
+        subject
+        expect(course['COURSE_NAME']).to eq 'MATH C51 LEC 001 TWO HANDED REGRESSION'
+      end
+    end
+
   end
 
   context 'department-specific filters' do

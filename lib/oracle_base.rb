@@ -49,6 +49,6 @@ class OracleBase < ActiveRecord::Base
     predicates = terms.each_slice(1000).map do |slice|
       "#{column_name} IN (#{slice.join ','})"
     end
-    "AND (#{predicates.join ' OR '})"
+    "(#{predicates.join ' OR '})"
   end
 end

@@ -28,7 +28,7 @@ module Oec
           home_dept_rows_imported += 1
           cross_listed_ccns.merge [course_row['cross_listed_ccns'], course_row['co_scheduled_ccns']].join(',').split(',').reject(&:blank?)
         end
-        course_codes_by_ccn[course_row['course_cntl_num']] ||= course_row.slice('dept_name', 'catalog_id', 'instruction_format', 'section_num')
+        course_codes_by_ccn[course_row['course_cntl_num']] ||= course_row.slice('dept_name', 'catalog_id', 'instruction_format', 'section_num', 'course_title_short')
       end
       log :info, "Imported #{home_dept_rows_imported} of #{home_dept_rows.count} pairings"
 
@@ -42,7 +42,7 @@ module Oec
         if import_course(worksheet, cross_listing)
           cross_listed_rows_imported += 1
         end
-        course_codes_by_ccn[cross_listing['course_cntl_num']] = cross_listing.slice('dept_name', 'catalog_id', 'instruction_format', 'section_num')
+        course_codes_by_ccn[cross_listing['course_cntl_num']] = cross_listing.slice('dept_name', 'catalog_id', 'instruction_format', 'section_num', 'course_title_short')
       end
       log :info, "Imported #{cross_listed_rows_imported} of #{cross_listed_rows.count} pairings"
 
@@ -68,7 +68,8 @@ module Oec
         else
           course['course_id_2'] = course['course_id']
           set_dept_form course
-          set_evaluation_type course
+          # Course rows sourced from EdoOracle::Adapters::Oec may have evaluation type already set.
+          set_evaluation_type course unless course['evaluation_type']
           worksheet[row_key] = Oec::Worksheet.capitalize_keys course
         end
       end
@@ -114,6 +115,14 @@ module Oec
           "#{course_codes.join(', ')} #{section_code}"
         end
         course_row['CROSS_LISTED_NAME'] = cross_listings_by_section_code.join(', ')
+
+        # Some cross-listed sections may return without titles from the database join. If so, get title from a
+        # different cross-listed section.
+        if course_row['COURSE_TITLE_SHORT'].blank? &&
+          (course_with_title = cross_listed_course_codes.find { |c| c['course_title_short'].present? })
+          course_row['COURSE_TITLE_SHORT'] = course_with_title['course_title_short']
+          course_row['COURSE_NAME'] << course_with_title['course_title_short']
+        end
       end
     end
 

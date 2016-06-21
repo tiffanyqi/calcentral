@@ -1,9 +1,9 @@
-describe Oec::Queries do
+describe CampusOracle::Oec do
 
   let(:term_year) { '2015'}
-  let(:semester_code) { Oec::Queries.test_data? ? 'B' : 'D' }
+  let(:semester_code) { CampusOracle::Oec.test_data? ? 'B' : 'D' }
   let(:term_code) { "#{term_year}-#{semester_code}" }
-  let(:test_ccn) { Oec::Queries.test_data? ? '7309' : '7253' }
+  let(:test_ccn) { CampusOracle::Oec.test_data? ? '7309' : '7253' }
 
   before do
     term = OpenStruct.new({ :year => 2015, :code => term_code })
@@ -11,7 +11,7 @@ describe Oec::Queries do
   end
 
   context 'department-specific queries' do
-    subject { Oec::Queries.depts_clause('c', course_codes, import_all) }
+    subject { CampusOracle::Oec.depts_clause(course_codes, import_all) }
     let(:import_all) { false }
 
     context 'limiting query by department code' do
@@ -84,7 +84,7 @@ describe Oec::Queries do
 
   context 'course lookup by code', testext: true do
     subject do
-      Oec::Queries.courses_for_codes(
+      CampusOracle::Oec.courses_for_codes(
         term_code,
         [Oec::CourseCode.new(dept_name: 'MATH', catalog_id: nil, dept_code: 'PMATH', include_in_oec: true)]
       )
@@ -94,7 +94,7 @@ describe Oec::Queries do
 
   context 'a department not participating in OEC', testext: true do
     subject do
-      Oec::Queries.courses_for_codes(
+      CampusOracle::Oec.courses_for_codes(
         term_code,
         [Oec::CourseCode.new(dept_name: 'FRENCH', catalog_id: nil, dept_code: 'HFREN', include_in_oec: false)],
         import_all
@@ -114,7 +114,7 @@ describe Oec::Queries do
 
   context 'course lookup by ccn', testext: true do
     let(:ccns) { %w(53507 53513) }
-    subject { Oec::Queries.courses_for_cntl_nums(term_code, ccns) }
+    subject { CampusOracle::Oec.courses_for_cntl_nums(term_code, ccns) }
     include_examples 'expected result structure'
     it 'returns the right courses' do
       expect(subject).to have(2).items
@@ -125,14 +125,14 @@ describe Oec::Queries do
   context 'crosslisting and room share lookup', testext: true do
     let(:ccns) { %w(7677 7682) }
     let(:ccn_aggregates) { [ '07677,20542', '07682,21120' ] }
-    subject { Oec::Queries.courses_for_cntl_nums(term_code, ccns) }
+    subject { CampusOracle::Oec.courses_for_cntl_nums(term_code, ccns) }
     it 'returns correct aggregated ccns' do
       expect(subject.map { |row| row['cross_listed_ccns'] }).to match_array ccn_aggregates
       expect(subject.map { |row| row['co_scheduled_ccns'] }).to match_array ccn_aggregates
     end
   end
 
-  let(:students_query) { Oec::Queries.students_for_cntl_nums(term_code, [test_ccn]) }
+  let(:students_query) { CampusOracle::Oec.students_for_cntl_nums(term_code, [test_ccn]) }
 
   context 'looking up students' do
     it 'contains expected result structure' do
@@ -147,7 +147,7 @@ describe Oec::Queries do
     end
   end
 
-  let(:enrollments_query) { Oec::Queries.enrollments_for_cntl_nums(term_code, [test_ccn]) }
+  let(:enrollments_query) { CampusOracle::Oec.enrollments_for_cntl_nums(term_code, [test_ccn]) }
 
   context 'looking up enrollments' do
     it 'contains expected result structure' do
