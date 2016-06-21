@@ -34,7 +34,9 @@
         </section>
       </li>
       <li class="cc-page-myfinances-account-summary-item cc-clearfix-container" data-ng-if="billing.data.summary.accountBalance">
-        <div class="small-8 columns cc-print-width-auto">Account Balance
+        <div class="small-8 columns cc-print-width-auto">
+          <span data-ng-if="billing.data.summary.accountBalance < 0">Credit Balance</span>
+          <span data-ng-if="billing.data.summary.accountBalance >= 0">Account Balance</span>
           <div class="cc-page-myfinances-account-summary-subtitle cc-page-myfinances-light">Includes charges not yet due</div>
         </div>
         <div class="small-4 columns cc-print-width-auto cc-print-right">
