@@ -1,22 +1,22 @@
 #!/bin/bash
 
+default_uid=1079058
+default_cs_id=25129630
+
+UID_CROSSWALK=${UID_CROSSWALK:-$default_uid}
+SID=${SID:-$default_cs_id}
+CAMPUS_SOLUTIONS_ID=${CAMPUS_SOLUTIONS_ID:-$default_cs_id}
+
 echo_usage() {
-  echo; echo "USAGE"; echo "    ${0} [Path to YAML file]"; echo
-  echo; echo "[OPTIONAL] Environment variables:"; echo
-  echo "  export TRANSITIVE_DEPENDENCIES=true"
+  echo; echo "USAGE"; echo "    ${0} [Path to YAML file]"
+  echo; echo "[OPTIONAL] Environment variables"
   echo
-  echo "    The 'TRANSITIVE_DEPENDENCIES' are endpoints used by the Hub when proxying to"
-  echo "    Campus Solutions. You won't find them referenced in CalCentral"
-  echo "    code. To test these particular endpoints, in addition to the rest,"
-  echo "    set environment variable as above."
+  echo "  By default, this script uses UID ${default_uid} (CS ID ${default_cs_id}) when testing API calls."
+  echo "  You can override those defaults with:"
   echo
-  echo "  export UID_CROSSWALK=123"
-  echo "  export SID=456"
-  echo "  export CAMPUS_SOLUTIONS_ID=789"
-  echo
-  echo "    The script uses hard-coded IDs (i.e., test users) to construct"
-  echo "    API calls. You can override those defaults with the environment"
-  echo "    variables above."
+  echo "    export UID_CROSSWALK=123"
+  echo "    export SID=456"
+  echo "    export CAMPUS_SOLUTIONS_ID=789"
   echo
 }
 
@@ -26,10 +26,6 @@ LOG_RELATIVE_PATH="log/sis_api_test_$(date +"%Y-%m-%d_%H%M%S")"
 LOG_DIRECTORY="${PWD}/${LOG_RELATIVE_PATH}"
 CURL_STDOUT_LOG_FILE="${LOG_DIRECTORY}/curl_stdout.log"
 API_ERROR_INDICATORS="error\|unable to find\|not authorized\|no service\|not available"
-
-UID_CROSSWALK=${UID_CROSSWALK:-1079058}
-SID=${SID:-25129630}
-CAMPUS_SOLUTIONS_ID=${CAMPUS_SOLUTIONS_ID:-25129630}
 
 parse_yaml() {
   # --------------------------------------------
@@ -262,7 +258,7 @@ verify_cs "cs_billing" "${yml_features_cs_billing}" \
   "/UC_SF_FPP_LINKS_GET.v1/Get"
 
 verify_cs "cs_advisor_student_lookup" "${yml_features_cs_advisor_student_lookup}" \
-  "/UC_CC_USER_LOOKUP.v1/lookup?NAME1=Wavy&NAME2=Gravy&AFFILIATIONS[]=STUDENT&AFFILIATIONS[]=UNDERGRAD"
+  "/UC_CC_USER_LOOKUP.v1/lookup?NAME1=Wavy&NAME2=Gravy&AFFILIATIONS=STUDENT,UNDERGRAD"
 
 verify_hub "/${CAMPUS_SOLUTIONS_ID}/academic-status" \
   "/${CAMPUS_SOLUTIONS_ID}/affiliation" \
