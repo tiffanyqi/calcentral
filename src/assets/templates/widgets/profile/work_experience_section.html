@@ -11,14 +11,14 @@
         <div>
           <strong data-ng-bind="item.employer"></strong>
         </div>
-        <div data-ng-if="item.payFrequency.fromDate || item.payFrequency.toDate">
-          <span data-ng-bind="item.payFrequency.fromDate"></span>
-          <span data-ng-if="!item.payFrequency.fromDate">No start date</span>
-          <span data-ng-if="item.payFrequency.toDate">-</span>
-          <span data-ng-bind="item.payFrequency.toDate"></span>
+        <div data-ng-if="item.fromDate || item.toDate">
+          <span data-ng-bind="item.fromDate"></span>
+          <span data-ng-if="!item.fromDate">No start date</span>
+          <span data-ng-if="item.toDate">-</span>
+          <span data-ng-bind="item.toDate"></span>
         </div>
         <div>
-          <button class="cc-button-link" data-ng-click="showEdit(item)" data-ng-disabled="!api.user.profile.actAsOptions.canPost">Edit <span class="cc-visuallyhidden">Your <span data-ng-bind="item.employer"></span> Work Experience</span></button>
+          <button class="cc-button-link" data-ng-click="showEdit(item)" data-ng-if="api.user.profile.actAsOptions.canPost">Edit <span class="cc-visuallyhidden">Your <span data-ng-bind="item.employer"></span> Work Experience</span></button>
         </div>
       </div>
       <div data-ng-if="item.isModifying" data-ng-include="'widgets/profile/work_experience_editor.html'"></div>
@@ -27,7 +27,7 @@
       There is no work experience available.
     </div>
   </div>
-  <div class="cc-page-widget-profile-section-add" data-ng-if="!items.editorEnabled">
+  <div class="cc-page-widget-profile-section-add" data-ng-if="!items.editorEnabled && api.user.profile.actAsOptions.canPost">
     <button class="cc-button-link" data-ng-click="showAdd()">
       <i class="fa fa-plus"></i> Add <span class="cc-visuallyhidden">Work Experience</span>
     </button>
