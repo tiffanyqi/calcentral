@@ -61,10 +61,11 @@ module Rosters
       sections.map {|section| section[:name]}.sort.join(', ')
     end
 
-    def get_enrollments(course_id, term_yr, term_cd)
+    def get_enrollments(ccns, term_yr, term_cd)
       if Berkeley::Terms.legacy?(term_yr, term_cd)
-        CampusOracle::Queries.get_enrolled_students(course_id, term_yr, term_cd).map do |row|
+        enrollments = CampusOracle::Queries.get_enrolled_students_for_ccns(ccns, term_yr, term_cd).map do |row|
           {
+            ccn: row['course_cntl_num'],
             ldap_uid: row['ldap_uid'],
             student_id: row['student_id'],
             first_name: row['first_name'],
@@ -73,22 +74,28 @@ module Rosters
             enroll_status: row['enroll_status']
           }
         end
+        enrollments.group_by { |enrollment| enrollment[:ccn] }
       else
         term_id = Berkeley::TermCodes.to_edo_id(term_yr, term_cd)
-        enrollments_by_uid = EdoOracle::Queries.get_rosters(course_id, term_id).group_by { |row| row['ldap_uid'] }
-        User::BasicAttributes.attributes_for_uids(enrollments_by_uid.keys).each do |attrs|
-          attrs[:email] = attrs.delete :email_address
-          attrs[:majors] = enrollments_by_uid[attrs[:ldap_uid]].collect { |e| e['major'] }
-          if (enrollment_row = enrollments_by_uid[attrs[:ldap_uid]].first)
-            attrs[:terms_in_attendance] = terms_in_attendance_code(enrollment_row['terms_in_attendance_group'], enrollment_row['academic_program_code'])
-            attrs[:enroll_status] = enrollment_row['enroll_status']
-            attrs[:grade_option] = Berkeley::GradeOptions.grade_option_from_basis enrollment_row['grading_basis']
-            attrs[:units] = enrollment_row['units'].to_s
-            if enrollment_row['enroll_status'] == 'W'
-              attrs[:waitlist_position] = enrollment_row['waitlist_position'].to_i
+        enrollments = {}
+        EdoOracle::Queries.get_rosters(ccns, term_id).group_by { |row| row['section_id'] }.each do |section_id, section_enrollments|
+          section_enrollments_by_uid = section_enrollments.group_by { |row| row['ldap_uid'] }
+          enrollments[section_id] = User::BasicAttributes.attributes_for_uids section_enrollments_by_uid.keys
+          enrollments[section_id].each do |attrs|
+            attrs[:email] = attrs.delete :email_address
+            attrs[:majors] = section_enrollments_by_uid[attrs[:ldap_uid]].collect { |e| e['major'] }
+            if (enrollment_row = section_enrollments_by_uid[attrs[:ldap_uid]].first)
+              attrs[:terms_in_attendance] = terms_in_attendance_code(enrollment_row['terms_in_attendance_group'], enrollment_row['academic_program_code'])
+              attrs[:enroll_status] = enrollment_row['enroll_status']
+              attrs[:grade_option] = Berkeley::GradeOptions.grade_option_from_basis enrollment_row['grading_basis']
+              attrs[:units] = enrollment_row['units'].to_s
+              if enrollment_row['enroll_status'] == 'W'
+                attrs[:waitlist_position] = enrollment_row['waitlist_position'].to_i
+              end
             end
           end
         end
+        enrollments
       end
     end
 
