@@ -14,7 +14,8 @@ module CampusSolutions
 
     def get_higher_one_url
       return {} unless is_feature_enabled
-      proxy.build_url.strip
+      url = proxy.build_url
+      url && url.strip
     end
 
     private
