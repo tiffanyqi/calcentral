@@ -1,5 +1,5 @@
 <div class="cc-page-widget-profile-section-emergency-phone-fields">
-  <div>
+  <div data-ng-if="(!phone && emergencyPhone.isAdding) || phone.availablePhoneTypes.length > 0">
     <label for="cc_page_widget_profile_emergency_phone_type">
       <strong>Phone Type</strong>
     </label>

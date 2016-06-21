@@ -104,7 +104,7 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   };
 
   $scope.showAdd = function() {
-    $scope.emptyObject.emergencyPhones = [angular.copy($scope.emergencyPhone.emptyObject)];
+    $scope.emptyObject.emergencyPhones = [angular.copy($scope.emergencyPhone.firstEmptyObject)];
 
     apiService.profile.showAdd($scope, $scope.emptyObject);
   };
@@ -131,6 +131,12 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   angular.extend($scope, {
     emergencyPhone: {
       currentObject: {},
+      firstEmptyObject: {
+        phone: '',
+        phoneType: '',
+        extension: '',
+        countryCode: ''
+      },
       emptyObject: {
         availablePhoneTypes: [],
         phone: '',
@@ -220,6 +226,10 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       });
       return usingTypes.indexOf(type.fieldvalue) < 0;
     });
+    if ($scope.emergencyPhone.currentObject.data.availablePhoneTypes.length === 1) {
+      $scope.emergencyPhone.currentObject.data.phoneType = $scope.emergencyPhone.currentObject.data.availablePhoneTypes[0].fieldvalue;
+      $scope.emergencyPhone.currentObject.data.phoneTypeDescr = $scope.emergencyPhone.currentObject.data.availablePhoneTypes[0].xlatlongname;
+    }
 
     $scope.emergencyPhone.isAdding = true;
   };
@@ -247,7 +257,7 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       if (_.isEmpty(contact.emergencyPhones)) {
         // Provides an empty phone to display, if no emergency phones have been
         // added yet. This enables contact editor to show empty phone inputs.
-        contact.emergencyPhones = [angular.copy($scope.emergencyPhone.emptyObject)];
+        contact.emergencyPhones = [angular.copy($scope.emergencyPhone.firstEmptyObject)];
       }
 
       _.each(contact.emergencyPhones, function(phone) {
@@ -269,7 +279,7 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       var phones = contact.emergencyPhones;
 
       // In the Campus Solutions interface, the first phone in the list for a
-      // contact is not always assigned a phoneType. This block creates a custom
+      // contact is never assigned a phoneType. This block creates a custom
       // property, addPhoneLimit, on each contact, in order to allow the first
       // phone to continue to have no phoneType, and allow the user to add an
       // additional phone beyond the number of "allowed" phone types for each
@@ -288,10 +298,12 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       var usingTypes = _.map(phones, function(phone) {
         return phone.phoneType;
       });
-      _.forEach(phones, function(phone) {
-        phone.availablePhoneTypes = _.filter(allowedTypes, function(type) {
-          return usingTypes.indexOf(type.fieldvalue) < 0 || type.fieldvalue === phone.phoneType;
-        });
+      _.forEach(phones, function(phone, pos) {
+        if (pos > 0) {
+          phone.availablePhoneTypes = _.filter(allowedTypes, function(type) {
+            return usingTypes.indexOf(type.fieldvalue) < 0 || type.fieldvalue === phone.phoneType;
+          });
+        }
       });
     });
 
