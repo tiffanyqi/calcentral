@@ -35,7 +35,7 @@
         <div data-ng-if="residency.isLoading">
           <div data-cc-spinner-directive="residency.isLoading"></div>
         </div>
-        <div data-ng-if="!residency.isLoading">
+        <div data-ng-if="!residency.isLoading && residency.official.description">
           <div>
             <div class="cc-inline-block" style="width: 130px">
               California Residency
