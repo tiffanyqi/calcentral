@@ -292,9 +292,9 @@ module EdoOracle
           enroll."STDNT_ENRL_STATUS_CODE" AS enroll_status,
           enroll."WAITLISTPOSITION" AS waitlist_position,
           enroll."UNITS_TAKEN" AS units,
+          enroll."ACAD_CAREER" AS academic_career,
           TRIM(enroll."GRADING_BASIS_CODE") AS grading_basis,
           plan."ACADPLAN_DESCR" AS major,
-          plan."ACADPROG_CODE" AS academic_program_code,
           stdgroup."STDNT_GROUP" AS terms_in_attendance_group
         FROM SISEDO.ENROLLMENTV00_VW enroll
         LEFT OUTER JOIN
