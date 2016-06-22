@@ -31,11 +31,11 @@ class ApiEdosStudentPage
   end
 
   def residency_from_term
-    residency && residency['fromTerm']['label']
+    residency && residency['fromTerm'] && residency['fromTerm']['label']
   end
 
   def residency_message_code
-    residency && residency['message']['code']
+    residency && residency['message'] && residency['message']['code']
   end
 
   def has_residency?

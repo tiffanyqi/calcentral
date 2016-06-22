@@ -98,7 +98,7 @@ module CalCentralPages
       elements(:standard_budget_row_toggle, :element, :xpath => '//th[text()="Standard Budget Items"]/../../../tbody')
       elements(:additional_budget_row_toggle, :element, :xpath => '//th[text()="Additional Budget Items"]/../../../tbody')
       elements(:sub_item_title, :cell, :xpath => '//td[@data-ng-bind="subItem.title"]')
-      elements(:sub_item_total, :cell, :xpath => '//td[@data-cc-amount-directive="subItem.total"]')
+      elements(:sub_item_total, :span, :xpath => '//span[@data-cc-amount-directive="subItem.total"]')
       elements(:sub_item_amount, :cell, :xpath => '//td[@data-ng-repeat="amount in subItem.amounts track by $index"]')
       table(:grand_total_budget_table, :xpath => '//h2[text()="Estimated Cost of Attendance"]/../following-sibling::div//th[text()="Grand Total"]/../../..')
 
