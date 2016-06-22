@@ -23,6 +23,7 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
 
       status_api_page = ApiMyStatusPage.new driver
       student_api_page = ApiEdosStudentPage.new driver
+      residency_api_page = ApiCSResidencyMessagePage.new driver
       academics_api_page = ApiMyAcademicsPageSemesters.new driver
       holds_api_page = ApiCSHoldsPage.new driver
       badges_api_page = ApiMyBadgesPage.new driver
@@ -84,7 +85,7 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
           if is_student || (affiliations.include?('ADMT_UX'))
 
             # New admits with no reg status info and no holds should have no status in the popover
-            if affiliations.include?('ADMT_UX') && badges_api_page.reg_status_summary.nil? && !has_active_hold
+            if affiliations.include?('ADMT_UX') && !status_api_page.is_student? && badges_api_page.reg_status_summary.nil? && !has_active_hold
               it ("is not available via a person icon in the header for UID #{uid}") { expect(has_status_heading).to be false }
             else
               it ("is available via a person icon in the header for UID #{uid}") { expect(has_status_heading).to be true }
@@ -98,7 +99,9 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
             unless (is_student && badges_api_page.reg_status_summary.nil?) || (is_ex_student && academics_api_page.all_student_semesters.empty?)
 
               api_reg_status_explanation = badges_api_page.reg_status_explanation
-              has_reg_status_summary = my_academics_page.reg_status_summary?
+
+              # Status info can take a while to load, so wait 5 seconds to see whether or not it appears
+              has_reg_status_summary = WebDriverUtils.verify_block { my_academics_page.reg_status_summary_element.when_visible 5 }
               has_reg_status_explanation = my_academics_page.reg_status_explanation?
 
               if api_reg_status_summary.nil?
@@ -183,67 +186,46 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
                 it ("shows residency status for UID #{uid}") { expect(has_res_status).to be true }
 
                 api_res_status = student_api_page.residency_desc
+                api_res_from_term = student_api_page.residency_from_term
+
                 my_acad_res_status = my_academics_page.res_status_summary
+                my_acad_res_from_term = my_academics_page.res_from_term
+
+                shows_slr_submission_link = my_academics_page.res_slr_link?
 
                 it ("shows residency status of '#{api_res_status}' for UID #{uid}") { expect(my_acad_res_status).to eql(api_res_status) }
+                it ("shows a residency term applied for UID #{uid}") { expect(my_acad_res_from_term).to eql(api_res_from_term) }
+                it ("shows an SLR link for UID #{uid}") { expect(shows_slr_submission_link).to be true }
 
                 has_green_res_status_icon = my_academics_page.res_status_icon_green?
                 has_gold_res_status_icon = my_academics_page.res_status_icon_gold?
                 has_red_res_status_icon = my_academics_page.res_status_icon_red?
 
-                shows_slr_submission_link = my_academics_page.res_slr_submit_link?
-                shows_slr_status_link = my_academics_page.res_slr_status_link?
-
-                # Check presence of links, but only verify that each link directs to the right page for one of the test users
-                shows_res_info_link = if api_res_status == 'Resident'
-                                        my_academics_page.res_info_link?
-                                      elsif api_res_status == 'Non-Resident'
-                                        if non_res_link_tested
-                                          my_academics_page.res_info_link?
-                                        else
-                                          WebDriverUtils.verify_external_link(driver, my_academics_page.res_info_link_element, 'Tuition, Fees, & Residency | Office of the Registrar')
-                                          non_res_link_tested = true
-                                        end
-                                      else
-                                        if pending_res_link_tested
-                                          my_academics_page.res_info_link?
-                                        else
-                                          WebDriverUtils.verify_external_link(driver, my_academics_page.res_info_link_element, 'How to Apply for Residency (for Tuition Purposes) | Office of the Registrar')
-                                          pending_res_link_tested = true
-                                        end
-                                      end
-
-                if api_res_status == 'Resident'
-
-                  resident_users << uid
-
+                if %w(Resident Non-Resident).include? api_res_status
                   it ("shows a green residency status icon for UID #{uid}") { expect(has_green_res_status_icon).to be true }
-                  it ("shows no SLR submission link for UID #{uid}") { expect(shows_slr_submission_link).to be false }
-                  it ("shows no SLR status link for UID #{uid}") { expect(shows_slr_status_link).to be false }
-                  it ("shows no residency info link for UID #{uid}") { expect(shows_res_info_link).to be false }
-
-                elsif api_res_status == 'Non-Resident'
-
-                  it ("shows a green residency status icon for UID #{uid}") { expect(has_green_res_status_icon).to be true }
-                  it ("shows no SLR submission link for UID #{uid}") { expect(shows_slr_submission_link).to be false }
-                  it ("shows no SLR status link for UID #{uid}") { expect(shows_slr_status_link).to be false }
-                  it ("shows a 'residency info' link for UID #{uid}") { expect(shows_res_info_link).to be true }
-
                 elsif api_res_status == 'Pending'
-
                   it ("shows a gold residency status icon for UID #{uid}") { expect(has_gold_res_status_icon).to be true }
-                  it ("shows a SLR submission link for UID #{uid}") { expect(shows_slr_submission_link).to be false }
-                  it ("shows a SLR status link for UID #{uid}") { expect(shows_slr_status_link).to be true }
-                  it ("shows a 'residency info' link for UID #{uid}") { expect(shows_res_info_link).to be true }
-
                 else
-
                   it ("shows a red residency status icon for UID #{uid}") { expect(has_red_res_status_icon).to be true }
-                  it ("shows a SLR submission link for UID #{uid}") { expect(shows_slr_submission_link).to be true }
-                  it ("shows no SLR status link for UID #{uid}") { expect(shows_slr_status_link).to be false }
-                  it ("shows a 'residency info' link for UID #{uid}") { expect(shows_res_info_link).to be true }
+                end
+
+                unless student_api_page.residency_message_code.blank?
+
+                  residency_api_page.get_json(driver, student_api_page.residency_message_code)
+                  api_residency_msg = residency_api_page.message_text
+
+                  my_academics_page.load_page
+
+                  has_res_message = WebDriverUtils.verify_block { my_academics_page.res_msg_element.when_visible WebDriverUtils.page_load_timeout }
+
+                  ui_residency_msg = my_academics_page.res_msg
+
+                  it ("shows a residency message for UID #{uid}") { expect(has_res_message).to be true }
+                  it ("shows the right residency message for UID #{uid}") { expect(ui_residency_msg).to eql(api_residency_msg) }
 
                 end
+
+                resident_users << uid if api_res_status == 'Resident'
 
               else
 
@@ -274,7 +256,7 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
               it ("shows the hold reason on the academics page for UID #{uid}") { expect(hold_reasons).to eql(holds_api_hold_reasons) }
               it ("shows the hold date on the academics page for UID #{uid}") { expect(hold_dates).to eql(holds_api_hold_dates) }
 
-            elsif (affiliations.include?('ADMT_UX') && !affiliations.include?('STUDENT')) || badges_api_page.reg_status.nil?
+            elsif (affiliations.include?('ADMT_UX') && !status_api_page.is_student?) || badges_api_page.reg_status.nil?
 
               has_holds_heading = my_academics_page.active_holds_heading?
 
