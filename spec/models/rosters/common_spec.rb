@@ -342,7 +342,7 @@ describe Rosters::Common do
         expect(enrollments[section_id_two][2][:majors]).to eq ['Pizza Science BA']
       end
 
-      pending 'converts and includes terms in attendance code' do
+      it 'converts and includes terms in attendance code' do
         expect(enrollments[section_id_one][0][:terms_in_attendance]).to eq '2'
         expect(enrollments[section_id_one][1][:terms_in_attendance]).to eq '8'
         expect(enrollments[section_id_one][2][:terms_in_attendance]).to eq 'G'
