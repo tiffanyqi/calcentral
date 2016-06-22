@@ -103,7 +103,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   };
 
   var parseAmounts = function(value) {
-    return _.isNumber(value) ? value.toFixed(2) : value;
+    return _.isNumber(value) ? parseFloat(value.toFixed(2)) : value;
   };
 
   var parseBillingInfo = function(data) {
