@@ -8,19 +8,19 @@ module CalCentralPages
 
     # Registration
     table(:status_table, :class => 'cc-academics-status-holds-blocks-status-table')
-    span(:reg_status_summary, :xpath => '//tr[@data-ng-if="api.user.profile.features.regstatus"]//span[@data-ng-bind="studentInfo.regStatus.summary"]')
-    div(:reg_status_explanation, :xpath => '//td[@data-ng-bind-html="studentInfo.regStatus.explanation"]')
+    span(:reg_status_summary, :xpath => '//tr[@data-ng-if="api.user.profile.features.regstatus"]//span[@data-ng-bind="regStatus.summary"]')
+    div(:reg_status_explanation, :xpath => '//td[@data-ng-bind-html="regStatus.explanation"]')
     image(:reg_status_icon_green, :xpath => '//tr[@data-ng-if="api.user.profile.features.regstatus"]//i[@class="cc-icon fa fa-check-circle cc-icon-green"]')
     image(:reg_status_icon_red, :xpath => '//tr[@data-ng-if="api.user.profile.features.regstatus"]//i[@class="cc-icon fa fa-exclamation-circle cc-icon-red"]')
 
     # Residency
-    span(:res_status_summary, :xpath => '//span[@data-ng-bind="residency.description"]')
-    image(:res_status_icon_green, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-check-circle cc-icon-green ng-scope"]')
-    image(:res_status_icon_gold, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-warning cc-icon-gold ng-scope"]')
-    image(:res_status_icon_red, :xpath => '//th[contains(.,"California Residency")]/following-sibling::td//i[@class="cc-icon fa fa-exclamation-circle cc-icon-red ng-scope"]')
-    link(:res_slr_submit_link, :xpath => '//a[contains(text(),"Statement of Legal Residence")]')
-    link(:res_slr_status_link, :xpath => '//a[contains(text(),"check the status of your submission")]')
-    link(:res_info_link, :xpath => '//a[contains(text(),"residency information")]')
+    span(:res_status_summary, :xpath => '//span[@data-ng-bind="residency.official.description"]')
+    image(:res_status_icon_green, :xpath => '//div[contains(.,"California Residency")]/following-sibling::div/i[@class="cc-icon fa fa-check-circle cc-icon-green ng-scope"]')
+    image(:res_status_icon_gold, :xpath => '//div[contains(.,"California Residency")]/following-sibling::div/i[@class="cc-icon fa fa-warning cc-icon-gold ng-scope"]')
+    image(:res_status_icon_red, :xpath => '//div[contains(.,"California Residency")]/following-sibling::div/i[@class="cc-icon fa fa-exclamation-circle cc-icon-red ng-scope"]')
+    span(:res_from_term, :xpath => '//span[@data-ng-bind="residency.fromTerm.label"]')
+    div(:res_msg, :xpath => '//div[@data-ng-bind-html="residency.message.description"]')
+    link(:res_slr_link, :xpath => '//a[contains(text(),"Statement of Legal Residence")]')
 
     # Holds (service indicators)
     h3(:active_holds_heading, :xpath => '//h3[text()="Active Holds"]')

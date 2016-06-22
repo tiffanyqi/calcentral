@@ -14,7 +14,7 @@ class ApiCSHoldsPage
   end
 
   def hold_reasons
-    holds.map { |hold| hold['reasonDescr'] }
+    holds.map { |hold| hold['reasonDescr'].gsub(/\s+/, ' ') }
   end
 
   def hold_dates

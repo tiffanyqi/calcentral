@@ -19,11 +19,23 @@ class ApiEdosStudentPage
   end
 
   def residency
-    student['residency'] && student['residency']['official']
+    student['residency']
+  end
+
+  def residency_official
+    residency && residency['official']
   end
 
   def residency_desc
-    residency['description'].blank? ? 'Not Yet Submitted' : residency['description']
+    residency_official['description'].blank? ? 'Not Yet Submitted' : residency_official['description']
+  end
+
+  def residency_from_term
+    residency && residency['fromTerm'] && residency['fromTerm']['label']
+  end
+
+  def residency_message_code
+    residency && residency['message'] && residency['message']['code']
   end
 
   def has_residency?

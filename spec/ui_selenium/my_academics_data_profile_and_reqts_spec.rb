@@ -42,7 +42,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
           academics_api_page.get_json driver
           profile_card.load_page
 
-          if (status_api_page.has_academics_tab? && status_api_page.is_student?) || status_api_page.has_student_history?
+          if (status_api_page.has_academics_tab? && status_api_page.is_student?) || status_api_page.has_student_history? || status_api_page.is_applicant?
 
             profile_card.profile_card_element.when_visible WebDriverUtils.academics_timeout
             testable_users << uid unless academics_api_page.transition_term?
