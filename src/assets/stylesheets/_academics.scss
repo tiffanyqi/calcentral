@@ -358,6 +358,12 @@
   }
 
   @media print {
+    .cc-academics-teaching-button-group {
+      a[href]:after {
+        content: "";
+      }
+    }
+
     .cc-widget-title {
       text-align: center;
     }
