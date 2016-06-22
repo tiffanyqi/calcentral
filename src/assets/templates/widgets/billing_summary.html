@@ -45,15 +45,20 @@
       </li>
       <li data-ng-if="billing.data.summary.accountBalance > 0">
         <div class="cc-page-myfinances-account-summary-buttons cc-print-hide">
-          <a class="cc-button" data-cc-outbound-enabled="true" href="/higher_one/higher_one_url" data-ng-disabled="!api.user.profile.actAsOptions.canPost">
-            Make Payment
-            <span data-ng-if="billing.fallSubheader" data-ng-bind-template="for {{billing.fallSubheader}}"></span>
+          <a class="cc-button"
+            data-cc-outbound-enabled="true"
+            href="/higher_one/higher_one_url"
+            data-ng-disabled="!api.user.profile.isDirectlyAuthenticated && !api.user.profile.canActOnFinances">
+            Make Payment <span data-ng-if="billing.fallSubheader" data-ng-bind-template="for {{billing.fallSubheader}}"></span>
           </a>
         </div>
       </li>
       <li data-ng-if="billing.data.summary.accountBalance <= 0">
-        <a class="cc-page-myfinances-account-summary-item" data-cc-outbound-enabled="true" href="/higher_one/higher_one_url">
-          View Official Monthly Statement
+        <a class="cc-page-myfinances-account-summary-item"
+           data-cc-outbound-enabled="true"
+           href="/higher_one/higher_one_url"
+           data-ng-if="api.user.profile.isDirectlyAuthenticated || api.user.profile.canActOnFinances">
+           View Official Monthly Statement
         </a>
       </li>
     </ul>
