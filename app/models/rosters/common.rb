@@ -86,7 +86,7 @@ module Rosters
             attrs[:majors] = section_enrollments_by_uid[attrs[:ldap_uid]].collect { |e| e['major'] }
             if (enrollment_row = section_enrollments_by_uid[attrs[:ldap_uid]].first)
               attrs[:student_id] = enrollment_row['student_id']
-              attrs[:terms_in_attendance] = terms_in_attendance_code(enrollment_row['terms_in_attendance_group'], enrollment_row['academic_program_code'])
+              attrs[:terms_in_attendance] = terms_in_attendance_code(enrollment_row['academic_career'], enrollment_row['terms_in_attendance_group'])
               attrs[:enroll_status] = enrollment_row['enroll_status']
               attrs[:grade_option] = Berkeley::GradeOptions.grade_option_from_basis enrollment_row['grading_basis']
               attrs[:units] = enrollment_row['units'].to_s
@@ -100,14 +100,15 @@ module Rosters
       end
     end
 
-    def terms_in_attendance_code(terms_in_attendance_group, academic_program_code)
-      case academic_program_code.try(:[], 0)
-        when 'G', 'L'
+    def terms_in_attendance_code(academic_career, terms_in_attendance_group)
+      terms_count = terms_in_attendance_group.try(:[], 1)
+      case academic_career
+        when 'GRAD', 'LAW'
           'G'
-        when 'X'
+        when 'UGRD'
+          terms_count || 'U'
+        when 'UCBX'
           "\u2014"
-        when 'U'
-          terms_in_attendance_group.try(:[], 1)
         else
           nil
       end

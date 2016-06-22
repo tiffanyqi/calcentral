@@ -173,7 +173,7 @@ describe Rosters::Campus do
             'units' => 4.0,
             'waitlist_position' => nil,
             'major' => 'Cognitive Science BA',
-            'academic_program_code' => 'UCLS',
+            'academic_career' => 'UGRD',
             'terms_in_attendance_group' => 'R2TA'
           },
           {
@@ -185,7 +185,7 @@ describe Rosters::Campus do
             'units' => 4.0,
             'waitlist_position' => nil,
             'major' => 'Computer Science BA',
-            'academic_program_code' => 'UCLS',
+            'academic_career' => 'UGRD',
             'terms_in_attendance_group' => 'R2TA'
           },
           {
@@ -197,7 +197,7 @@ describe Rosters::Campus do
             'units' => 3.0,
             'waitlist_position' => 9.0,
             'major' => 'Break Science BA',
-            'academic_program_code' => 'UCLS',
+            'academic_career' => 'UGRD',
             'terms_in_attendance_group' => 'R6TA'
           },
           {
@@ -209,7 +209,7 @@ describe Rosters::Campus do
             'units' => 4.0,
             'waitlist_position' => nil,
             'major' => 'Cognitive Science BA',
-            'academic_program_code' => 'UCLS',
+            'academic_career' => 'UGRD',
             'terms_in_attendance_group' => 'R2TA'
           },
           {
@@ -221,7 +221,7 @@ describe Rosters::Campus do
             'units' => 4.0,
             'waitlist_position' => nil,
             'major' => 'Computer Science BA',
-            'academic_program_code' => 'UCLS',
+            'academic_career' => 'UGRD',
             'terms_in_attendance_group' => 'R2TA'
           },
           {
@@ -233,7 +233,7 @@ describe Rosters::Campus do
             'units' => 3.0,
             'waitlist_position' => 9.0,
             'major' => 'Break Science BA',
-            'academic_program_code' => 'UCLS',
+            'academic_career' => 'UGRD',
             'terms_in_attendance_group' => 'R6TA'
           }
         ]
