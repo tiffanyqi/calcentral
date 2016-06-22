@@ -90,11 +90,12 @@
       display: block;
       overflow: visible;
       text-overflow: string;
-      white-space: pre-wrap;
+      white-space: normal;
     }
 
     .cc-page-roster-list {
       li {
+        height: auto;
         margin-top: 15px;
         page-break-inside: avoid;
       }
