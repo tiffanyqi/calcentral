@@ -9,6 +9,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   $scope.billing = {
     data: {},
     hasCarsActivity: false,
+    isErrored: false,
     isLoading: true,
     isLoadingCars: true,
     // We want to show this subheader only during the transition period, so we'll remove this for GL7.
@@ -72,7 +73,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   var loadCarsInfo = function() {
     financesFactory.getFinances()
       .then(hasCarsActivity)
-      .then(function() {
+      .finally(function() {
         $scope.billing.isLoadingCars = false;
       });
   };
@@ -108,6 +109,11 @@ angular.module('calcentral.controllers').controller('BillingController', functio
 
   var parseBillingInfo = function(data) {
     var billing = _.get(data, 'data.feed');
+
+    if (!billing || !billing.summary) {
+      $scope.billing.isErrored = true;
+      return;
+    }
 
     // Toggles the "Fall 2016" subheader needed for transition period, remove this for GL7.
     if (billing.summary.currentTerm === 'Summer 2016' || billing.summary.currentTerm === 'Fall 2016') {
@@ -171,7 +177,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
     financesFactory.getCsFinances()
       .then(parseBillingInfo)
       .then(loadCarsInfo)
-      .then(function() {
+      .finally(function() {
         $scope.billing.isLoading = false;
       });
   };
