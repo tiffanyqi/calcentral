@@ -83,7 +83,7 @@ module Rosters
           enrollments[section_id] = User::BasicAttributes.attributes_for_uids section_enrollments_by_uid.keys
           enrollments[section_id].each do |attrs|
             attrs[:email] = attrs.delete :email_address
-            attrs[:majors] = section_enrollments_by_uid[attrs[:ldap_uid]].collect { |e| e['major'] }
+            attrs[:majors] = section_enrollments_by_uid[attrs[:ldap_uid]].collect { |e| e['major'] }.uniq
             if (enrollment_row = section_enrollments_by_uid[attrs[:ldap_uid]].first)
               attrs[:student_id] = enrollment_row['student_id']
               attrs[:terms_in_attendance] = terms_in_attendance_code(enrollment_row['academic_career'], enrollment_row['terms_in_attendance_group'])
