@@ -276,12 +276,16 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
       }
     }).error(function(data) {
       angular.extend($scope, data);
+    }).finally(function() {
       $scope.csActivity.isLoadingCs = false;
     });
   };
 
   var loadCsInfo = function() {
     financesFactory.getCsFinances().success(function(data) {
+      if (!data || !data.feed || !data.feed.summary) {
+        return;
+      }
       if (data.feed.activity && data.feed.activity.length) {
         $scope.csActivity.hasCsActivity = true;
       }
@@ -289,7 +293,6 @@ angular.module('calcentral.controllers').controller('CarsController', function(a
       if (data.feed.summary.currentTerm === 'Summer 2016' || data.feed.summary.currentTerm === 'Fall 2016') {
         $scope.csActivity.fallText = 'Fall 2016';
       }
-      $scope.csActivity.isLoadingCs = false;
     });
   };
 
