@@ -46,7 +46,7 @@ class AdvisingStudentController < ApplicationController
   end
 
   def registrations
-    render json: MyRegistrations::MyRegistrations.new(student_uid_param).get_feed_internal
+    render json: MyRegistrations::MyRegistrations.new(student_uid_param).get_feed_as_json
   end
 
   def resources
