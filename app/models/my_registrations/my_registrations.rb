@@ -10,7 +10,7 @@ module MyRegistrations
       registrations = get_registrations
       terms = get_terms
       {
-        affiliations: registrations['affiliations'],
+        affiliations: registrations['affiliations'] || [],
         terms: terms,
         registrations: match_terms(registrations['registrations'], terms)
       }
@@ -44,6 +44,7 @@ module MyRegistrations
     def match_terms(registrations, terms)
       legacy_cutoff = Berkeley::TermCodes.slug_to_edo_id(Settings.terms.legacy_cutoff)
       matched_terms = {}
+      return matched_terms unless registrations.present?
       terms.each do |key, value|
         next if (value.nil? || matched_terms[value[:id]].present?)
         # Array format due to the possibility of a single term containing multiple academic career registrations
