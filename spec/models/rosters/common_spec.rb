@@ -350,6 +350,13 @@ describe Rosters::Common do
         expect(enrollments[section_id_two][1][:terms_in_attendance]).to eq "\u2014"
         expect(enrollments[section_id_two][2][:terms_in_attendance]).to eq nil
       end
+
+      context 'duplicate results from EDO DB' do
+        before { cs_enrollments << cs_enrollments.last }
+        it 'should de-duplicate majors' do
+          expect(enrollments[section_id_two].last[:majors]).to have(1).item
+        end
+      end
     end
   end
 
