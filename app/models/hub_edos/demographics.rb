@@ -45,7 +45,7 @@ module HubEdos
 
     def get_residency_item(path)
       return '' if path.blank?
-      return path['code']
+      return path['code'] || ''
     end
   end
 end
