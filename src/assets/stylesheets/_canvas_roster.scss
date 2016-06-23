@@ -3,6 +3,9 @@
   .cc-page-roster .cc-roster-search .cc-right {
     margin-top: 8px;
   }
+  .cc-page-roster .cc-inline-select {
+    height: auto;
+  }
   .cc-page-roster-list {
     li {
       height: auto;
@@ -37,7 +40,7 @@
       margin: 0 5px;
     }
 
-    .cc-select {
+    .cc-inline-select {
       width: 200px;
     }
   }
