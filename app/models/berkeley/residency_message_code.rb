@@ -1,69 +1,54 @@
 module Berkeley
   module ResidencyMessageCode
     extend self
+    include ClassLogger
 
     def residency_message_code(slr_status, residency_status, tuition_exception)
       slr_status.strip! if slr_status
       residency_status.strip! if residency_status
       tuition_exception.strip! if tuition_exception
-
-      case slr_status
-        when 'N' # Not submitted
-          case residency_status
-            when '', 'PEND' # none or Pending
-              '2000'
-            else
-              ''
-          end
-        when 'A' # Awaiting
-          case residency_status
-            when '', 'PEND'
+      message_code = case residency_status
+        when ''  # Not submitted
+          '2000' unless ['A', 'S', 'R'].include? slr_status   # Only for Pending residency
+        when 'PEND' # Pending
+          case slr_status
+            when 'A', 'S' # Awaiting Documents, Submitted
               '2001'
-            else
-              ''
-          end
-        when 'R' # Received
-          case residency_status
-            when '', 'PEND'
+            when 'R'  # Documents Received
               '2002'
             else
-              ''
+              '2000'
           end
-        when 'D', 'Y' # Completed
-          case residency_status
-            when 'NON' # Non-resident
-              case tuition_exception
-                when ''
-                  '2004'
-                when 'RA', 'RV' # AB540, Veteran/Dependent of Veteran
-                  '2005'
-                when 'RP' # Dependent Deceased Law Enf/FF
-                  '2007'
-                when 'RD', 'RDRA', 'RE', 'RF', 'RL' # Attorney Waiver, DACA Students Not CA or AB540, UC Employee Outside of CA, Faculty Spouse or Dependent, Dep of UC Emp Outside CA
-                  '2009'
-                when 'RM' # Military Member/Dep/Spouse
-                  '2010'
-                else
-                  ''
-              end
-            when 'RES' # Resident
-              case tuition_exception
-                when ''
-                  '2003'
-                when 'R8', 'RB', 'RP' # Credentialed Public School Emp, Grad Bureau Indian Affairs Sch, Dependent Deceased Law Enf/FF
-                  '2006'
-                when 'RD', 'RDO', 'RDRA' # Attorney Waiver, DACA Students Not CA or AB540,	Pending I-485 & AB540 Eligible
-                  '2008'
-                when 'R6', 'R9' # Dependent of CA Res Parent, Chula Vista Athlete
-                  '2011'
-                else
-                  ''
-              end
-            else
-              ''
+        when 'RES'  # Resident
+          case tuition_exception
+            when '' # Submitted, completed, nothing more to say
+              '2003'
+            when 'R8', 'RP', 'RB' # Credentialed Public School Emp, Dependent Deceased Law Enf/FF, Grad Bureau Indian Aff Sch
+              '2006'
+            when 'RD', 'RDO', 'RDRA'  # Attorney Waiver, DACA Students not CA or AB 540, Pending I-485 & AB 540 Eligible
+              '2008'
+            when 'R9', 'R6' # Chula Vista Athlete, Dependent of CA Res Parent
+              '2011'
           end
-        else
-          ''
+        when 'NON'  # Non-resident
+          case tuition_exception
+            when '' # Submitted, completed, nothing more to say
+              '2004'
+            when 'RA', 'RV' # AB 540, Veteran/Dependent of Veteran
+              '2005'
+            when 'RP' # Dependent Deceased Law Enf/FF
+              '2007'
+            when 'RD', 'RL', 'RF', 'RDRA', 'RE' # Attorney Waiver, Dep of UC Emp Outside CA, Faculty Spouse or Dependent, Pending I-485 & AB 540 Eligible, UC Employee Outside CA
+              '2009'
+            when 'RM' # Military Member/Dep/Spouse
+              '2010'
+          end
+      end
+      if message_code.nil?
+        logger.warn "Cannot determine message code for residency '#{residency_status}', SLR '#{slr_status}', tuition exception '#{tuition_exception}'"
+        ''
+      else
+        message_code
       end
     end
   end
