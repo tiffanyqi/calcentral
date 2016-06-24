@@ -9,13 +9,12 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
 
       test_users = UserUtils.load_test_users.select { |user| user['status'] }
       test_output_heading = ['UID', 'Affiliations', 'Student', 'Ex-Student', 'Registered', 'Reg Status', 'Reg Status Summary',
-                             'Resident', 'Active Hold', 'Hold Reasons', 'Active Block', 'Block Types', 'Block History']
+                             'Resident', 'Residency Message', 'Active Hold', 'Hold Reasons', 'Active Block', 'Block Types',
+                             'Block History']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       registered_users = []
       resident_users = []
-      non_res_link_tested = false
-      pending_res_link_tested = false
 
       splash_page = CalCentralPages::SplashPage.new driver
       my_dashboard_page = CalCentralPages::MyDashboardPage.new driver
@@ -35,6 +34,7 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
         logger.info "UID is #{uid}"
         api_reg_status = nil
         api_res_status = nil
+        api_residency_msg = nil
         has_active_hold = nil
         popover_hold_count = nil
         hold_reasons = []
@@ -181,16 +181,17 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
               # Residency info can take a while to load
               has_res_status = WebDriverUtils.verify_block { my_academics_page.res_status_summary_element.when_present 5 }
 
-              if has_reg_status_summary && student_api_page.has_residency? && !academics_api_page.colleges.include?('Haas School of Business')
+              if has_reg_status_summary && student_api_page.has_residency?
 
                 it ("shows residency status for UID #{uid}") { expect(has_res_status).to be true }
 
                 api_res_status = student_api_page.residency_desc
                 api_res_from_term = student_api_page.residency_from_term
 
+                resident_users << uid if api_res_status == 'Resident'
+
                 my_acad_res_status = my_academics_page.res_status_summary
                 my_acad_res_from_term = my_academics_page.res_from_term
-
                 shows_slr_submission_link = my_academics_page.res_slr_link?
 
                 it ("shows residency status of '#{api_res_status}' for UID #{uid}") { expect(my_acad_res_status).to eql(api_res_status) }
@@ -209,23 +210,27 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
                   it ("shows a red residency status icon for UID #{uid}") { expect(has_red_res_status_icon).to be true }
                 end
 
+                # Configurable residency messages in CS
                 unless student_api_page.residency_message_code.blank?
 
                   residency_api_page.get_json(driver, student_api_page.residency_message_code)
                   api_residency_msg = residency_api_page.message_text
 
                   my_academics_page.load_page
+                  my_academics_page.res_msg_element.when_visible
 
-                  has_res_message = WebDriverUtils.verify_block { my_academics_page.res_msg_element.when_visible WebDriverUtils.page_load_timeout }
+                  if api_residency_msg.blank?
 
-                  ui_residency_msg = my_academics_page.res_msg
+                    has_no_res_message = my_academics_page.wait_until { my_academics_page.res_msg.empty? }
+                    it ("shows no residency message for UID #{uid}") { expect(has_no_res_message).to be_truthy }
 
-                  it ("shows a residency message for UID #{uid}") { expect(has_res_message).to be true }
-                  it ("shows the right residency message for UID #{uid}") { expect(ui_residency_msg).to eql(api_residency_msg) }
+                  else
 
+                    has_res_message = my_academics_page.wait_until { my_academics_page.res_msg == api_residency_msg }
+                    it ("shows the right residency message for UID #{uid}") { expect(has_res_message).to be_truthy }
+
+                  end
                 end
-
-                resident_users << uid if api_res_status == 'Resident'
 
               else
 
@@ -264,7 +269,7 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
 
             else
 
-              has_no_holds_message = my_academics_page.no_active_holds_message?
+              has_no_holds_message = WebDriverUtils.verify_block { my_academics_page.no_active_holds_message_element.when_visible }
 
               it ("shows no hold alert on the profile popover for UID #{uid}") { expect(has_hold_alert).to be false }
               it ("shows a no active hold message for UID #{uid}") { expect(has_no_holds_message).to be true }
@@ -305,7 +310,7 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
             # If user has no reg status but has a hold, the blocks messaging still appears
             elsif (has_active_hold && badges_api_page.reg_status.nil?) || !badges_api_page.reg_status.nil?
 
-              has_no_blocks_message = my_academics_page.no_active_blocks_message?
+              has_no_blocks_message = WebDriverUtils.verify_block { my_academics_page.no_active_blocks_message_element.when_visible }
 
               it ("shows no block alert on the profile popover for UID #{uid}") { expect(has_block_alert).to be false }
               it ("shows a no active blocks message for UID #{uid}") { expect(has_no_blocks_message).to be true }
@@ -401,7 +406,8 @@ describe 'My Academics Status, Blocks, and Holds', :testui => true do
           logger.error "#{e.message + "\n"} #{e.backtrace.join("\n ")}"
         ensure
           test_output_row = [uid, affiliations * ', ', is_student, is_ex_student, is_registered, api_reg_status, api_reg_status_summary,
-                             api_res_status, has_active_hold, hold_reasons * ', ', has_active_block, block_types, has_block_history]
+                             api_res_status, api_residency_msg, has_active_hold, hold_reasons * ', ', has_active_block, block_types,
+                             has_block_history]
           UserUtils.add_csv_row(test_output, test_output_row)
         end
       end
