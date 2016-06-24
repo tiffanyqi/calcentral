@@ -18,7 +18,7 @@
           <span data-ng-bind="item.toDate"></span>
         </div>
         <div>
-          <button class="cc-button-link" data-ng-click="showEdit(item)" data-ng-if="api.user.profile.actAsOptions.canPost">Edit <span class="cc-visuallyhidden">Your <span data-ng-bind="item.employer"></span> Work Experience</span></button>
+          <button class="cc-button-link" data-ng-click="showEdit(item)" data-ng-if="!items.editorEnabled && api.user.profile.actAsOptions.canPost">Edit <span class="cc-visuallyhidden">Your <span data-ng-bind="item.employer"></span> Work Experience</span></button>
         </div>
       </div>
       <div data-ng-if="item.isModifying" data-ng-include="'widgets/profile/work_experience_editor.html'"></div>
