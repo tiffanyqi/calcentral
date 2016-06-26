@@ -9,8 +9,13 @@ class ApiCSResidencyMessagePage
     @parsed = JSON.parse driver.find_element(:xpath => '//pre').text
   end
 
+  def message
+    @parsed['feed'] && @parsed['feed']['root'] && @parsed['feed']['root']['getMessageCatDefn'] && @parsed['feed']['root']['getMessageCatDefn']['descrlong']
+  end
+
+  # Remove link markup from the message strings
   def message_text
-    @parsed['feed'] && @parsed['feed']['root']['getMessageCatDefn']['descrlong']
+    message && message.gsub(%r{</?[^>]+?>}, '')
   end
 
 end
