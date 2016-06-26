@@ -48,7 +48,7 @@ module EdoOracle
           enroll."CLASS_SECTION_ID" = '#{course_id}'
           AND enroll."TERM_ID" = '#{term_id}'
           AND enroll."STDNT_ENRL_STATUS_CODE" != 'D'
-          #{users_clause}
+          AND #{users_clause}
       SQL
     end
 

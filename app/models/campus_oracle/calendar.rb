@@ -48,7 +48,7 @@ module CampusOracle
             and c.term_yr = #{term_yr.to_i}
             and c.term_cd = #{connection.quote(term_cd)}
             and c.course_cntl_num = #{ccn.to_i}
-        #{users_clause}
+            and #{users_clause}
           order by p.ldap_uid
         SQL
         result = connection.select_all(sql)
