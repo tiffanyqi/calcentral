@@ -70,12 +70,12 @@ module EdoOracle
         LEFT OUTER JOIN SISEDO.DISPLAYNAMEXLAT_MVW xlat ON (
           xlat."classDisplayName" = sec."displayName")
         LEFT OUTER JOIN SISEDO.API_COURSEV00_VW crs ON (
-          xlat."courseDisplayName" = crs."displayName")
+          xlat."courseDisplayName" = crs."displayName"
+          AND crs."status-code" = 'ACTIVE')
         WHERE
           sec."term-id" = '#{term_id}'
           AND #{filter_clause}
           AND sec."status-code" = 'A'
-          AND (crs."status-code" = 'ACTIVE' OR crs."status-code" IS NULL)
       SQL
     end
 
