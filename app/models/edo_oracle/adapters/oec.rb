@@ -4,9 +4,19 @@ module EdoOracle
       extend EdoOracle::Adapters::Common
 
       def self.get_courses(term_code, filter)
+        rows = super(term_id(term_code), filter)
+        adapt_courses(rows, term_code)
+      end
+
+      def self.get_enrollments(term_code, select_clause, filter)
+        rows = super(term_id(term_code), select_clause, filter)
+        adapt_enrollments(rows, term_code)
+      end
+
+      def self.adapt_courses(rows, term_code)
         default_dates = default_edo_dates term_code
         user_courses = EdoOracle::UserCourses::Base.new
-        super(term_id(term_code), filter).each do |row|
+        rows.each do |row|
           uniq_ccn_lists row
 
           adapt_dept_name_and_catalog_id(row, user_courses)
@@ -24,8 +34,8 @@ module EdoOracle
         end
       end
 
-      def self.get_enrollments(term_code, select_clause, filter)
-        super(term_id(term_code), select_clause, filter).each do |row|
+      def self.adapt_enrollments(rows, term_code)
+        rows.each do |row|
           adapt_course_id(row, term_code)
         end
       end
