@@ -18,7 +18,7 @@ module MyRegistrations
 
     def get_registrations
       registrations = HubEdos::Registrations.new(user_id: @uid).get
-      registrations[:feed]
+      registrations[:feed] || []
     end
 
     def get_terms
@@ -44,20 +44,22 @@ module MyRegistrations
     def match_terms(registrations, terms)
       legacy_cutoff = Berkeley::TermCodes.slug_to_edo_id(Settings.terms.legacy_cutoff)
       matched_terms = {}
-      return matched_terms unless registrations.present?
       terms.each do |key, value|
         next if (value.nil? || matched_terms[value[:id]].present?)
         # Array format due to the possibility of a single term containing multiple academic career registrations
-        matched_terms[value[:id]] = []
+        term_id = value[:id]
+        term_registrations = []
         # If the term is less than or equal to Settings.terms.legacy_cutoff, parse it as we would a legacy term.
-        if (value[:id].to_i <= legacy_cutoff.to_i)
-          matched_terms[value[:id]].push parse_legacy_term(key, value[:id], value[:name])
-        end
-        registrations.each do |registration|
-          if (value[:id] == registration['term']['id'])
-            matched_terms[value[:id]].push(registration)
+        if (term_id.to_i <= legacy_cutoff.to_i)
+          term_registrations.push parse_legacy_term(key, term_id, value[:name])
+        elsif registrations.present?
+          registrations.each do |registration|
+            if (term_id == registration['term']['id'])
+              term_registrations.push(registration)
+            end
           end
         end
+        matched_terms[term_id] = term_registrations if term_registrations.present?
       end
       matched_terms
     end
