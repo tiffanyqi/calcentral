@@ -22,6 +22,7 @@ if ENV["UI_TEST"]
   require_relative '../ui_selenium/pages/my_finances_pages'
   require_relative '../ui_selenium/pages/my_finances_landing_page'
   require_relative '../ui_selenium/pages/my_finances_details_page'
+  require_relative '../ui_selenium/pages/my_finances_billing_page'
   require_relative '../ui_selenium/pages/my_finances_financial_aid_page'
   require_relative '../ui_selenium/pages/my_profile_page'
   require_relative '../ui_selenium/pages/my_toolbox_page'

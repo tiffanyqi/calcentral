@@ -9,16 +9,16 @@ module CalCentralPages
     wait_for_expected_title('My Finances | CalCentral', WebDriverUtils.page_load_timeout)
     h1(:page_heading, :xpath => '//h1[text()="My Finances"]')
 
-    # BILLING SUMMARY CARD
+    # BILLING SUMMARY CARD - CARS
     h2(:billing_summary_heading, :xpath => '//h2[contains(text(),"Billing Summary")]')
     link(:details_link, :text => 'Details')
     div(:billing_summary_spinner, :xpath => '//h2[contains(.,"Billing Summary")]/../following-sibling::div[@class="cc-spinner"]')
-    paragraph(:no_cars_data_msg, :xpath => '//p[@data-ng-if="myfinancesError"]')
+    paragraph(:no_cars_data_msg, :class => 'cc-page-myfinances-account-summary-error')
     unordered_list(:billing_summary_list, :xpath => '//ul[@data-ng-show="myfinances.summary"]')
     div(:dpp_bal, :xpath => '//div[@data-cc-amount-directive="myfinances.summary.dppBalance"]')
     div(:dpp_norm_install, :xpath => '//div[@data-cc-amount-directive="myfinances.summary.dppNormalInstallmentAmount"]')
     div(:dpp_text, :xpath => '//div[contains(text(),"1: Reflected in charges with DPP")]')
-    label(:amt_due_now_label, :xpath => '//strong[@data-cc-amount-directive="myfinances.summary.minimumAmountDue"]/../../preceding-sibling::div/strong[1]')
+    label(:amt_due_now_label, :xpath => '//strong[@data-cc-amount-directive="myfinances.summary.minimumAmountDue"]/../../preceding-sibling::div/strong')
     div(:min_amt_due, :xpath => '//div[@class="cc-page-myfinances-amount"]/strong[@data-cc-amount-directive="myfinances.summary.minimumAmountDue"]')
     span(:past_due, :xpath => '//span[@data-cc-amount-directive="myfinances.summary.totalPastDueAmount"]')
     div(:chg_not_due, :xpath => '//div[@data-cc-amount-directive="myfinances.summary.futureActivity"]')
@@ -27,6 +27,31 @@ module CalCentralPages
     div(:last_statement_bal, :xpath => '//div[@data-cc-amount-directive="myfinances.summary.lastStatementBalance"]')
     link(:view_statements_link, :xpath => '//a[contains(text(),"View Statements")]')
     link(:make_payment_link, :xpath => '//a[@href="http://studentbilling.berkeley.edu/carsPaymentOptions.htm"]')
+
+    # BILLING SUMMARY CARD - CS
+    label(:amt_due_now_label_cs, :xpath => '//strong[@data-cc-amount-directive="billing.data.summary.amountDueNow"]/../../preceding-sibling::div/strong')
+    div(:min_amt_due_cs, :xpath => '//strong[@data-cc-amount-directive="billing.data.summary.amountDueNow"]')
+    div(:chg_not_due_cs, :xpath => '//div[@data-cc-amount-directive="billing.data.summary.chargesNotYetDue"]')
+    div(:account_bal_cs, :xpath => '//div[@data-cc-amount-directive="billing.data.summary.accountBalance"]')
+    link(:make_payment_link_cs, :xpath => '//a[contains(@href,"/higher_one")]')
+    # TODO - past due?
+    link(:view_prior_link, :xpath => '//a[contains(.,"View transactions prior to")]')
+    div(:no_cs_data_msg, :xpath => '//div[contains(.," There was a problem reaching campus services. Please try again later.")]')
+
+    # BILLING ACTIVITY - for both CARS and CS
+    select_list(:activity_filter_select, :id => 'cc-page-myfinances-account-choices')
+    select_list(:activity_filter_term_select, :id => 'cc-page-myfinances-select-term')
+    text_area(:search_string_input, :xpath => '//input[@data-ng-model="search.$"]')
+    text_area(:search_start_date_input, :id => 'cc-page-myfinances-date-start')
+    text_area(:search_end_date_input, :id => 'cc-page-myfinances-date-end')
+    paragraph(:search_start_date_format_error, :xpath => '//p[contains(.,"Please use mm/dd/yyyy date format for the start date.")]')
+    paragraph(:search_end_date_format_error, :xpath => '//p[contains(.,"Please use mm/dd/yyyy date format for the end date.")]')
+
+    table(:transaction_table, :xpath => '//div[@class="cc-table cc-table-sortable cc-page-myfinances-table cc-table-finances"]/table')
+    link(:transaction_table_row_one, :xpath => '//div[@class="cc-table cc-table-sortable cc-page-myfinances-table cc-table-finances"]/table/tbody')
+    paragraph(:zero_balance_text, :xpath => '//p[contains(text(),"You do not owe anything at this time. Please select a different filter to view activity details.")]')
+    paragraph(:credit_balance_text, :xpath => '//p[contains(text(),"You have an over-payment on your account. You do not owe anything at this time. Please select a different filter to view activity details.")]')
+    button(:show_more_button, :class => 'cc-widget-show-more')
 
     # FINANCIAL AID SUMMARY CARD
     div(:finaid_content, :xpath => '//div[@data-ng-if="!finaidSummaryInfo.errored"]')
@@ -62,11 +87,11 @@ module CalCentralPages
     link(:faso_link, :xpath => '//div[@data-ng-controller="FinaidSummaryController"]//a[contains(.,"Financial Aid & Scholarships")]')
     link(:csu_link, :xpath => '//div[@data-ng-controller="FinaidSummaryController"]//a[contains(.,"Cal Student Central")]')
 
-    # BILLING AND PAYMENTS
-
     def strip_currency(currency_amount)
       currency_amount.delete('$, ')
     end
+
+    # ACCOUNT SUMMARY - CARS
 
     def account_balance
       strip_currency account_bal
@@ -113,6 +138,76 @@ module CalCentralPages
     def click_billing_details_link
       details_link
       activity_heading_element.when_visible WebDriverUtils.page_load_timeout
+    end
+
+    # ACCOUNT SUMMARY - CS
+
+    def amt_due_now_cs
+      strip_currency min_amt_due_cs
+    end
+
+    def charges_not_due_cs
+      strip_currency chg_not_due_cs
+    end
+
+    def account_balance_cs
+      strip_currency account_bal_cs
+    end
+
+    # TRANSACTION FILTERING
+
+    def search(activity, term, start_date, end_date, string)
+      activity_filter_select_element.when_visible WebDriverUtils.page_load_timeout
+      self.activity_filter_select = activity
+      self.activity_filter_term_select = term unless term.nil?
+      if activity == 'Date Range'
+        WebDriverUtils.wait_for_element_and_type(search_start_date_input_element, start_date)
+        WebDriverUtils.wait_for_element_and_type(search_end_date_input_element, end_date)
+      end
+      WebDriverUtils.wait_for_element_and_type(search_string_input_element, string)
+    end
+
+    # TRANSACTION DATA
+
+    def visible_transaction_count
+      transaction_table_element.exists? ? (transaction_table_element.rows - 1) : 0
+    end
+
+    def visible_transaction_dates
+      dates = []
+      transaction_table_element.each { |row| dates << row[0].text }
+      dates_minus_heading = dates.drop 1
+      dates_minus_heading.map { |date| Date.strptime(date, '%m/%d/%y') }
+    end
+
+    def visible_transaction_descrips
+      descriptions = []
+      transaction_table_element.each { |row| descriptions << row[1].text }
+      descriptions.drop 1
+    end
+
+    def visible_transaction_amts_str
+      amounts = []
+      transaction_table_element.each { |row| amounts << row[2].text.delete('$, ') }
+      amounts.drop 1
+    end
+
+    def visible_transaction_amts
+      visible_transaction_amts_str.collect { |s| s.to_f }
+    end
+
+    def visible_transaction_types
+      trans_types = []
+      transaction_table_element.each { |row| trans_types << row[3].text }
+      trans_types.drop 1
+    end
+
+    def show_all
+      show_more_button while show_more_button_element.visible?
+    end
+
+    def toggle_first_trans_detail
+      transaction_table_row_one
     end
 
     # FINANCIAL AID - CS CARD

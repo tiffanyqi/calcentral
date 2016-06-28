@@ -13,14 +13,6 @@ module CalCentralPages
       h1(:page_heading, :xpath => '//h1[contains(.,"Details"]')
       div(:activity_spinner, :xpath => '//h2[text()="Activity"]/../following-sibling::div[@class="cc-spinner"]')
 
-      select_list(:activity_filter_select, :id => 'cc-page-myfinances-account-choices')
-      select_list(:activity_filter_term_select, :id => 'cc-page-myfinances-select-term')
-      text_area(:search_string_input, :xpath => '//input[@data-ng-model="search.$"]')
-      text_area(:search_start_date_input, :id => 'cc-page-myfinances-date-start')
-      text_area(:search_end_date_input, :id => 'cc-page-myfinances-date-end')
-      paragraph(:search_start_date_format_error, :xpath => '//p[contains(.,"Please use mm/dd/yyyy date format for the start date.")]')
-      paragraph(:search_end_date_format_error, :xpath => '//p[contains(.,"Please use mm/dd/yyyy date format for the end date.")]')
-
       link(:sort_by_date, :xpath => '//th[@data-ng-click="changeSorting(\'transDate\')"]')
       link(:sort_by_descrip, :xpath => '//th[@data-ng-click="changeSorting(\'transDesc\')"]')
       link(:sort_by_amount, :xpath => '//th[@data-ng-click="changeSorting(\'transBalanceAmountFloat\')"]')
@@ -28,9 +20,6 @@ module CalCentralPages
       link(:sort_by_due_now, :xpath => '//th[@data-ng-click="changeSorting(\'isDueNow\')"]')
       image(:sort_descending, :xpath => '//i[@class="fa fa-chevron-down"]')
       image(:sort_ascending, :xpath => '//i[@class="fa fa-chevron-up"]')
-
-      table(:transaction_table, :xpath => '//div[@class="cc-table cc-table-sortable cc-page-myfinances-table cc-table-finances"]/table')
-      link(:transaction_table_row_one, :xpath => '//div[@class="cc-table cc-table-sortable cc-page-myfinances-table cc-table-finances"]/table/tbody')
 
       # The following are elements from the first transaction in the UI
       span(:trans_date, :xpath => '//span[@data-ng-bind="item.transDate | date:\'MM/dd/yy\'"]')
@@ -52,79 +41,26 @@ module CalCentralPages
       div(:trans_ref_void, :xpath => '//div[@data-ng-if="item.transPaymentVoidDate"]')
       div(:trans_unapplied, :xpath => '//div[@data-ng-if="item.transStatus === \'Unapplied\' && item.transType === \'Award\'"]')
 
-      paragraph(:zero_balance_text, :xpath => '//p[contains(text(),"You do not owe anything at this time. Please select a different filter to view activity details.")]')
-      paragraph(:credit_balance_text, :xpath => '//p[contains(text(),"You have an over-payment on your account. You do not owe anything at this time. Please select a different filter to view activity details.")]')
-
-      button(:show_more_button, :class => 'cc-widget-show-more')
-
       span(:last_update_date, :xpath => '//span[@data-ng-bind="myfinances.summary.lastUpdateDate | date:\'MM/dd/yy\'"]')
 
       def load_page
         logger.info 'Loading My Finances details page'
         sleep 1
         navigate_to "#{WebDriverUtils.base_url}/finances/details"
-        activity_spinner_element.when_not_visible WebDriverUtils.page_load_timeout if activity_spinner_element.visible?
+        activity_spinner_element.when_not_visible if activity_spinner_element.visible?
       end
 
-      # VISIBLE TRANSACTIONS
-
-      def visible_transaction_count
-        transaction_table_element.exists? ? (transaction_table_element.rows - 1) : 0
-      end
-
-      def visible_transaction_dates
-        dates = []
-        transaction_table_element.each { |row| dates << row[0].text }
-        dates_minus_heading = dates.drop 1
-        dates_minus_heading.map { |date| Date.strptime(date, '%m/%d/%y') }
-      end
-
-      def visible_transaction_descrips
-        descriptions = []
-        transaction_table_element.each { |row| descriptions << row[1].text }
-        descriptions.drop 1
-      end
-
-      def visible_transaction_amts_str
-        amounts = []
-        transaction_table_element.each { |row| amounts << row[2].text.delete('$, ') }
-        amounts.drop 1
-      end
-
-      def visible_transaction_amts
-        visible_transaction_amts_str.collect { |s| s.to_f }
+      def load_summary
+        tries ||= 5
+        load_page
+        min_amt_due_element.when_visible
+      rescue
+        retry unless (tries -= 1).zero?
       end
 
       def visible_transactions_sum_str
         sum = visible_transaction_amts_str.inject(BigDecimal.new('0')) { |acc, amt| acc + BigDecimal.new(amt) }
         (sprintf '%.2f', sum).to_s
-      end
-
-      def visible_transaction_types
-        trans_types = []
-        transaction_table_element.each { |row| trans_types << row[4].text }
-        trans_types.drop 1
-      end
-
-      def show_all
-        show_more_button while show_more_button_element.visible?
-      end
-
-      def toggle_first_trans_detail
-        transaction_table_row_one
-      end
-
-      # TRANSACTION FILTERING
-
-      def search(activity, term, start_date, end_date, string)
-        activity_filter_select_element.when_visible WebDriverUtils.page_load_timeout
-        self.activity_filter_select = activity
-        self.activity_filter_term_select = term unless term.nil?
-        if activity == 'Date Range'
-          WebDriverUtils.wait_for_element_and_type(search_start_date_input_element, start_date)
-          WebDriverUtils.wait_for_element_and_type(search_end_date_input_element, end_date)
-        end
-        WebDriverUtils.wait_for_element_and_type(search_string_input_element, string)
       end
 
       # TRANSACTION SORTING

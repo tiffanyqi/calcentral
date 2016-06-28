@@ -157,7 +157,8 @@ class ApiMyFinancialsPage
   end
 
   def transactions_sum(transactions)
-    transactions.inject(BigDecimal.new('0')) { |acc, bal| acc + BigDecimal.new(amt_to_s(trans_balance(bal))) }
+    sum = transactions.inject(BigDecimal.new('0')) { |acc, bal| acc + BigDecimal.new(amt_to_s(trans_balance(bal))) }
+    WebDriverUtils.amt_to_s sum
   end
 
   def open_transactions

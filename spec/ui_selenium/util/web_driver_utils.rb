@@ -109,6 +109,11 @@ class WebDriverUtils
     dollar_amount.delete('$, ').to_f
   end
 
+  def self.amt_to_s(amount)
+    trimmed_amount = (amount == amount.to_i ? amount.to_i : amount)
+    trimmed_amount.to_s
+  end
+
   def self.wait_for_page_and_click(element)
     element.when_present page_load_timeout
     element.when_visible page_load_timeout
