@@ -9,21 +9,7 @@ describe MyRegistrations::MyRegistrations do
       ],
       "registrations" => [
         {
-          "term" => {
-            "id" => 2162,
-            "name" => "2016 Spring",
-            "academicYear" => "2017"
-          }
-        },
-        {
-          "term" => {
-            "id" => 2165,
-            "name" => "2016 Summer",
-            "academicYear" => "2017"
-          }
-        },
-        {
-          "term" => {
+            "term" => {
             "id" => 2168,
             "name" => "2016 Fall",
             "academicYear" => "2017"
