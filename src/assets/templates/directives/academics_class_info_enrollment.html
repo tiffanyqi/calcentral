@@ -2,12 +2,6 @@
   <div class="cc-widget-title">
     <h2 class="cc-left" data-ng-bind="title"></h2>
     <div class="cc-academics-class-enrollment-options cc-right">
-      <a class="cc-button"
-          data-ng-disabled="studentsInSectionEmailList().length === 0 || showAddresses"
-          data-ng-click="toggleAddresses(true)">
-        <i class="fa fa-clipboard" aria-hidden="true"></i>
-        <span class="hidden-for-small-only">Copy Addresses</span>
-      </a>
       <a class="cc-button hidden-for-small-only" target="_self"
         data-ng-disabled="!students.length"
         data-ng-href="/api/academics/rosters/campus/csv/{{campusCourseId}}.csv">
@@ -18,41 +12,113 @@
       <select id="section-select" class="cc-inline-select bc-canvas-embedded-roster-select"
               data-ng-options="section as section.name for section in sections track by section.ccn"
               data-ng-model="selectedSection"
-              data-ng-change="accessibilityAnnounce('Enrollment filtered by section')">
+              data-ng-change="sectionChangeActions()">
         <option value="">All Sections</option>
       </select>
     </div>
   </div>
   <div class="cc-widget-padding">
+
     <div class="cc-academics-class-enrollment-text">
-      On List: <strong data-ng-bind="students.length"></strong> |
-      Available: <strong data-ng-bind="seatsAvailable"></strong>
+      <span class="cc-academics-class-enrollment-stats">
+        On List: <strong data-ng-bind="students.length"></strong> |
+        Available: <strong data-ng-bind="seatsAvailable"></strong>
+      </span>
+
+      <div class="visible-for-small-only cc-academics-class-enrollment-mobile-button-spacer"></div>
+
+      <a class="cc-button cc-class-enrollment-formatted-content-show-button"
+          data-ng-disabled="displayedSection === 'addresses' || noStudentsSelected()"
+          data-ng-click="displaySection('addresses')">
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
+        <span class="hidden-for-small-only">Copy Addresses</span>
+      </a>
+
+      <a class="cc-button cc-class-enrollment-formatted-content-show-button"
+          data-ng-if="studentRole === 'waitlisted'"
+          data-ng-disabled="displayedSection === 'promote' || noStudentsSelected()"
+          data-ng-click="displaySection('promote')">
+        <span class="hidden-for-small-only">Request to</span> Promote
+      </a>
+
+      <a class="cc-button cc-class-enrollment-formatted-content-show-button"
+          data-ng-if="studentRole === 'waitlisted'"
+          data-ng-disabled="displayedSection === 'enroll' || noStudentsSelected()"
+          data-ng-click="displaySection('enroll')">
+        <span class="hidden-for-small-only">Request to</span> Enroll
+      </a>
+
+      <a class="cc-button cc-class-enrollment-formatted-content-show-button"
+          data-ng-if="studentRole === 'waitlisted'"
+          data-ng-disabled="displayedSection === 'remove' || noStudentsSelected()"
+          data-ng-click="displaySection('remove')">
+        <span class="hidden-for-small-only">Request to</span> Remove
+      </a>
+
+      <a class="cc-button cc-class-enrollment-formatted-content-show-button"
+          data-ng-if="studentRole !== 'waitlisted'"
+          data-ng-disabled="displayedSection === 'drop' || noStudentsSelected()"
+          data-ng-click="displaySection('drop')">
+        <span class="hidden-for-small-only">Request to</span> Drop
+      </a>
     </div>
-    <div data-ng-if="showAddresses">
-      <div class="cc-class-enrollment-addresses-instructions">
-        <p class="cc-class-enrollment-addresses-instructions-paragraph">
+
+    <div data-ng-if="displayedSection === 'addresses'">
+      <div class="cc-class-enrollment-action-instructions">
+        <p class="cc-class-enrollment-action-instructions-paragraph">
           <strong>
             <span data-ng-bind="students.length"></span> student addresses ready to be copied.
           </strong>
         </p>
-        <p class="cc-class-enrollment-addresses-instructions-paragraph">
-          Copy the email addresses from the text field below, and paste them into your email application. For larger classes, scrolling may be needed to view all addresses. With FERPA in mind, use the BCC field as needed. Click Hide Addresses when finished.
+        <p class="cc-class-enrollment-action-instructions-paragraph">
+          Copy the email addresses from the text field below, and paste them into your email application. For larger
+          classes, scrolling may be needed to view all addresses. With FERPA in mind, use the BCC field as needed.
+          Click Hide Addresses when finished.
         </p>
       </div>
-      <div class="cc-class-enrollment-addresses-hide-button">
-        <a class="cc-button" data-ng-disabled="!showAddresses" data-ng-click="toggleAddresses(false)">
+      <div class="cc-class-enrollment-formatted-content-hide-button">
+        <a class="cc-button" data-ng-disabled="displayedSection !== 'addresses'" data-ng-click="displaySection('default')">
           Hide Addresses
         </a>
       </div>
-      <textarea class="cc-class-enrollment-addresses" data-ng-bind="studentsInSectionEmailList()"></textarea>
+      <textarea class="cc-class-enrollment-formatted-content" data-ng-bind="selectedStudentsEmailList()"></textarea>
     </div>
-    <div data-ng-if="!showAddresses">
+
+    <div data-ng-if="isMessageDisplay()">
+      <div class="cc-class-enrollment-action-instructions">
+        <p class="cc-class-enrollment-action-instructions-paragraph">
+          The message in the text field below is for the classroom scheduler / enrollment manager ("scheduler") for your
+          class. To use it, copy the content, and paste it into your email application. Edit as needed, and address the
+          message to your scheduler. Note that a subject is included. Pasting that into the subject field will make it
+          easier for your scheduler to most efficiently gather and process requests from your department.
+        </p>
+        <p class="cc-class-enrollment-action-instructions-paragraph">
+          <strong>Note:</strong>
+          These students' positions on waitlists, enrollment, etc. will not be updated in CalCentral until the scheduler
+          has fulfilled your request.
+        </p>
+      </div>
+      <div class="cc-class-enrollment-formatted-content-hide-button">
+        <a class="cc-button" data-ng-disabled="displayedSection === 'default'" data-ng-click="displaySection('default')">
+          Hide <span class="cc-capitalize" data-ng-bind="displayedSection"></span> Message
+        </a>
+      </div>
+      <textarea class="cc-class-enrollment-formatted-content" data-ng-bind="messageForSelectedStudents()"></textarea>
+    </div>
+
+    <div data-ng-if="displayedSection === 'default'">
       <div class="cc-academics-class-enrollment-notice">
-        <strong>Notes:</strong> Use headers to sort columns. Email links and buttons work best when signed into bMail in another window/tab in the same browser as CalCentral.
+        <strong>Notes:</strong> Use headers to sort columns. Email links and buttons work best when signed into bMail in
+        another window/tab in the same browser as CalCentral.
       </div>
       <div class="cc-table cc-academics-class-enrollment-table">
         <table>
           <thead class="cc-academics-class-enrollment-table-head">
+            <th scope="col">
+              <span class="cc-visuallyhidden">Selectors</span>
+              <input id="cc-academics-class-enrollment-student-selectall"
+                  type="checkbox" data-ng-checked="!noStudentsSelected()" data-ng-click="toggleSelected()">
+            </th>
             <th data-ng-show="showPosition" data-cc-sortable-column-directive="waitlist_position" data-column-heading="Pos"></th>
             <th data-cc-sortable-column-directive="last_name" data-column-heading="Name"></th>
             <th data-cc-sortable-column-directive="email" data-column-heading="Email"></th>
@@ -66,12 +132,18 @@
                  data-ng-class-even="'cc-academics-even'"
                  data-ng-if="students.length">
             <tr class="cc-academics-class-enrollment-table-row">
+              <td>
+                <input id="cc-academics-class-enrollment-student-{{$index}}"
+                  type="checkbox" name="student_id" data-ng-model="student.selected">
+              </td>
               <td data-ng-if="showPosition">
                 <strong data-ng-bind="student.waitlist_position"></strong>
               </td>
               <td>
-                <span data-ng-bind="student.last_name"></span>,
-                <span data-ng-bind="student.first_name"></span>
+                <label for="cc-academics-class-enrollment-student-{{$index}}">
+                  <span data-ng-bind="student.last_name"></span>,
+                  <span data-ng-bind="student.first_name"></span>
+                </label>
               </td>
               <td>
                 <a data-ng-if="student.email" data-ng-bind="student.email" data-ng-href="{{bmailLink(student.email)}}"></a>

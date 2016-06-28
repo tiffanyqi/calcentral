@@ -64,21 +64,27 @@
     margin-bottom: 10px;
     margin-top: 0;
   }
-  .cc-class-enrollment-addresses {
-    height: 10em;
+  .cc-class-enrollment-formatted-content {
+    height: 25em;
     width: 100%;
   }
-  .cc-class-enrollment-addresses-instructions {
-    padding: 10px 0;
-  }
-  .cc-class-enrollment-addresses-hide-button {
+  .cc-class-enrollment-formatted-content-hide-button {
     padding: 0 0 15px;
   }
-  .cc-class-enrollment-addresses-instructions-paragraph {
+  .cc-class-enrollment-formatted-content-show-button {
+    margin-right: 5px;
+  }
+  .cc-class-enrollment-action-instructions {
+    padding: 10px 0;
+  }
+  .cc-class-enrollment-action-instructions-paragraph {
+    margin-bottom: 5px;
+  }
+  .cc-academics-class-enrollment-mobile-button-spacer {
     margin-bottom: 5px;
   }
   .cc-academics-class-enrollment-notice {
-    padding-top: 5px;
+    padding-top: 10px;
   }
   .cc-academics-class-enrollment-options {
     margin: 7px 0;
@@ -106,6 +112,9 @@
     td {
       padding: 5px;
     }
+  }
+  .cc-academics-class-enrollment-stats {
+    margin-right: 10px;
   }
   .cc-academics-class-enrollment-text {
     font-size: 13px;
