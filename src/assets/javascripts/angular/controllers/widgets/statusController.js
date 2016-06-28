@@ -24,7 +24,7 @@ angular.module('calcentral.controllers').controller('StatusController', function
       $scope.count++;
       $scope.hasAlerts = true;
     }
-    if (data.studentInfo.regBlock.activeBlocks) {
+    if (data.studentInfo.regBlock.activeBlocks && apiService.user.profile.features.legacyRegblocks) {
       $scope.count += data.studentInfo.regBlock.activeBlocks;
       $scope.hasAlerts = true;
     } else if (data.studentInfo.regBlock.errored) {

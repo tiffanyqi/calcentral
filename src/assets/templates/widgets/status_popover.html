@@ -15,7 +15,7 @@
       </div>
     </a>
   </li>
-  <li class="cc-popover-item" data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)">
+  <li class="cc-popover-item" data-ng-if="api.user.profile.roles.student && api.user.profile.features.legacyRegblocks && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)">
     <a href="/academics">
       <div class="cc-launcher-status-description">
         <i class="fa"

@@ -1,0 +1,49 @@
+.cc-status-holds {
+  .cc-status-holds-status-table {
+    margin-bottom: 15px;
+    tbody tr:nth-child(odd) {
+      td, th {
+        padding-top: 10px;
+      }
+    }
+  }
+  .cc-widget-list-hover, .cc-widget-table-hover {
+    padding: 0;
+    i {
+      padding-right: 5px;
+    }
+    p {
+      font-size: 12px;
+      line-height: 1.3;
+      margin: 5px 0;
+    }
+  }
+  .cc-status-holds-list {
+    font-size: 13px;
+    padding: 0;
+
+    > li {
+      border-bottom: 1px solid $cc-color-widget-background;
+      &:last-child {
+        border-bottom: 1px solid $cc-color-widget-background;
+      }
+    }
+    .cc-status-holds-expanded-text {
+      margin-left: 10px;
+    }
+    .cc-status-holds-list-item {
+      margin-bottom: 8px;
+    }
+    .cc-status-holds-list-section {
+      margin: 10px 0 4px;
+    }
+  }
+
+  .cc-status-holds-section {
+    margin-bottom: 16px;
+  }
+
+  .cc-status-holds-status-header {
+    padding-bottom: 12px;
+  }
+}

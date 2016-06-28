@@ -99,6 +99,7 @@ features:
   cs_profile_work_experience: true
   cs_transfer_credit: true
   financials: true
+  legacy_regblocks: true
   telebears: true
   textbooks: true
   videos: true

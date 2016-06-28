@@ -18,9 +18,11 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     isLoading: true
   };
   $scope.regStatus = {
+    term: null,
+    isSummer: false,
     summary: null,
     explanation: null,
-    needsAction: null,
+    needsAction: false,
     isLoading: true
   };
   $scope.residency = {
@@ -31,7 +33,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
   };
   $scope.statusHoldsBlocks = {};
 
-  $scope.$watchGroup(['regStatus.summary', 'api.user.profile.features.csHolds'], function(newValues) {
+  $scope.$watchGroup(['regStatus.summary', 'api.user.profile.features.csHolds', 'api.user.profile.features.legacyRegblocks'], function(newValues) {
     var enabledSections = [];
 
     if (newValues[0] !== null && newValues[0] !== undefined) {
@@ -42,7 +44,9 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       enabledSections.push('Holds');
     }
 
-    enabledSections.push('Blocks');
+    if (newValues[2]) {
+      enabledSections.push('Blocks');
+    }
 
     $scope.statusHoldsBlocks.enabledSections = enabledSections;
   });
@@ -129,6 +133,10 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     advisingFactory.getStudentRegistrations({
       uid: $routeParams.uid
     }).success(function(data) {
+      $scope.regStatus.term = data.terms.current.name;
+      if (_.startsWith($scope.regStatus.term, 'Summer')) {
+        $scope.regStatus.isSummer = true;
+      }
       var currentTerm = data.terms.current.id;
       var regStatus = data.registrations[currentTerm];
 
@@ -171,13 +179,13 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
    */
   var parseCsTerm = function(term) {
     if (term.registered === true) {
-      $scope.regStatus.summary = 'Registered';
-      $scope.regStatus.explanation = 'You are officially registered for this term and are entitled to access campus services.';
+      $scope.regStatus.summary = 'Officially Registered';
+      $scope.regStatus.explanation = $scope.regStatus.isSummer ? 'You are officially registered for this term.' : 'You are officially registered and are entitled to access campus services.';
       $scope.regStatus.needsAction = false;
     }
     if (term.registered === false) {
-      $scope.regStatus.summary = 'Not Registered';
-      $scope.regStatus.explanation = 'In order to be officially registered, you must pay at least 20% of your tuition and fees, have no outstanding holds, and be enrolled in at least one class.';
+      $scope.regStatus.summary = 'Not Officially Registered';
+      $scope.regStatus.explanation = $scope.regStatus.isSummer ? 'You are not officially registered for this term.' : 'You are not entitled to access campus services until you are officially registered.  In order to be officially registered, you must pay your Tuition and Fees, and have no outstanding holds.';
       $scope.regStatus.needsAction = true;
     }
   };
@@ -188,6 +196,18 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
   var parseLegacyTerm = function(term) {
     $scope.regStatus.summary = term.regStatus.summary;
     $scope.regStatus.explanation = term.regStatus.explanation;
+
+    // Special summer parsing for the last legacy term (Summer 2016)
+    if ($scope.regStatus.isSummer) {
+      if (term.regStatus.summary !== 'Registered') {
+        $scope.regStatus.summary = 'Not Officially Registered';
+        $scope.regStatus.explanation = 'You are not officially registered for this term.';
+      } else {
+        $scope.regStatus.summary = 'Officially Registered';
+        $scope.regStatus.explanation = 'You are officially registered for this term.';
+      }
+    }
+
     $scope.regStatus.needsAction = term.regStatus.needsAction;
   };
 
