@@ -167,7 +167,7 @@ module User
         hasInstructorHistory: has_instructor_history,
         hasDashboardTab: true,
         hasAcademicsTab: can_view_academics,
-        canViewGrades: can_view_academics,
+        canViewGrades: can_view_academics || !!roles[:advisor],
         hasFinancialsTab: has_financials_tab?(roles),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
         hasPhoto: !!User::Photo.fetch(@uid, @options),

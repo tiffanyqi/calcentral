@@ -20,6 +20,7 @@ module MyAcademics
 
       data[:additionalCredits] = transcripts[:additional_credits] if transcripts[:additional_credits].any?
       data[:semesters] = semester_feed(enrollments, transcripts[:semesters]).compact
+      merge_semesters_count data
     end
 
     def semester_feed(enrollment_terms, transcript_terms)
@@ -28,15 +29,27 @@ module MyAcademics
         semester.delete :slug if @filtered
         if enrollment_terms[term_key]
           semester[:hasEnrollmentData] = true
+          semester[:summaryFromTranscript] = (semester[:timeBucket] == 'past')
           semester[:classes] = map_enrollments(enrollment_terms[term_key]).compact
           merge_grades(semester, transcript_terms[term_key])
         else
           semester[:hasEnrollmentData] = false
+          semester[:summaryFromTranscript] = true
           semester[:classes] = map_transcripts transcript_terms[term_key][:courses]
           semester[:notation] = translate_notation transcript_terms[term_key][:notations]
         end
         semester unless semester[:classes].empty?
       end
+    end
+
+    def merge_semesters_count(data)
+      if data[:semesters]
+        past_semesters_count = data[:semesters].select {|sem| sem[:timeBucket] == 'past'}.length
+        data[:pastSemestersLimit] = data[:semesters].length - past_semesters_count + 1
+        past_semesters_count += 1 if data[:additionalCredits]
+        data[:pastSemestersCount] = past_semesters_count
+      end
+      data
     end
 
     def map_enrollments(enrollment_term)

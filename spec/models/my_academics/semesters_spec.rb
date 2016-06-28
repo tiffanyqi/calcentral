@@ -144,6 +144,7 @@ describe MyAcademics::Semesters do
     it 'should preserve structure of enrollment data' do
       feed[:semesters].each do |s|
         expect(s[:hasEnrollmentData]).to eq true
+        expect(s[:summaryFromTranscript]).to eq (s[:timeBucket] == 'past')
         enrollment_semester = enrollment_data["#{s[:termYear]}-#{s[:termCode]}"]
         expect(s[:classes].length).to eq enrollment_semester.length
         s[:classes].each do |course|
@@ -160,6 +161,7 @@ describe MyAcademics::Semesters do
     end
     it 'should include additional credits' do
       expect(feed[:additionalCredits]).to eq transcript_data[:additional_credits]
+      expect(feed[:pastSemestersLimit]).to eq (feed[:pastSemestersCount] + 2)
     end
   end
 
@@ -303,6 +305,7 @@ describe MyAcademics::Semesters do
 
     it 'should include transcript data' do
       expect(feed_semester[:hasEnrollmentData]).to eq false
+      expect(feed_semester[:summaryFromTranscript]).to eq true
       expect(feed_semester[:classes].length).to eq transcript_semester[:courses].length
       feed_semester[:classes].each do |course|
         transcript_match = transcript_semester[:courses].find { |c| c[:title] == course[:title] }
@@ -440,6 +443,7 @@ describe MyAcademics::Semesters do
     it 'should preserve structure of enrollment summary data' do
       feed[:semesters].each do |s|
         expect(s[:hasEnrollmentData]).to eq true
+        expect(s[:summaryFromTranscript]).to eq (s[:timeBucket] == 'past')
         enrollment_semester = enrollment_summary_data["#{s[:termYear]}-#{s[:termCode]}"]
         expect(s[:classes].length).to eq enrollment_semester.length
         s[:classes].each do |course|
