@@ -2,6 +2,14 @@ describe User::Api do
   let(:uid) { random_id }
   let(:original_delegate_user_id) { nil }
   let(:preferred_name) { 'Sid Vicious' }
+  let(:edo_roles) do
+    {
+      student: true,
+      exStudent: false,
+      faculty: false,
+      staff: false
+    }
+  end
   let(:edo_attributes) do
     {
       person_name: preferred_name,
@@ -9,12 +17,7 @@ describe User::Api do
       campus_solutions_id: 'CC12345678',
       is_legacy_user: false,
       official_bmail_address: 'foo@foo.com',
-      roles: {
-        student: true,
-        exStudent: false,
-        faculty: false,
-        staff: false
-      }
+      roles: edo_roles
     }
   end
   let(:ldap_attributes) { {} }
@@ -69,6 +72,15 @@ describe User::Api do
       expect(api[:delegateViewAsPrivileges]).to be_nil
       expect(api[:isDirectlyAuthenticated]).to be true
       expect(api[:canActOnFinances]).to be true
+    end
+    context 'advisor user' do
+      let(:edo_roles) do
+        {student: false, exStudent: false, faculty: false, advisor: true}
+      end
+      it 'allows viewing grades' do
+        api = User::Api.new(uid).get_feed
+        expect(api[:canViewGrades]).to be true
+      end
     end
   end
 

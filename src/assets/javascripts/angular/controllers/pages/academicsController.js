@@ -164,14 +164,6 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
   var parseAcademics = function(data) {
     angular.extend($scope, data);
 
-    if (data.semesters) {
-      $scope.pastSemestersCount = academicsService.pastSemestersCount(data.semesters);
-      $scope.pastSemestersLimit = data.semesters.length - $scope.pastSemestersCount + 1;
-      if (data.additionalCredits) {
-        $scope.pastSemestersCount++;
-      }
-    }
-
     $scope.isLSStudent = academicsService.isLSStudent($scope.collegeAndLevel);
     $scope.isUndergraduate = _.includes(_.get($scope.collegeAndLevel, 'careers'), 'Undergraduate');
     $scope.isProfileCurrent = !$scope.transitionTerm || $scope.transitionTerm.isProfileCurrent;

@@ -183,22 +183,6 @@ angular.module('calcentral.services').service('academicsService', function() {
     }
   };
 
-  var pastSemestersCount = function(semesters) {
-    var count = 0;
-
-    if (semesters && semesters.length) {
-      for (var i = 0; i < semesters.length; i++) {
-        if (semesters[i].timeBucket === 'past') {
-          semesters[i].summaryFromTranscript = true;
-          count++;
-        } else {
-          semesters[i].summaryFromTranscript = !semesters[i].hasEnrollmentData;
-        }
-      }
-    }
-    return count;
-  };
-
   /**
    * Prepares course sections for display based on primary or secondary status, with support for
    * courses with multiple primary sections
@@ -282,7 +266,6 @@ angular.module('calcentral.services').service('academicsService', function() {
     hasTeachingClasses: hasTeachingClasses,
     isLSStudent: isLSStudent,
     normalizeGradingData: normalizeGradingData,
-    pastSemestersCount: pastSemestersCount,
     textbookRequestInfo: textbookRequestInfo
   };
 });
