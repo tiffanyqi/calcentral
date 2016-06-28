@@ -44,7 +44,6 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
 
           if (has_finances_tab = @status_api.has_finances_tab?)
 
-
             if fin_api.error?
 
               @my_finances_landing.load_page
