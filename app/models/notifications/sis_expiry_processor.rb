@@ -40,7 +40,7 @@ module Notifications
       'sis:student:enrollment' => CampusSolutions::EnrollmentTermExpiry,
       'sis:student:ferpa' => nil,
       'sis:student:finaid' => CampusSolutions::FinancialAidExpiry,
-      'sis:student:financials' => nil,
+      'sis:student:financials' => CampusSolutions::MyBilling,
       'sis:student:messages' => MyActivities::Merged,
       'sis:student:serviceindicator' => CampusSolutions::MyHolds
     }
