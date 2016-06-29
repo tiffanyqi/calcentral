@@ -60,6 +60,8 @@ describe 'My Finances legacy student financials', :testui => true do
 
             testable_users << uid
 
+            @my_finances.load_summary
+
             # ACCOUNT SUMMARY CARD
 
             # Balance
@@ -164,38 +166,8 @@ describe 'My Finances legacy student financials', :testui => true do
               it("shows no DPP informational text for UID #{uid}") { expect(shows_dpp_msg).to be false }
             end
 
-            # STATUS POPOVER
-
-            if @status_api.is_student? || @status_api.is_ex_student?
-
-              @my_finances.open_profile_popover
-              @my_finances.status_popover_heading_element.when_visible WebDriverUtils.page_event_timeout
-
-              has_amt_due_alert = @my_finances.amount_due_status_alert?
-              popover_amt_due = @my_finances.alert_amt_due if has_amt_due_alert
-
-              if fin_api.min_amt_due > 0
-                it("shows an Amount Due alert for UID #{uid}") { expect(has_amt_due_alert).to be true }
-                it("shows the amount due on the Amount Due alert for UID #{uid}") { expect(popover_amt_due).to eql(fin_api.amt_to_s fin_api.min_amt_due) }
-              else
-                it("shows no Amount Due alert for UID #{uid}") { expect(has_amt_due_alert).to be false }
-              end
-
-              if has_amt_due_alert
-                @dashboard_page.load_page
-                @dashboard_page.open_profile_popover
-                @dashboard_page.click_amt_due_alert
-                @my_finances.billing_summary_list_element.when_present WebDriverUtils.page_event_timeout
-
-                amt_due_link_works = @my_finances.min_amt_due?
-
-                it("offers a link from the profile popover amount due alert to the My Finances page for UID #{uid}") { expect(amt_due_link_works).to be true }
-              end
-            end
-
             # TRANSACTION DETAIL CARD
 
-            @my_finances.load_page
             @my_finances.search('All Transactions', nil, '', '', '')
             @my_finances.show_all
 
@@ -534,6 +506,36 @@ describe 'My Finances legacy student financials', :testui => true do
                 logger.warn "Found more than one waiver on #{waiver_date}, skipping"
               end
             end
+
+            # STATUS POPOVER
+
+            if @status_api.is_student? || @status_api.is_ex_student?
+
+              @my_finances.open_profile_popover
+              @my_finances.status_popover_heading_element.when_visible WebDriverUtils.page_event_timeout
+
+              has_amt_due_alert = @my_finances.amount_due_status_alert?
+              popover_amt_due = @my_finances.alert_amt_due if has_amt_due_alert
+
+              if fin_api.min_amt_due > 0
+                it("shows an Amount Due alert for UID #{uid}") { expect(has_amt_due_alert).to be true }
+                it("shows the amount due on the Amount Due alert for UID #{uid}") { expect(popover_amt_due).to eql(fin_api.amt_to_s fin_api.min_amt_due) }
+              else
+                it("shows no Amount Due alert for UID #{uid}") { expect(has_amt_due_alert).to be false }
+              end
+
+              if has_amt_due_alert
+                @dashboard_page.load_page
+                @dashboard_page.open_profile_popover
+                @dashboard_page.click_amt_due_alert
+                @my_finances.billing_summary_list_element.when_present WebDriverUtils.page_event_timeout
+
+                amt_due_link_works = @my_finances.min_amt_due?
+
+                it("offers a link from the profile popover amount due alert to the My Finances page for UID #{uid}") { expect(amt_due_link_works).to be true }
+              end
+            end
+
           else
             it("shows a no-data message for UID #{uid}") { expect(my_fin_no_cars_msg).to be true }
           end
