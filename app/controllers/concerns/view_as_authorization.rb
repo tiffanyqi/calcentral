@@ -1,6 +1,14 @@
 module ViewAsAuthorization
   include AdvisorAuthorization
 
+  def render_403(error)
+    if error.respond_to? :message
+      render json: { :error => error.message }.to_json, :status => 403
+    else
+      render :nothing => true, :status => 403
+    end
+  end
+
   def authorize_user_lookup(current_user, lookup_uid)
     return if can_view_as_for_all_uids? current_user
     authorize_advisor_view_as current_user.real_user_id, lookup_uid
