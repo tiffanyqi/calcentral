@@ -171,10 +171,6 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.showProfileMessage = (!$scope.isProfileCurrent || !$scope.collegeAndLevel || _.isEmpty($scope.collegeAndLevel.careers));
 
     $scope.hasTeachingClasses = academicsService.hasTeachingClasses(data.teachingSemesters);
-    if (data.teachingSemesters) {
-      $scope.pastSemestersTeachingCount = academicsService.pastSemestersCount(data.teachingSemesters);
-      $scope.pastSemestersTeachingLimit = data.teachingSemesters.length - $scope.pastSemestersTeachingCount + 1;
-    }
 
     // Get selected semester from URL params and extract data from semesters array
     var semesterSlug = ($routeParams.semesterSlug || $routeParams.teachingSemesterSlug);
