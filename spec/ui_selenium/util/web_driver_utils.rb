@@ -110,6 +110,8 @@ class WebDriverUtils
   end
 
   def self.amt_to_s(amount)
+    # The new finances UI currently displays a 1.0 float as "1". But a direct conversion from float to string would produce "1.0",
+    # so the tests first have to convert whole dollar (no decimal) values to integers and then to strings.
     trimmed_amount = (amount == amount.to_i ? amount.to_i : amount)
     trimmed_amount.to_s
   end
