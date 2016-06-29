@@ -67,6 +67,12 @@ class ActAsController < ApplicationController
       return false
     end
 
+    # Block acting as oneself, because that's way too confusing.
+    if act_as_uid.to_i == current_user.real_user_id.to_i
+      logger.warn "User #{current_user.user_id} FAILED to login to #{act_as_uid}, cannot view-as oneself"
+      raise Pundit::NotAuthorizedError.new "You cannot View As yourself."
+    end
+
     # Ensure uid is in our database
     if Settings.features.cs_profile
       ldap_uid = CalnetCrosswalk::ByUid.new(user_id: act_as_uid).lookup_ldap_uid
