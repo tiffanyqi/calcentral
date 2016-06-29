@@ -104,54 +104,56 @@ describe EdoOracle::Oec do
     end
   end
 
-  context 'course lookup by id', testext: true do
-    let(:course_ids) { %w(31036 31037) }
-    subject { EdoOracle::Oec.courses_for_cntl_nums(term_id, course_ids) }
-    include_examples 'expected result structure'
-    it 'returns the right courses' do
-      expect(subject).to have(2).items
-      expect(subject.map { |row| row['section_id'] }).to match_array course_ids
-    end
-  end
-
-  context 'crosslisting and room share lookup', testext: true do
-    let(:course_ids) { %w(32821 32862) }
-    let(:course_id_aggregates) { [ '32819,32820,32821', '32862,33269,33378' ] }
-    subject { EdoOracle::Oec.courses_for_cntl_nums(term_id, course_ids) }
-    it 'returns correct aggregated ccns' do
-      expect(subject.map { |row| row['cross_listed_ccns'].split(',').uniq.join(',') }).to match_array course_id_aggregates
-      expect(subject.map { |row| row['co_scheduled_ccns'].split(',').uniq.join(',') }).to match_array course_id_aggregates
-    end
-  end
-
-  let(:students_query) { EdoOracle::Oec.students_for_cntl_nums(term_id, [test_course_id]) }
-
-  context 'student lookup', testext: true do
-    it 'contains expected result structure' do
-      expect(students_query).not_to be_empty
-      students_query.each do |row|
-        expect(row['first_name']).to be_present
-        expect(row['last_name']).to be_present
-        expect(row['email_address']).to be_present
-        expect(row['ldap_uid']).to be_present
-        expect(row['sis_id']).to be_present
-      end
-    end
-  end
-
-  let(:enrollments_query) { EdoOracle::Oec.enrollments_for_cntl_nums(term_id, [test_course_id]) }
-
-  context 'enrollment lookup', testext: true do
-    it 'contains expected result structure' do
-      expect(enrollments_query).not_to be_empty
-      enrollments_query.each do |row|
-        expect(row['ldap_uid']).to be_present
-        expect(row['section_id']).to eq test_course_id
+  pending do
+    context 'course lookup by id', testext: true do
+      let(:course_ids) { %w(31036 31037) }
+      subject { EdoOracle::Oec.courses_for_cntl_nums(term_id, course_ids) }
+      include_examples 'expected result structure'
+      it 'returns the right courses' do
+        expect(subject).to have(2).items
+        expect(subject.map { |row| row['section_id'] }).to match_array course_ids
       end
     end
 
-    it 'returns matching student and enrollment data' do
-      expect(enrollments_query.map { |row| row['ldap_uid'] }).to match_array(students_query.map { |row| row['ldap_uid'] })
+    context 'crosslisting and room share lookup', testext: true do
+      let(:course_ids) { %w(32821 32862) }
+      let(:course_id_aggregates) { [ '32819,32820,32821', '32862,33269,33378' ] }
+      subject { EdoOracle::Oec.courses_for_cntl_nums(term_id, course_ids) }
+      it 'returns correct aggregated ccns' do
+        expect(subject.map { |row| row['cross_listed_ccns'].split(',').uniq.join(',') }).to match_array course_id_aggregates
+        expect(subject.map { |row| row['co_scheduled_ccns'].split(',').uniq.join(',') }).to match_array course_id_aggregates
+      end
+    end
+
+    let(:students_query) { EdoOracle::Oec.students_for_cntl_nums(term_id, [test_course_id]) }
+
+    context 'student lookup', testext: true do
+      it 'contains expected result structure' do
+        expect(students_query).not_to be_empty
+        students_query.each do |row|
+          expect(row['first_name']).to be_present
+          expect(row['last_name']).to be_present
+          expect(row['email_address']).to be_present
+          expect(row['ldap_uid']).to be_present
+          expect(row['sis_id']).to be_present
+        end
+      end
+    end
+
+    let(:enrollments_query) { EdoOracle::Oec.enrollments_for_cntl_nums(term_id, [test_course_id]) }
+
+    context 'enrollment lookup', testext: true do
+      it 'contains expected result structure' do
+        expect(enrollments_query).not_to be_empty
+        enrollments_query.each do |row|
+          expect(row['ldap_uid']).to be_present
+          expect(row['section_id']).to eq test_course_id
+        end
+      end
+
+      it 'returns matching student and enrollment data' do
+        expect(enrollments_query.map { |row| row['ldap_uid'] }).to match_array(students_query.map { |row| row['ldap_uid'] })
+      end
     end
   end
 
