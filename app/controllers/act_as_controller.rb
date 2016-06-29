@@ -70,7 +70,7 @@ class ActAsController < ApplicationController
     # Block acting as oneself, because that's way too confusing.
     if act_as_uid.to_i == current_user.real_user_id.to_i
       logger.warn "User #{current_user.user_id} FAILED to login to #{act_as_uid}, cannot view-as oneself"
-      raise Pundit::NotAuthorizedError.new "You cannot View As yourself."
+      raise Pundit::NotAuthorizedError.new "You cannot View as your own ID."
     end
 
     # Ensure uid is in our database
