@@ -48,9 +48,9 @@ angular.module('calcentral.controllers').controller('BillingController', functio
       endDt: ''
     },
     searchTermId: {},
-    searchStatus: '0.00',
+    searchStatus: 0,
     statuses: {
-      balance: '0.00',
+      balance: 0,
       allTransactions: ['Unpaid', 'Paid']
     }
   };
@@ -94,17 +94,21 @@ angular.module('calcentral.controllers').controller('BillingController', functio
 
   var makeDollarAmountsSearchable = function(billingItem) {
     if (billingItem.itemLineAmount) {
-      var itemLineAmountSearch = '$' + billingItem.itemLineAmount;
+      var itemLineAmountSearch = '$' + billingItem.itemLineAmount.toFixed(2);
       _.set(billingItem, 'itemLineAmountSearch', itemLineAmountSearch);
     }
     if (billingItem.itemBalance) {
-      var itemBalanceSearch = '$' + billingItem.itemBalance;
+      var itemBalanceSearch = '$' + billingItem.itemBalance.toFixed(2);
       _.set(billingItem, 'itemBalanceSearch', itemBalanceSearch);
     }
   };
 
-  var parseAmounts = function(value) {
-    return _.isNumber(value) ? parseFloat(value.toFixed(2)) : value;
+  var setAmountStrings = function(billingItem) {
+    _.forOwn(billingItem, function(value, key) {
+      if (_.isNumber(value)) {
+        _.set(billingItem, key + 'String', value.toFixed(2));
+      }
+    });
   };
 
   var parseBillingInfo = function(data) {
@@ -120,14 +124,11 @@ angular.module('calcentral.controllers').controller('BillingController', functio
       $scope.billing.fallSubheader = 'Fall 2016';
     }
 
-    billing.summary = _.mapValues(billing.summary, function(value) {
-      value = parseAmounts(value);
-      return value;
-    });
+    setAmountStrings(billing.summary);
 
     billing.activity = _.map(billing.activity, function(object) {
       var billingItem = _.mapValues(object, function(value) {
-        value = parseIncomingDates(parseAmounts(value));
+        value = parseIncomingDates(value);
         return value;
       });
       return billingItem;
@@ -137,6 +138,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
       getTermOptions(billingItem);
       makeDatesSearchable(billingItem);
       makeDollarAmountsSearchable(billingItem);
+      setAmountStrings(billingItem);
     });
 
     $scope.billing.data = billing;
