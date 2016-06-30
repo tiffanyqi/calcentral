@@ -6,7 +6,7 @@
   <table>
     <thead>
       <tr>
-        <th data-ng-bind="category.title" scope="col" width="40%"></th>
+        <th data-ng-bind="category.titleHeader" scope="col" width="40%"></th>
         <th data-ng-repeat="header in category.headers" class="cc-table-right" scope="col" width="20%">
           <span data-ng-bind="header"></span>
           <span data-ng-if="$last && category.change" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
@@ -41,14 +41,8 @@
           data-ng-attr-colspan="{{item.totals.length + 1}}"
           class="cc-table-right cc-table-top-border cc-text-small cc-widget-finaid-table-budget-total-title cc-text-uppercase"
         >
-          <span data-ng-if="category.title === 'Standard Budget Items'">
-            Standard Budget Total
-            <span data-ng-if="category.change" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
-          </span>
-          <span data-ng-if="category.title === 'Additional Items'">
-            Additional Budget Total
-            <span data-ng-if="category.change" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
-          </span>
+          <span data-ng-bind="category.titleTotal"></span>
+          <span data-ng-if="category.change" data-cc-amount-change-symbol-directive="changeTags.blank"></span>
         </td>
       </tr>
       <tr data-ng-if="item.totals.length">
