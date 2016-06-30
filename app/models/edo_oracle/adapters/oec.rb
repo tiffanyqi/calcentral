@@ -14,7 +14,7 @@ module EdoOracle
       end
 
       def self.adapt_courses(rows, term_code)
-        default_dates = default_edo_dates term_code
+        default_dates = get_default_dates term_code
         user_courses = EdoOracle::UserCourses::Base.new
         rows.each do |row|
           uniq_ccn_lists row
@@ -40,14 +40,12 @@ module EdoOracle
         end
       end
 
-      # TODO This temporary logic, appropriate for Fall 2016 only, bridges a gap between legacy term data and EDO
-      # section data on what counts as default course dates.
-      def self.default_edo_dates(term_code)
+      def self.get_default_dates(term_code)
         slug = Berkeley::TermCodes.to_slug *term_code.split('-')
         term = Berkeley::Terms.fetch.campus[slug]
         {
-          start: term.classes_start.to_date.advance(days: 7).next_week(:wednesday),  # 2016-08-24 for Fall 2016
-          end: term.classes_end.to_date.advance(days: -21).next_week(:friday)        # 2016-12-09 for Fall 2016
+          start: term.classes_start.to_date,
+          end: term.instruction_end.to_date
         }
       end
 
