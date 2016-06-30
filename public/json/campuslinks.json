@@ -3557,9 +3557,9 @@
       "roles": {
         "student": true,
         "applicant": true,
-        "staff": true,
-        "faculty": true,
-        "exStudent": true
+        "staff": false,
+        "faculty": false,
+        "exStudent": false
       },
       "categories": [
         {
