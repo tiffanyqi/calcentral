@@ -18,7 +18,7 @@
             </button>
             <div data-ng-if="!student.delegateAccess || !student.uid">
               <strong class="cc-text-big" data-ng-bind="student.fullName"></strong>
-              <div data-ng-if="student.uid">
+              <div data-ng-if="student.limitedPrivileges">
                 <p class="cc-text-small" data-ng-if="student.privileges.phone">
                   By Phone and In-Person Only
                 </p>
@@ -29,6 +29,11 @@
               <div data-ng-if="!student.uid">
                 <p class="cc-text-small">
                   Account Issue
+                </p>
+              </div>
+              <div data-ng-if="student.selfDelegating">
+                <p class="cc-text-small">
+                  Cannot Delegate for Self
                 </p>
               </div>
             </div>
@@ -54,6 +59,14 @@
             Account Issue:
           </strong>
           There is a technical issue with the account for the indicated student(s). It will be resolved as soon as possible. If you have questions, please contact <a href="https://www.ets.berkeley.edu/calcentral-support">CalCentral Support</a>.
+        </p>
+        <p data-ng-if="showSelfDelegatingMessage">
+          <strong>
+            Cannot Delegate for Self:
+          </strong>
+          A technical issue has caused you to be linked as a delegate to your own account. Please check your delegate
+          settings at <a href="/profile/delegate">Manage Delegates</a>.  If you have questions, please contact
+          <a href="https://www.ets.berkeley.edu/calcentral-support">CalCentral Support</a>.
         </p>
         <p>
           <strong>
