@@ -23,6 +23,23 @@ module Oec
         course_supervisors = Oec::CourseSupervisors.new
       end
 
+      # Carry over course-instructor associations from the previous year, and note instructor UIDs to fill
+      # any gaps in the this term's instructor data.
+      previous_instructor_uids = Set.new
+      if (previous_term_folder = find_previous_term_folder) && (previous_term_last_export = find_last_export previous_term_folder)
+        previous_course_instructors = worksheet_from_folder(previous_term_last_export, Oec::CourseInstructors)
+        previous_instructors = worksheet_from_folder(previous_term_last_export, Oec::Instructors)
+        if previous_course_instructors && previous_instructors
+          cutoff_term = term_one_year_ago
+          previous_course_instructors.each do |row|
+            if row['COURSE_ID'][0..5] > cutoff_term
+              validate_and_add(course_instructors, row, %w(LDAP_UID COURSE_ID))
+              previous_instructor_uids << row['LDAP_UID']
+            end
+          end
+        end
+      end
+
       ccns = Set.new
       suffixed_ccns = {}
 
@@ -84,6 +101,14 @@ module Oec
         end
       end
 
+      # To avoid conflicts with current-term instructor data, go back and fill in data for previous instructors
+      # only after current instructors have been added.
+      previous_instructors.try(:each) do |row|
+        if previous_instructor_uids.include?(row['LDAP_UID']) && instructors[row['LDAP_UID']].nil?
+          validate_and_add(instructors, row, %w(LDAP_UID))
+        end
+      end
+
       courses.group_by { |course| course['CROSS_LISTED_NAME'] }.each do |cross_listed_name, courses|
         next if cross_listed_name.blank?
         course_ids = courses.map { |course| course['COURSE_ID'] }
@@ -121,7 +146,11 @@ module Oec
 
       validate_integrity('LDAP_UID', students, course_students)
       validate_integrity('LDAP_UID', instructors, course_instructors)
-      validate_integrity('COURSE_ID', courses, course_instructors)
+
+      # Course_instructors may include pairings from previous terms; only current-term pairings should be validated against courses.
+      validate_integrity('COURSE_ID', courses, course_instructors) do |id|
+        id.start_with? @term_code
+      end
 
       if valid?
         log :info, 'Validation passed.'
@@ -134,17 +163,34 @@ module Oec
       end
     end
 
+    def term_one_year_ago
+      # If this task's term is 2016-D, then 2015-D
+      term_yr = @term_code.to_i
+      @term_code.sub(term_yr.to_s, (term_yr - 1).to_s)
+    end
+
     def validate_integrity(key, *worksheets)
       id_sets = worksheets.map do |worksheet|
+        ids = Set.new
+        worksheet.each do |row|
+          # Provide an optional block to select a subset of IDs for validation.
+          ids.add(row[key]) if (!block_given? || yield(row[key]))
+        end
         {
           name: worksheet.class.export_name,
-          ids: worksheet.inject(Set.new) { |set, row| set.add row[key] }
+          ids: ids
         }
       end
       id_sets.permutation do |set1, set2|
         (set1[:ids] - set2[:ids]).each do |id|
           validate(set1[:name], key) { |errors| errors.add "#{key} #{id} found in #{set1[:name]} but not #{set2[:name]}" }
         end
+      end
+    end
+
+    def worksheet_from_folder(folder, klass)
+      if (file = find_csv_in_folder(folder, "#{klass.export_name}.csv")) && (file.mime_type == 'text/csv') && file.download_url
+        klass.from_csv @remote_drive.download(file)
       end
     end
 

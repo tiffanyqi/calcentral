@@ -10,10 +10,9 @@ module Oec
         term_subfolders[folder_type] = create_folder(folder_name, term_folder)
       end
 
-      find_previous_term_csvs
-
+      previous_term_csvs = find_previous_term_csvs
       [Oec::CourseInstructors, Oec::CourseSupervisors, Oec::Instructors, Oec::Supervisors].each do |worksheet_class|
-        file = @previous_term_csvs[worksheet_class]
+        file = previous_term_csvs[worksheet_class]
         if file && (file.mime_type == 'text/csv') && file.download_url
           content = StringIO.new @remote_drive.download(file)
           @remote_drive.upload_to_spreadsheet(file.title.chomp('.csv'), content, term_subfolders[:overrides].id)
@@ -35,25 +34,18 @@ module Oec
     end
 
     def find_previous_term_csvs
-      @previous_term_csvs = {}
+      csvs = {}
       if (previous_term_folder = find_previous_term_folder)
         if (previous_overrides = @remote_drive.find_first_matching_folder(Oec::Folder.overrides, previous_term_folder))
-          @previous_term_csvs[Oec::Instructors] = @remote_drive.find_first_matching_item('instructors', previous_overrides)
-          @previous_term_csvs[Oec::Supervisors] = @remote_drive.find_first_matching_item('supervisors', previous_overrides)
+          csvs[Oec::Instructors] = @remote_drive.find_first_matching_item('instructors', previous_overrides)
+          csvs[Oec::Supervisors] = @remote_drive.find_first_matching_item('supervisors', previous_overrides)
         end
-        if (previous_exports =  @remote_drive.find_first_matching_folder(Oec::Folder.published, previous_term_folder))
-          if (most_recent_export = @remote_drive.find_folders(previous_exports.id).sort_by(&:title).last)
-            @previous_term_csvs[Oec::CourseInstructors] = @remote_drive.find_items_by_title('course_instructors.csv', parent_id: most_recent_export.id, mime_type: 'text/csv').first
-            @previous_term_csvs[Oec::CourseSupervisors] = @remote_drive.find_items_by_title('course_supervisors.csv', parent_id: most_recent_export.id, mime_type: 'text/csv').first
-          end
+        if (previous_term_last_export = find_last_export previous_term_folder)
+          csvs[Oec::CourseInstructors] = find_csv_in_folder(previous_term_last_export, 'course_instructors.csv')
+          csvs[Oec::CourseSupervisors] = find_csv_in_folder(previous_term_last_export, 'course_supervisors.csv')
         end
       end
-    end
-
-    def find_previous_term_folder
-      if (folders = @remote_drive.find_folders)
-        folders.select { |f| f.title.match(/\d{4}-[A-D]/) && f.title < @term_code }.sort_by(&:title).last
-      end
+      csvs
     end
 
     def set_default_term_dates(courses)
