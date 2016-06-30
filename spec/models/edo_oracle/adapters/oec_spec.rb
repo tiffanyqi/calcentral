@@ -3,15 +3,7 @@ describe EdoOracle::Adapters::Oec do
   let(:term_id) { '2168' }
   let(:course_id) { '32819' }
 
-  before do
-    allow_any_instance_of(Berkeley::Terms).to receive(:campus).and_return({
-      'fall-2016' => double({
-        legacy?: false,
-        classes_start: DateTime.parse('Sat, 13 Aug 2016 23:59:59 -0700'),
-        classes_end: DateTime.parse('Sat, 24 Dec 2016 23:59:59 -0800')
-      })
-    })
-  end
+  before { allow(Settings.terms).to receive(:fake_now).and_return '2016-07-14 01:00:00' }
 
   context 'adapting course data' do
     let(:row) do
