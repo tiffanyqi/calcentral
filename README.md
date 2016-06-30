@@ -71,6 +71,7 @@ http://www.oracle.com/technetwork/java/javase/downloads/index.html
     create user calcentral_test with password 'secret' createdb;
     grant all privileges on database calcentral_test to calcentral_test;
     alter database calcentral_test owner to calcentral_test;
+    \q
     ```
 
     **Note**: At this point, exit out of Postgres. To do this, type "\q" and then press ENTER.
@@ -113,6 +114,7 @@ http://www.oracle.com/technetwork/java/javase/downloads/index.html
 1. Download the appropriate gems with [Bundler](http://gembundler.com/rails3.html):
 
     ```bash
+    gem install bundler
     bundle install
     ```
 
@@ -128,7 +130,7 @@ http://www.oracle.com/technetwork/java/javase/downloads/index.html
     You can also create Ruby configuration files like "settings.local.rb" and "development.local.rb" to amend the standard `config/environments/*.rb` files.
 
 1. Install JDBC driver (for Oracle connection)
-  * Download [ojdbc6.jar](http://svn.media.berkeley.edu/nexus/content/repositories/myberkeley/com/oracle/ojdbc6/11.2.0.3/ojdbc6-11.2.0.3.jar)
+  * Download [ojdbc6.jar](http://svn.media.berkeley.edu/nexus/content/repositories/myberkeley/com/oracle/ojdbc6/11.2.0.3/ojdbc6-11.2.0.3.jar) [Alternative download](http://www.oracle.com/technetwork/apps-tech/jdbc-112010-090769.html)
   * Note: You do not have to open the file.
   * Rename the file to `ojdbc6.jar`
   * Copy `ojdbc6.jar` to `calcentral/lib`

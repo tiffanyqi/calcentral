@@ -181,14 +181,20 @@
       data-cc-spinner-directive-message="Downloading sections. This may take a minute for larger classes.">
     <div class="column cc-academics-row-margin"
          data-cc-academics-class-info-enrollment-directive
+         data-class-name="selectedCourse.course_code"
+         data-instructor-name="api.user.profile.preferredName"
          data-seats-limit="selectedCourse.waitlistLimit"
+         data-semester-name="selectedSemester.name"
          data-show-position="true"
          data-students="waitlistedStudents"
          data-title="Wait List"
     ></div>
     <div class="column cc-academics-row-margin"
          data-cc-academics-class-info-enrollment-directive
+         data-class-name="selectedCourse.course_code"
+         data-instructor-name="api.user.profile.preferredName"
          data-seats-limit="selectedCourse.enrollLimit"
+         data-semester-name="selectedSemester.name"
          data-show-position="false"
          data-students="enrolledStudents"
          data-title="Enrollment List"
