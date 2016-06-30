@@ -47,3 +47,15 @@ shared_context 'OEC enrollment data merge' do
   end
 
 end
+
+shared_context 'OEC instructor data import from previous terms' do
+  let(:mock_csv) { double(mime_type: 'text/csv', download_url: 'https://drive.google.com/mock.csv') }
+  let(:previous_course_instructors_csv) { Oec::CourseInstructors.new.headers.join ',' }
+  let(:previous_instructors_csv) { Oec::Instructors.new.headers.join ',' }
+  before(:each) do
+    allow(fake_remote_drive).to receive(:find_items_by_title).and_return [mock_csv]
+    allow(fake_remote_drive).to receive(:find_first_matching_folder).and_return mock_google_drive_item
+    allow(fake_remote_drive).to receive(:find_folders).and_return [mock_google_drive_item('2014-D')]
+    allow(fake_remote_drive).to receive(:download).and_return(previous_course_instructors_csv, previous_instructors_csv)
+  end
+end

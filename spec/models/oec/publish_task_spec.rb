@@ -7,6 +7,7 @@ describe Oec::PublishTask do
   let(:tmp_publish_directory) { now.strftime "publish_#{Oec::Task.date_format}_%H%M%S" }
 
   include_context 'OEC enrollment data merge'
+  include_context 'OEC instructor data import from previous terms'
 
   def read_exported_csv(filename)
     File.read task.staging_dir.join(tmp_publish_directory, "#{filename}.csv")
@@ -35,9 +36,7 @@ describe Oec::PublishTask do
   describe 'exported sheet structure' do
     let(:local_write) { 'Y' }
 
-    context 'valid fixture data' do
-      before { task.run }
-
+    shared_examples 'data integrity checks' do
       it 'should create local staging directory' do
         path = "#{task.staging_dir.expand_path}/#{tmp_publish_directory}"
         expect(path).to start_with '/'
@@ -45,7 +44,7 @@ describe Oec::PublishTask do
       end
 
       it 'should produce a sane instructors sheet' do
-        expect(instructors).to have(16).items
+        expect(instructors).to have_at_least(16).items
         ('a'..'p').map do |l|
           matches = instructors.select { |instructor| instructor['LAST_NAME'] == (l*4).capitalize }
           expect(matches).to have(1).item
@@ -68,8 +67,9 @@ describe Oec::PublishTask do
       end
 
       it 'should produce a sane course_instructors sheet' do
-        expect(course_instructors.first).to_not be_empty
-        course_instructors.each do |course_instructor|
+        course_instructors_to_validate = course_instructors.select { |ci| ci['COURSE_ID'].start_with? term_code }
+        expect(course_instructors_to_validate).to_not be_empty
+        course_instructors_to_validate.each do |course_instructor|
           expect(courses.find { |course| course['COURSE_ID'] == course_instructor['COURSE_ID'] }).to be_present
           expect(instructors.find { |instructor| instructor['LDAP_UID'] == course_instructor['LDAP_UID'] }).to be_present
         end
@@ -102,6 +102,62 @@ describe Oec::PublishTask do
 
       it 'should export the same supervisors sheet it was given' do
         expect(read_exported_csv 'supervisors').to eq merged_supervisor_confirmations_csv
+      end
+    end
+
+    context 'valid fixture data' do
+      before { task.run }
+      include_examples 'data integrity checks'
+    end
+
+    context 'merging instructor data from previous terms' do
+      let(:previous_course_instructors_csv) do
+        [
+          Oec::CourseInstructors.new.headers.join(','),
+          '2014-B-11111,55555',
+          '2014-C-11111,66666',
+          '2014-D-11111,77777',
+          '2014-D-22222,128533'
+        ].join("\n")
+      end
+      let(:previous_instructors_csv) do
+        [
+          Oec::Instructors.new.headers.join(','),
+          '55555,UID:55555,Xerxes,Xxxx,xxxx@berkeley.edu,23',
+          '66666,UID:66666,Ysidro,Yyyy,yyyy@berkeley.edu,23',
+          '77777,UID:77777,Zaphod,Zzzz,zzzz@berkeley.edu,23',
+          '128533,UID:88888,Ancient,Aaaa,ancient-email-address@compuserve.com,23'
+        ].join("\n")
+      end
+
+      before { task.run }
+      include_examples 'data integrity checks'
+
+      it 'should include course-instructor pairings less than a year old' do
+        expect(course_instructors.find { |ci| ci['COURSE_ID'] == '2014-C-11111' && ci['LDAP_UID'] == '66666'}).to be_present
+        expect(course_instructors.find { |ci| ci['COURSE_ID'] == '2014-D-11111' && ci['LDAP_UID'] == '77777'}).to be_present
+        expect(course_instructors.find { |ci| ci['COURSE_ID'] == '2014-D-22222' && ci['LDAP_UID'] == '128533'}).to be_present
+        expect(instructors.find { |i| i['LDAP_UID'] == '66666'}).to be_present
+        expect(instructors.find { |i| i['LDAP_UID'] == '77777'}).to be_present
+      end
+
+      it 'should not include course-instructor pairings a year old or more' do
+        expect(course_instructors.find { |ci| ci['COURSE_ID'] == '2014-B-11111' && ci['LDAP_UID'] == '55555'}).not_to be_present
+        expect(instructors.find { |i| i['LDAP_UID'] == '55555'}).not_to be_present
+      end
+
+      it 'should merge instructor data from previous terms when current-term data absent' do
+        expect(instructors.find { |i| i['LDAP_UID'] == '66666'}).to include({'FIRST_NAME' => 'Ysidro', 'LAST_NAME' => 'Yyyy', 'EMAIL_ADDRESS' => 'yyyy@berkeley.edu'})
+        expect(instructors.find { |i| i['LDAP_UID'] == '77777'}).to include({'FIRST_NAME' => 'Zaphod', 'LAST_NAME' => 'Zzzz', 'EMAIL_ADDRESS' => 'zzzz@berkeley.edu'})
+      end
+
+      it 'should not overwrite current-term instructor data with previous-term data' do
+        expect(instructors.find { |i| i['LDAP_UID'] == '128533'}).to include({
+          'FIRST_NAME' => 'Alan',
+          'LAST_NAME' => 'Aaaa',
+          'EMAIL_ADDRESS' => 'aaaa@berkeley.edu',
+          'SIS_ID' => 'UID:128533'
+        })
       end
     end
 
