@@ -208,7 +208,6 @@ describe Oec::SisImportTask do
 
       it 'groups cross-listings together' do
         cross_listed_names = subject.map { |row| row['CROSS_LISTED_NAME'] }.compact.uniq
-        subject.each {  }
         cross_listed_names.each do |name|
           index_of_first_listing = subject.index { |row| row['CROSS_LISTED_NAME'] == name }
           expect(subject[index_of_first_listing + 1]['CROSS_LISTED_NAME']).to eq name
@@ -218,6 +217,12 @@ describe Oec::SisImportTask do
       it 'sorts within home department by numeric portion of catalog id' do
         stat_catalog_ids = subject.map { |row| row['CATALOG_ID'] if row['DEPT_NAME'] == 'STAT' }.compact
         expect(stat_catalog_ids).to eq %w(65 65 C205A 206A C236A)
+      end
+
+      it 'sorts primary sections first' do
+        stat_65 = subject.select { |row| row['DEPT_NAME'] == 'STAT' && row['CATALOG_ID'] == '65' }
+        expect(stat_65[0]['PRIMARY_SECONDARY_CD']).to eq 'P'
+        expect(stat_65[1]['PRIMARY_SECONDARY_CD']).to eq 'S'
       end
 
       it 'flags non-student academic employees as faculty' do
