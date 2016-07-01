@@ -29,14 +29,15 @@ describe CampusSolutions::HigherOneUrl do
         expect(proxy.url).to end_with '/UC_OB_HIGHER_ONE_URL_GET.v1/get?EMPLID=26662066'
       end
     end
-    context 'pass DELEGATE_UID arg to Campus Solutions' do
+    context 'pass both DELEGATE_UID and EMPLID args to Campus Solutions' do
       let(:delegate_uid) { '12350' }
       let(:options) { { fake: true, user_id: user_id, delegate_uid: delegate_uid } }
 
       it_should_behave_like 'a proxy that gets data'
 
       it 'should construct proper URL' do
-        expect(proxy.url).to end_with '/UC_OB_HIGHER_ONE_URL_GET.v1/get?DELEGATE_UID=12350'
+        expect(proxy.url).to include("DELEGATE_UID=")
+        expect(proxy.url).to include("EMPLID=")
       end
     end
   end

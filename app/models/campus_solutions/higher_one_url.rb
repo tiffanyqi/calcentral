@@ -25,7 +25,7 @@ module CampusSolutions
     end
 
     def url
-      query_args = @delegate_uid ? "DELEGATE_UID=#{@delegate_uid}" : "EMPLID=#{@campus_solutions_id}"
+      query_args = @delegate_uid ? "DELEGATE_UID=#{@delegate_uid}&EMPLID=#{@campus_solutions_id}" : "EMPLID=#{@campus_solutions_id}"
       "#{@settings.base_url}/UC_OB_HIGHER_ONE_URL_GET.v1/get?#{query_args}"
     end
 
