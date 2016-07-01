@@ -35,13 +35,13 @@ describe 'My Finances Campus Solutions billing details page', :testui => true do
         it 'allow a user to filter for open charges' do
           @my_finances_billing.search('Balance', nil, '', '', '')
           @my_finances_billing.show_all
-          @my_finances_billing.wait_until(timeout) { @my_finances_billing.visible_transaction_count == @api.open_charges.length }
+          @my_finances_billing.wait_until(timeout) { @my_finances_billing.visible_transaction_count == @api.transactions_with_balance.length }
         end
 
         it 'allow a user to filter for open charges containing a specified string' do
           if @api.open_charges.any?
             search_string = @api.description @api.open_charges.last
-            charges = @api.transactions_by_desc(@api.open_charges, search_string)
+            charges = @api.transactions_by_desc(@api.transactions_with_balance, search_string)
             @my_finances_billing.search('Balance', nil, '', '', search_string)
             @my_finances_billing.show_all
             @my_finances_billing.wait_until(timeout) { @my_finances_billing.visible_transaction_count == charges.length }
