@@ -461,6 +461,7 @@ features:
   cs_profile_work_experience: false
   cs_sir: true
   cs_transfer_credit: false
+  legacy_regblocks: true
   manage_site_mailing_lists: false
   my_fin_aid: false
   prevent_acting_as_users_from_posting: true

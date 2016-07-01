@@ -3,7 +3,7 @@ module Bearfacts
     include DatedFeed
 
     def get
-      return {} unless legacy_user?
+      return {} unless legacy_user? && Settings.features.legacy_regblocks
       response = super
       feed = response.delete :feed
       return response if feed.blank?
