@@ -67,25 +67,30 @@ describe EdoOracle::Adapters::Oec do
       let(:instructor_func) { nil }
     end
 
-    shared_examples 'affiliations to evaluation type' do
+    shared_examples 'affiliation-dependent data' do
       before { row['affiliations'] = affiliations }
       it { expect(course['evaluation_type']).to eq evaluation_type }
+      it { expect(course['sis_id']).to eq sis_id }
     end
-    include_examples 'affiliations to evaluation type' do
+    include_examples 'affiliation-dependent data' do
       let(:affiliations) { 'INSTRUCTOR' }
       let(:evaluation_type) { 'F' }
+      let(:sis_id) { 'UID:12345' }
     end
-    include_examples 'affiliations to evaluation type' do
+    include_examples 'affiliation-dependent data' do
       let(:affiliations) { 'STUDENT' }
       let(:evaluation_type) { 'G' }
+      let(:sis_id) { '1234567890' }
     end
-    include_examples 'affiliations to evaluation type' do
+    include_examples 'affiliation-dependent data' do
       let(:affiliations) { 'INSTRUCTOR,STUDENT' }
       let(:evaluation_type) { 'G' }
+      let(:sis_id) { '1234567890' }
     end
-    include_examples 'affiliations to evaluation type' do
+    include_examples 'affiliation-dependent data' do
       let(:affiliations) { nil }
       let(:evaluation_type) { nil }
+      let(:sis_id) { 'UID:12345' }
     end
 
     context 'default course dates' do

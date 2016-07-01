@@ -29,6 +29,7 @@ module EdoOracle
           adapt_evaluation_type row
           adapt_instructor_func row
           adapt_primary_secondary_cd row
+          adapt_sis_id row
 
           row['blue_role'] = '23'
         end
@@ -83,6 +84,12 @@ module EdoOracle
                                    when /STUDENT/ then 'G'
                                    when /INSTRUCTOR/ then 'F'
                                  end
+      end
+
+      def self.adapt_sis_id(row)
+        unless row['affiliations'] && row['affiliations'].include?('STUDENT')
+          row['sis_id'] = row['ldap_uid'] ? "UID:#{row['ldap_uid']}" : nil
+        end
       end
 
       def self.uniq_ccn_lists(row)
