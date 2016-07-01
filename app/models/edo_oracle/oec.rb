@@ -38,7 +38,8 @@ module EdoOracle
             sec."session-id" = sec2."session-id" AND
             sec."sectionNumber" = sec2."sectionNumber"
         ) AS cross_listed_ccns,
-        (
+        CASE mtg."location-code"
+          WHEN 'INTR' THEN NULL ELSE (
           SELECT listagg("id", ',') WITHIN GROUP (ORDER BY "id")
           FROM SISEDO.MEETINGV00_VW mtg2 JOIN SISEDO.CLASSSECTIONV00_VW sec3 ON (
             mtg2."location-code" = mtg."location-code" AND
@@ -52,7 +53,8 @@ module EdoOracle
             mtg2."session-id" = sec3."session-id" AND
             mtg2."offeringNumber" = sec3."offeringNumber" AND
             mtg2."sectionNumber" = sec3."sectionNumber")
-        ) AS co_scheduled_ccns
+          )
+        END AS co_scheduled_ccns
       FROM
         SISEDO.CLASSSECTIONV00_VW sec
         LEFT OUTER JOIN SISEDO.MEETINGV00_VW mtg ON (
