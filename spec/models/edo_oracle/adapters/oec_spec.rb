@@ -113,6 +113,17 @@ describe EdoOracle::Adapters::Oec do
       end
     end
 
+    context 'missing email address' do
+      before { row['email_address'] = nil }
+      it 'fills in email address from attributes query' do
+        expect(User::BasicAttributes).to receive(:attributes_for_uids).with(['12345']).and_return([{
+          ldap_uid: '12345',
+          email_address: 'kaymcnulty@arl.army.mil'
+        }])
+        expect(course['email_address']).to eq 'kaymcnulty@arl.army.mil'
+      end
+    end
+
     it 'leaves other values unchanged' do
       %w(instruction_format section_num ldap_uid sis_id first_name last_name email_address enrollment_count).each do |key|
         expect(course[key]).to eq row[key]

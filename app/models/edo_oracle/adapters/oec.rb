@@ -16,6 +16,8 @@ module EdoOracle
       def self.adapt_courses(rows, term_code)
         default_dates = get_default_dates term_code
         user_courses = EdoOracle::UserCourses::Base.new
+        supplement_email_addresses rows
+
         rows.each do |row|
           uniq_ccn_lists row
 
@@ -36,8 +38,25 @@ module EdoOracle
       end
 
       def self.adapt_enrollments(rows, term_code)
+        supplement_email_addresses rows
         rows.each do |row|
           adapt_course_id(row, term_code)
+        end
+      end
+
+      def self.supplement_email_addresses(rows)
+        rows_without_email = rows.inject({}) do |hash, row|
+          # Check for the presence of the email_address key because not all queries are expected to return email addresses.
+          if row['ldap_uid'].present? && row.has_key?('email_address') && row['email_address'].blank?
+            hash[row['ldap_uid']] ||= []
+            hash[row['ldap_uid']] << row
+          end
+          hash
+        end
+        User::BasicAttributes.attributes_for_uids(rows_without_email.keys).each do |attrs|
+          rows_without_email[attrs[:ldap_uid]].each do |row|
+            row['email_address'] = attrs[:email_address]
+          end
         end
       end
 
