@@ -194,6 +194,18 @@ angular.module('calcentral.controllers').controller('BillingController', functio
     }
   };
 
+  /**
+   * Sorting on "amount" is conditional on the type of filter selected - we want to sort on
+   * "itemBalance" under the "Balance" view, and "itemLineAmount" under all other views.
+   */
+  $scope.changeSortingAmount = function() {
+    if ($scope.filter.choice === 'balance') {
+      $scope.changeSorting('itemBalance');
+    } else {
+      $scope.changeSorting('itemLineAmount');
+    }
+  };
+
   $scope.choiceChange = function() {
     resetSearch();
     if ($scope.filter.choice === 'balance') {
@@ -223,6 +235,14 @@ angular.module('calcentral.controllers').controller('BillingController', functio
   $scope.getSortClass = function(column) {
     var sortUpDown = $scope.billing.sort.descending ? 'down' : 'up';
     return _.isEqual($scope.billing.sort.column, column) && 'fa fa-chevron-' + sortUpDown;
+  };
+
+  $scope.getSortClassAmount = function() {
+    if ($scope.filter.choice === 'balance') {
+      return $scope.getSortClass('itemBalance');
+    } else {
+      return $scope.getSortClass('itemLineAmount');
+    }
   };
 
   $scope.parseEndDt = function(date) {
