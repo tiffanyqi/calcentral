@@ -109,6 +109,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
         _.set(billingItem, key + 'String', value.toFixed(2));
       }
     });
+    return billingItem;
   };
 
   var parseBillingInfo = function(data) {
@@ -124,7 +125,7 @@ angular.module('calcentral.controllers').controller('BillingController', functio
       $scope.billing.fallSubheader = 'Fall 2016';
     }
 
-    setAmountStrings(billing.summary);
+    billing.summary = setAmountStrings(billing.summary);
 
     billing.activity = _.map(billing.activity, function(object) {
       var billingItem = _.mapValues(object, function(value) {
