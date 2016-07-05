@@ -70,7 +70,6 @@ features:
   cs_academic_planner: true
   cs_academic_progress_report: true
   cs_advising_scheduler_view: true
-  cs_advising_show_advisors: true
   cs_advisor_student_lookup: true
   cs_billing: true
   cs_delegated_access: true
