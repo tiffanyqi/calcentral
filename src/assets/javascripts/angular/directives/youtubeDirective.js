@@ -9,7 +9,7 @@ angular.module('calcentral.directives').directive('ccYoutubeDirective', function
     link: function(scope, elem, attrs) {
       scope.$watch(attrs.ccYoutubeDirective, function(value) {
         var videoid = value;
-        var videourl = 'https://www.youtube.com/embed/' + videoid + '?version=3&f=playlists&app=youtube_gdata&showinfo=0&theme=light&modestbranding=1&autoplay=1&html5=1';
+        var videourl = 'https://www.youtube.com/embed/' + videoid + '?app=youtube_gdata&autoplay=1&authuser=1&f=playlists&html5=1&modestbranding=1&showinfo=0';
         var imageUrl = $sce.trustAsResourceUrl('https://img.youtube.com/vi/' + videoid + '/hqdefault.jpg');
         var title = attrs.ccYoutubeDirectiveTitle ? ' - ' + attrs.ccYoutubeDirectiveTitle : '';
 
