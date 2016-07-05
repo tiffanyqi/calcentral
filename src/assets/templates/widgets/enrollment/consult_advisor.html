@@ -30,26 +30,4 @@
     </ul>
   </div>
 
-  <div data-ng-if="!enrollmentTerm.isLawStudent">
-    <ul class="cc-enrollment-card-advisors-list" data-ng-if="enrollmentTerm.advisors.length && api.user.profile.features.csAdvisingShowAdvisors">
-      <li data-ng-repeat="advisor in enrollmentTerm.advisors">
-        <div>
-          <a
-            data-ng-href="http://www.berkeley.edu/directory/results?search-type=uid&search-base=all&search-term={{advisor.id}}"
-            data-ng-bind="advisor.name"
-          ></a>
-        </div>
-        <div>
-          <span data-ng-bind="advisor.program" class="cc-text-light cc-text-small"></span>
-        </div>
-        <div>
-          <a
-            data-ng-href="mailto:{{advisor.emailAddress}}"
-            data-ng-bind="advisor.emailAddress"
-          ></a>
-        </div>
-      </li>
-    </ul>
-  </div>
-
 </div>
