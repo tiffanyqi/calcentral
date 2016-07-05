@@ -9,11 +9,11 @@ describe Links::MyCampusLinks do
     context 'ex-students' do
       subject { roles_for_link['exStudent'] }
       context 'student gets a link' do
-        let(:roles) { %w(student) }
+        let(:roles) { %w(student exStudent) }
         it { should be true }
       end
       context 'no link for student role' do
-        let(:roles) { %w(applicant staff faculty) }
+        let(:roles) { %w(applicant staff faculty student) }
         it { should be false }
       end
     end

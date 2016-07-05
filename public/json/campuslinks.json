@@ -163,24 +163,6 @@
       ]
     },
     {
-      "name": "At Your Service",
-      "description": "Benefits, Earnings, Taxes \u0026 Retirement",
-      "url": "https://atyourserviceonline.ucop.edu",
-      "roles": {
-        "student": false,
-        "applicant": false,
-        "staff": true,
-        "faculty": true,
-        "exStudent": false
-      },
-      "categories": [
-        {
-          "topcategory": "HR \u0026 Benefits",
-          "subcategory": "Benefits"
-        }
-      ]
-    },
-    {
       "name": "Athletic Study Center",
       "description": "Advising and tutoring for student athletes",
       "url": "https://asc.berkeley.edu/",
@@ -195,6 +177,24 @@
         {
           "topcategory": "Support Services",
           "subcategory": "Students"
+        }
+      ]
+    },
+    {
+      "name": "At Your Service",
+      "description": "Benefits, Earnings, Taxes \u0026 Retirement",
+      "url": "https://atyourserviceonline.ucop.edu",
+      "roles": {
+        "student": false,
+        "applicant": false,
+        "staff": true,
+        "faculty": true,
+        "exStudent": false
+      },
+      "categories": [
+        {
+          "topcategory": "HR \u0026 Benefits",
+          "subcategory": "Benefits"
         }
       ]
     },
@@ -315,24 +315,6 @@
       ]
     },
     {
-      "name": "Bear Facts",
-      "description": "Academic record, grades \u0026 transcript, bill, degree audit, loans, SLR \u0026 personal info",
-      "url": "https://bearfacts.berkeley.edu",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": true,
-        "faculty": true,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Academic Planning",
-          "subcategory": "Academic Record"
-        }
-      ]
-    },
-    {
       "name": "BearBuy",
       "description": "Campus procurement system with online catalog shopping and electronically-enabled workflows",
       "url": "http://supplychain.berkeley.edu/bearbuy/",
@@ -347,6 +329,24 @@
         {
           "topcategory": "Tools \u0026 Resources",
           "subcategory": "Purchasing"
+        }
+      ]
+    },
+    {
+      "name": "Bear Facts",
+      "description": "Academic record, grades \u0026 transcript, bill, degree audit, loans, SLR \u0026 personal info",
+      "url": "https://bearfacts.berkeley.edu",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": true,
+        "faculty": true,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Academic Planning",
+          "subcategory": "Academic Record"
         }
       ]
     },
@@ -715,118 +715,6 @@
       ]
     },
     {
-      "name": "Cal Marketplace",
-      "description": "Everything at Cal you may want to buy, discover or visit",
-      "url": "http://calmarketplace.berkeley.edu/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": true,
-        "faculty": true,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Recreation \u0026 Entertainment",
-          "subcategory": "Points of Interest"
-        }
-      ]
-    },
-    {
-      "name": "Cal Performances",
-      "description": "Information and tickets for Cal music, dance, and theater performances",
-      "url": "http://www.calperformances.org/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": true,
-        "faculty": true,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Recreation \u0026 Entertainment",
-          "subcategory": "Points of Interest"
-        }
-      ]
-    },
-    {
-      "name": "Cal Rentals",
-      "description": "Listings of housing opportunities for the Berkeley community",
-      "url": "http://calrentals.housing.berkeley.edu/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": true,
-        "faculty": true,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Food \u0026 Housing",
-          "subcategory": "Housing"
-        }
-      ]
-    },
-    {
-      "name": "Cal Spirit Groups",
-      "description": "Cheerleading and Dance Group ",
-      "url": "http://calspirit.berkeley.edu/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Student Engagement",
-          "subcategory": "Activities"
-        }
-      ]
-    },
-    {
-      "name": "Cal Student Central",
-      "description": "Providing support to your questions concerning financial aid, fees and billing, payments, disbursements, registration, and enrollment",
-      "url": "http://studentcentral.berkeley.edu/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Academic Planning",
-          "subcategory": "Student Advising"
-        },
-        {
-          "topcategory": "Finances",
-          "subcategory": "Your Questions Answered Here"
-        }
-      ]
-    },
-    {
-      "name": "Cal Student Store",
-      "description": "Apparel, school supplies, and more ",
-      "url": "https://calstudentstore.berkeley.edu/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": true,
-        "faculty": true,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Recreation \u0026 Entertainment",
-          "subcategory": "Points of Interest"
-        }
-      ]
-    },
-    {
       "name": "CalBears Intercollegiate Athletics",
       "description": "Berkeley's official sport teams",
       "url": "http://www.calbears.com/",
@@ -939,6 +827,24 @@
       ]
     },
     {
+      "name": "Cal Marketplace",
+      "description": "Everything at Cal you may want to buy, discover or visit",
+      "url": "http://calmarketplace.berkeley.edu/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": true,
+        "faculty": true,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Recreation \u0026 Entertainment",
+          "subcategory": "Points of Interest"
+        }
+      ]
+    },
+    {
       "name": "CalMessages",
       "description": "Berkeley's official messaging system used to send broadcast email notifications to all staff, all students, etc.",
       "url": "https://calmessages.berkeley.edu/",
@@ -975,6 +881,24 @@
       ]
     },
     {
+      "name": "Cal Performances",
+      "description": "Information and tickets for Cal music, dance, and theater performances",
+      "url": "http://www.calperformances.org/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": true,
+        "faculty": true,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Recreation \u0026 Entertainment",
+          "subcategory": "Points of Interest"
+        }
+      ]
+    },
+    {
       "name": "CalPlanning",
       "description": "UC Berkeley's financial planning and analysis tool",
       "url": "http://budget.berkeley.edu/systems/calplanning",
@@ -993,6 +917,24 @@
       ]
     },
     {
+      "name": "Cal Rentals",
+      "description": "Listings of housing opportunities for the Berkeley community",
+      "url": "http://calrentals.housing.berkeley.edu/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": true,
+        "faculty": true,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Food \u0026 Housing",
+          "subcategory": "Housing"
+        }
+      ]
+    },
+    {
       "name": "CalShare",
       "description": "Tool for creating and managing web sites for collaboration purposes",
       "url": "https://calshare.berkeley.edu/",
@@ -1007,6 +949,64 @@
         {
           "topcategory": "Communication \u0026 Collaboration",
           "subcategory": "Collaboration Tools"
+        }
+      ]
+    },
+    {
+      "name": "Cal Spirit Groups",
+      "description": "Cheerleading and Dance Group ",
+      "url": "http://calspirit.berkeley.edu/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Student Engagement",
+          "subcategory": "Activities"
+        }
+      ]
+    },
+    {
+      "name": "Cal Student Central",
+      "description": "Providing support to your questions concerning financial aid, fees and billing, payments, disbursements, registration, and enrollment",
+      "url": "http://studentcentral.berkeley.edu/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Academic Planning",
+          "subcategory": "Student Advising"
+        },
+        {
+          "topcategory": "Finances",
+          "subcategory": "Your Questions Answered Here"
+        }
+      ]
+    },
+    {
+      "name": "Cal Student Store",
+      "description": "Apparel, school supplies, and more ",
+      "url": "https://calstudentstore.berkeley.edu/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": true,
+        "faculty": true,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Recreation \u0026 Entertainment",
+          "subcategory": "Points of Interest"
         }
       ]
     },
@@ -1173,24 +1173,6 @@
       ]
     },
     {
-      "name": "CARE Services",
-      "description": "free, confidential problem assessment and referral for UC Berkeley faculty and staff",
-      "url": "http://uhs.berkeley.edu/facstaff/care/",
-      "roles": {
-        "student": false,
-        "applicant": false,
-        "staff": true,
-        "faculty": true,
-        "exStudent": false
-      },
-      "categories": [
-        {
-          "topcategory": "Wellness",
-          "subcategory": "Campus Health Center"
-        }
-      ]
-    },
-    {
       "name": "Career Center",
       "description": "Cal jobs, internships \u0026 career counseling",
       "url": "http://career.berkeley.edu/",
@@ -1277,6 +1259,24 @@
         {
           "topcategory": "Career",
           "subcategory": "Jobs"
+        }
+      ]
+    },
+    {
+      "name": "CARE Services",
+      "description": "free, confidential problem assessment and referral for UC Berkeley faculty and staff",
+      "url": "http://uhs.berkeley.edu/facstaff/care/",
+      "roles": {
+        "student": false,
+        "applicant": false,
+        "staff": true,
+        "faculty": true,
+        "exStudent": false
+      },
+      "categories": [
+        {
+          "topcategory": "Wellness",
+          "subcategory": "Campus Health Center"
         }
       ]
     },
@@ -2321,24 +2321,6 @@
       ]
     },
     {
-      "name": "My Years at Cal",
-      "description": "Undergraduate advice site with useful resources and on how to stay on track for graduation ",
-      "url": "http://myyears.berkeley.edu/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Support Services",
-          "subcategory": "Students"
-        }
-      ]
-    },
-    {
       "name": "MyFinAid (aid prior to Fall 2016)",
       "description": "Personal financial aid information prior to Fall 2016",
       "url": "https://myfinaid.berkeley.edu/",
@@ -2353,6 +2335,24 @@
         {
           "topcategory": "Finances",
           "subcategory": "Financial Assistance"
+        }
+      ]
+    },
+    {
+      "name": "My Years at Cal",
+      "description": "Undergraduate advice site with useful resources and on how to stay on track for graduation ",
+      "url": "http://myyears.berkeley.edu/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Support Services",
+          "subcategory": "Students"
         }
       ]
     },
@@ -2393,24 +2393,6 @@
       ]
     },
     {
-      "name": "New Student Services (includes CalSO)",
-      "description": "Helping new undergrads get the most out of Cal",
-      "url": "http://nss.berkeley.edu/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Support Services",
-          "subcategory": "Students"
-        }
-      ]
-    },
-    {
       "name": "Newscenter",
       "description": "News affiliated with UC Berkeley",
       "url": "http://newscenter.berkeley.edu",
@@ -2425,6 +2407,24 @@
         {
           "topcategory": "Community",
           "subcategory": "News \u0026 Events"
+        }
+      ]
+    },
+    {
+      "name": "New Student Services (includes CalSO)",
+      "description": "Helping new undergrads get the most out of Cal",
+      "url": "http://nss.berkeley.edu/",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Support Services",
+          "subcategory": "Students"
         }
       ]
     },
@@ -2901,24 +2901,6 @@
       ]
     },
     {
-      "name": "Schedule \u0026 Deadlines",
-      "description": "Key dates and deadlines for summer sessions",
-      "url": "http://summer.berkeley.edu/registration/schedule",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": false,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Finances",
-          "subcategory": "Summer Programs"
-        }
-      ]
-    },
-    {
       "name": "Schedule Builder",
       "description": "Plan your classes",
       "url": "https://schedulebuilder.berkeley.edu/",
@@ -2933,6 +2915,24 @@
         {
           "topcategory": "Academic Planning",
           "subcategory": "Planning"
+        }
+      ]
+    },
+    {
+      "name": "Schedule \u0026 Deadlines",
+      "description": "Key dates and deadlines for summer sessions",
+      "url": "http://summer.berkeley.edu/registration/schedule",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": false,
+        "faculty": false,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Finances",
+          "subcategory": "Summer Programs"
         }
       ]
     },
@@ -3013,24 +3013,6 @@
         {
           "topcategory": "HR \u0026 Benefits",
           "subcategory": "Conflict Resolution"
-        }
-      ]
-    },
-    {
-      "name": "Student \u0026 Student Organization Policies",
-      "description": "Rules and policies enforced on students and student organizations",
-      "url": "http://sa.berkeley.edu/conduct/policies",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": true,
-        "faculty": true,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Policies \u0026 Procedures",
-          "subcategory": "Policies"
         }
       ]
     },
@@ -3121,6 +3103,24 @@
         {
           "topcategory": "Student Engagement",
           "subcategory": "Student Organizations"
+        }
+      ]
+    },
+    {
+      "name": "Student \u0026 Student Organization Policies",
+      "description": "Rules and policies enforced on students and student organizations",
+      "url": "http://sa.berkeley.edu/conduct/policies",
+      "roles": {
+        "student": true,
+        "applicant": true,
+        "staff": true,
+        "faculty": true,
+        "exStudent": true
+      },
+      "categories": [
+        {
+          "topcategory": "Policies \u0026 Procedures",
+          "subcategory": "Policies"
         }
       ]
     },
@@ -3553,7 +3553,7 @@
     {
       "name": "Veteran's Benefits",
       "description": "Apply to gain veteran's educational benefits.",
-      "url": "https://bcsweb.is.berkeley.edu/psp/bcsprd/EMPLOYEE/HRMS/s/WEBLIB_PTAL.ISCRIPT1.FieldFormula.IScript_PTAL_DASHBOARD?tab=G3WORKCENTER&FolderPath=PORTAL_ROOT_OBJECT.G3WORKCENTER_LINK&IsFolder=false&IgnoreParamTempl=FolderPath%2cIsFolder",
+      "url": "https://bcsweb.is.berkeley.edu/psp/bcsprd/EMPLOYEE/HRMS/s/WEBLIB_PTAL.ISCRIPT1.FieldFormula.IScript_PTAL_DASHBOARD?tab=G3WORKCENTER\u0026FolderPath=PORTAL_ROOT_OBJECT.G3WORKCENTER_LINK\u0026IsFolder=false\u0026IgnoreParamTempl=FolderPath%2cIsFolder",
       "roles": {
         "student": true,
         "applicant": true,
@@ -3569,7 +3569,7 @@
       ]
     },
     {
-      "name": "Wisdom Caf\u00e9",
+      "name": "Wisdom Café",
       "description": "Where Berkeley staff learn \u0026 share",
       "url": "http://wisdomcafe.berkeley.edu/",
       "roles": {
