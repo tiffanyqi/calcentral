@@ -22,18 +22,8 @@ class AdvisingStudentController < ApplicationController
     render json: filtered_academics.to_json
   end
 
-  def enrollment_term
-    model = CampusSolutions::MyEnrollmentTerm.new student_uid_param
-    model.term_id = params['term_id']
-    render json: model.get_feed_as_json
-  end
-
-  def enrollment_terms
-    render json: CampusSolutions::MyEnrollmentTerms.new(student_uid_param).get_feed_as_json
-  end
-
-  def academic_plan
-    render json: academic_plan_by_student_uid.get_feed_as_json
+  def enrollment_instructions
+    render json: MyAcademics::ClassEnrollments.new(student_uid_param).get_feed_as_json
   end
 
   def holds
@@ -82,12 +72,6 @@ class AdvisingStudentController < ApplicationController
       membership[:sites].each { |site| site.delete :site_url } if membership[:sites]
     end
     feed
-  end
-
-  def academic_plan_by_student_uid
-    model = CampusSolutions::MyAcademicPlan.new student_uid_param
-    model.term_id = params['term_id']
-    model
   end
 
   def authorize_student_lookup

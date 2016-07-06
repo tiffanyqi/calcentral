@@ -1,6 +1,6 @@
-<div class="cc-enrollment-card-advisors-consult" data-cc-spinner-directive="enrollment.holds.isLoading">
+<div class="cc-enrollment-card-advisors-consult">
 
-  <div data-ng-if="enrollment.holds.hasHolds" class="cc-flex">
+  <div data-ng-if="enrollmentInstruction.hasHolds" class="cc-flex">
     <div>
       <i class="fa fa-exclamation-circle cc-icon-red cc-enrollment-card-icon"></i>
     </div>
@@ -9,11 +9,11 @@
     </div>
   </div>
 
-  <div data-ng-if="!enrollment.holds.hasHolds">
+  <div data-ng-if="!enrollmentInstruction.hasHolds">
     Consult with an advisor if you have any questions.
   </div>
 
-  <div data-ng-if="enrollmentTerm.isLawStudent">
+  <div data-ng-if="isInstructionType(enrollmentInstruction, 'law')">
     <ul class="cc-list-bullets">
       <li>
         JD students should contact
@@ -29,5 +29,4 @@
       </li>
     </ul>
   </div>
-
 </div>
