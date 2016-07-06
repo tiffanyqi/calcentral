@@ -6,11 +6,16 @@ module Terms
 
     def initialize(options = {})
       super(Settings.terms_proxy, options)
+      # Previous, Current, or Next. Current is the default if the option is not specified.
       @temporal_position = options[:temporal_position]
+      # Date from which the temporal position should be decided. Today is the default if no date is specified.
+      # For example, this can be used to find the term after the next term.
       @as_of_date = options[:as_of_date]
       initialize_mocks if @fake
     end
 
+    # Because the API takes 0, 1, or 2 parameters, the key of the corresponding instance can be
+    # nil (i.e., "global"), based on one parameter, or based on both parameters.
     def instance_key
       [@temporal_position, @as_of_date].compact.join '-'
     end
@@ -42,7 +47,9 @@ module Terms
 
     def get_internal
       response = get_response(url, request_options)
-      # When the campus is between terms, a request for the 'Current' term will return 404.
+      # When the campus is between terms, a request for the 'Current' term will return 404 with a
+      # "No term found" message. Since that is expected behavior, it should not be logged as an ERROR.
+      # Other sorts of 404 returns (such as a bad URI path) do need attention, however.
       if response.code == 404 &&
         (!response['apiResponse'] || !response['apiResponse']['message'] ||
         response['apiResponse']['message']['description'] != 'No term found for the given date')
