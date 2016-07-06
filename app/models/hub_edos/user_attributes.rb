@@ -158,7 +158,7 @@ module HubEdos
     end
 
     def term_transition?
-      Berkeley::Terms.fetch.current.sis_term_status != 'CT'
+      Berkeley::Terms.fetch.in_term_transition?
     end
 
   end

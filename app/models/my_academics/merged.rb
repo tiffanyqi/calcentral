@@ -19,7 +19,6 @@ module MyAcademics
         Semesters,
         Teaching,
         Exams,
-        Telebears,
         CanvasSites
       ]
     end

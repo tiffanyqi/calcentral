@@ -9,7 +9,6 @@ describe MyAcademics::Merged do
       MyAcademics::Semesters,
       MyAcademics::Teaching,
       MyAcademics::Exams,
-      MyAcademics::Telebears,
       MyAcademics::CanvasSites
     ]
   end
@@ -48,18 +47,18 @@ describe MyAcademics::Merged do
 
   context 'when a provider misbehaves' do
     before do
-      bad_provider = oski_providers.delete MyAcademics::Telebears
+      bad_provider = oski_providers.delete MyAcademics::Exams
       expect(bad_provider).to receive(:merge).and_raise NoMethodError
       set_mock_merge oski_providers
     end
 
     it 'should merge other providers and report error' do
-      expect(Rails.logger).to receive(:error).with /Failed to merge MyAcademics::Telebears for UID #{uid}: NoMethodError/
+      expect(Rails.logger).to receive(:error).with /Failed to merge MyAcademics::Exams for UID #{uid}: NoMethodError/
       feed = described_class.new(uid).get_feed
-      well_behaved_classes = provider_classes - [MyAcademics::Telebears]
+      well_behaved_classes = provider_classes - [MyAcademics::Exams]
       well_behaved_classes.each { |well_behaved_class| expect(feed[well_behaved_class.to_s]).to eq true }
-      expect(feed).not_to include 'MyAcademics::Telebears'
-      expect(feed[:errors]).to eq ['MyAcademics::Telebears']
+      expect(feed).not_to include 'MyAcademics::Exams'
+      expect(feed[:errors]).to eq ['MyAcademics::Exams']
     end
   end
 
