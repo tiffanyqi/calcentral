@@ -178,6 +178,12 @@ financials_proxy:
   username: ''
   password: ''
 
+terms_proxy:
+  fake: false
+  app_id: ''
+  app_key: ''
+  base_url: 'https://apis.berkeley.edu/uat/sis/v1/terms'
+
 textbooks_proxy:
   fake: false
   base_url: "https://calstudentstore.berkeley.edu"
