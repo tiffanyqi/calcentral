@@ -1,6 +1,7 @@
 module Proxies
   module AuthenticatedApi
     def request_options(opts = {})
+      opts = super(opts)
       if @settings.app_id.present? && @settings.app_key.present?
         opts = {headers: {
           'app_id' => @settings.app_id,
