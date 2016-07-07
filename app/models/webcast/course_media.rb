@@ -38,6 +38,7 @@ module Webcast
           audio = get_audio_as_json data
           itunes = get_itunes_as_json data
           media_per_ccn[ccn] = videos.merge(audio).merge(itunes)
+          media_per_ccn[ccn][:youTubePlaylist] = data[:youtube_playlist]
         end
       end
       media_per_ccn
@@ -57,7 +58,7 @@ module Webcast
     end
 
     def get_itunes_url(id)
-      !id.blank? ? 'https://itunes.apple.com/us/itunes-u/id' + id : nil
+      id && "https://itunes.apple.com/us/itunes-u/id#{id}"
     end
 
     def get_itunes_as_json(playlist)

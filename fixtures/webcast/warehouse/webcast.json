@@ -2090,6 +2090,23 @@
         }
       ],
       "audioOnly": false
+    },
+    {
+      "year": 2016,
+      "semester": "Fall",
+      "ccn": 15954,
+      "deptName": "IAS",
+      "catalogId": "45",
+      "public": false,
+      "youTubePlaylist": "PL-XXv-cvA_iAn6Qt6B7D-phRT0Ld1GOUV",
+      "recordings": [
+        {
+          "lecture": "2016-08-25: IAS 45 lecture 1",
+          "youTubeId": "yDqMvV0Hj5g",
+          "recordingStartUTC": "2016-08-25T15:10:00-11:00"
+        }
+      ],
+      "audioOnly": false
     }
   ]
 }

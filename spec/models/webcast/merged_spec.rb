@@ -1,8 +1,8 @@
 describe Webcast::Merged do
 
   context 'authorized user and a fake proxy' do
-    let(:user_id) { rand(99999).to_s }
-    let(:options) { {:fake => true} }
+    let(:user_id) { random_id }
+    let(:options) { { fake: true } }
     let(:policy) do
       AuthenticationStatePolicy.new(AuthenticationState.new('user_id' => user_id), nil)
     end
@@ -34,17 +34,17 @@ describe Webcast::Merged do
       before do
         courses_list = [
           {
-            :classes=>[
+            classes: [
               {
-                :dept => 'PLANTBI',
-                :courseCatalog => '150',
-                :sections => [
-                  { :ccn=>'87435', :section_number=>'101', :instruction_format=>'LAB' },
-                  { :ccn=>'87438', :section_number=>'102', :instruction_format=>'LAB' },
-                  { :ccn=>'87444', :section_number=>'201', :instruction_format=>'LAB' },
-                  { :ccn=>'87447', :section_number=>'202', :instruction_format=>'LAB' },
-                  { :ccn=>'87432', :section_number=>'001', :instruction_format=>'LEC' },
-                  { :ccn=>'87441', :section_number=>'002', :instruction_format=>'LEC' }
+                dept: 'PLANTBI',
+                courseCatalog: '150',
+                sections: [
+                  { ccn: '87435', section_number: '101', instruction_format: 'LAB' },
+                  { ccn: '87438', section_number: '102', instruction_format: 'LAB' },
+                  { ccn: '87444', section_number: '201', instruction_format: 'LAB' },
+                  { ccn: '87447', section_number: '202', instruction_format: 'LAB' },
+                  { ccn: '87432', section_number: '001', instruction_format: 'LEC' },
+                  { ccn: '87441', section_number: '002', instruction_format: 'LEC' }
                 ]
               }
             ]
@@ -53,20 +53,17 @@ describe Webcast::Merged do
         expect_any_instance_of(MyAcademics::Teaching).to receive(:courses_list_from_ccns).once.and_return courses_list
       end
       it 'returns one match media' do
-        stat_131A = feed[:media][0]
-        expect(stat_131A[:termYr]).to eq 2014
-        expect(stat_131A[:termCd]).to eq 'B'
-        expect(stat_131A[:ccn]).to eq '87432'
-        expect(stat_131A[:deptName]).to eq 'PLANTBI'
-        expect(stat_131A[:catalogId]).to eq '150'
-        videos = stat_131A[:videos]
-        itunes_audio_id = '819827828'
-        expect(stat_131A[:iTunes][:audio]).to include itunes_audio_id
+        stat_131 = feed[:media][0]
+        expect(stat_131[:termYr]).to eq 2014
+        expect(stat_131[:termCd]).to eq 'B'
+        expect(stat_131[:ccn]).to eq '87432'
+        expect(stat_131[:deptName]).to eq 'PLANTBI'
+        expect(stat_131[:catalogId]).to eq '150'
+        videos = stat_131[:videos]
+        expect(stat_131[:iTunes][:audio]).to end_with '819827828'
         expect(videos).to have(31).items
         # Verify backwards compatibility
         expect(feed[:videos]).to eq videos
-        expect(feed[:videoErrorMessage]).to be_nil
-        expect(feed[:iTunes][:audio]).to include itunes_audio_id
       end
     end
 
@@ -75,8 +72,13 @@ describe Webcast::Merged do
         Webcast::Merged.new(user_id, policy, 2008, 'D', [9688], options).get_feed
       end
       before do
-        courses_list = [{
-            :classes=>[{ :sections => [{ :ccn=>'09688', :section_number=>'101', :instruction_format=>'LEC' }] }]
+        courses_list = [
+          {
+            classes: [
+              {
+                sections: [{ ccn: '09688', section_number: '101', instruction_format: 'LEC' }]
+              }
+            ]
           }
         ]
         expect_any_instance_of(MyAcademics::Teaching).to receive(:courses_list_from_ccns).once.and_return courses_list
@@ -100,18 +102,18 @@ describe Webcast::Merged do
       before do
         sections_with_recordings = [
           {
-            :classes=>[
+            classes: [
               {
-                :sections=>[
+                sections: [
                   {
-                    :ccn=>'76207',
-                    :instruction_format=>'LEC',
-                    :section_number=>'101'
+                    ccn: '76207',
+                    instruction_format: 'LEC',
+                    section_number: '101'
                   },
                   {
-                    :ccn=>'87432',
-                    :instruction_format=>'LEC',
-                    :section_number=>'101'
+                    ccn: '87432',
+                    instruction_format: 'LEC',
+                    section_number: '101'
                   }
                 ]
               }
@@ -120,30 +122,30 @@ describe Webcast::Merged do
         ]
         webcast_eligible = [
           {
-            :classes=>[
+            classes: [
               {
-                :dept => 'BIO',
-                :courseCatalog => '1B',
-                :sections=>[
+                dept: 'BIO',
+                courseCatalog: '1B',
+                sections: [
                   {
-                    :ccn=>'07620',
-                    :section_number=>'312',
-                    :instruction_format => 'LAB',
-                    :instructors=>[
+                    ccn: '07620',
+                    section_number: '312',
+                    instruction_format: 'LAB',
+                    instructors: [
                       {
-                        :name=>'Paul Duguid',
-                        :uid=>'18938',
-                        :instructor_func=>'1'
+                        name: 'Paul Duguid',
+                        uid: '18938',
+                        instructor_func: '1'
                       },
                       {
-                        :name=>'Geoffrey Nunberg',
-                        :uid=>ldap_uid,
-                        :instructor_func=>'3'
+                        name: 'Geoffrey Nunberg',
+                        uid: ldap_uid,
+                        instructor_func: '3'
                       },
                       {
-                        :name=>'Nikolai Smith',
-                        :uid=>'1016717',
-                        :instructor_func=>'2'
+                        name: 'Nikolai Smith',
+                        uid: '1016717',
+                        instructor_func: '2'
                       }
                     ]
                   }
@@ -160,20 +162,21 @@ describe Webcast::Merged do
         expect(feed[:videoErrorMessage]).to be_nil
         media = feed[:media]
         expect(media).to have(2).items
-        pb_hlth_241 = media[0]
-        stat_131A = media[1]
-        expect(stat_131A[:ccn]).to eq '87432'
-        expect(stat_131A[:videos]).to have(31).items
-        expect(stat_131A[:instructionFormat]).to eq 'LEC'
-        expect(stat_131A[:sectionNumber]).to eq '101'
-        expect(stat_131A[:eligibleForSignUp]).to be_nil
-        expect(pb_hlth_241[:ccn]).to eq '76207'
-        expect(pb_hlth_241[:videos]).to have(35).items
-        expect(pb_hlth_241[:iTunes][:audio]).to include('805328862')
-        expect(pb_hlth_241[:iTunes][:video]).to be_nil
-        expect(feed[:videos]).to match_array(pb_hlth_241[:videos] + stat_131A[:videos])
+        pb_health_241 = media[0]
+        stat_131 = media[1]
+        expect(stat_131[:ccn]).to eq '87432'
+        expect(stat_131[:videos]).to have(31).items
+        expect(stat_131[:instructionFormat]).to eq 'LEC'
+        expect(stat_131[:sectionNumber]).to eq '101'
+        expect(stat_131[:eligibleForSignUp]).to be_nil
+        expect(pb_health_241[:ccn]).to eq '76207'
+        expect(pb_health_241[:youTubePlaylist]).to eq '-XXv-cvA_iBacs-uhTVhDhip4sGWoq2C'
+        expect(pb_health_241[:videos]).to have(35).items
+        expect(pb_health_241[:iTunes][:audio]).to end_with '805328862'
+        expect(pb_health_241[:iTunes][:video]).to be_nil
+        expect(feed[:videos]).to match_array(pb_health_241[:videos] + stat_131[:videos])
         expect(feed[:audio]).to be_empty
-        expect(feed[:iTunes][:audio]).to include('805328862')
+        expect(feed[:iTunes][:audio]).to end_with '805328862'
         expect(feed[:iTunes][:video]).to be_nil
 
         # Instructors that can sign up for Webcast
@@ -204,11 +207,11 @@ describe Webcast::Merged do
       before do
         sections_with_recordings = [
           {
-            :classes=>[
+            classes: [
               {
-                :sections=>[
-                  { :ccn=>'05915', :section_number=>'101', :instruction_format=>'LEC' },
-                  { :ccn=>'51990', :section_number=>'201', :instruction_format=>'LEC' }
+                sections: [
+                  { ccn: '05915', section_number: '101', instruction_format: 'LEC' },
+                  { ccn: '51990', section_number: '201', instruction_format: 'LEC' }
                 ]
               }
             ]
@@ -230,7 +233,7 @@ describe Webcast::Merged do
     end
   end
 
-  context 'a real, non-fake proxy with user in view-as mode', :testext => true do
+  context 'a real, non-fake proxy with user in view-as mode', testext: true do
     context 'course with zero recordings is different than course not scheduled for recordings' do
       before do
         allow(Berkeley::Terms).to receive(:legacy?).with(2015, 'B').and_return true

@@ -103,13 +103,13 @@ module Webcast
               next_class[:sections].each do |section|
                 ccn = section[:ccn]
                 section_metadata = {
-                  :termYr => @term_yr,
-                  :termCd => @term_cd,
-                  :ccn => ccn,
-                  :deptName => next_class[:dept],
-                  :catalogId => next_class[:courseCatalog],
-                  :instructionFormat => section[:instruction_format],
-                  :sectionNumber => section[:section_number]
+                  termYr: @term_yr,
+                  termCd: @term_cd,
+                  ccn: ccn,
+                  deptName: next_class[:dept],
+                  catalogId: next_class[:courseCatalog],
+                  instructionFormat: section[:instruction_format],
+                  sectionNumber: section[:section_number]
                 }
                 media = media_per_ccn[ccn.to_i]
                 feed << media.merge(section_metadata) if media

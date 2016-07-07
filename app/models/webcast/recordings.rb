@@ -19,10 +19,11 @@ module Webcast
           key = Webcast::CourseMedia.id_per_ccn(year, semester, course['ccn'])
           recordings[:courses][key] = {
             audio_only: course['audioOnly'],
-            audio_rss: course['audioRSS'].to_s,
+            audio_rss: course['audioRSS'],
             recordings: course['recordings'],
-            itunes_audio: course['iTunesAudio'].to_s,
-            itunes_video: course['iTunesVideo'].to_s
+            itunes_audio: course['iTunesAudio'],
+            itunes_video: course['iTunesVideo'],
+            youtube_playlist: course['youTubePlaylist']
           }
         end
       end
