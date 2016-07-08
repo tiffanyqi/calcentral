@@ -26,7 +26,7 @@ describe 'Delegated access', :testui => true do
 
       # Academics UI
       @academic_profile_card = CalCentralPages::MyAcademicsProfileCard.new @driver
-      @status_card = CalCentralPages::MyAcademicsStatusBlocksHoldsCard.new @driver
+      @status_card = CalCentralPages::MyAcademicsStatusAndHoldsCard.new @driver
       @semester_card = CalCentralPages::MyAcademicsSemestersCard.new @driver
       @final_exams_card = CalCentralPages::MyAcademicsFinalExamsCard.new @driver
       @advising_card = CalCentralPages::MyAcademicsAdvisingCard.new @driver
@@ -232,12 +232,12 @@ describe 'Delegated access', :testui => true do
                     end
 
                     # Reg Status
-                    shows_reg_status = @status_card.status_table?
+                    shows_reg_status = @status_card.status_holds_section?
                     it ("shows delegate UID #{uid} no registration status for UID #{student_uid}") { expect(shows_reg_status).to be false }
 
-                    # Active Blocks
-                    shows_active_blocks = @status_card.active_blocks_table?
-                    it ("shows delegate UID #{uid} no active blocks for UID #{student_uid}") { expect(shows_active_blocks).to be false }
+                    # Holds
+                    shows_holds = @status_card.active_holds_table?
+                    it ("shows delegate UID #{uid} no holds for UID #{student_uid}") { expect(shows_holds).to be false }
 
                     # Final Exams
                     shows_exams = @final_exams_card.all_exam_courses.any?
