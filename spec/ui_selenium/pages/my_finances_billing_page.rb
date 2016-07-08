@@ -14,7 +14,7 @@ module CalCentralPages
 
       link(:sort_by_date, :xpath => '//th[@data-ng-click="changeSorting(\'itemEffectiveDate\')"]')
       link(:sort_by_descrip, :xpath => '//th[@data-ng-click="changeSorting(\'itemDescription\')"]')
-      link(:sort_by_amount, :xpath => '//th[@data-ng-click="changeSorting(\'itemBalance\')"]')
+      link(:sort_by_amount, :xpath => '//th[@data-ng-click="changeSortingAmount()"]')
       link(:sort_by_trans_type, :xpath => '//th[@data-ng-click="changeSorting(\'itemType\')"]')
       link(:sort_by_due_date, :xpath => '//th[@data-ng-click="changeSorting(\'itemDueDate\')"]')
       image(:sort_descending, :xpath => '//i[@class="fa fa-chevron-down"]')
