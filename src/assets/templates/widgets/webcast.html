@@ -74,12 +74,32 @@
         </ul>
         <div data-ng-if="currentSelection === 'Video'">
           <div data-ng-if="videos.length">
-            <div class="cc-select cc-widget-webcast-select">
-              <label for="cc-widget-webcast-video-selection" class="cc-visuallyhidden">Select Video</label>
-              <select id="cc-widget-webcast-video-selection" class="bc-canvas-embedded-form-select" data-ng-model="selectedVideo" data-ng-change="announceVideoSelect()" data-ng-options="video.lecture for video in videos"></select>
-            </div>
-            <div class="cc-youtube-video">
-              <div data-cc-youtube-directive="selectedVideo.youTubeId" data-cc-youtube-directive-title="{{selectedVideo.lecture}}"></div>
+            <div class="cc-table" data-ng-repeat="medium in media">
+              <h3 data-ng-bind-template="{{medium.deptName + ' ' + medium.catalogId + ' ' + medium.instructionFormat + ' ' + medium.sectionNumber}}" data-ng-if="media.length > 1"></h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th width="60%" scope="col">
+                      Recording (YouTube)
+                    </th>
+                    <th width="40%" scope="col">
+                      Date
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-ng-repeat="video in medium.videos | limitTo: futureLimit">
+                    <td class="cc-table-top-border">
+                      <a data-ng-href="https://www.youtube.com/watch?v={{video.youTubeId}}"
+                         title="{{video.lecture}}"
+                         data-ng-bind="video.lecture">
+                      </a>
+                    </td>
+                    <td class="cc-table-top-border" data-ng-bind="video.recordingStartUTC | date:'MMM d'"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div data-cc-show-more-directive data-cc-show-more-list="medium.videos" data-cc-show-more-limit="futureLimit"></div>
             </div>
           </div>
           <ul class="cc-widget-webcast-links" data-ng-if="iTunes.video">

@@ -1,20 +1,19 @@
 describe Webcast::Recordings do
 
-  let (:webcast_uri) { URI.parse "#{Settings.webcast_proxy.base_url}/warehouse/webcast.json" }
-
   context 'a fake proxy' do
-    context 'data organized by ccn' do
-      let(:recordings) { Webcast::Recordings.new({:fake => true}).get }
-      it 'should return a lot of playlists' do
-        expect(recordings[:courses].keys.length).to eq 23
-        law_2723 = recordings[:courses]['2008-D-49688']
-        expect(law_2723).to_not be_nil
-        expect(law_2723[:recordings]).to have(12).items
-      end
+    let(:recordings) { Webcast::Recordings.new({:fake => true}).get }
+    it 'should return many playlists' do
+      expect(recordings[:courses]).to have(24).items
+      law_2723 = recordings[:courses]['2008-D-49688']
+      expect(law_2723).to_not be_nil
+      expect(law_2723[:youtube_playlist]).to eq 'EC8DA9DAD111EAAD28'
+      expect(law_2723[:recordings]).to have(12).items
     end
   end
 
-  context 'a real, non-fake proxy', :testext => true do
+  context 'a real, non-fake proxy', testext: true do
+    let (:webcast_uri) { URI.parse "#{Settings.webcast_proxy.base_url}/warehouse/webcast.json" }
+
     subject { Webcast::Recordings.new }
 
     context 'normal return of real data' do
@@ -52,8 +51,7 @@ describe Webcast::Recordings do
     end
 
     context 'when videos are disabled' do
-      before { Settings.features.videos = false }
-      after { Settings.features.videos = true }
+      before { allow(Settings.features).to receive(:videos).and_return false }
       it 'should return an empty hash' do
         result = subject.get
         expect(result).to be_an_instance_of Hash
