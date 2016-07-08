@@ -30,12 +30,13 @@ describe 'My Profile Basic Info', :testui => true, :order => :defined do
 
       it ('include a link to Basic Information') { expect(@basic_info_card.basic_info_link?).to be true }
       it ('include a link to Contact Information') { expect(@basic_info_card.contact_info_link?).to be true }
-      it ('include no link to Emergency Contact') { expect(@basic_info_card.emergency_contact_link?).to be false }
+      it ('include a link to Emergency Contact') { expect(@basic_info_card.emergency_contact_link?).to be true }
       it ('include a link to Demographic Information') { expect(@basic_info_card.contact_info_link?).to be true }
       it ('include a link to Delegate Access') { expect(@basic_info_card.contact_info_link?).to be true }
       it ('include a link to Information Disclosure') { expect(@basic_info_card.contact_info_link?).to be true }
       it ('include a link to Title IV Release') { expect(@basic_info_card.contact_info_link?).to be true }
-      it ('include no link to Work Experience') { expect(@basic_info_card.work_experience_link?).to be false }
+      it ('include a link to Work Experience') { expect(@basic_info_card.work_experience_link?).to be true }
+      it ('include no link to Languages') { expect(@basic_info_card.languages_link?).to be false }
       it ('include a link to bConnected') { expect(@basic_info_card.contact_info_link?).to be true }
 
     end
