@@ -5,7 +5,7 @@
     <li data-ng-repeat="link in links | orderBy:'name' | campusLinksSubcategoryFilter:subcategory">
       <a data-ng-href="{{link.url}}"
         data-ng-click="api.analytics.trackExternalLink('Campus links', subcategory, link.url)"
-        title="{{link.description}}">{{link.name}}</a>
+        data-ng-attr-title="{{link.description}}">{{link.name}}</a>
     </li>
   </ul>
 </div>
