@@ -104,6 +104,10 @@ describe 'MyAcademics::CollegeAndLevel' do
       expect(feed[:collegeAndLevel][:termName]).to eq 'Spring 2017'
     end
 
+    it 'includes transfer credit as cumulativeUnits' do
+      expect(feed[:collegeAndLevel][:cumulativeUnits]).to be
+    end
+
     context 'empty status feed' do
       before { status_proxy.set_response(status: 200, body: '{}') }
       it 'reports empty' do
