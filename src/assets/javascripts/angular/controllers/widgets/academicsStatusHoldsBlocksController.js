@@ -65,10 +65,12 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
     var currentTerm = data.data.terms.current.id;
     var regStatus = data.data.registrations[currentTerm];
 
-    if (regStatus[0].isLegacy) {
-      parseLegacyTerm(regStatus[0]);
-    } else {
-      parseCsTerm(regStatus[0]);
+    if (regStatus[0]) {
+      if (regStatus[0].isLegacy) {
+        parseLegacyTerm(regStatus[0]);
+      } else {
+        parseCsTerm(regStatus[0]);
+      }
     }
 
     return;

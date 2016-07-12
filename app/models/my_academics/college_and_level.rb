@@ -47,6 +47,7 @@ module MyAcademics
       response = HubEdos::AcademicStatus.new(user_id: @uid).get
       if (status = parse_hub_academic_status response)
         response[:careers] = parse_hub_careers status
+        response[:cumulativeUnits] = parse_hub_transfer_credit_cumulative_units status
         response[:level] = parse_hub_level status
         response[:termName] = parse_hub_term_name status
         response[:termsInAttendance] = status['termsInAttendance'].to_s
@@ -63,6 +64,11 @@ module MyAcademics
           careers << career
         end
       end
+    end
+
+    def parse_hub_transfer_credit_cumulative_units(status)
+      return {} unless status['cumulativeUnits'].present?
+      status['cumulativeUnits']
     end
 
     def parse_hub_level(status)
