@@ -1,0 +1,19 @@
+<div class="cc-page-academics" data-ng-if="api.user.profile.features.enrollmentVerification && api.user.profile.isDirectlyAuthenticated">
+  <div class="row">
+    <div class="column">
+      <h1 class="cc-heading-page-title cc-print-hide">
+        <a href="/academics">My Academics</a> &raquo; Request Enrollment Verification
+      </h1>
+      <h1 class="cc-heading-page-title cc-hidden cc-print-show">
+        Enrollment Verification for <span data-ng-bind="api.user.profile.fullName"></span>
+      </h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="medium-10 medium-offset-1 column">
+      <div data-ng-include="'widgets/academics/enrollment_verification.html'"></div>
+    </div>
+  </div>
+</div>
+<div data-ng-include="'404.html'" data-ng-if="!api.user.profile.features.enrollmentVerification || !api.user.profile.isDirectlyAuthenticated"></div>

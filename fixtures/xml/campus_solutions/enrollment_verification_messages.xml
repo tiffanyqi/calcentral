@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ROOT>
+   <GET_MESSAGE_CAT_DEFN>
+      <MESSAGE_SET_NBR>32500</MESSAGE_SET_NBR>
+      <MESSAGE_NBR>1</MESSAGE_NBR>
+      <MESSAGE_TEXT>Print Your Official Enrollment Verification On-Demand</MESSAGE_TEXT>
+      <MSG_SEVERITY>M</MSG_SEVERITY>
+      <DESCRLONG>
+         <p>
+            The University has partnered with the <a target="clearinghouse" href="http://www.studentclearinghouse.org/">National Student Clearinghouse</a>
+            ,a nonprofit organization serving the higher education community, enabling you to print your own:
+         </p>
+         <ul>
+            <li>
+               <b>Enrollment Verification Certificates</b> - proof of registration, enrollment status, and anticipated graduation date for scholarships, grants, student housing, exchange programs, etc.
+            </li>
+            <li>
+               <b>Good Student Certificates</b> - proof of registration, enrollment status, and eligibility for scholarships, grants, discounts and services that require a GPA of 3.00 or higher.
+            </li>
+            <li>This tool also enables you to check information about student loan deferments and electronic notifications sent to your lenders.</li>
+         </ul>
+         <p>
+            The information on these certificates is <em><b>updated weekly</b></em> every Tuesday afternoon to reflect your registration status as of 5:00 p.m. on the preceding Friday.
+         </p>
+         <p>
+            <b>Follow these steps to print your verification:</b>
+         </p>
+         <ul>
+            <li>
+               Click the <em><b>Self-Service Verifications</b></em> button below.
+            </li>
+            <li>Select and print the appropriate certificate.</li>
+            <li>Attach the certificate to any form(s) required by the organization seeking verification.</li>
+            <li>Submit them as directed by your service provider.</li>
+            <li>Log out of the National Student Clearinghouse application.</li>
+         </ul>
+      </DESCRLONG>
+   </GET_MESSAGE_CAT_DEFN>
+   <GET_MESSAGE_CAT_DEFN>
+      <MESSAGE_SET_NBR>32500</MESSAGE_SET_NBR>
+      <MESSAGE_NBR>2</MESSAGE_NBR>
+      <MESSAGE_TEXT>Request Other Enrollment Verifications</MESSAGE_TEXT>
+      <MSG_SEVERITY>M</MSG_SEVERITY>
+      <DESCRLONG>
+         <p>If you need other types of verifications that require more detailed information you can request them online and they will be sent through the US postal service.</p>
+         <p>
+            Use this service if you need to provide information such as your school or college at UC Berkeley, major(s), degree(s) earned, term(s) enrolled, units carried for each term, GPA, class level, etc.
+            <a target="registrar" href="http://registrar.berkeley.edu/current_students/registration_enrollment/verification.html">See the full list of other verification services.</a>
+         </p>
+         <p>The information on these verifications reflect your record at the time it is produced, generally 1-2 business days after you submit your request.</p>
+         <p>Your verification will be sent to the address of your choice via first-class mail within 3 business days.</p>
+         <p>
+            <b>Follow these steps to request a verification:</b>
+         </p>
+         <ul class="bf-aca-ver">
+            <li>
+               Click the <em><b>Verifications</b></em> button below.
+            </li>
+            <li>Select Enrollment Verifications Request</li>
+            <li>Complete the form and click submit.</li>
+         </ul>
+      </DESCRLONG>
+   </GET_MESSAGE_CAT_DEFN>
+   <GET_MESSAGE_CAT_DEFN>
+      <MESSAGE_SET_NBR>32500</MESSAGE_SET_NBR>
+      <MESSAGE_NBR>3</MESSAGE_NBR>
+      <MESSAGE_TEXT>Berkeley Law enrollment verification</MESSAGE_TEXT>
+      <MSG_SEVERITY>M</MSG_SEVERITY>
+      <DESCRLONG>
+         To Receive enrollment verification for your law classes you must visit <a href="https://www.law.berkeley.edu/academics/registrar/verification-of-attendance/" target="blank">Berkeley Law enrollment verification</a>.
+      </DESCRLONG>
+   </GET_MESSAGE_CAT_DEFN>
+</ROOT>
