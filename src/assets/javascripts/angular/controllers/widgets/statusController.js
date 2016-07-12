@@ -89,7 +89,9 @@ angular.module('calcentral.controllers').controller('StatusController', function
       $scope.hasWarnings = true;
     }
 
-    $scope.hasBillingData = ($scope.minimumAmountDue !== null);
+    if ($scope.minimumAmountDue) {
+      $scope.hasBillingData = true;
+    }
   };
 
   var loadActivity = function(data) {
