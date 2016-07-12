@@ -73,6 +73,12 @@
           </li>
         </ul>
         <div data-ng-if="currentSelection === 'Video'">
+          <div class="cc-widget-webcast-alert">
+            <i class="fa fa-exclamation-triangle cc-icon-gold"></i>
+            <strong>Alert: </strong>
+            You must log in to YouTube with your bConnected account to watch the videos below. For more information,
+            go to our <a href="https://berkeley.service-now.com/kb_view.do?sysparm_article=KB0011469">help page</a>.
+          </div>
           <div data-ng-if="videos.length">
             <div class="cc-table" data-ng-repeat="medium in media">
               <h3 data-ng-bind-template="{{medium.deptName + ' ' + medium.catalogId + ' ' + medium.instructionFormat + ' ' + medium.sectionNumber}}"
@@ -81,7 +87,7 @@
                 <thead>
                   <tr>
                     <th width="60%" scope="col">
-                      Recording (YouTube)
+                      Lecture
                     </th>
                     <th width="40%" scope="col">
                       Date
@@ -150,7 +156,7 @@
         </div>
         <div class="cc-widget-webcast-outbound-link"
           data-ng-if="(videos && videos.length > 0) || (audio && audio.length > 0)">
-          <a href="http://www.ets.berkeley.edu/find-support/request-forms/request-support-or-give-feedback">Report a problem with this recording</a>
+          <a href="http://www.ets.berkeley.edu/find-support/request-forms/request-support-or-give-feedback">Report a problem</a>
         </div>
       </div>
     </div>
