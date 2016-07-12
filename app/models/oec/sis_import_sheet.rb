@@ -76,10 +76,10 @@ module Oec
       [                                                   # Canonical sort order:
         row['DEPT_NAME'].to_s,                            # - Department name;
         row['CATALOG_ID'].try(:match, /\d+/).to_s.to_i,   # - Numeric portion of catalog ID;
-        row['CATALOG_ID'],                                # - Catalog ID as string;
-        row['PRIMARY_SECONDARY_CD'],                      # - Primary sections first;
-        row['SECTION_NUM'],                               # - Section number;
-        row['LDAP_UID']                                   # - Instructor ID.
+        row['CATALOG_ID'].to_s,                           # - Catalog ID as string;
+        row['PRIMARY_SECONDARY_CD'].to_s,                 # - Primary sections first;
+        row['SECTION_NUM'].to_s,                          # - Section number;
+        row['LDAP_UID'].to_s.to_i                         # - Instructor ID.
       ]
     end
 
