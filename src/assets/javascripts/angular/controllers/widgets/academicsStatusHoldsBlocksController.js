@@ -6,21 +6,18 @@ var _ = require('lodash');
 /**
  * Academics status, holds & blocks controller
  */
-angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksController', function(apiService, profileFactory, slrDeeplinkFactory, residencyMessageFactory, registrationsFactory, $scope) {
+angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksController', function(apiService, profileFactory, slrDeeplinkFactory, residencyMessageFactory, registrationsFactory, statusHoldsService, $scope) {
   // Data for studentInfo and csHolds are pulled by the AcademicsController that
   // governs the academics template. The statusHoldsBlocks segment watches those
   // for changes in order to display the corresponding UI elements.
   $scope.statusHoldsBlocks = {};
   $scope.regStatus = {
-    term: null,
-    isSummer: false,
-    summary: null,
-    explanation: null,
-    needsAction: false,
+    terms: [],
+    registrations: [],
     isLoading: true
   };
 
-  $scope.$watchGroup(['regStatus.summary', 'api.user.profile.features.csHolds', 'api.user.profile.features.legacyRegblocks'], function(newValues) {
+  $scope.$watchGroup(['regStatus.registrations[0].summary', 'api.user.profile.features.csHolds', 'api.user.profile.features.legacyRegblocks'], function(newValues) {
     var enabledSections = [];
 
     if (newValues[0] !== null && newValues[0] !== undefined) {
@@ -58,59 +55,34 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
    * There is also the possibility of the hub bringing over more than one registration for a term.
    */
   var parseRegistrations = function(data) {
-    $scope.regStatus.term = data.data.terms.current.name;
-    if (_.startsWith($scope.regStatus.term, 'Summer')) {
-      $scope.regStatus.isSummer = true;
-    }
-    var currentTerm = data.data.terms.current.id;
-    var regStatus = data.data.registrations[currentTerm];
-
-    if (regStatus[0]) {
-      if (regStatus[0].isLegacy) {
-        parseLegacyTerm(regStatus[0]);
-      } else {
-        parseCsTerm(regStatus[0]);
+    _.forOwn(data.data.terms, function(value, key) {
+      if (key === 'current' || key === 'next') {
+        if (value) {
+          $scope.regStatus.terms.push({
+            temporalPosition: key,
+            id: value.id,
+            name: value.name
+          });
+        }
       }
-    }
+    });
+    _.forEach($scope.regStatus.terms, function(term) {
+      var regStatus = data.data.registrations[term.id];
+
+      if (regStatus && regStatus[0]) {
+        _.set(regStatus[0], 'termName', term.name);
+        _.set(regStatus[0], 'termId', parseInt(term.id));
+        regStatus[0].isSummer = _.startsWith(term.name, 'Summer');
+
+        if (regStatus[0].isLegacy) {
+          $scope.regStatus.registrations.push(statusHoldsService.parseLegacyTerm(regStatus[0]));
+        } else {
+          $scope.regStatus.registrations.push(statusHoldsService.parseCsTerm(regStatus[0]));
+        }
+      }
+    });
 
     return;
-  };
-
-  /**
-   * Parses any terms past the legacy cutoff.  Mirrors current functionality for now, but this will be changed in redesigns slated
-   * for GL6.
-   */
-  var parseCsTerm = function(term) {
-    if (term.registered === true) {
-      $scope.regStatus.summary = 'Officially Registered';
-      $scope.regStatus.explanation = $scope.regStatus.isSummer ? 'You are officially registered for this term.' : 'You are officially registered and are entitled to access campus services.';
-    }
-    if (term.registered === false) {
-      $scope.regStatus.summary = 'Not Officially Registered';
-      $scope.regStatus.explanation = $scope.regStatus.isSummer ? 'You are not officially registered for this term.' : 'You are not entitled to access campus services until you are officially registered.  In order to be officially registered, you must pay your Tuition and Fees, and have no outstanding holds.';
-      $scope.regStatus.needsAction = true;
-    }
-  };
-
-  /**
-   * Parses any terms on or before the legacy cutoff.  Mirrors current functionality, this should be able to be removed in Fall 2016.
-   */
-  var parseLegacyTerm = function(term) {
-    $scope.regStatus.summary = term.regStatus.summary;
-    $scope.regStatus.explanation = term.regStatus.explanation;
-
-    // Special summer parsing for the last legacy term (Summer 2016)
-    if ($scope.regStatus.isSummer) {
-      if (term.regStatus.summary !== 'Registered') {
-        $scope.regStatus.summary = 'Not Officially Registered';
-        $scope.regStatus.explanation = 'You are not officially registered for this term.';
-      } else {
-        $scope.regStatus.summary = 'Officially Registered';
-        $scope.regStatus.explanation = 'You are officially registered for this term.';
-      }
-    }
-
-    $scope.regStatus.needsAction = term.regStatus.needsAction;
   };
 
   var getSlrDeeplink = function() {
@@ -176,16 +148,16 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
     parseCalResidency(residency);
   };
 
-  var loadResidencyInformation = function() {
+  var loadStatusInformation = function() {
     getPerson()
     .then(parsePerson)
     .then(getSlrDeeplink)
     .then(getRegistrations)
-    .then(function() {
+    .finally(function() {
       $scope.residency.isLoading = false;
       $scope.regStatus.isLoading = false;
     });
   };
 
-  loadResidencyInformation();
+  loadStatusInformation();
 });
