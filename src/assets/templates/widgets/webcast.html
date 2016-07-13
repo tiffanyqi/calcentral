@@ -73,13 +73,13 @@
           </li>
         </ul>
         <div data-ng-if="currentSelection === 'Video'">
-          <div class="cc-widget-webcast-alert">
-            <i class="fa fa-exclamation-triangle cc-icon-gold"></i>
-            <strong>Alert: </strong>
-            You must log in to YouTube with your bConnected account to watch the videos below. For more information,
-            go to our <a href="https://berkeley.service-now.com/kb_view.do?sysparm_article=KB0011469">help page</a>.
-          </div>
           <div data-ng-if="videos.length">
+            <div class="cc-widget-webcast-alert">
+              <i class="fa fa-exclamation-triangle cc-icon-gold"></i>
+              <strong>Alert: </strong>
+              You must log in to YouTube with your bConnected account to watch the videos below. For more information,
+              go to our <a href="https://berkeley.service-now.com/kb_view.do?sysparm_article=KB0011469">help page</a>.
+            </div>
             <div class="cc-table" data-ng-repeat="medium in media">
               <h3 data-ng-bind-template="{{medium.deptName + ' ' + medium.catalogId + ' ' + medium.instructionFormat + ' ' + medium.sectionNumber}}"
                 data-ng-if="media.length > 1"></h3>
