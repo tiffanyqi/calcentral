@@ -1,0 +1,234 @@
+{
+  "apiResponse": {
+    "httpStatus": {
+      "code": "200",
+      "description": "OK"
+    },
+    "responseType": "namespaceURI=\"http://bmeta.berkeley.edu/student/termV0.xsd\" element=\"terms\"",
+    "response": {
+      "terms": [
+        {
+          "academicCareer": {
+            "code": "LAW",
+            "description": "Law"
+          },
+          "temporalPosition": "Past",
+          "id": "2162",
+          "name": "2016 Spring",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2016",
+          "beginDate": "2016-01-04",
+          "endDate": "2016-05-12",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-02-23",
+          "fullyEnrolledDeadline": "2016-01-04",
+          "fullyGradedDeadline": "2016-05-12",
+          "cancelDeadline": "2016-01-10",
+          "withdrawNoPenaltyDeadline": "2016-04-26",
+          "degreeConferDate": "2016-05-12",
+          "selfServicePlanBeginDate": "2015-09-01",
+          "selfServicePlanEndDate": "2016-05-12",
+          "selfServiceEnrollBeginDate": "2015-09-01",
+          "selfServiceEnrollEndDate": "2016-05-12",
+          "sessions": [
+            {
+              "temporalPosition": "Past",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2016-01-11",
+              "endDate": "2016-04-29",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-02-23",
+              "sixtyPercentPoint": "2016-03-29",
+              "openEnrollmentDate": "2015-09-01",
+              "waitListEndDate": "2016-04-29",
+              "fullyEnrolledDeadline": "2016-01-04",
+              "dropDeletedFromRecordDeadline": "2016-01-10",
+              "dropRetainedOnRecordDeadline": "2016-04-26",
+              "cancelDeadline": "2016-01-10",
+              "withdrawNoPenaltyDeadline": "2016-04-26",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "GRAD",
+            "description": "Graduate"
+          },
+          "temporalPosition": "Past",
+          "id": "2162",
+          "name": "2016 Spring",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2016",
+          "beginDate": "2016-01-12",
+          "endDate": "2016-05-13",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-02-23",
+          "fullyEnrolledDeadline": "2016-01-12",
+          "fullyGradedDeadline": "2016-05-13",
+          "cancelDeadline": "2016-01-18",
+          "withdrawNoPenaltyDeadline": "2016-05-06",
+          "degreeConferDate": "2016-05-13",
+          "selfServicePlanBeginDate": "2015-09-01",
+          "selfServicePlanEndDate": "2016-05-13",
+          "selfServiceEnrollBeginDate": "2015-09-01",
+          "selfServiceEnrollEndDate": "2016-05-13",
+          "sessions": [
+            {
+              "temporalPosition": "Past",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2016-01-19",
+              "endDate": "2016-05-06",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-02-23",
+              "sixtyPercentPoint": "2016-03-29",
+              "openEnrollmentDate": "2015-09-01",
+              "waitListEndDate": "2016-05-06",
+              "fullyEnrolledDeadline": "2016-01-12",
+              "dropDeletedFromRecordDeadline": "2016-01-18",
+              "dropRetainedOnRecordDeadline": "2016-05-06",
+              "cancelDeadline": "2016-01-18",
+              "withdrawNoPenaltyDeadline": "2016-05-06",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "UCBX",
+            "description": "UC Berkeley Extension"
+          },
+          "temporalPosition": "Past",
+          "id": "2162",
+          "name": "2016 Spring",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2016",
+          "beginDate": "2016-01-12",
+          "endDate": "2016-05-13",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-02-23",
+          "fullyEnrolledDeadline": "2016-01-12",
+          "fullyGradedDeadline": "2016-05-13",
+          "cancelDeadline": "2016-01-18",
+          "withdrawNoPenaltyDeadline": "2016-05-06",
+          "degreeConferDate": "2016-05-13",
+          "selfServicePlanBeginDate": "2015-09-01",
+          "selfServicePlanEndDate": "2016-05-13",
+          "selfServiceEnrollBeginDate": "2015-09-01",
+          "selfServiceEnrollEndDate": "2016-05-13",
+          "sessions": [
+            {
+              "temporalPosition": "Past",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2016-01-19",
+              "endDate": "2016-05-06",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-02-23",
+              "sixtyPercentPoint": "2016-03-30",
+              "openEnrollmentDate": "2015-09-01",
+              "enrollEndDate": "2016-10-01",
+              "waitListEndDate": "2016-10-01",
+              "fullyEnrolledDeadline": "2016-01-12",
+              "dropDeletedFromRecordDeadline": "2016-01-18",
+              "dropRetainedOnRecordDeadline": "2016-05-06",
+              "cancelDeadline": "2016-01-18",
+              "withdrawNoPenaltyDeadline": "2016-05-06",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "UGRD",
+            "description": "Undergraduate"
+          },
+          "temporalPosition": "Past",
+          "id": "2162",
+          "name": "2016 Spring",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2016",
+          "beginDate": "2016-01-12",
+          "endDate": "2016-05-13",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-02-23",
+          "fullyEnrolledDeadline": "2016-01-12",
+          "fullyGradedDeadline": "2016-05-13",
+          "cancelDeadline": "2016-01-18",
+          "withdrawNoPenaltyDeadline": "2016-05-06",
+          "degreeConferDate": "2016-05-13",
+          "selfServicePlanBeginDate": "2015-09-01",
+          "selfServicePlanEndDate": "2016-05-13",
+          "selfServiceEnrollBeginDate": "2015-09-01",
+          "selfServiceEnrollEndDate": "2016-05-13",
+          "sessions": [
+            {
+              "temporalPosition": "Past",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2016-01-19",
+              "endDate": "2016-05-06",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-02-23",
+              "sixtyPercentPoint": "2016-03-29",
+              "openEnrollmentDate": "2015-09-01",
+              "waitListEndDate": "2016-05-06",
+              "fullyEnrolledDeadline": "2016-01-12",
+              "dropDeletedFromRecordDeadline": "2016-01-18",
+              "dropRetainedOnRecordDeadline": "2016-05-06",
+              "cancelDeadline": "2016-01-18",
+              "withdrawNoPenaltyDeadline": "2016-05-06",
+              "timePeriods": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

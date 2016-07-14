@@ -1,0 +1,590 @@
+{
+  "apiResponse": {
+    "httpStatus": {
+      "code": "200",
+      "description": "OK"
+    },
+    "responseType": "namespaceURI=\"http://bmeta.berkeley.edu/student/termV0.xsd\" element=\"terms\"",
+    "response": {
+      "terms": [
+        {
+          "academicCareer": {
+            "code": "LAW",
+            "description": "Law"
+          },
+          "temporalPosition": "Current",
+          "id": "2165",
+          "name": "2016 Summer",
+          "category": {
+            "code": "S",
+            "description": "Summer Term"
+          },
+          "academicYear": "2017",
+          "beginDate": "2016-05-23",
+          "endDate": "2016-08-12",
+          "weeksOfInstruction": 12,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-06-24",
+          "fullyEnrolledDeadline": "2016-05-23",
+          "fullyGradedDeadline": "2016-08-12",
+          "cancelDeadline": "2016-05-27",
+          "withdrawNoPenaltyDeadline": "2016-08-12",
+          "degreeConferDate": "2016-08-12",
+          "selfServicePlanBeginDate": "2015-12-01",
+          "selfServicePlanEndDate": "2016-08-12",
+          "selfServiceEnrollBeginDate": "2015-12-01",
+          "selfServiceEnrollEndDate": "2016-08-12",
+          "sessions": [
+            {
+              "temporalPosition": "Current",
+              "id": "10W",
+              "name": "10 Week",
+              "beginDate": "2016-06-06",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 10,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-06-24",
+              "sixtyPercentPoint": "2016-07-16",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-06-24",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-06-03",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-06-03",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Future",
+              "id": "3W",
+              "name": "Three Week",
+              "beginDate": "2016-07-25",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 3,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-08-05",
+              "sixtyPercentPoint": "2016-08-04",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-08-05",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-07-22",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-07-22",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Past",
+              "id": "6W1",
+              "name": "Six Week - First",
+              "beginDate": "2016-05-23",
+              "endDate": "2016-07-01",
+              "weeksOfInstruction": 6,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-06-02",
+              "sixtyPercentPoint": "2016-06-15",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-06-02",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-05-27",
+              "dropRetainedOnRecordDeadline": "2016-07-01",
+              "cancelDeadline": "2016-05-27",
+              "withdrawNoPenaltyDeadline": "2016-07-01",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Current",
+              "id": "6W2",
+              "name": "Six Week - Second",
+              "beginDate": "2016-07-05",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 6,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-07-16",
+              "sixtyPercentPoint": "2016-07-27",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-07-16",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-07-01",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-07-01",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Current",
+              "id": "8W",
+              "name": "Eight Week",
+              "beginDate": "2016-06-20",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 8,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-07-01",
+              "sixtyPercentPoint": "2016-07-21",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-07-01",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-06-17",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-06-17",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "GRAD",
+            "description": "Graduate"
+          },
+          "temporalPosition": "Current",
+          "id": "2165",
+          "name": "2016 Summer",
+          "category": {
+            "code": "S",
+            "description": "Summer Term"
+          },
+          "academicYear": "2017",
+          "beginDate": "2016-05-23",
+          "endDate": "2016-08-12",
+          "weeksOfInstruction": 12,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-06-24",
+          "fullyEnrolledDeadline": "2016-05-23",
+          "fullyGradedDeadline": "2016-08-12",
+          "cancelDeadline": "2016-05-27",
+          "withdrawNoPenaltyDeadline": "2016-08-12",
+          "degreeConferDate": "2016-08-12",
+          "selfServicePlanBeginDate": "2015-12-01",
+          "selfServicePlanEndDate": "2016-08-12",
+          "selfServiceEnrollBeginDate": "2015-12-01",
+          "selfServiceEnrollEndDate": "2016-08-12",
+          "sessions": [
+            {
+              "temporalPosition": "Current",
+              "id": "10W",
+              "name": "10 Week",
+              "beginDate": "2016-06-06",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 10,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-06-24",
+              "sixtyPercentPoint": "2016-07-16",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-08-12",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-06-03",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-06-03",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Future",
+              "id": "3W",
+              "name": "Three Week",
+              "beginDate": "2016-07-25",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 3,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-08-05",
+              "sixtyPercentPoint": "2016-08-04",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-08-12",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-07-22",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-07-22",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Past",
+              "id": "6W1",
+              "name": "Six Week - First",
+              "beginDate": "2016-05-23",
+              "endDate": "2016-07-01",
+              "weeksOfInstruction": 6,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-06-02",
+              "sixtyPercentPoint": "2016-06-15",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-07-01",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-05-27",
+              "dropRetainedOnRecordDeadline": "2016-07-01",
+              "cancelDeadline": "2016-05-27",
+              "withdrawNoPenaltyDeadline": "2016-07-01",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Current",
+              "id": "6W2",
+              "name": "Six Week - Second",
+              "beginDate": "2016-07-05",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 6,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-07-16",
+              "sixtyPercentPoint": "2016-07-27",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-08-12",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-07-01",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-07-01",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Current",
+              "id": "8W",
+              "name": "Eight Week",
+              "beginDate": "2016-06-20",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 8,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-07-01",
+              "sixtyPercentPoint": "2016-07-21",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-08-12",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-06-17",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-06-17",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "UCBX",
+            "description": "UC Berkeley Extension"
+          },
+          "temporalPosition": "Current",
+          "id": "2165",
+          "name": "2016 Summer",
+          "category": {
+            "code": "S",
+            "description": "Summer Term"
+          },
+          "academicYear": "2017",
+          "beginDate": "2016-05-23",
+          "endDate": "2016-08-12",
+          "weeksOfInstruction": 12,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-06-24",
+          "fullyEnrolledDeadline": "2016-05-23",
+          "fullyGradedDeadline": "2016-08-12",
+          "cancelDeadline": "2016-05-27",
+          "withdrawNoPenaltyDeadline": "2016-08-12",
+          "degreeConferDate": "2016-08-12",
+          "selfServicePlanBeginDate": "2015-12-01",
+          "selfServicePlanEndDate": "2016-08-12",
+          "selfServiceEnrollBeginDate": "2015-12-01",
+          "selfServiceEnrollEndDate": "2016-08-12",
+          "sessions": [
+            {
+              "temporalPosition": "Current",
+              "id": "10W",
+              "name": "10 Week",
+              "beginDate": "2016-06-06",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 10,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-06-24",
+              "sixtyPercentPoint": "2016-07-16",
+              "openEnrollmentDate": "2016-02-01",
+              "enrollEndDate": "2016-10-01",
+              "waitListEndDate": "2016-10-01",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-06-03",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-06-03",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Future",
+              "id": "3W",
+              "name": "Three Week",
+              "beginDate": "2016-07-25",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 3,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-08-05",
+              "sixtyPercentPoint": "2016-08-04",
+              "openEnrollmentDate": "2016-02-01",
+              "enrollEndDate": "2016-10-01",
+              "waitListEndDate": "2016-10-01",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-07-22",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-07-22",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Past",
+              "id": "6W1",
+              "name": "Six Week - First",
+              "beginDate": "2016-05-23",
+              "endDate": "2016-07-01",
+              "weeksOfInstruction": 6,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-06-02",
+              "sixtyPercentPoint": "2016-06-15",
+              "openEnrollmentDate": "2016-02-01",
+              "enrollEndDate": "2016-10-01",
+              "waitListEndDate": "2016-10-01",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-05-27",
+              "dropRetainedOnRecordDeadline": "2016-07-01",
+              "cancelDeadline": "2016-05-27",
+              "withdrawNoPenaltyDeadline": "2016-07-01",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Current",
+              "id": "6W2",
+              "name": "Six Week - Second",
+              "beginDate": "2016-07-05",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 6,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-07-16",
+              "sixtyPercentPoint": "2016-07-27",
+              "openEnrollmentDate": "2016-02-01",
+              "enrollEndDate": "2016-10-01",
+              "waitListEndDate": "2016-10-01",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-07-01",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-07-01",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Current",
+              "id": "8W",
+              "name": "Eight Week",
+              "beginDate": "2016-06-20",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 8,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-07-01",
+              "sixtyPercentPoint": "2016-07-21",
+              "openEnrollmentDate": "2016-02-01",
+              "enrollEndDate": "2016-10-01",
+              "waitListEndDate": "2016-10-01",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-06-17",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-06-17",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "UGRD",
+            "description": "Undergraduate"
+          },
+          "temporalPosition": "Current",
+          "id": "2165",
+          "name": "2016 Summer",
+          "category": {
+            "code": "S",
+            "description": "Summer Term"
+          },
+          "academicYear": "2017",
+          "beginDate": "2016-05-23",
+          "endDate": "2016-08-12",
+          "weeksOfInstruction": 12,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-06-24",
+          "fullyEnrolledDeadline": "2016-05-23",
+          "fullyGradedDeadline": "2016-08-12",
+          "cancelDeadline": "2016-05-27",
+          "withdrawNoPenaltyDeadline": "2016-08-12",
+          "degreeConferDate": "2016-08-12",
+          "selfServicePlanBeginDate": "2015-12-01",
+          "selfServicePlanEndDate": "2016-08-12",
+          "selfServiceEnrollBeginDate": "2015-12-01",
+          "selfServiceEnrollEndDate": "2016-08-12",
+          "sessions": [
+            {
+              "temporalPosition": "Current",
+              "id": "10W",
+              "name": "10 Week",
+              "beginDate": "2016-06-06",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 10,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-06-24",
+              "sixtyPercentPoint": "2016-07-16",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-08-12",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-06-03",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-06-03",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Future",
+              "id": "3W",
+              "name": "Three Week",
+              "beginDate": "2016-07-25",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 3,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-08-05",
+              "sixtyPercentPoint": "2016-08-04",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-08-12",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-07-22",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-07-22",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Past",
+              "id": "6W1",
+              "name": "Six Week - First",
+              "beginDate": "2016-05-23",
+              "endDate": "2016-07-01",
+              "weeksOfInstruction": 6,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-06-02",
+              "sixtyPercentPoint": "2016-06-15",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-06-02",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-05-27",
+              "dropRetainedOnRecordDeadline": "2016-07-01",
+              "cancelDeadline": "2016-05-27",
+              "withdrawNoPenaltyDeadline": "2016-07-01",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Current",
+              "id": "6W2",
+              "name": "Six Week - Second",
+              "beginDate": "2016-07-05",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 6,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-07-16",
+              "sixtyPercentPoint": "2016-07-27",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-07-16",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-07-01",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-07-01",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            },
+            {
+              "temporalPosition": "Current",
+              "id": "8W",
+              "name": "Eight Week",
+              "beginDate": "2016-06-20",
+              "endDate": "2016-08-12",
+              "weeksOfInstruction": 8,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-07-01",
+              "sixtyPercentPoint": "2016-07-21",
+              "openEnrollmentDate": "2016-02-01",
+              "waitListEndDate": "2016-07-01",
+              "fullyEnrolledDeadline": "2016-05-23",
+              "dropDeletedFromRecordDeadline": "2016-06-17",
+              "dropRetainedOnRecordDeadline": "2016-08-12",
+              "cancelDeadline": "2016-06-17",
+              "withdrawNoPenaltyDeadline": "2016-08-12",
+              "timePeriods": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "apiResponse": {
+    "httpStatus": {
+      "code": "200",
+      "description": "OK"
+    },
+    "responseType": "namespaceURI=\"http://bmeta.berkeley.edu/student/termV0.xsd\" element=\"terms\"",
+    "response": {
+      "terms": [
+        {
+          "academicCareer": {
+            "code": "LAW",
+            "description": "Law"
+          },
+          "temporalPosition": "Past",
+          "id": "2158",
+          "name": "2015 Fall",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2016",
+          "beginDate": "2015-08-17",
+          "endDate": "2015-12-17",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2015-09-30",
+          "fullyEnrolledDeadline": "2015-08-17",
+          "fullyGradedDeadline": "2015-12-17",
+          "cancelDeadline": "2015-08-23",
+          "withdrawNoPenaltyDeadline": "2015-12-02",
+          "degreeConferDate": "2015-12-17",
+          "selfServicePlanBeginDate": "2015-03-01",
+          "selfServicePlanEndDate": "2015-12-17",
+          "selfServiceEnrollBeginDate": "2015-03-01",
+          "selfServiceEnrollEndDate": "2015-12-17",
+          "sessions": [
+            {
+              "temporalPosition": "Past",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2015-08-24",
+              "endDate": "2015-12-07",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2015-09-30",
+              "sixtyPercentPoint": "2015-11-02",
+              "openEnrollmentDate": "2015-03-01",
+              "waitListEndDate": "2015-09-30",
+              "fullyEnrolledDeadline": "2015-08-17",
+              "dropDeletedFromRecordDeadline": "2015-08-23",
+              "dropRetainedOnRecordDeadline": "2015-12-02",
+              "cancelDeadline": "2015-08-23",
+              "withdrawNoPenaltyDeadline": "2015-12-02",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "UGRD",
+            "description": "Undergraduate"
+          },
+          "temporalPosition": "Past",
+          "id": "2158",
+          "name": "2015 Fall",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2016",
+          "beginDate": "2015-08-19",
+          "endDate": "2015-12-18",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2015-09-30",
+          "fullyEnrolledDeadline": "2015-08-19",
+          "fullyGradedDeadline": "2015-12-18",
+          "cancelDeadline": "2015-08-25",
+          "withdrawNoPenaltyDeadline": "2015-12-11",
+          "degreeConferDate": "2015-12-18",
+          "selfServicePlanBeginDate": "2015-03-01",
+          "selfServicePlanEndDate": "2015-12-18",
+          "selfServiceEnrollBeginDate": "2015-03-01",
+          "selfServiceEnrollEndDate": "2015-12-18",
+          "sessions": [
+            {
+              "temporalPosition": "Past",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2015-08-26",
+              "endDate": "2015-12-11",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2015-09-30",
+              "sixtyPercentPoint": "2015-11-02",
+              "openEnrollmentDate": "2015-03-01",
+              "waitListEndDate": "2015-12-11",
+              "fullyEnrolledDeadline": "2015-08-19",
+              "dropDeletedFromRecordDeadline": "2015-08-25",
+              "dropRetainedOnRecordDeadline": "2015-12-11",
+              "cancelDeadline": "2015-08-25",
+              "withdrawNoPenaltyDeadline": "2015-12-11",
+              "timePeriods": [
+                {
+                  "period": {
+                    "code": "140",
+                    "description": "End of Drop/Add"
+                  },
+                  "endDate": "2015-10-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "GRAD",
+            "description": "Graduate"
+          },
+          "temporalPosition": "Past",
+          "id": "2158",
+          "name": "2015 Fall",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2016",
+          "beginDate": "2015-08-19",
+          "endDate": "2015-12-18",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2015-09-30",
+          "fullyEnrolledDeadline": "2015-08-19",
+          "fullyGradedDeadline": "2015-12-18",
+          "cancelDeadline": "2015-08-25",
+          "withdrawNoPenaltyDeadline": "2015-12-11",
+          "degreeConferDate": "2015-12-18",
+          "selfServicePlanBeginDate": "2015-03-01",
+          "selfServicePlanEndDate": "2015-12-18",
+          "selfServiceEnrollBeginDate": "2015-03-01",
+          "selfServiceEnrollEndDate": "2015-12-18",
+          "sessions": [
+            {
+              "temporalPosition": "Past",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2015-08-26",
+              "endDate": "2015-12-11",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2015-09-30",
+              "sixtyPercentPoint": "2015-11-02",
+              "openEnrollmentDate": "2015-03-01",
+              "waitListEndDate": "2015-12-11",
+              "fullyEnrolledDeadline": "2015-08-19",
+              "dropDeletedFromRecordDeadline": "2015-08-25",
+              "dropRetainedOnRecordDeadline": "2015-12-11",
+              "cancelDeadline": "2015-08-25",
+              "withdrawNoPenaltyDeadline": "2015-12-11",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "UCBX",
+            "description": "UC Berkeley Extension"
+          },
+          "temporalPosition": "Past",
+          "id": "2158",
+          "name": "2015 Fall",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2016",
+          "beginDate": "2015-08-19",
+          "endDate": "2015-12-18",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2015-09-30",
+          "fullyEnrolledDeadline": "2015-08-19",
+          "fullyGradedDeadline": "2015-12-18",
+          "cancelDeadline": "2015-08-25",
+          "withdrawNoPenaltyDeadline": "2015-12-11",
+          "degreeConferDate": "2015-12-18",
+          "selfServicePlanBeginDate": "2015-03-01",
+          "selfServicePlanEndDate": "2015-12-18",
+          "selfServiceEnrollBeginDate": "2015-03-01",
+          "selfServiceEnrollEndDate": "2015-12-18",
+          "sessions": [
+            {
+              "temporalPosition": "Past",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2015-08-26",
+              "endDate": "2015-12-11",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2015-09-30",
+              "sixtyPercentPoint": "2015-11-01",
+              "openEnrollmentDate": "2015-03-01",
+              "enrollEndDate": "2016-10-01",
+              "waitListEndDate": "2016-10-01",
+              "fullyEnrolledDeadline": "2015-08-19",
+              "dropDeletedFromRecordDeadline": "2015-08-25",
+              "dropRetainedOnRecordDeadline": "2015-12-11",
+              "cancelDeadline": "2015-08-25",
+              "withdrawNoPenaltyDeadline": "2015-12-11",
+              "timePeriods": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
