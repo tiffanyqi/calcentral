@@ -8,23 +8,23 @@
 
     <div data-cc-spinner-directive="regStatus.isLoading">
       <div data-ng-if="statusHoldsBlocks.enabledSections.indexOf('Status') !== -1">
-        <div class="cc-status-holds-section">
-          <h4 data-ng-bind="regStatus.term"></h4>
+        <div class="cc-status-holds-section" data-ng-repeat="registration in regStatus.registrations | orderBy:'-termId'">
+          <h4 data-ng-bind="registration.termName"></h4>
           <ul class="cc-widget-list cc-status-holds-list" data-ng-if="api.user.profile.features.regstatus">
             <li class="cc-widget-list-hover"
-                data-ng-class="{'cc-widget-list-hover-opened':(regStatus.show)}"
+                data-ng-class="{'cc-widget-list-hover-opened':(registration.show)}"
                 data-cc-accessible-focus-directive
-                data-ng-click="api.widget.toggleShow($event, null, regStatus, 'My Academics - Status and Holds')">
+                data-ng-click="api.widget.toggleShow($event, null, registration, 'My Academics - Status and Holds')">
               <div class="cc-status-holds-list-section">
                 <div class="cc-status-holds-list-item">
-                  <span data-ng-if="!regStatus.isSummer && regStatus.summary !== 'Not Officially Registered'">
+                  <span data-ng-hide="registration.isSummer && registration.summary === 'Not Officially Registered'">
                     <i class="cc-icon fa"
-                       data-ng-class="{true:'fa-check-circle cc-icon-green',false:'fa-exclamation-circle cc-icon-red'}[regStatus.summary=='Officially Registered']">
+                       data-ng-class="{true:'fa-check-circle cc-icon-green',false:'fa-exclamation-circle cc-icon-red'}[registration.summary=='Officially Registered']">
                     </i>
                   </span>
-                  <span data-ng-bind="regStatus.summary"></span>
+                  <span data-ng-bind="registration.summary"></span>
                 </div>
-                <div class="cc-status-holds-expanded-text" data-ng-show="regStatus.show" data-ng-bind="regStatus.explanation"></div>
+                <div class="cc-status-holds-expanded-text" data-ng-show="registration.show" data-ng-bind="registration.explanation"></div>
               </div>
             </li>
           </ul>

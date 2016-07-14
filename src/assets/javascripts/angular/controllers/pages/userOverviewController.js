@@ -6,7 +6,7 @@ var _ = require('lodash');
 /**
  * Preview of user profile prior to viewing-as
  */
-angular.module('calcentral.controllers').controller('UserOverviewController', function(adminService, advisingFactory, holdsFactory, residencyMessageFactory, apiService, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('UserOverviewController', function(adminService, advisingFactory, holdsFactory, residencyMessageFactory, apiService, statusHoldsService, $routeParams, $scope) {
   $scope.academics = {
     isLoading: true,
     excludeLinksToRegistrar: true
@@ -18,11 +18,8 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     isLoading: true
   };
   $scope.regStatus = {
-    term: null,
-    isSummer: false,
-    summary: null,
-    explanation: null,
-    needsAction: false,
+    terms: [],
+    registrations: [],
     isLoading: true
   };
   $scope.residency = {
@@ -33,7 +30,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
   };
   $scope.statusHoldsBlocks = {};
 
-  $scope.$watchGroup(['regStatus.summary', 'api.user.profile.features.csHolds', 'api.user.profile.features.legacyRegblocks'], function(newValues) {
+  $scope.$watchGroup(['regStatus.registrations[0].summary', 'api.user.profile.features.csHolds', 'api.user.profile.features.legacyRegblocks'], function(newValues) {
     var enabledSections = [];
 
     if (newValues[0] !== null && newValues[0] !== undefined) {
@@ -133,19 +130,32 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     advisingFactory.getStudentRegistrations({
       uid: $routeParams.uid
     }).success(function(data) {
-      $scope.regStatus.term = data.terms.current.name;
-      if (_.startsWith($scope.regStatus.term, 'Summer')) {
-        $scope.regStatus.isSummer = true;
-      }
-      var currentTerm = data.terms.current.id;
-      var regStatus = data.registrations[currentTerm];
+      _.forOwn(data.terms, function(value, key) {
+        if (key === 'current' || key === 'next') {
+          if (value) {
+            $scope.regStatus.terms.push({
+              temporalPosition: key,
+              id: value.id,
+              name: value.name
+            });
+          }
+        }
+      });
+      _.forEach($scope.regStatus.terms, function(term) {
+        var regStatus = data.registrations[term.id];
 
-      if (regStatus[0].isLegacy) {
-        parseLegacyTerm(regStatus[0]);
-      } else {
-        parseCsTerm(regStatus[0]);
-      }
-      return;
+        if (regStatus && regStatus[0]) {
+          _.set(regStatus[0], 'termName', term.name);
+          _.set(regStatus[0], 'termId', parseInt(term.id));
+          regStatus[0].isSummer = _.startsWith(term.name, 'Summer');
+
+          if (regStatus[0].isLegacy) {
+            $scope.regStatus.registrations.push(statusHoldsService.parseLegacyTerm(regStatus[0]));
+          } else {
+            $scope.regStatus.registrations.push(statusHoldsService.parseCsTerm(regStatus[0]));
+          }
+        }
+      });
     }).finally(function() {
       $scope.regStatus.isLoading = false;
     });
@@ -171,44 +181,6 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
         }
       });
     }
-  };
-
-  /**
-   * Parses any terms past the legacy cutoff.  Mirrors current functionality for now, but this will be changed in redesigns slated
-   * for GL6.
-   */
-  var parseCsTerm = function(term) {
-    if (term.registered === true) {
-      $scope.regStatus.summary = 'Officially Registered';
-      $scope.regStatus.explanation = $scope.regStatus.isSummer ? 'You are officially registered for this term.' : 'You are officially registered and are entitled to access campus services.';
-      $scope.regStatus.needsAction = false;
-    }
-    if (term.registered === false) {
-      $scope.regStatus.summary = 'Not Officially Registered';
-      $scope.regStatus.explanation = $scope.regStatus.isSummer ? 'You are not officially registered for this term.' : 'You are not entitled to access campus services until you are officially registered.  In order to be officially registered, you must pay your Tuition and Fees, and have no outstanding holds.';
-      $scope.regStatus.needsAction = true;
-    }
-  };
-
-  /**
-   * Parses any terms on or before the legacy cutoff.  Mirrors current functionality, this should be able to be removed in Fall 2016.
-   */
-  var parseLegacyTerm = function(term) {
-    $scope.regStatus.summary = term.regStatus.summary;
-    $scope.regStatus.explanation = term.regStatus.explanation;
-
-    // Special summer parsing for the last legacy term (Summer 2016)
-    if ($scope.regStatus.isSummer) {
-      if (term.regStatus.summary !== 'Registered') {
-        $scope.regStatus.summary = 'Not Officially Registered';
-        $scope.regStatus.explanation = 'You are not officially registered for this term.';
-      } else {
-        $scope.regStatus.summary = 'Officially Registered';
-        $scope.regStatus.explanation = 'You are officially registered for this term.';
-      }
-    }
-
-    $scope.regStatus.needsAction = term.regStatus.needsAction;
   };
 
   $scope.targetUser.actAs = function() {
