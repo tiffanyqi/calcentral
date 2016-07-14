@@ -105,7 +105,10 @@ describe Textbooks::Proxy do
       end
 
       context 'course catalog with fewer than three characters' do
-        before { allow_any_instance_of(Berkeley::Term).to receive(:legacy?).and_return legacy }
+        before do
+          allow(Settings.features).to receive(:hub_term_api).and_return false
+          allow(Settings.terms).to receive(:legacy_cutoff).and_return(legacy_terms_cutoff)
+        end
         let(:course_catalog) { '1A' }
         let(:url) { proxy.bookstore_link section_numbers }
 
@@ -114,13 +117,13 @@ describe Textbooks::Proxy do
         end
 
         context 'legacy term' do
-          let(:legacy) { true }
+          let(:legacy_terms_cutoff) { 'summer-2016' }
           it 'does not zero-pad course catalog' do
             expect(url).to include encoded_course_param('1A')
           end
         end
         context 'Campus Solutions term' do
-          let(:legacy) { false }
+          let(:legacy_terms_cutoff) { 'summer-2013' }
           it 'zero-pads course catalog' do
             expect(url).to include encoded_course_param('01A')
           end
