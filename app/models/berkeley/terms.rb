@@ -50,15 +50,15 @@ module Berkeley
     attr_reader :campus
 
     def self.fetch(options = {})
-      options.reverse_merge!(fake_now: Settings.terms.fake_now, oldest: Settings.terms.oldest)
-      fetch_from_cache(nil, options[:force]) do
-        Terms.new(options)
+      options.reverse_merge!(
+        fake_now: Settings.terms.fake_now,
+        oldest: Settings.terms.oldest,
+        hub_api_disabled: !Settings.features.hub_term_api
+      )
+      smart_fetch_from_cache(force_write: options[:force]) do
+        terms = Terms.new(options)
+        terms.init
       end
-    end
-
-    def self.campus_solutions?(term_yr, term_cd)
-      term = self.fetch.campus[Berkeley::TermCodes.to_slug(term_yr, term_cd)]
-      term.present? && !term.legacy?
     end
 
     def self.legacy?(term_yr, term_cd)
@@ -67,40 +67,94 @@ module Berkeley
     end
 
     def initialize(options)
-      terms = {}
-      future_terms = []
-      current_date = options[:fake_now] || DateTime.now
+      @current_date = options[:fake_now] || DateTime.now
       @oldest = options[:oldest]
-      parsing_legacy_terms = false
+      @hub_api_disabled = options[:hub_api_disabled]
+    end
+
+    def init
+      # The final terms map is ordered newest-to-oldest.
+      terms = {}
+      # We stash future terms in oldest-to-newest order so as to limit the number of future terms
+      # used in CalCentral/Junction.
+      future_terms = []
 
       # Do initial term parsing.
-      CampusOracle::Queries.terms.each do |db_term|
-        term = Term.new(db_term)
+      terms_array = fetch_terms_from_api
+      merge_terms_from_legacy_db terms_array
+
+      # Classify and map terms.
+      terms_array.each do |term|
         terms[term.slug] = term
-        @sis_current_term = term if term.sis_term_status == 'CT'
-        if term.start > current_date
+        if term.start > @current_date
           future_terms.push term
-        elsif term.end >= current_date
+        elsif term.end >= @current_date
           @running = term
         else
           @previous ||= term
-          @grading_in_progress ||= term if term.grades_entered >= current_date
+          @grading_in_progress ||= term if term.grades_entered >= @current_date
         end
-        parsing_legacy_terms = true if term.slug == Settings.terms.legacy_cutoff
-        term.set_as_legacy if parsing_legacy_terms
-        break if term.slug == @oldest
       end
 
       @current = @running || future_terms.pop
       if (@next = future_terms.pop)
-        if (@future = future_terms.pop)
-          unless future_terms.empty?
-            logger.info("Found more than two future terms: #{future_terms.map(&:slug).join(', ')}")
-            future_terms.each {|t| terms.delete(t.slug)}
-          end
+        @future = future_terms.pop
+        unless future_terms.empty?
+          logger.info("Found more than two future terms: #{future_terms.map(&:slug).join(', ')}")
+          future_terms.each {|t| terms.delete(t.slug)}
         end
       end
       @campus = terms
+      self
+    end
+
+    def fetch_terms_from_api
+      # Unlike the legacy database view, the HubTerm API does not support bulk queries. We have to
+      # loop through enough API calls to find:
+      #   - Current term (if any)
+      #   - Next term
+      #   - Next term after the end of the next term (if available)
+      #   - Previous term
+      #   - Previous term before the previous term
+      #   - ... and so on until we reach either the oldest configured term or the legacy_cutoff configured term.
+      # For backwards compatibility, we will stash the Term objects in descending chronological order.
+      # Because there is a possibility that no academic term is current today, the loop starts from the next term.
+      cs_terms = []
+      return cs_terms if @hub_api_disabled
+      feed = HubTerm::Proxy.new(temporal_position: HubTerm::Proxy::NEXT_TERM).get_term
+      if feed.blank?
+        logger.error "No Next term found from HubTerm::Proxy; no non-legacy academic terms are available"
+      else
+        term = Berkeley::Term.new.from_cs_api(feed)
+        cs_terms << term unless term.legacy?
+        term_date = term.end.to_date.to_s
+        if (next_after_next = HubTerm::Proxy.new(temporal_position: HubTerm::Proxy::NEXT_TERM, as_of_date: term_date).get_term)
+          cs_terms.unshift Berkeley::Term.new.from_cs_api(next_after_next)
+        end
+        loop do
+          term_date = term.start.to_date.to_s
+          feed = HubTerm::Proxy.new(temporal_position: HubTerm::Proxy::PREVIOUS_TERM, as_of_date: term_date).get_term
+          break unless feed.present?
+          term = Berkeley::Term.new.from_cs_api(feed)
+          break if term.legacy?
+          @sis_current_term = term if term.sis_current_term?
+          cs_terms << term
+          break if term.slug == @oldest
+        end
+      end
+      cs_terms
+    end
+
+    def merge_terms_from_legacy_db(terms)
+      CampusOracle::Queries.terms.each do |db_term|
+        term = Term.new(db_term)
+        if term.legacy? || @hub_api_disabled
+          @sis_current_term ||= term if term.legacy_sis_term_status == 'CT'
+          terms << term
+        end
+        break if term.slug == @oldest
+      end
+      terms
     end
 
     # True if the current term in CalCentral UX is not the official "current term" in SIS.
