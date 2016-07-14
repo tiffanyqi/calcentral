@@ -3,7 +3,7 @@
   <div data-ng-bind="proxyErrorMessage"></div>
   <div data-ng-if="!proxyErrorMessage">
     <h1 class="cc-visuallyhidden" data-ng-if="isEmbedded">Course Captures</h1>
-    <div data-ng-if="eligibleForSignUp && eligibleForSignUp.length > 0" class="bc-tab-navigation">
+    <div data-ng-if="eligibleForSignUp && eligibleForSignUp.length" class="bc-tab-navigation">
       <ul data-ng-if="videos || audio" class="bc-tab-group cc-clearfix-container" role="tablist">
         <li class="bc-tab"
             data-ng-class="{'bc-tab-active':(currentTabSelection === tabOption)}"
@@ -47,18 +47,8 @@
       </div>
     </div>
     <div data-ng-if="currentTabSelection === 'Course Captures'">
-      <div data-ng-if="(!eligibleForSignUp || eligibleForSignUp.length === 0) && !videos && !audio">
+      <div data-ng-if="(!eligibleForSignUp || !eligibleForSignUp.length) && !videos && !audio">
         There are no recordings available.
-      </div>
-      <div data-ng-if="media">
-        <span data-ng-repeat="section in media">
-          <span data-ng-if="!section.videos.length && !section.audio.length">
-            <span ng-if="$first">Recordings of </span>
-            <span ng-if="$last && (media.length > 1)"> and </span>
-            <strong data-ng-bind-template="{{section.deptName}} {{section.catalogId}} {{media.length > 1 ? section.instructionFormat : ''}} {{media.length > 1 ? section.sectionNumber : ' lecture'}}"></strong><span ng-if="!$last && ($index < media.length - 2)">, </span>
-            <span ng-if="$last">will appear here after classes start.</span>
-          </span>
-        </span>
       </div>
       <div data-ng-if="videos || audio" class="bc-tab-navigation">
         <ul class="bc-tab-group cc-clearfix-container" data-ng-if="videos.length && audio.length" role="tablist">
@@ -73,41 +63,46 @@
           </li>
         </ul>
         <div data-ng-if="currentSelection === 'Video'">
-          <div data-ng-if="videos.length">
-            <div class="cc-widget-webcast-alert">
-              <i class="fa fa-exclamation-triangle cc-icon-gold"></i>
-              <strong>Alert: </strong>
-              You must log in to YouTube with your bConnected account to watch the videos below. For more information,
-              go to our <a href="https://berkeley.service-now.com/kb_view.do?sysparm_article=KB0011469">help page</a>.
-            </div>
-            <div class="cc-table" data-ng-repeat="medium in media">
-              <h3 data-ng-bind-template="{{medium.deptName + ' ' + medium.catalogId + ' ' + medium.instructionFormat + ' ' + medium.sectionNumber}}"
-                data-ng-if="media.length > 1"></h3>
-              <table>
+          <div data-ng-if="media.length">
+            <div class="cc-table cc-webcast-table" data-ng-repeat="section in media">
+              <h3 data-ng-class="{'cc-widget-section-header': !$first}" data-ng-bind-template="{{section.deptName + ' ' + section.catalogId + ' ' + section.instructionFormat + ' ' + section.sectionNumber}}" data-ng-if="media.length > 1"></h3>
+
+              <div class="cc-widget-webcast-alert" data-ng-if="section.videos.length">
+                <i class="fa fa-exclamation-triangle cc-icon-gold"></i>
+                <strong>Alert: </strong>
+                Log in to YouTube with your bConnected account to watch the videos below. More information is at
+                our <a href="https://berkeley.service-now.com/kb_view.do?sysparm_article=KB0011469">help page</a>.
+              </div>
+
+              <div data-ng-if="!section.videos.length && !section.audio.length">
+                <span data-ng-if="media.length > 1">Recordings will appear here after classes start.</span>
+                <div data-ng-if="media.length === 1">
+                  Recordings of
+                  <span data-ng-bind-template="{{section.deptName + ' ' + section.catalogId + ' ' + section.instructionFormat + ' ' + section.sectionNumber}}"></span>
+                  will appear here after classes start.
+                </div>
+              </div>
+              <table data-ng-if="section.videos.length">
                 <thead>
                   <tr>
                     <th width="60%" scope="col">
                       Lecture
                     </th>
-                    <th width="40%" scope="col">
-                      Date
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr data-ng-repeat="video in medium.videos | limitTo: futureLimit">
+                  <tr data-ng-repeat="video in section.videos | limitTo: futureLimit">
                     <td class="cc-table-top-border">
                       <a data-ng-href="https://www.youtube.com/watch?v={{video.youTubeId}}"
                         data-ng-attr-title="{{video.lecture}}"
                         data-ng-bind="video.lecture">
                       </a>
                     </td>
-                    <td class="cc-table-top-border" data-ng-bind="video.recordingStartUTC | date:'MMM d'"></td>
                   </tr>
                 </tbody>
               </table>
               <div data-cc-show-more-directive
-                data-cc-show-more-list="medium.videos"
+                data-cc-show-more-list="section.videos"
                 data-cc-show-more-limit="futureLimit"></div>
             </div>
           </div>
@@ -150,12 +145,12 @@
               </a>
             </li>
           </ul>
-          <div data-ng-if="(!audio || audio.length === 0) && !iTunes.audio" class="cc-widget-webcast-error">
+          <div data-ng-if="(!audio || !audio.length) && !iTunes.audio" class="cc-widget-webcast-error">
             No audio content available.
           </div>
         </div>
         <div class="cc-widget-webcast-outbound-link"
-          data-ng-if="(videos && videos.length > 0) || (audio && audio.length > 0)">
+          data-ng-if="(videos && videos.length) || (audio && audio.length)">
           <a href="http://www.ets.berkeley.edu/find-support/request-forms/request-support-or-give-feedback">Report a problem</a>
         </div>
       </div>
