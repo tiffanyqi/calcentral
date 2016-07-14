@@ -10,8 +10,21 @@
     padding-bottom: 10px;
     width: 200px;
   }
+  .cc-widget-section-header {
+    padding-top: 15px;
+  }
   .cc-widget-webcast-content {
     max-width: 480px;
+  }
+  .cc-webcast-table {
+    table {
+      tr {
+        td, th {
+          padding: 5px;
+          vertical-align: middle;
+        }
+      }
+    }
   }
   .cc-widget-webcast-error {
     margin-top: 15px;
@@ -32,6 +45,6 @@
     padding: 10px 0 0;
   }
   .cc-widget-webcast-alert {
-    margin: 0 15px 15px 0;
+    margin: 0 5px 5px 0;
   }
 }
