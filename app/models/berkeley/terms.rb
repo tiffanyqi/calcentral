@@ -103,6 +103,13 @@ module Berkeley
       @campus = terms
     end
 
+    # True if the current term in CalCentral UX is not the official "current term" in SIS.
+    # In CS SIS, this will probably only happen when between the end date of one term and the
+    # start date of the next. In legacy SIS, it was also true during the Summer term.
+    def in_term_transition?
+      @current != @sis_current_term
+    end
+
     def self.legacy_group(terms=nil)
       terms ||= self.fetch.campus.values
       terms = terms.to_a

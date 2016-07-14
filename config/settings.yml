@@ -178,6 +178,12 @@ financials_proxy:
   username: ''
   password: ''
 
+terms_proxy:
+  fake: false
+  app_id: ''
+  app_key: ''
+  base_url: 'https://apis.berkeley.edu/uat/sis/v1/terms'
+
 textbooks_proxy:
   fake: false
   base_url: "https://calstudentstore.berkeley.edu"
@@ -332,7 +338,7 @@ hot_plate:
 background_jobs_check:
   time_between_pings: <%= 5.minutes %>
 
-youtube_splash_id: 'Yc3z0TIl_Fc'
+youtube_splash_id: '3Iz1NT9QKjI'
 
 oec:
   administrator_uid: ''
@@ -445,7 +451,6 @@ features:
   cs_academic_profile_prefers_legacy: true
   cs_academic_progress_report: false
   cs_advising_scheduler_view: false
-  cs_advising_show_advisors: false
   cs_advisor_student_lookup: false
   cs_billing: false
   cs_delegated_access: false
@@ -461,6 +466,7 @@ features:
   cs_profile_work_experience: false
   cs_sir: true
   cs_transfer_credit: false
+  legacy_regblocks: true
   manage_site_mailing_lists: false
   my_fin_aid: false
   prevent_acting_as_users_from_posting: true

@@ -1,0 +1,309 @@
+{
+  "apiResponse": {
+    "httpStatus": {
+      "code": "200",
+      "description": "OK"
+    },
+    "responseType": "namespaceURI=\"http://bmeta.berkeley.edu/student/termV0.xsd\" element=\"terms\"",
+    "response": {
+      "terms": [
+        {
+          "academicCareer": {
+            "code": "LAW",
+            "description": "Law"
+          },
+          "temporalPosition": "Future",
+          "id": "2172",
+          "name": "2017 Spring",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2017",
+          "beginDate": "2017-01-02",
+          "endDate": "2017-05-10",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2017-02-17",
+          "fullyEnrolledDeadline": "2016-02-17",
+          "fullyGradedDeadline": "2016-05-08",
+          "cancelDeadline": "2017-01-04",
+          "withdrawNoPenaltyDeadline": "2017-02-17",
+          "degreeConferDate": "2017-05-10",
+          "selfServicePlanBeginDate": "2016-10-03",
+          "selfServicePlanEndDate": "2017-05-10",
+          "selfServiceEnrollBeginDate": "2016-10-03",
+          "selfServiceEnrollEndDate": "2017-05-05",
+          "sessions": [
+            {
+              "temporalPosition": "Future",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2017-01-09",
+              "endDate": "2017-04-25",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2017-02-17",
+              "sixtyPercentPoint": "2017-03-24",
+              "openEnrollmentDate": "2016-10-17",
+              "enrollBeginDate": "2016-10-17",
+              "enrollEndDate": "2017-02-17",
+              "waitListEndDate": "2016-02-17",
+              "fullyEnrolledDeadline": "2017-02-17",
+              "dropDeletedFromRecordDeadline": "2017-01-01",
+              "dropRetainedOnRecordDeadline": "2017-02-17",
+              "dropWithPenaltyDeadline": "2017-04-28",
+              "cancelDeadline": "2017-01-04",
+              "withdrawNoPenaltyDeadline": "2017-02-17",
+              "withdrawWithPenaltyDeadline": "2017-04-28",
+              "timePeriods": [
+                {
+                  "period": {
+                    "code": "100",
+                    "description": "instruction Begins"
+                  },
+                  "endDate": "2017-01-02"
+                },
+                {
+                  "period": {
+                    "code": "110",
+                    "description": "End of First Week"
+                  },
+                  "endDate": "2017-01-13"
+                },
+                {
+                  "period": {
+                    "code": "120",
+                    "description": "End of Second Week"
+                  },
+                  "endDate": "2017-01-20"
+                },
+                {
+                  "period": {
+                    "code": "130",
+                    "description": "End of Third Week"
+                  },
+                  "endDate": "2017-01-27"
+                },
+                {
+                  "period": {
+                    "code": "140",
+                    "description": "End of Drop/Add"
+                  },
+                  "endDate": "2017-02-17"
+                },
+                {
+                  "period": {
+                    "code": "200",
+                    "description": "End of RRR Week"
+                  },
+                  "endDate": "2017-04-25"
+                },
+                {
+                  "period": {
+                    "code": "250",
+                    "description": "End of Instruction"
+                  },
+                  "endDate": "2017-04-28"
+                },
+                {
+                  "period": {
+                    "code": "300",
+                    "description": "End of Term"
+                  },
+                  "endDate": "2017-05-10"
+                },
+                {
+                  "period": {
+                    "code": "400",
+                    "description": "End of Grading Period"
+                  },
+                  "endDate": "2017-05-17"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "GRAD",
+            "description": "Graduate"
+          },
+          "temporalPosition": "Future",
+          "id": "2172",
+          "name": "2017 Spring",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2017",
+          "beginDate": "2017-01-10",
+          "endDate": "2017-05-12",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-02-21",
+          "fullyEnrolledDeadline": "2017-01-10",
+          "fullyGradedDeadline": "2017-05-12",
+          "cancelDeadline": "2017-01-16",
+          "withdrawNoPenaltyDeadline": "2017-05-05",
+          "degreeConferDate": "2017-05-12",
+          "selfServicePlanBeginDate": "2016-10-03",
+          "selfServicePlanEndDate": "2017-05-12",
+          "selfServiceEnrollBeginDate": "2016-10-03",
+          "selfServiceEnrollEndDate": "2017-05-12",
+          "sessions": [
+            {
+              "temporalPosition": "Future",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2017-01-17",
+              "endDate": "2017-05-05",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2017-02-21",
+              "sixtyPercentPoint": "2017-03-28",
+              "openEnrollmentDate": "2016-09-01",
+              "enrollBeginDate": "2016-10-17",
+              "enrollEndDate": "2017-05-05",
+              "waitListEndDate": "2017-02-03",
+              "fullyEnrolledDeadline": "2017-01-10",
+              "dropDeletedFromRecordDeadline": "2017-01-16",
+              "dropRetainedOnRecordDeadline": "2017-02-21",
+              "dropWithPenaltyDeadline": "2017-05-05",
+              "cancelDeadline": "2017-01-16",
+              "withdrawNoPenaltyDeadline": "2017-02-21",
+              "withdrawWithPenaltyDeadline": "2017-05-05",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "UCBX",
+            "description": "UC Berkeley Extension"
+          },
+          "temporalPosition": "Future",
+          "id": "2172",
+          "name": "2017 Spring",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2017",
+          "beginDate": "2017-01-10",
+          "endDate": "2017-05-12",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-02-21",
+          "fullyEnrolledDeadline": "2017-01-10",
+          "fullyGradedDeadline": "2017-05-12",
+          "cancelDeadline": "2017-01-16",
+          "withdrawNoPenaltyDeadline": "2017-05-05",
+          "degreeConferDate": "2017-05-12",
+          "selfServicePlanBeginDate": "2016-09-01",
+          "selfServicePlanEndDate": "2017-05-12",
+          "selfServiceEnrollBeginDate": "2016-09-01",
+          "selfServiceEnrollEndDate": "2017-05-12",
+          "sessions": [
+            {
+              "temporalPosition": "Future",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2017-01-17",
+              "endDate": "2017-05-05",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2016-02-21",
+              "sixtyPercentPoint": "2017-03-30",
+              "openEnrollmentDate": "2016-09-01",
+              "waitListEndDate": "2016-02-17",
+              "fullyEnrolledDeadline": "2017-01-10",
+              "dropDeletedFromRecordDeadline": "2017-01-16",
+              "dropRetainedOnRecordDeadline": "2017-05-05",
+              "cancelDeadline": "2017-01-16",
+              "withdrawNoPenaltyDeadline": "2017-05-05",
+              "timePeriods": []
+            }
+          ]
+        },
+        {
+          "academicCareer": {
+            "code": "UGRD",
+            "description": "Undergraduate"
+          },
+          "temporalPosition": "Future",
+          "id": "2172",
+          "name": "2017 Spring",
+          "category": {
+            "code": "R",
+            "description": "Regular Term"
+          },
+          "academicYear": "2017",
+          "beginDate": "2017-01-10",
+          "endDate": "2017-05-12",
+          "weeksOfInstruction": 15,
+          "holidaySchedule": {
+            "code": "UCB01",
+            "description": "UCB Non-Instructional Days"
+          },
+          "censusDate": "2016-02-21",
+          "fullyEnrolledDeadline": "2017-01-10",
+          "fullyGradedDeadline": "2017-05-12",
+          "cancelDeadline": "2017-01-16",
+          "withdrawNoPenaltyDeadline": "2017-05-05",
+          "degreeConferDate": "2017-05-12",
+          "selfServicePlanBeginDate": "2016-10-03",
+          "selfServicePlanEndDate": "2017-05-12",
+          "selfServiceEnrollBeginDate": "2016-10-03",
+          "selfServiceEnrollEndDate": "2017-05-12",
+          "sessions": [
+            {
+              "temporalPosition": "Future",
+              "id": "1",
+              "name": "Regular Academic Session",
+              "beginDate": "2017-01-17",
+              "endDate": "2017-05-05",
+              "weeksOfInstruction": 15,
+              "holidaySchedule": {
+                "code": "UCB01",
+                "description": "UCB Non-Instructional Days"
+              },
+              "censusDate": "2017-02-21",
+              "sixtyPercentPoint": "2017-03-28",
+              "openEnrollmentDate": "2016-09-01",
+              "enrollBeginDate": "2016-10-17",
+              "enrollEndDate": "2017-05-05",
+              "waitListEndDate": "2017-02-03",
+              "fullyEnrolledDeadline": "2017-01-10",
+              "dropDeletedFromRecordDeadline": "2017-01-16",
+              "dropRetainedOnRecordDeadline": "2017-02-21",
+              "dropWithPenaltyDeadline": "2017-05-05",
+              "cancelDeadline": "2017-01-16",
+              "withdrawNoPenaltyDeadline": "2017-02-21",
+              "withdrawWithPenaltyDeadline": "2017-05-05",
+              "timePeriods": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

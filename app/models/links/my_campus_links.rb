@@ -74,8 +74,6 @@ module Links
         'exStudent' => false
       }
       link.user_roles.each { |link_role| roles[link_role.slug] = true }
-      # Ex-students get 'student' links. A distinct 'exStudent' list will be introduced when necessary.
-      roles['exStudent'] = roles['student']
       roles
     end
 

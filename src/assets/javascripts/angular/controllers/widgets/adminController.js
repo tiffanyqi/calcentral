@@ -130,7 +130,11 @@ angular.module('calcentral.controllers').controller('AdminController', function(
         $scope.admin.userPool = response.users;
         return;
       }
-      return adminService.actAs(response.users[0]);
+      return adminService.actAs(response.users[0]).error(function(data) {
+        if (data.error) {
+          $scope.admin.actAsErrorStatus = data.error;
+        }
+      });
     });
   };
 

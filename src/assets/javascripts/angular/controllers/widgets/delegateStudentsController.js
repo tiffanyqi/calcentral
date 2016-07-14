@@ -33,8 +33,13 @@ angular.module('calcentral.controllers').controller('DelegateStudentsController'
     var viewable = _.some(delegateAccessPrivileges, function(key) {
       return student.privileges[key] && key !== phone;
     });
+    student.selfDelegating = (student.uid === apiService.user.profile.uid || student.campusSolutionsId === apiService.user.profile.campusSolutionsID);
+    if (student.selfDelegating) {
+      $scope.showSelfDelegatingMessage = true;
+    }
 
-    student.delegateAccess = viewable;
+    student.delegateAccess = (viewable && !student.selfDelegating);
+    student.limitedPrivileges = !viewable;
 
     /**
      * If at least one student grants no privileges, this flag lets us show the

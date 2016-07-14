@@ -1,13 +1,5 @@
 module AdvisorAuthorization
 
-  def render_403(error)
-    if error.respond_to? :message
-      render json: { :error => error.message }.to_json, :status => 403
-    else
-      render :nothing => true, :status => 403
-    end
-  end
-
   def authorize_advisor_view_as(uid, student_uid)
     require_advisor uid
     student = user_attributes student_uid

@@ -31,6 +31,7 @@ module CanvasCsv
     end
 
     def derive_sis_user_id(campus_user)
+      return nil unless campus_user
       if Settings.canvas_proxy.mixed_sis_user_id
         if campus_user[:student_id].present? &&
           (campus_user[:roles][:student] || campus_user[:roles][:concurrentEnrollmentStudent])

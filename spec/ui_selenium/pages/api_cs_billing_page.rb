@@ -108,7 +108,7 @@ class ApiCSBillingPage
   end
 
   def transactions_sum(transactions)
-    transactions.inject(BigDecimal.new('0')) { |acc, bal| acc + BigDecimal.new(WebDriverUtils.amt_to_s(balance(bal))) }
+    transactions.inject(BigDecimal.new('0')) { |acc, bal| acc + BigDecimal.new(amt_to_s(balance(bal))) }
   end
 
   def transactions_unpaid
@@ -129,6 +129,10 @@ class ApiCSBillingPage
 
   def formatted_date(date_string)
     Time.parse(date_string).strftime('%m/%d/%y')
+  end
+
+  def amt_to_s(amount)
+    (sprintf '%.2f', amount).to_s
   end
 
 end

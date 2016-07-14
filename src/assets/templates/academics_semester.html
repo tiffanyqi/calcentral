@@ -24,8 +24,6 @@
   </div>
 
   <div class="medium-4 columns cc-column-3" data-ng-class="{'pull-8 cc-clearfix':(!selectedCourses.length && selectedSemester.timeBucket === 'future')}">
-    <div data-ng-include="'widgets/telebears.html'" data-ng-if="telebearsSemesters.length"></div>
-
     <div data-ng-include="'academics_final_grades.html'" data-ng-if="selectedStudentSemester && (selectedSemester.timeBucket === 'past') && !selectedSemester.gradingInProgress"></div>
 
     <div data-ng-include="'academics_gpa.html'" data-ng-if="(selectedStudentSemester && (selectedSemester.timeBucket !== 'future') && ((selectedSemester.timeBucket !== 'past') || selectedSemester.gradingInProgress)) && !studentInfo.isLawStudent"></div>

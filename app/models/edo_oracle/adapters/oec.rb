@@ -14,8 +14,10 @@ module EdoOracle
       end
 
       def self.adapt_courses(rows, term_code)
-        default_dates = default_edo_dates term_code
+        default_dates = get_default_dates term_code
         user_courses = EdoOracle::UserCourses::Base.new
+        supplement_email_addresses rows
+
         rows.each do |row|
           uniq_ccn_lists row
 
@@ -29,25 +31,41 @@ module EdoOracle
           adapt_evaluation_type row
           adapt_instructor_func row
           adapt_primary_secondary_cd row
+          adapt_sis_id row
 
           row['blue_role'] = '23'
         end
       end
 
       def self.adapt_enrollments(rows, term_code)
+        supplement_email_addresses rows
         rows.each do |row|
           adapt_course_id(row, term_code)
         end
       end
 
-      # TODO This temporary logic, appropriate for Fall 2016 only, bridges a gap between legacy term data and EDO
-      # section data on what counts as default course dates.
-      def self.default_edo_dates(term_code)
+      def self.supplement_email_addresses(rows)
+        rows_without_email = rows.inject({}) do |hash, row|
+          # Check for the presence of the email_address key because not all queries are expected to return email addresses.
+          if row['ldap_uid'].present? && row.has_key?('email_address') && row['email_address'].blank?
+            hash[row['ldap_uid']] ||= []
+            hash[row['ldap_uid']] << row
+          end
+          hash
+        end
+        User::BasicAttributes.attributes_for_uids(rows_without_email.keys).each do |attrs|
+          rows_without_email[attrs[:ldap_uid]].each do |row|
+            row['email_address'] = attrs[:email_address]
+          end
+        end
+      end
+
+      def self.get_default_dates(term_code)
         slug = Berkeley::TermCodes.to_slug *term_code.split('-')
         term = Berkeley::Terms.fetch.campus[slug]
         {
-          start: term.classes_start.to_date.advance(days: 7).next_week(:wednesday),  # 2016-08-24 for Fall 2016
-          end: term.classes_end.to_date.advance(days: -21).next_week(:friday)        # 2016-12-09 for Fall 2016
+          start: term.classes_start.to_date,
+          end: term.instruction_end.to_date
         }
       end
 
@@ -85,6 +103,12 @@ module EdoOracle
                                    when /STUDENT/ then 'G'
                                    when /INSTRUCTOR/ then 'F'
                                  end
+      end
+
+      def self.adapt_sis_id(row)
+        unless row['affiliations'] && row['affiliations'].include?('STUDENT')
+          row['sis_id'] = row['ldap_uid'] ? "UID:#{row['ldap_uid']}" : nil
+        end
       end
 
       def self.uniq_ccn_lists(row)

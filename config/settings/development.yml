@@ -77,7 +77,6 @@ features:
   cs_academic_planner: true
   cs_academic_progress_report: true
   cs_advising_scheduler_view: true
-  cs_advising_show_advisors: true
   cs_advisor_student_lookup: true
   cs_billing: true
   cs_delegated_access: true
@@ -91,6 +90,7 @@ features:
   cs_profile_work_experience: true
   cs_transfer_credit: true
   my_fin_aid: true
+  legacy_regblocks: true
   prevent_acting_as_users_from_posting: false
   reauthentication: false
   textbooks: true

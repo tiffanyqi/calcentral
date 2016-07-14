@@ -92,7 +92,6 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     if (!checkPageExists(selectedSemester)) {
       return;
     }
-    var selectedTelebears = academicsService.findSemester(data.telebears, semesterSlug, selectedTelebears);
     updatePrevNextSemester([data.semesters, data.teachingSemesters], selectedSemester);
 
     $scope.selectedSemester = selectedSemester;
@@ -107,9 +106,6 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     }
     $scope.selectedStudentSemester = selectedStudentSemester;
     $scope.selectedTeachingSemester = selectedTeachingSemester;
-    if (selectedTelebears) {
-      $scope.telebearsSemesters = [selectedTelebears];
-    }
 
     // Get selected course from URL params and extract data from selected semester schedule
     if ($routeParams.classSlug) {
@@ -171,17 +167,12 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.showProfileMessage = (!$scope.isProfileCurrent || !$scope.collegeAndLevel || _.isEmpty($scope.collegeAndLevel.careers));
 
     $scope.hasTeachingClasses = academicsService.hasTeachingClasses(data.teachingSemesters);
-    if (data.teachingSemesters) {
-      $scope.pastSemestersTeachingCount = academicsService.pastSemestersCount(data.teachingSemesters);
-      $scope.pastSemestersTeachingLimit = data.teachingSemesters.length - $scope.pastSemestersTeachingCount + 1;
-    }
 
     // Get selected semester from URL params and extract data from semesters array
     var semesterSlug = ($routeParams.semesterSlug || $routeParams.teachingSemesterSlug);
     if (semesterSlug) {
       fillSemesterSpecificPage(semesterSlug, data);
     } else {
-      $scope.telebearsSemesters = data.telebears;
       if ($scope.hasTeachingClasses && (!data.semesters || (data.semesters.length === 0))) {
         // Show the current semester, or the most recent semester, since otherwise the instructor
         // landing page will be grimly bare.

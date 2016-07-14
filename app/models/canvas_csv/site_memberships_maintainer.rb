@@ -200,7 +200,7 @@ module CanvasCsv
       logger.debug "Adding UID #{login_uid} to SIS Section: #{sis_section_id} as role: #{canvas_api_role}"
 
       sis_user_id = get_sis_user_id(login_uid)
-      append_enrollment_update(sis_section_id, canvas_api_role, sis_user_id)
+      append_enrollment_update(sis_section_id, canvas_api_role, sis_user_id) if sis_user_id
     end
 
     def handle_missing_enrollments(uid, section_id, remaining_enrollments)
@@ -218,6 +218,10 @@ module CanvasCsv
       unless @known_users[uid].present?
         logger.debug "Adding UID #{uid} as new user"
         user_attributes = User::BasicAttributes.attributes_for_uids([uid]).first
+        unless user_attributes
+          logger.error "No user attributes found for LDAP UID #{uid}; skipping this account"
+          return
+        end
         canvas_user = canvas_user_from_campus_attributes(user_attributes)
         @users_csv_output << canvas_user
         @known_users[uid] = canvas_user['user_id']

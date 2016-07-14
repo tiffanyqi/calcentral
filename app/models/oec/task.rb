@@ -151,6 +151,16 @@ module Oec
       end
     end
 
+    def find_csv_in_folder(term_folder, title)
+      @remote_drive.find_items_by_title(title, parent_id: term_folder.id, mime_type: 'text/csv').first
+    end
+
+    def find_last_export(term_folder)
+      if (exports = @remote_drive.find_first_matching_folder(Oec::Folder.published, term_folder))
+        @remote_drive.find_folders(exports.id).sort_by(&:title).last
+      end
+    end
+
     def find_or_create_folder(folder_name, parent=nil)
       @remote_drive.check_conflicts_and_create_folder(folder_name, parent,
         on_conflict: :return_existing,
@@ -168,6 +178,12 @@ module Oec
       return if @opts[:local_write]
       parent = @remote_drive.find_nested([@term_code, category_name], on_failure: :error)
       find_or_create_folder(datestamp(date_time), parent)
+    end
+
+    def find_previous_term_folder
+      if (folders = @remote_drive.find_folders)
+        folders.select { |f| f.title.match(/\d{4}-[A-D]/) && f.title < @term_code }.sort_by(&:title).last
+      end
     end
 
     def get_overrides_worksheet(klass)

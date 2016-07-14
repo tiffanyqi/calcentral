@@ -64,10 +64,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
 
               acct_bal = 'Zero'
               my_fin_amt_due_now = @my_finances_billing.amt_due_now_cs
-              it("shows a zero amount due now for UID #{uid}") { expect(my_fin_amt_due_now).to eql('0') }
-
-              my_fin_future_activity = @my_finances_billing.charges_not_due_cs
-              it("shows a zero amount due in the future for UID #{uid}") { expect(my_fin_future_activity).to eql('0') }
+              it("shows a zero amount due now for UID #{uid}") { expect(my_fin_amt_due_now).to eql('0.00') }
 
             else
 
@@ -80,13 +77,13 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
               # Balance
 
               my_fin_acct_bal = @my_finances_billing.account_balance_cs
-              it("shows the right account balance for UID #{uid}") { expect(my_fin_acct_bal).to eql(WebDriverUtils.amt_to_s fin_api.account_balance) }
+              it("shows the right account balance for UID #{uid}") { expect(my_fin_acct_bal).to eql(fin_api.amt_to_s fin_api.account_balance) }
 
               if fin_api.account_balance > 0
                 acct_bal = 'Positive'
                 @my_finances_billing.transaction_table_element.when_visible
                 my_fin_balance_transactions = @my_finances_billing.visible_transactions_sum_str
-                it("shows the open charges for UID #{uid}") { expect(my_fin_balance_transactions).to eql(WebDriverUtils.amt_to_s fin_api.transactions_sum(fin_api.open_charges)) }
+                it("shows the open charges for UID #{uid}") { expect(my_fin_balance_transactions).to eql(fin_api.transactions_sum(fin_api.open_charges)) }
 
               elsif fin_api.account_balance == 0
                 acct_bal = 'Zero'
@@ -99,7 +96,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
               # Amount due now
 
               my_fin_amt_due_now = @my_finances_billing.amt_due_now_cs
-              it("shows the right amount due now for UID #{uid}") { expect(my_fin_amt_due_now).to eql(WebDriverUtils.amt_to_s fin_api.amount_due_now) }
+              it("shows the right amount due now for UID #{uid}") { expect(my_fin_amt_due_now).to eql(fin_api.amt_to_s fin_api.amount_due_now) }
 
               my_fin_amt_due_label = @my_finances_billing.amt_due_now_label_cs
 
@@ -126,7 +123,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
               if fin_api.charges_not_yet_due > 0
                 has_future_activity = true
                 my_fin_future_activity = @my_finances_billing.charges_not_due_cs
-                it("shows the charges not yet due for UID #{uid}") { expect(my_fin_future_activity).to eql(WebDriverUtils.amt_to_s fin_api.charges_not_yet_due) }
+                it("shows the charges not yet due for UID #{uid}") { expect(my_fin_future_activity).to eql(fin_api.amt_to_s fin_api.charges_not_yet_due) }
               end
 
               # Make payment link
@@ -134,7 +131,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
               my_fin_pmt_link = @my_finances_billing.make_payment_link_cs?
               fin_api.account_balance.zero? ?
                   it("shows no make payment link for UID #{uid}") { expect(my_fin_pmt_link).to be false } :
-                  it("shows a make payment link for UID #{uid}") { expect(my_fin_pmt_link).to be true } unless fin_api.account_balance.zero?
+                  it("shows a make payment link for UID #{uid}") { expect(my_fin_pmt_link).to be true }
 
               # TODO - status popover
 
@@ -177,7 +174,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
                     it("shows the charge description for UID #{uid}") { expect(ui_charge_desc).to eql(fin_api.description(charge)) }
 
                     ui_charge_amt = @my_finances_billing.strip_currency @my_finances_billing.item_amt
-                    it("shows the charge amount for UID #{uid}") { expect(ui_charge_amt).to eql(WebDriverUtils.amt_to_s fin_api.line_amount(charge)) }
+                    it("shows the charge amount for UID #{uid}") { expect(ui_charge_amt).to eql(fin_api.amt_to_s fin_api.line_amount(charge)) }
 
                     ui_charge_type = @my_finances_billing.item_type
                     it("shows the transaction type of the charge for UID #{uid}") { expect(ui_charge_type).to eql(fin_api.type charge) }
@@ -239,7 +236,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
                         it("shows the original amount in the charge detail for UID #{uid}") { expect(ui_balance_has_orig_amt).to be true }
 
                         ui_charge_orig_amt = @my_finances_billing.strip_currency @my_finances_billing.item_detail_orig_amt
-                        it("shows the right original amount in the charge detail for UID #{uid}") { expect(ui_charge_orig_amt).to eql(WebDriverUtils.amt_to_s fin_api.line_amount(charge)) }
+                        it("shows the right original amount in the charge detail for UID #{uid}") { expect(ui_charge_orig_amt).to eql(fin_api.amt_to_s fin_api.line_amount(charge)) }
 
                         has_partial_payment = true if (fin_api.balance(charge) != fin_api.line_amount(charge))
 
@@ -275,7 +272,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
                     it("shows the payment description for UID #{uid}") { expect(ui_payment_desc).to eql(fin_api.description(payment)) }
 
                     ui_payment_amt = @my_finances_billing.strip_currency @my_finances_billing.item_amt
-                    it("shows the payment amount for UID #{uid}") { expect(ui_payment_amt).to eql(WebDriverUtils.amt_to_s fin_api.line_amount(payment)) }
+                    it("shows the payment amount for UID #{uid}") { expect(ui_payment_amt).to eql(fin_api.amt_to_s fin_api.line_amount(payment)) }
 
                     ui_payment_type = @my_finances_billing.item_type
                     it("shows the transaction type of the payment for UID #{uid}") { expect(ui_payment_type).to eql(fin_api.type payment) }
@@ -324,7 +321,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
                   it("shows the award description for UID #{uid}") { expect(ui_award_desc).to eql(fin_api.description(award)) }
 
                   ui_award_amt = @my_finances_billing.strip_currency @my_finances_billing.item_amt
-                  it("shows the award amount for UID #{uid}") { expect(ui_award_amt).to eql(WebDriverUtils.amt_to_s fin_api.line_amount(award)) }
+                  it("shows the award amount for UID #{uid}") { expect(ui_award_amt).to eql(fin_api.amt_to_s fin_api.line_amount(award)) }
 
                   ui_award_type = @my_finances_billing.item_type
                   it("shows the transaction type of the award for UID #{uid}") { expect(ui_award_type).to eql(fin_api.type award) }

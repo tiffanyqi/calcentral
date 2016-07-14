@@ -1,0 +1,75 @@
+<div class="cc-widget cc-status-holds">
+  <div class="cc-widget-title">
+    <h2 data-ng-bind="statusHoldsBlocks.enabledSections | andFilter"></h2>
+  </div>
+
+  <div class="cc-widget-padding">
+    <h3 class="cc-status-holds-status-header">Status</h3>
+
+    <div data-cc-spinner-directive="regStatus.isLoading">
+      <div data-ng-if="statusHoldsBlocks.enabledSections.indexOf('Status') !== -1">
+        <div class="cc-status-holds-section">
+          <h4 data-ng-bind="regStatus.term"></h4>
+          <ul class="cc-widget-list cc-status-holds-list" data-ng-if="api.user.profile.features.regstatus">
+            <li class="cc-widget-list-hover"
+                data-ng-class="{'cc-widget-list-hover-opened':(regStatus.show)}"
+                data-cc-accessible-focus-directive
+                data-ng-click="api.widget.toggleShow($event, null, regStatus, 'My Academics - Status and Holds')">
+              <div class="cc-status-holds-list-section">
+                <div class="cc-status-holds-list-item">
+                  <span data-ng-if="!regStatus.isSummer && regStatus.summary !== 'Not Officially Registered'">
+                    <i class="cc-icon fa"
+                       data-ng-class="{true:'fa-check-circle cc-icon-green',false:'fa-exclamation-circle cc-icon-red'}[regStatus.summary=='Officially Registered']">
+                    </i>
+                  </span>
+                  <span data-ng-bind="regStatus.summary"></span>
+                </div>
+                <div class="cc-status-holds-expanded-text" data-ng-show="regStatus.show" data-ng-bind="regStatus.explanation"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div data-cc-spinner-directive="residency.isLoading">
+      <div class="cc-status-holds-section">
+        <div data-ng-if="residency.official.description">
+          <h4>California Residency</h4>
+          <ul class="cc-widget-list cc-status-holds-list">
+            <li class="cc-widget-list-hover"
+                data-ng-class="{'cc-widget-list-hover-opened':(residency.show)}"
+                data-cc-accessible-focus-directive
+                data-ng-click="api.widget.toggleShow($event, null, residency, 'My Academics - Status and Holds')">
+              <div class="cc-status-holds-list-section">
+                <div class="cc-status-holds-list-item">
+                  <i class="cc-icon fa fa-exclamation-circle cc-icon-red" aria-hidden="true" data-ng-if="residency.official.code === ''"></i>
+                  <i class="cc-icon fa fa-warning cc-icon-gold" aria-hidden="true" data-ng-if="residency.official.code === 'PEND'"></i>
+                  <i class="cc-icon fa fa-check-circle cc-icon-green" aria-hidden="true" data-ng-if="residency.official.code === 'NON' || residency.official.code === 'RES'"></i>
+                  <span data-ng-bind="residency.official.description"></span>
+                </div>
+                <div class="cc-status-holds-expanded-text" data-ng-show="residency.show" data-ng-include="'california_residency_status.html'"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div data-ng-if="statusHoldsBlocks.enabledSections.indexOf('Holds') !== -1">
+      <h3>Active Holds</h3>
+      <div data-ng-include="'widgets/holds.html'"></div>
+    </div>
+
+    <div data-ng-if="statusHoldsBlocks.enabledSections.indexOf('Blocks') !== -1">
+      <h3 class="cc-status-holds-holds-header">Active Blocks</h3>
+      <div data-ng-if="!regblocks.errored">
+        <div data-ng-include="'academics_regblocks.html'"></div>
+      </div>
+      <div data-ng-if="regblocks.errored">
+        <i class="fa fa-exclamation-triangle cc-icon-red cc-errored"></i> Block message is currently unavailable.
+      </div>
+    </div>
+
+  </div>
+</div>

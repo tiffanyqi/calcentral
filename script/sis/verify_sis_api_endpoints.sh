@@ -127,7 +127,7 @@ verify_sis_endpoints() {
           ;;
       esac
       validate_api_response "${path}" "${response_metadata}" "${url}" "${log_file}"
-      echo "	Response body: ${log_file}" | tee -a "${CURL_STDOUT_LOG_FILE}"; echo
+      echo "  Response body: ${log_file}" | tee -a "${CURL_STDOUT_LOG_FILE}"; echo
     done
   fi
   echo
@@ -240,7 +240,8 @@ verify_cs "cs_fin_aid" "${yml_features_cs_fin_aid}" \
 verify_cs "cs_delegated_access" "${yml_features_cs_delegated_access}" \
   "/UC_CC_DELEGATED_ACCESS.v1/DelegatedAccess/get?SCC_DA_PRXY_OPRID=${UID_CROSSWALK}" \
   "/UC_CC_DELEGATED_ACCESS_URL.v1/get" \
-  "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=25000&MESSAGE_NBR=15"
+  "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=25000&MESSAGE_NBR=15" \
+  "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=28001&MESSAGE_NBR=2005"
 
 verify_cs "cs_enrollment_card" "${yml_features_cs_enrollment_card}"  \
   "/UC_SR_ACADEMIC_PLANNER.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168" \
@@ -259,6 +260,9 @@ verify_cs "cs_billing" "${yml_features_cs_billing}" \
 
 verify_cs "cs_advisor_student_lookup" "${yml_features_cs_advisor_student_lookup}" \
   "/UC_CC_USER_LOOKUP.v1/lookup?NAME1=Wavy&NAME2=Gravy&AFFILIATIONS=STUDENT,UNDERGRAD"
+
+verify_cs "cs_profile_emergency_contacts" "${yml_features_cs_profile_emergency_contacts}" \
+  "/UcApiEmergencyContactGet.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 
 verify_hub "/${CAMPUS_SOLUTIONS_ID}/academic-status" \
   "/${CAMPUS_SOLUTIONS_ID}/affiliation" \

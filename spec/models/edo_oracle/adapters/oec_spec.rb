@@ -3,15 +3,7 @@ describe EdoOracle::Adapters::Oec do
   let(:term_id) { '2168' }
   let(:course_id) { '32819' }
 
-  before do
-    allow_any_instance_of(Berkeley::Terms).to receive(:campus).and_return({
-      'fall-2016' => double({
-        legacy?: false,
-        classes_start: DateTime.parse('Sat, 13 Aug 2016 23:59:59 -0700'),
-        classes_end: DateTime.parse('Sat, 24 Dec 2016 23:59:59 -0800')
-      })
-    })
-  end
+  before { allow(Settings.terms).to receive(:fake_now).and_return '2016-07-14 01:00:00' }
 
   context 'adapting course data' do
     let(:row) do
@@ -75,25 +67,30 @@ describe EdoOracle::Adapters::Oec do
       let(:instructor_func) { nil }
     end
 
-    shared_examples 'affiliations to evaluation type' do
+    shared_examples 'affiliation-dependent data' do
       before { row['affiliations'] = affiliations }
       it { expect(course['evaluation_type']).to eq evaluation_type }
+      it { expect(course['sis_id']).to eq sis_id }
     end
-    include_examples 'affiliations to evaluation type' do
+    include_examples 'affiliation-dependent data' do
       let(:affiliations) { 'INSTRUCTOR' }
       let(:evaluation_type) { 'F' }
+      let(:sis_id) { 'UID:12345' }
     end
-    include_examples 'affiliations to evaluation type' do
+    include_examples 'affiliation-dependent data' do
       let(:affiliations) { 'STUDENT' }
       let(:evaluation_type) { 'G' }
+      let(:sis_id) { '1234567890' }
     end
-    include_examples 'affiliations to evaluation type' do
+    include_examples 'affiliation-dependent data' do
       let(:affiliations) { 'INSTRUCTOR,STUDENT' }
       let(:evaluation_type) { 'G' }
+      let(:sis_id) { '1234567890' }
     end
-    include_examples 'affiliations to evaluation type' do
+    include_examples 'affiliation-dependent data' do
       let(:affiliations) { nil }
       let(:evaluation_type) { nil }
+      let(:sis_id) { 'UID:12345' }
     end
 
     context 'default course dates' do
@@ -113,6 +110,17 @@ describe EdoOracle::Adapters::Oec do
       end
       it 'marks course as modular' do
         expect(course['modular_course']).to eq 'Y'
+      end
+    end
+
+    context 'missing email address' do
+      before { row['email_address'] = nil }
+      it 'fills in email address from attributes query' do
+        expect(User::BasicAttributes).to receive(:attributes_for_uids).with(['12345']).and_return([{
+          ldap_uid: '12345',
+          email_address: 'kaymcnulty@arl.army.mil'
+        }])
+        expect(course['email_address']).to eq 'kaymcnulty@arl.army.mil'
       end
     end
 

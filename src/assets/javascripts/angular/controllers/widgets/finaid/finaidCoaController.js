@@ -24,11 +24,23 @@ angular.module('calcentral.controllers').controller('FinaidCoaController', funct
     }
   };
 
+  var adaptCategoryTitles = function(coa) {
+    _.forEach(views, function(view) {
+      var categories = coa[view].data;
+      _.forEach(categories, function(category) {
+        var categoryTitle = category.title;
+        category.titleHeader = categoryTitle.replace(' Items', '');
+        category.titleTotal = categoryTitle.replace(' Items', ' Total');
+      });
+    });
+  };
+
   var loadCoa = function() {
     return finaidFactory.getFinaidYearInfo({
       finaidYearId: finaidService.options.finaidYear.id
     }).success(function(data) {
       angular.extend($scope.coa, _.get(data, 'feed.coa'));
+      adaptCategoryTitles($scope.coa);
       $scope.coa.errored = data.errored;
       $scope.coa.isLoading = false;
     });

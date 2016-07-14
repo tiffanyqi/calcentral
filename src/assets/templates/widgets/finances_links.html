@@ -10,11 +10,14 @@
           <a data-ng-href="/profile/delegate" data-ng-attr-title="{{$parent.delegateAccess.title}}">Delegate Access</a>
         </li>
         <li data-ng-if="subcategory === 'Billing & Payments'">
-          <a data-ng-href="{{$parent.eft.eftLink.url}}" data-ng-attr-title="{{$parent.eft.eftLink.title}}">Electronic Funds Transfer / EFT </a>
-          <span class="cc-text-green-plus cc-list-links-nested-dash cc-list-links-text" data-ng-if="$parent.eft.studentActive && $parent.eft.data.data.eftStatus === 'active'">
+          <a data-ng-href="{{$parent.eft.eftLink.url}}"
+            data-ng-attr-title="{{$parent.eft.eftLink.title}}">Electronic Funds Transfer / EFT </a>
+          <span class="cc-text-green-plus cc-list-links-nested-dash cc-list-links-text"
+            data-ng-if="$parent.eft.studentActive && $parent.eft.data.data.eftStatus === 'active'">
             Status: <i class="fa fa-check cc-icon-green"></i> Active
           </span>
-          <span class="cc-text-green-plus cc-list-links-nested-dash cc-list-links-text" data-ng-if="$parent.eft.studentActive && $parent.eft.data.data.accountNumber">
+          <span class="cc-text-green-plus cc-list-links-nested-dash cc-list-links-text"
+            data-ng-if="$parent.eft.studentActive && $parent.eft.data.data.accountNumber">
             Account <span aria-hidden="true">#: </span>
             <span class="cc-visuallyhidden">Number</span>
             <span data-ng-bind="$parent.eft.data.data.accountNumber"></span>
@@ -23,37 +26,39 @@
             Status: Not Active
           </span>
           <a class="cc-list-links-nested-dash"
-             data-ng-href="{{$parent.eft.manageAccountLink.url}}"
-             data-ng-attr-title="{{$parent.eft.manageAccountLink.title}}"
-             data-ng-if="!api.user.profile.delegateActingAsUid">
+            data-ng-href="{{$parent.eft.manageAccountLink.url}}"
+            data-ng-attr-title="{{$parent.eft.manageAccountLink.title}}"
+            data-ng-if="!api.user.profile.delegateActingAsUid">
             <strong>Manage Account</strong>
           </a>
         </li>
         <li data-ng-repeat-start="link in campusLinks.data.links | campusLinksSubcategoryFilter:subcategory">
           <a data-ng-href="{{link.url}}"
             data-ng-click="api.analytics.trackExternalLink('Campus links', subcategory, link.url)"
-            title="{{link.description}}"
+            data-ng-attr-title="{{link.description}}"
             data-ng-bind="link.name">
           </a>
         </li>
         <li data-ng-if="subcategory === 'Billing & Payments' && $index === 1">
-          <a data-ng-href="{{$parent.fpp.fppLink.url}}" data-ng-attr-title="{{$parent.fpp.fppLink.title}}">Tuition and Fees Payment Plan</a>
+          <a data-ng-href="{{$parent.fpp.fppLink.url}}"
+            data-ng-attr-title="{{$parent.fpp.fppLink.title}}">Tuition and Fees Payment Plan</a>
           <a class="cc-list-links-nested-dash"
-             data-cc-campus-solutions-link-directive="$parent.fpp.data.fppEnrollUrl.url"
-             data-cc-campus-solutions-link-directive-enabled="{{$parent.fpp.data.fppEnrollUrl.isCsLink}}"
-             data-cc-campus-solutions-link-directive-text="fpp.activatePlanLink.backToText"
-             data-cc-campus-solutions-link-directive-cache="'finances'"
-             data-cc-outbound-enabled="false"
-             data-ng-attr-title="{{$parent.fpp.activatePlanLink.title}}"
-             data-ng-if="$parent.fpp.data.fppEnrollUrl.url"><strong>Activate Plan</strong>
+            data-cc-campus-solutions-link-directive="$parent.fpp.data.fppEnrollUrl.url"
+            data-cc-campus-solutions-link-directive-enabled="{{$parent.fpp.data.fppEnrollUrl.isCsLink}}"
+            data-cc-campus-solutions-link-directive-text="fpp.activatePlanLink.backToText"
+            data-cc-campus-solutions-link-directive-cache="'finances'"
+            data-cc-outbound-enabled="false"
+            data-ng-attr-title="{{$parent.fpp.activatePlanLink.title}}"
+            data-ng-if="$parent.fpp.data.fppEnrollUrl.url"><strong>Activate Plan</strong>
           </a>
         </li>
         <li data-ng-repeat-end data-ng-if="subcategory === 'Billing & Payments' && $index === 1">
-          <a data-ng-href="{{$parent.taxForm.taxFormLink.url}}" data-ng-attr-title="{{$parent.taxForm.taxFormLink.title}}">Tax 1098-T Form</a>
+          <a data-ng-href="{{$parent.taxForm.taxFormLink.url}}"
+            data-ng-attr-title="{{$parent.taxForm.taxFormLink.title}}">Tax 1098-T Form</a>
           <a class="cc-list-links-nested-dash"
-             data-ng-href="{{$parent.taxForm.viewFormLink.url}}"
-             data-ng-attr-title="{{$parent.taxForm.viewFormLink.title}}"
-             data-ng-if="!api.user.profile.delegateActingAsUid">
+            data-ng-href="{{$parent.taxForm.viewFormLink.url}}"
+            data-ng-attr-title="{{$parent.taxForm.viewFormLink.title}}"
+            data-ng-if="!api.user.profile.delegateActingAsUid">
             <strong>View Form</strong>
           </a>
         </li>

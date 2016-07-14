@@ -29,10 +29,10 @@ module CalCentralPages
     link(:make_payment_link, :xpath => '//a[@href="http://studentbilling.berkeley.edu/carsPaymentOptions.htm"]')
 
     # BILLING SUMMARY CARD - CS
-    label(:amt_due_now_label_cs, :xpath => '//strong[@data-cc-amount-directive="billing.data.summary.amountDueNow"]/../../preceding-sibling::div/strong')
-    div(:min_amt_due_cs, :xpath => '//strong[@data-cc-amount-directive="billing.data.summary.amountDueNow"]')
-    div(:chg_not_due_cs, :xpath => '//div[@data-cc-amount-directive="billing.data.summary.chargesNotYetDue"]')
-    div(:account_bal_cs, :xpath => '//div[@data-cc-amount-directive="billing.data.summary.accountBalance"]')
+    label(:amt_due_now_label_cs, :xpath => '//strong[@data-cc-amount-directive="billing.data.summary.amountDueNowString"]/../../preceding-sibling::div/strong')
+    div(:min_amt_due_cs, :xpath => '//strong[@data-cc-amount-directive="billing.data.summary.amountDueNowString"]')
+    div(:chg_not_due_cs, :xpath => '//div[@data-cc-amount-directive="billing.data.summary.chargesNotYetDueString"]')
+    div(:account_bal_cs, :xpath => '//div[@data-cc-amount-directive="billing.data.summary.accountBalanceString"]')
     link(:make_payment_link_cs, :xpath => '//a[contains(@href,"/higher_one")]')
     # TODO - past due?
     link(:view_prior_link, :xpath => '//a[contains(.,"View transactions prior to")]')

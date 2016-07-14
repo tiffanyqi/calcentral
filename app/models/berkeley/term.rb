@@ -26,6 +26,11 @@ module Berkeley
     # returns true for the Summer term, false otherwise
     attr_reader :is_summer
 
+    FALL_2016_DATES = {
+      'term_start_date' => Time.parse('2016-08-24 00:00:00 UTC'),
+      'term_end_date' => Time.parse('2016-12-09 00:00:00 UTC')
+    }
+
     def initialize(db_row)
       term_cd = db_row['term_cd']
       term_yr = db_row['term_yr'].to_i
@@ -33,6 +38,10 @@ module Berkeley
       @year = term_yr
       @name = db_row['term_name']
       @slug = TermCodes.to_slug(term_yr, term_cd)
+
+      # TODO Remove this embarrassment as soon as we switch to Campus Solutions for source of record on term dates.
+      db_row.merge! FALL_2016_DATES if @slug == 'fall-2016'
+
       @classes_start = db_row['term_start_date'].to_date.in_time_zone.to_datetime
       @instruction_end = db_row['term_end_date'].to_date.in_time_zone.to_datetime.end_of_day
       @sis_term_status = db_row['term_status']

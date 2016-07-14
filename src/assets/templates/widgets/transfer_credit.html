@@ -11,10 +11,17 @@
         <strong>Units</strong>
       </div>
     </div>
-    <ul class="cc-widget-list cc-widget-transfercredit-list">
-      <li data-ng-repeat="creditType in transferCredit.creditTypes"
-          data-ng-class="{'cc-widget-list-selected': creditType.show}"
-          data-ng-include="'widgets/transfer_credit_list_item.html'"></li>
+    <ul class="cc-widget-list cc-widget-transfercredit-units">
+      <li class="cc-widget-vertical-padding">Transfer Units
+        <div class="cc-right">
+          <span data-ng-bind="transferCredit.cumulativeUnits.unitsTransferAccepted"></span>
+          <span data-ng-if="transferCredit.cumulativeUnits.unitsTransferAccepted < transferCredit.cumulativeUnits.unitsTransferEarned">
+            (Non-Adjusted: <span data-ng-bind="transferCredit.cumulativeUnits.unitsTransferEarned"></span>)
+          </span>
+        </div>
+      </li>
+      <li class="cc-widget-vertical-padding">Test Units <span class="cc-right" data-ng-bind="transferCredit.cumulativeUnits.unitsTest"></span></li>
+      <li class="cc-widget-vertical-padding">Other Units <span class="cc-right" data-ng-bind="transferCredit.cumulativeUnits.unitsOther"></span></li>
     </ul>
   </div>
 </div>

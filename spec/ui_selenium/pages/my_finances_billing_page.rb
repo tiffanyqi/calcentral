@@ -14,7 +14,7 @@ module CalCentralPages
 
       link(:sort_by_date, :xpath => '//th[@data-ng-click="changeSorting(\'itemEffectiveDate\')"]')
       link(:sort_by_descrip, :xpath => '//th[@data-ng-click="changeSorting(\'itemDescription\')"]')
-      link(:sort_by_amount, :xpath => '//th[@data-ng-click="changeSorting(\'itemBalance\')"]')
+      link(:sort_by_amount, :xpath => '//th[@data-ng-click="changeSortingAmount()"]')
       link(:sort_by_trans_type, :xpath => '//th[@data-ng-click="changeSorting(\'itemType\')"]')
       link(:sort_by_due_date, :xpath => '//th[@data-ng-click="changeSorting(\'itemDueDate\')"]')
       image(:sort_descending, :xpath => '//i[@class="fa fa-chevron-down"]')
@@ -25,8 +25,8 @@ module CalCentralPages
       # The following are elements from the first transaction in the UI
       span(:item_date, :xpath => '//span[contains(@data-ng-bind,"item.itemEffectiveDate")]')
       div(:item_desc, :xpath => '//div[@data-ng-bind="item.itemDescription"]')
-      td(:item_balance, :xpath => '//td[@data-cc-amount-directive="item.itemBalance"]')
-      td(:item_amt, :xpath => '//td[@data-cc-amount-directive="item.itemLineAmount"]')
+      td(:item_balance, :xpath => '//td[@data-cc-amount-directive="item.item.itemBalanceString"]')
+      td(:item_amt, :xpath => '//td[@data-cc-amount-directive="item.itemLineAmountString"]')
       span(:item_type, :xpath => '//span[@data-ng-bind="item.itemType"]')
       span(:item_due_date, :xpath => '//span[contains(@data-ng-bind,"item.itemDueDate")]')
 
@@ -35,7 +35,7 @@ module CalCentralPages
       image(:item_due_past_icon, :xpath => '//td[@class="cc-page-myfinances-due-date cc-table-center"]//i[contains(@class,"fa-exclamation-circle")]')
 
       span(:item_detail_status, :xpath => '//span[contains(@data-ng-bind,"item.itemStatus")]')
-      span(:item_detail_orig_amt, :xpath => '//span[@data-cc-amount-directive="item.itemLineAmount"]')
+      span(:item_detail_orig_amt, :xpath => '//span[@data-cc-amount-directive="item.itemLineAmountString"]')
       span(:item_detail_term, :xpath => '//span[contains(@data-ng-bind,"item.itemTermDescription")]')
       span(:item_detail_type, :xpath => '//tr[@data-ng-if="item.show"]//span[@data-ng-bind="item.itemType"]')
 
@@ -63,8 +63,7 @@ module CalCentralPages
       end
 
       def visible_transactions_sum_str
-        sum = visible_transaction_amts_str.inject(BigDecimal.new('0')) { |acc, amt| acc + BigDecimal.new(amt) }
-        WebDriverUtils.amt_to_s sum
+        visible_transaction_amts_str.inject(BigDecimal.new('0')) { |acc, amt| acc + BigDecimal.new(amt) }
       end
 
       # TRANSACTION SORTING

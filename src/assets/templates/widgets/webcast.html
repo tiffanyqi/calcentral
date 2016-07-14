@@ -63,8 +63,8 @@
       <div data-ng-if="videos || audio" class="bc-tab-navigation">
         <ul class="bc-tab-group cc-clearfix-container" data-ng-if="videos.length && audio.length" role="tablist">
           <li class="bc-tab"
-              data-ng-class="{'bc-tab-active':(currentSelection === selectOption)}"
-              data-ng-repeat="selectOption in selectOptions">
+            data-ng-class="{'bc-tab-active':(currentSelection === selectOption)}"
+            data-ng-repeat="selectOption in selectOptions">
             <a data-ng-click="switchSelectedOption(selectOption)"
               ng-attr-aria-selected="{{currentSelection === selectOption}}"
               role="tab"
@@ -74,12 +74,41 @@
         </ul>
         <div data-ng-if="currentSelection === 'Video'">
           <div data-ng-if="videos.length">
-            <div class="cc-select cc-widget-webcast-select">
-              <label for="cc-widget-webcast-video-selection" class="cc-visuallyhidden">Select Video</label>
-              <select id="cc-widget-webcast-video-selection" class="bc-canvas-embedded-form-select" data-ng-model="selectedVideo" data-ng-change="announceVideoSelect()" data-ng-options="video.lecture for video in videos"></select>
+            <div class="cc-widget-webcast-alert">
+              <i class="fa fa-exclamation-triangle cc-icon-gold"></i>
+              <strong>Alert: </strong>
+              You must log in to YouTube with your bConnected account to watch the videos below. For more information,
+              go to our <a href="https://berkeley.service-now.com/kb_view.do?sysparm_article=KB0011469">help page</a>.
             </div>
-            <div class="cc-youtube-video">
-              <div data-cc-youtube-directive="selectedVideo.youTubeId" data-cc-youtube-directive-title="{{selectedVideo.lecture}}"></div>
+            <div class="cc-table" data-ng-repeat="medium in media">
+              <h3 data-ng-bind-template="{{medium.deptName + ' ' + medium.catalogId + ' ' + medium.instructionFormat + ' ' + medium.sectionNumber}}"
+                data-ng-if="media.length > 1"></h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th width="60%" scope="col">
+                      Lecture
+                    </th>
+                    <th width="40%" scope="col">
+                      Date
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-ng-repeat="video in medium.videos | limitTo: futureLimit">
+                    <td class="cc-table-top-border">
+                      <a data-ng-href="https://www.youtube.com/watch?v={{video.youTubeId}}"
+                        data-ng-attr-title="{{video.lecture}}"
+                        data-ng-bind="video.lecture">
+                      </a>
+                    </td>
+                    <td class="cc-table-top-border" data-ng-bind="video.recordingStartUTC | date:'MMM d'"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div data-cc-show-more-directive
+                data-cc-show-more-list="medium.videos"
+                data-cc-show-more-limit="futureLimit"></div>
             </div>
           </div>
           <ul class="cc-widget-webcast-links" data-ng-if="iTunes.video">
@@ -98,7 +127,11 @@
           <div data-ng-show="audio.length">
             <div class="cc-select cc-widget-webcast-select">
               <label for="cc-widget-webcast-audio-selection" class="cc-visuallyhidden">Select Audio</label>
-              <select id="cc-widget-webcast-audio-selection" class="bc-canvas-embedded-form-select" data-ng-model="selectedAudio" data-ng-change="announceAudioSelect()" data-ng-options="item.title for item in audio"></select>
+              <select id="cc-widget-webcast-audio-selection"
+                class="bc-canvas-embedded-form-select"
+                data-ng-model="selectedAudio"
+                data-ng-change="announceAudioSelect()"
+                data-ng-options="item.title for item in audio"></select>
             </div>
             <div class="cc-widget-webcast-audio" controls>
               <div data-cc-audio-directive="selectedAudio.playUrl"></div>
@@ -121,8 +154,9 @@
             No audio content available.
           </div>
         </div>
-        <div data-ng-if="(videos && videos.length > 0) || (audio && audio.length > 0)" class="cc-widget-webcast-outbound-link">
-          <a href="http://www.ets.berkeley.edu/find-support/request-forms/request-support-or-give-feedback">Report a problem with this recording</a>
+        <div class="cc-widget-webcast-outbound-link"
+          data-ng-if="(videos && videos.length > 0) || (audio && audio.length > 0)">
+          <a href="http://www.ets.berkeley.edu/find-support/request-forms/request-support-or-give-feedback">Report a problem</a>
         </div>
       </div>
     </div>

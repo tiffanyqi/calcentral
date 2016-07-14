@@ -90,8 +90,8 @@
               <th data-ng-click="changeSorting('itemDescription')" width="30%" scope="col">
                 Description <i data-ng-class="getSortClass('itemDescription')"></i>
               </th>
-              <th data-ng-click="changeSorting('itemBalance')" width="30%" class="cc-table-right cc-table-right-spacing" scope="col">
-                Amount <i data-ng-class="getSortClass('itemBalance')"></i>
+              <th data-ng-click="changeSortingAmount()" width="30%" class="cc-table-right cc-table-right-spacing" scope="col">
+                Amount <i data-ng-class="getSortClassAmount()"></i>
               </th>
               <th data-ng-click="changeSorting('itemType')" width="10%" scope="col">
                 Type <i data-ng-class="getSortClass('itemType')"></i>
@@ -115,8 +115,8 @@
               <td>
                 <div data-ng-bind="item.itemDescription" data-ng-class="{'cc-ellipsis':(!item.show)}"></div>
               </td>
-              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-ng-if="filter.choice !== 'balance'" data-cc-amount-directive="item.itemLineAmount"></td>
-              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-ng-if="filter.choice === 'balance'" data-cc-amount-directive="item.itemBalance"></td>
+              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-ng-if="filter.choice !== 'balance'" data-cc-amount-directive="item.itemLineAmountString"></td>
+              <td class="cc-page-myfinances-amount cc-table-right cc-table-right-spacing" data-ng-if="filter.choice === 'balance'" data-cc-amount-directive="item.itemBalanceString"></td>
               <td class="cc-page-myfinances-type">
                 <span class="hide-for-small cc-print-show" data-ng-bind="item.itemType"></span>
                 <div class="hide-for-medium-up cc-print-hide">
@@ -145,9 +145,9 @@
                     </strong>
                     <span data-ng-bind="item.itemReferenceDescription"></span>
                   </div>
-                  <div data-ng-if="item.itemLineAmount && filter.choice === 'balance'">
+                  <div data-ng-if="item.itemLineAmount && item.itemLineAmountString && filter.choice === 'balance'">
                     <strong>Original Amount:</strong>
-                    <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemLineAmount"></span>
+                    <span class="cc-page-myfinances-amount" data-cc-amount-directive="item.itemLineAmountString"></span>
                   </div>
                   <div data-ng-if="item.itemStatus && (item.itemType === 'Charge' || item.itemType === 'Refund') && filter.choice !== 'balance'">
                     <strong>Status:</strong>

@@ -67,6 +67,17 @@ describe ActAsController do
         it_fails
       end
     end
+    context 'acting as oneself' do
+      let(:real_superuser) {false}
+      let(:real_viewer) {true}
+      let(:target_uid) {real_user_id}
+      it 'refuses to budge' do
+        session['user_id'] = real_user_id
+        post :start, uid: target_uid
+        expect(response).to_not be_success
+        expect(session[SessionKey.original_user_id]).to be_nil
+      end
+    end
   end
 
 end

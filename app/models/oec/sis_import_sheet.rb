@@ -46,7 +46,7 @@ module Oec
 
       rows_by_cross_listing.values.each do |rows|
         # If a home department is defined, move home-department rows to the top within each group of cross-listings;
-        # otherwise give priority to participating departments. Then sort by department name and numeric portion of catalog id.
+        # otherwise give priority to participating departments.
         rows.sort_by! do |row|
           row_priority = if home_dept_names && home_dept_names.include?(row['DEPT_NAME'])
                            0
@@ -55,16 +55,14 @@ module Oec
                          else
                            2
                          end
-          [row_priority, row['DEPT_NAME'].to_s, row['CATALOG_ID'].try(:match, /\d+/).to_s.to_i]
+          # Within each row-priority group, follow canonical sort order.
+          self.class.sortable(row).prepend row_priority
         end
         # Move one representative from each cross-listed group into the set of non-cross-listed rows for sorting.
         non_cross_listed_rows << rows.shift
       end
 
-      non_cross_listed_rows.sort_by! do |row|
-        # Sort by department name first and numeric portion of catalog id second.
-        [row['DEPT_NAME'].to_s, row['CATALOG_ID'].try(:match, /\d+/).to_s.to_i]
-      end
+      non_cross_listed_rows.sort_by! { |row| self.class.sortable row }
 
       # Merge in the remaining cross-listings.
       rows_by_cross_listing.each do |cross_listed_name, rows|
@@ -72,6 +70,17 @@ module Oec
         non_cross_listed_rows.insert(cross_listing_index + 1, *rows)
       end
       non_cross_listed_rows
+    end
+
+    def self.sortable(row)
+      [                                                   # Canonical sort order:
+        row['DEPT_NAME'].to_s,                            # - Department name;
+        row['CATALOG_ID'].try(:match, /\d+/).to_s.to_i,   # - Numeric portion of catalog ID;
+        row['CATALOG_ID'].to_s,                           # - Catalog ID as string;
+        row['PRIMARY_SECONDARY_CD'].to_s,                 # - Primary sections first;
+        row['SECTION_NUM'].to_s,                          # - Section number;
+        row['LDAP_UID'].to_s.to_i                         # - Instructor ID.
+      ]
     end
 
   end
