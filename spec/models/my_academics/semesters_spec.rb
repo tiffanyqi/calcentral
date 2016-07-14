@@ -6,7 +6,7 @@ describe MyAcademics::Semesters do
     allow_any_instance_of(CampusOracle::UserCourses::Transcripts).to receive(:get_all_transcripts).and_return transcript_data
   end
 
-  let(:term_keys) { ['2013-B', '2013-D', '2014-B', '2014-C'] }
+  let(:term_keys) { ['2015-D', '2016-B', '2016-C', '2016-D'] }
   let(:transcript_data) do
     {
       semesters: Hash[term_keys.map{|key| [key, transcript_term(key)]}],
@@ -167,7 +167,8 @@ describe MyAcademics::Semesters do
 
   context 'legacy academic data' do
     before do
-      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2014'
+      allow(Settings.terms).to receive(:fake_now).and_return '2016-04-01'
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'fall-2016'
       allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
       expect(EdoOracle::Queries).not_to receive :get_enrolled_sections
     end
@@ -180,7 +181,8 @@ describe MyAcademics::Semesters do
 
   context 'Campus Solutions academic data' do
     before do
-      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2009'
+      allow(Settings.terms).to receive(:fake_now).and_return '2016-04-01'
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'fall-2009'
       expect(CampusOracle::Queries).not_to receive :get_enrolled_sections
       allow_any_instance_of(EdoOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
     end
@@ -194,19 +196,20 @@ describe MyAcademics::Semesters do
   context 'mixed legacy and Campus Solutions academic data' do
     let(:legacy_enrollment_data) do
       {
-        '2013-B' => enrollment_term('2013-B', edo_source: false),
-        '2013-D' => enrollment_term('2013-D', edo_source: false)
+        '2015-D' => enrollment_term('2015-D', edo_source: false),
+        '2016-B' => enrollment_term('2016-B', edo_source: false)
       }
     end
     let(:edo_enrollment_data) {
       {
-        '2014-B' => enrollment_term('2014-B', edo_source: true),
-        '2014-C' => enrollment_term('2014-C', edo_source: true)
+        '2016-C' => enrollment_term('2016-C', edo_source: true),
+        '2016-D' => enrollment_term('2016-D', edo_source: true)
       }
     }
     let(:enrollment_data) { legacy_enrollment_data.merge edo_enrollment_data }
     before do
-      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'fall-2013'
+      allow(Settings.terms).to receive(:fake_now).and_return '2016-04-01'
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'spring-2016'
       allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return legacy_enrollment_data
       allow_any_instance_of(EdoOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return edo_enrollment_data
     end
@@ -295,10 +298,10 @@ describe MyAcademics::Semesters do
   end
 
   context 'when enrollment data for a term is unavailable' do
-    let(:term_yr) { '2013' }
-    let(:term_cd) { 'D' }
+    let(:term_yr) { '2016' }
+    let(:term_cd) { 'B' }
     let(:enrollment_data) { generate_enrollment_data(edo_source: false)  }
-    before { allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data.except('2013-D') }
+    before { allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data.except('2016-B') }
 
     let(:feed_semester) { feed[:semesters].find { |s| s[:name] == Berkeley::TermCodes.to_english(term_yr, term_cd) } }
     let(:transcript_semester) { transcript_data[:semesters]["#{term_yr}-#{term_cd}"] }
@@ -342,8 +345,8 @@ describe MyAcademics::Semesters do
       allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
     end
 
-    let(:term_yr) { '2013' }
-    let(:term_cd) { 'D' }
+    let(:term_yr) { '2016' }
+    let(:term_cd) { 'B' }
     let(:enrollment_data) { generate_enrollment_data(edo_source: false)  }
     let(:feed_semester) { feed[:semesters].find { |s| s[:name] == Berkeley::TermCodes.to_english(term_yr, term_cd) } }
     let(:feed_semester_grades) { feed_semester[:classes].map { |course| course[:transcript] } }
@@ -371,25 +374,25 @@ describe MyAcademics::Semesters do
     end
 
     context 'current semester' do
-      let(:fake_now) {DateTime.parse('2013-10-10')}
+      let(:fake_now) {DateTime.parse('2016-04-10')}
       include_examples 'grades from enrollment'
       include_examples 'grading not in progress'
     end
 
     context 'semester just ended' do
-      let(:fake_now) {DateTime.parse('2013-12-30')}
+      let(:fake_now) {DateTime.parse('2016-05-22')}
       include_examples 'grades from enrollment'
       include_examples 'grading in progress'
     end
 
     context 'past semester' do
-      let(:fake_now) {DateTime.parse('2014-01-20')}
+      let(:fake_now) {DateTime.parse('2016-08-10')}
       include_examples 'grades from transcript'
       include_examples 'grading not in progress'
     end
 
     context 'semester with removed incomplete notation' do
-      let(:fake_now) {DateTime.parse('2013-12-30')}
+      let(:fake_now) {DateTime.parse('2016-05-30')}
       let(:enrolled_courses) { enrollment_data["#{term_yr}-#{term_cd}"] }
       let(:removed_incomplete) do
         {
