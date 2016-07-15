@@ -27,6 +27,9 @@ eft_proxy:
 financials_proxy:
   fake: true
 
+hub_term_proxy:
+  fake: true
+
 textbooks_proxy:
   fake: true
 

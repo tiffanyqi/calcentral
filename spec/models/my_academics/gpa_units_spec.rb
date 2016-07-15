@@ -12,8 +12,8 @@ describe 'MyAcademics::GpaUnits' do
     let(:status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
     before do
       allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return eight_digit_cs_id
-      allow_any_instance_of(Berkeley::Term).to receive(:legacy?).and_return(false)
       allow(Settings.features).to receive(:cs_academic_profile_prefers_legacy).and_return(prefer_legacy)
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return('spring-2010')
     end
     context 'CS-based data not fully baked' do
       let(:prefer_legacy) {true}

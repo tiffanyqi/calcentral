@@ -47,7 +47,6 @@ describe Canvas::CurrentTeacher do
     before do
       allow(Canvas::Terms).to receive(:current_terms).and_return(current_terms)
       # TODO: Update spec with EDO test cases instead of defaulting to false
-      current_terms.each {|term| term.set_as_legacy }
       allow(EdoOracle::Queries).to receive(:has_instructor_history?).and_return(false)
     end
 

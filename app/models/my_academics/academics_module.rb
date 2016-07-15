@@ -22,7 +22,7 @@ module MyAcademics
         termCode: term_cd,
         termYear: term_yr,
         timeBucket: time_bucket(term_yr, term_cd),
-        campusSolutionsTerm: Berkeley::Terms.campus_solutions?(term_yr, term_cd),
+        campusSolutionsTerm: !Berkeley::Terms.legacy?(term_yr, term_cd),
         gradingInProgress: (terms.grading_in_progress && (slug == terms.grading_in_progress.slug)),
         classes: []
       }

@@ -1,13 +1,19 @@
-module Terms
+module HubTerm
   class Proxy  < BaseProxy
     include ClassLogger
     include Proxies::AuthenticatedApi
     include Proxies::Mockable
 
+    CURRENT_TERM = 'Current'
+    NEXT_TERM = 'Next'
+    PREVIOUS_TERM = 'Previous'
+    TEMPORAL_POSITIONS = [CURRENT_TERM, NEXT_TERM, PREVIOUS_TERM]
+
     def initialize(options = {})
-      super(Settings.terms_proxy, options)
+      super(Settings.hub_term_proxy, options)
       # Previous, Current, or Next. Current is the default if the option is not specified.
       @temporal_position = options[:temporal_position]
+      logger.error "Unknown temporal_position '#{@temporal_position}'" if @temporal_position && !TEMPORAL_POSITIONS.include?(@temporal_position)
       # Date from which the temporal position should be decided. Today is the default if no date is specified.
       # For example, this can be used to find the term after the next term.
       @as_of_date = options[:as_of_date]
@@ -39,13 +45,19 @@ module Terms
       response
     end
 
-    def get
-      self.class.handling_exceptions(instance_key) do
-        get_internal
+    def get_term
+      response = get
+      if response.code != 200
+        nil
+      else
+        response.fetch('apiResponse', {}).fetch('response', {}).fetch('terms', nil)
       end
     end
 
-    def get_internal
+    # This will throw a ProxyError exception for non-404 responses.
+    def get
+      options = request_options
+      logger.info "Fake = #{@fake}; Making request to #{url} #{options[:query]}"
       response = get_response(url, request_options)
       # When the campus is between terms, a request for the 'Current' term will return 404 with a
       # "No term found" message. Since that is expected behavior, it should not be logged as an ERROR.

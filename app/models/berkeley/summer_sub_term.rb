@@ -1,4 +1,5 @@
 module Berkeley
+  # TODO Replace by HubTerm API data.
   class SummerSubTerm < ActiveRecord::Base
     include ActiveRecordHelper, ClassLogger
     extend Cache::Cacheable

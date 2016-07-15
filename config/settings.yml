@@ -178,7 +178,7 @@ financials_proxy:
   username: ''
   password: ''
 
-terms_proxy:
+hub_term_proxy:
   fake: false
   app_id: ''
   app_key: ''
@@ -466,6 +466,7 @@ features:
   cs_profile_work_experience: false
   cs_sir: true
   cs_transfer_credit: false
+  hub_term_api: true
   legacy_regblocks: true
   manage_site_mailing_lists: false
   my_fin_aid: false
