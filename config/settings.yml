@@ -295,6 +295,7 @@ cache:
     CampusSolutions::EthnicitySetup: <%= 29.days %>
     CampusSolutions::FerpaDeeplink: <%= 24.hours %>
     CampusSolutions::LanguageCode: <%= 29.days %>
+    CampusSolutions::Link: <%= 24.hours %>
     CampusSolutions::MyChecklist: <%= 15.minutes %>
     CampusSolutions::MyDeposit: <%= 2.minutes %>
     CampusSolutions::MyHigherOneUrl: <%= 1.seconds %>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<UC_LINK_RESOURCES>
+  <Link>
+    <URL_ID>UC_CX_TEST_LINK</URL_ID>
+    <Description>Test URL</Description>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>TESTLINK</NAME>
+        <value>TestValue</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/path/to/endpoint?PLACEHOLDER={PLACEHOLDER}</URL>
+    <COMMENTS>{PLACEHOLDER} should be returned as part of the URL, and replaced by the caller (client).</COMMENTS>
+  </Link>
+</UC_LINK_RESOURCES>

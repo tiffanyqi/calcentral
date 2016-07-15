@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<UC_LINK_RESOURCES>
+  <IS_FAULT>Y</IS_FAULT>
+  <STATUS>
+    <DETAILS>
+      <MSGS>
+        <MSG>
+          <ID>1000</ID>
+          <DESCR>Invalid PROPNAME GROUPX</DESCR>
+          <MESSAGE_SEVERITY>E</MESSAGE_SEVERITY>
+        </MSG>
+      </MSGS>
+    </DETAILS>
+  </STATUS>
+</UC_LINK_RESOURCES>
