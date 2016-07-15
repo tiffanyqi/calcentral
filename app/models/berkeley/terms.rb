@@ -98,6 +98,9 @@ module Berkeley
 
       @current = @running || future_terms.pop
       if (@next = future_terms.pop)
+        # Temporary workaround for Summer 2016, during which legacy SIS says the "current term" is Fall 2016 but CS SIS
+        # says the "current term" is Summer 2016.
+        @sis_current_term ||= @next if @current.legacy? && @current.is_summer && !@next.legacy?
         @future = future_terms.pop
         unless future_terms.empty?
           logger.info("Found more than two future terms: #{future_terms.map(&:slug).join(', ')}")
