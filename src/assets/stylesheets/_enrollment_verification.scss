@@ -1,0 +1,24 @@
+.cc-enrollment-verification {
+  .cc-enrollment-verification-subtitle {
+    font-size: 11px;
+    line-height: 8px;
+    padding: 12px 0;
+  }
+  .cc-enrollment-verification-message {
+    padding-bottom: 12px;
+    li:before {
+      color: $cc-color-list-block;
+      content: '\25A0';
+      float: left;
+      margin-left: -16px;
+      margin-top: -2px;
+      padding-right: 8px;
+    }
+    p {
+      margin: 0 0 8px;
+    }
+    ul {
+      margin: 0 0 8px 20px;
+    }
+  }
+}

@@ -468,6 +468,7 @@ features:
   cs_sir: true
   cs_transfer_credit: false
   hub_term_api: true
+  enrollment_verification: false
   legacy_regblocks: true
   manage_site_mailing_lists: false
   my_fin_aid: false

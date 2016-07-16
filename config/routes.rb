@@ -187,6 +187,7 @@ Calcentral::Application.routes.draw do
   get '/api/campus_solutions/holds' => 'campus_solutions/holds#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/enrollment_term' => 'campus_solutions/enrollment_term#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/enrollment_terms' => 'campus_solutions/enrollment_terms#get', :via => :get, :defaults => { :format => 'json' }
+  get '/api/campus_solutions/enrollment_verification_messages' => 'campus_solutions/enrollment_verification_messages#get', :via => :get, :defaults => {:format => 'json'}
   get '/api/campus_solutions/academic_plan' => 'campus_solutions/academic_plan#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/advising_resources' => 'campus_solutions/advising_resources#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/ferpa_deeplink' => 'campus_solutions/ferpa_deeplink#get', :via => :get, :defaults => { :format => 'json' }

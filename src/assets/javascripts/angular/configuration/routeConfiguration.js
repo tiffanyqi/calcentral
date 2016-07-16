@@ -16,6 +16,10 @@ angular.module('calcentral.config').config(function($routeProvider) {
     templateUrl: 'academics.html',
     controller: 'AcademicsController'
   }).
+  when('/academics/enrollment_verification', {
+    templateUrl: 'academics_enrollment_verification.html',
+    controller: 'EnrollmentVerificationController'
+  }).
   when('/academics/semester/:semesterSlug', {
     templateUrl: 'academics_semester.html',
     controller: 'AcademicsController'
