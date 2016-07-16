@@ -31,7 +31,7 @@ module CampusSolutions
       link = links.find do |link|
         link[:urlId] == urlId
       end
-      if link && options.any?
+      if link && options.present?
         options.each do |k, v|
           link[:url] = link[:url].gsub("{#{k}}", v)
         end
