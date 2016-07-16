@@ -236,7 +236,8 @@ describe Webcast::Merged do
   context 'a real, non-fake proxy with user in view-as mode', testext: true do
     context 'course with zero recordings is different than course not scheduled for recordings' do
       before do
-        allow(Berkeley::Terms).to receive(:legacy?).with(2015, 'B').and_return true
+        # Ensure that testext can reach 2015-B.
+        allow(Settings.terms).to receive(:fake_now).and_return('2015-07-01'.to_datetime)
       end
       let(:media) do
         user_id = rand(99999).to_s
