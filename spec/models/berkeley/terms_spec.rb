@@ -108,13 +108,14 @@ describe Berkeley::Terms do
     context 'term not found' do
       let(:legacy_cutoff) { 'fall-2013' }
       it 'returns false from class methods' do
-        expect(subject.campus[term_slug]).to be_nil
+        expect(subject.campus['spring-2017']).to be_nil
         expect(Berkeley::Terms.legacy?('1969', 'B')).to eq false
       end
     end
   end
 
   describe '.legacy_group' do
+    before { allow(Settings.features).to receive(:hub_term_api).and_return true }
     let(:terms) { Berkeley::Terms.fetch(fake_now: DateTime.parse('2016-07-12')).campus.values[0..2] }
     it 'returns terms grouped by data source' do
       result = Berkeley::Terms.legacy_group(terms)
@@ -126,7 +127,8 @@ describe Berkeley::Terms do
   end
 
   describe '#fetch_terms_from_api' do
-    subject { Berkeley::Terms.new(fake: true) }
+    before { allow(Settings.features).to receive(:hub_term_api).and_return true }
+    subject { Berkeley::Terms.new(fake: true, fake_now: DateTime.parse('2016-07-12')) }
     it 'finds all post-legacy data' do
       terms = subject.fetch_terms_from_api
       expect(terms.length).to eq 2
@@ -147,6 +149,7 @@ describe Berkeley::Terms do
   end
 
   describe 'short cache lifespan when API has errors' do
+    before { allow(Settings.features).to receive(:hub_term_api).and_return true }
     include_context 'short-lived cache write of Hash on failures'
     include_context 'expecting logs from server errors'
     let(:fake_now) {DateTime.parse('2016-06-10')}
