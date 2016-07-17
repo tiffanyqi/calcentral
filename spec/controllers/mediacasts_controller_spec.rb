@@ -16,7 +16,7 @@ describe MediacastsController do
 
   shared_examples 'a course with recordings' do
     before do
-      courses_list = [
+      sections_instructing = [
         {
           classes: [
             {
@@ -31,8 +31,27 @@ describe MediacastsController do
           ]
         }
       ]
-      expect(MyAcademics::Teaching).to receive(:new).and_return (teaching = double)
-      expect(teaching).to receive(:courses_list_from_ccns).once.and_return courses_list
+      expect(MyAcademics::Teaching).to receive(:new).and_return (model = double)
+      expect(model).to receive(:courses_list_from_ccns).once.and_return sections_instructing
+      term = "#{course[:term_yr]}-#{course[:term_cd]}"
+      courses = {
+        term => [
+          {
+            dept: course[:dept_name],
+            catid: course[:catalog_id],
+            sections: [
+              {
+                ccn: expected_ccn.to_s,
+                section_number: random_id,
+                instruction_format: 'LEC'
+              }
+            ]
+          }
+        ]
+      }
+      data_source_type = legacy ? CampusOracle::UserCourses::All : EdoOracle::UserCourses::All
+      expect(data_source_type).to receive(:new).and_return (edo = double)
+      expect(edo).to receive(:get_all_campus_courses).once.and_return courses
     end
     it 'should have audio and/or video' do
       get :get_media, params
@@ -66,14 +85,6 @@ describe MediacastsController do
 
   describe 'course data from EDO Oracle' do
     let(:legacy) { false }
-    before do
-      query_results = course[:ccn_set].map { |ccn| { 'section_id' => ccn.to_s } }
-      term_id = Berkeley::TermCodes.to_edo_id course[:term_yr], course[:term_cd]
-      expect(EdoOracle::Queries).to receive(:get_all_course_sections).with(
-        term_id,
-        course[:dept_name],
-        course[:catalog_id]).and_return query_results
-    end
 
     context 'course with recordings' do
       it_should_behave_like 'a course with recordings' do
@@ -105,15 +116,6 @@ describe MediacastsController do
 
   describe 'course data from legacy Oracle' do
     let(:legacy) { true }
-
-    before do
-      query_results = course[:ccn_set].map { |ccn| { 'course_cntl_num' => ccn.to_s } }
-      expect(CampusOracle::Queries).to receive(:get_all_course_sections).with(
-        course[:term_yr],
-        course[:term_cd],
-        course[:dept_name],
-        course[:catalog_id]).and_return query_results
-    end
 
     context 'feature flag is false' do
       it_should_behave_like 'a course with no recordings' do
