@@ -66,7 +66,7 @@ module MyRegistrations
 
     def parse_legacy_term(term_name, term_id, term_english)
       term_code = Berkeley::TermCodes.from_edo_id(term_id)
-      result = CampusOracle::Queries.get_person_attributes(@uid, term_code[:term_yr], term_code[:term_cd])
+      result = CampusOracle::Queries.get_person_attributes_with_term_reg(@uid, term_code[:term_yr], term_code[:term_cd])
       return if result.nil?
       if result
         result[:reg_status] = Notifications::RegStatusTranslator.new.translate_for_feed result['reg_status_cd']
