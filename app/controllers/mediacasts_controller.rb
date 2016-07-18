@@ -8,31 +8,43 @@ class MediacastsController < ApplicationController
 
   # GET /api/media/:term_yr/:term_cd/:dept_name/:catalog_id
   def get_media
-    term_yr = params.require 'term_yr'
-    term_cd = params.require 'term_cd'
-    dept_name = params.require 'dept_name'
-    catalog_id = params.require 'catalog_id'
+    # Get enrollments and instructing sections
     uid = session['user_id']
+    year = params.require 'term_yr'
+    term_code = param_upcase 'term_cd'
+    courses = term_courses(uid, year, term_code)
 
-    policy = policy Berkeley::Course.new @options
-    ccn_list = ccn_list(term_yr, term_cd, dept_name, catalog_id)
-    proxy = Webcast::Merged.new uid, policy, term_yr, term_cd, ccn_list, @options
+    # Find webcast recordings per section_id
+    dept_name = param_upcase 'dept_name'
+    catalog_id = param_upcase 'catalog_id'
+    sections_ids = extract_sections_ids(courses, dept_name, catalog_id)
+    proxy = Webcast::Merged.new uid, course_policy, year, term_code, sections_ids, @options
     render :json => proxy.get_feed
   end
 
   private
 
-  def ccn_list(term_yr, term_cd, dept_name, catalog_id)
-    legacy = Berkeley::Terms.legacy? term_yr, term_cd
-    sections = legacy ?
-      CampusOracle::Queries.get_all_course_sections(term_yr, term_cd, dept_name, catalog_id) :
-      EdoOracle::Queries.get_all_course_sections(term_id(term_yr, term_cd), dept_name, catalog_id)
-    key = legacy ? 'course_cntl_num' : 'section_id'
-    sections.map { |section| section[key].to_i }
+  def term_courses(uid, year, term_code)
+    legacy = Berkeley::Terms.legacy? year, term_code
+    all_courses = legacy ?
+      CampusOracle::UserCourses::All.new(user_id: uid).get_all_campus_courses :
+      EdoOracle::UserCourses::All.new(user_id: uid).get_all_campus_courses
+    all_courses["#{year}-#{term_code}"] || []
   end
 
-  def term_id(term_yr, term_cd)
-    Berkeley::TermCodes.to_edo_id term_yr, term_cd
+  def extract_sections_ids(courses, dept_name, catalog_id)
+    return [] if courses.empty?
+    courses.select! { |c| c[:dept] == dept_name && c[:catid] == catalog_id }
+    sections = courses.collect { |c| c[:sections] }
+    sections.flatten.map { |s| s[:ccn].to_i }
+  end
+
+  def course_policy
+    policy Berkeley::Course.new @options
+  end
+
+  def param_upcase(key)
+    (params.require key).upcase
   end
 
 end
