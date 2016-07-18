@@ -131,9 +131,9 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     }
 
     termData = mapLinks(termData);
+    termData = setTermData(termData, termData.term);
     termData = setSections(termData);
-    termData = groupByCareer(termData);
-    setTermData(termData, termData.term);
+    groupByCareer(termData);
   };
 
   /**
