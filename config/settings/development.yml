@@ -67,6 +67,9 @@ advising_proxy:
 eft_proxy:
   fake: true
 
+hub_term_proxy:
+  fake: true
+
 features:
   advising: true
   audio: true
