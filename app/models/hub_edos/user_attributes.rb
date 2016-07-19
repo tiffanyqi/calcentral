@@ -32,10 +32,6 @@ module HubEdos
           extract_names(edo, result)
           extract_roles(edo, result)
           extract_emails(edo, result)
-          extract_education_level(edo, result)
-          extract_total_units(edo, result)
-          extract_special_program_code(edo, result)
-          extract_reg_status(edo, result)
           result[:statusCode] = 200
         else
           logger.error "Could not get Student EDO data for UID #{@uid}"
@@ -116,49 +112,6 @@ module HubEdos
           end
         end
       end
-    end
-
-    def extract_education_level(edo, result)
-      return # TODO this data only supported in GoLive5
-      if edo[:currentRegistration].present?
-        result[:education_level] = edo[:currentRegistration][:academicLevel][:level][:description]
-      end
-    end
-
-    def extract_total_units(edo, result)
-      return # TODO this data only supported in GoLive5
-      if edo[:currentRegistration].present?
-        edo[:currentRegistration][:termUnits].each do |term_unit|
-          if term_unit[:type][:description] == 'Total'
-            result[:tot_enroll_unit] = term_unit[:unitsEnrolled]
-            break
-          end
-        end
-      end
-    end
-
-    def extract_special_program_code(edo, result)
-      return # TODO this data only supported in GoLive5
-      if edo[:currentRegistration].present?
-        result[:education_abroad] = false
-        # TODO verify business correctness of this conversion based on more examples of study-abroad students
-        edo[:currentRegistration][:specialStudyPrograms].each do |pgm|
-          if pgm[:type][:code] == 'EAP'
-            result[:education_abroad] = true
-            break
-          end
-        end
-      end
-    end
-
-    def extract_reg_status(edo, result)
-      return # TODO this data only supported in GoLive5
-      # TODO populate based on SISRP-7581 explanation. Incorporate full structure from RegStatusTranslator.
-      result[:reg_status] = {}
-    end
-
-    def term_transition?
-      Berkeley::Terms.fetch.in_term_transition?
     end
 
   end

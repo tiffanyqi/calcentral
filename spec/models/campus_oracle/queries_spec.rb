@@ -20,12 +20,12 @@ describe CampusOracle::Queries do
   end
 
   it 'should find Oliver' do
-    data = CampusOracle::Queries.get_person_attributes 2040, current_term.year, current_term.code
+    data = CampusOracle::Queries.get_person_attributes 2040
     expect(data['first_name']).to eq 'Oliver'
   end
 
   it 'should find a user who has a bunch of blocks' do
-    data = CampusOracle::Queries.get_person_attributes 300847, current_term.year, current_term.code
+    data = CampusOracle::Queries.get_person_attributes_with_term_reg 300847, current_term.year, current_term.code
     if CampusOracle::Queries.test_data?
       # we will only have predictable reg_status_cd values in our fake Oracle db.
       expect(data['educ_level']).to eq 'Masters'
@@ -306,7 +306,7 @@ describe CampusOracle::Queries do
   end
 
   it 'should find a user with an expired LDAP account', if: CampusOracle::Queries.test_data? do
-    expect(CampusOracle::Queries.get_person_attributes('6188989', current_term.year, current_term.code)['person_type']).to eq 'Z'
+    expect(CampusOracle::Queries.get_person_attributes('6188989')['person_type']).to eq 'Z'
     expect(CampusOracle::Queries.get_basic_people_attributes(['6188989']).first['person_type']).to eq 'Z'
   end
 
