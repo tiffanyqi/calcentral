@@ -6,7 +6,7 @@ var _ = require('lodash');
 /**
  * Preview of user profile prior to viewing-as
  */
-angular.module('calcentral.controllers').controller('UserOverviewController', function(adminService, advisingFactory, holdsFactory, residencyMessageFactory, apiService, statusHoldsService, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('UserOverviewController', function(adminService, advisingFactory, holdsFactory, residencyMessageFactory, apiService, statusHoldsService, $route, $routeParams, $scope) {
   $scope.academics = {
     isLoading: true,
     excludeLinksToRegistrar: true
@@ -14,6 +14,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
   $scope.holdsInfo = {
     isLoading: true
   };
+  $scope.isAdvisingStudentLookup = $route.current.isAdvisingStudentLookup;
   $scope.regBlocks = {
     isLoading: true
   };
