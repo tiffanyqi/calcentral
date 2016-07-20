@@ -53,7 +53,7 @@
               <thead>
                 <tr>
                   <th width="25%">Section</th>
-                  <th>CCN</th>
+                  <th>Class Number</th>
                 </tr>
               </thead>
               <tbody>
@@ -115,6 +115,24 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <h3 data-ng-if="selectedCourse.sections.length && isInstructorOrGsi">Class Number</h3>
+          <div class="cc-table" data-ng-if="selectedCourse.sections.length && isInstructorOrGsi">
+            <table>
+              <thead>
+                <tr>
+                  <th width="25%">Section</th>
+                  <th>Class Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-ng-repeat="sec in selectedCourse.sections">
+                  <td data-ng-bind="sec.section_label"></td>
+                  <td data-ng-bind="sec.ccn"></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
         </div>

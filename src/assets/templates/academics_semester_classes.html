@@ -14,7 +14,7 @@
       <div class="cc-table">
         <table data-ng-if="enrolledCourses.length">
           <thead>
-            <th scope="col" class="cc-table-right-spacing">Course Number</th>
+            <th scope="col" class="cc-table-right-spacing">Course</th>
             <th scope="col">Title</th>
             <th scope="col">Grade Option</th>
             <th class="cc-table-right" scope="col">Units</th>
@@ -77,7 +77,8 @@
       <div class="cc-table">
         <table>
           <thead>
-            <th scope="col" class="cc-table-right-spacing">Course Number</th>
+            <th scope="col" class="cc-table-right-spacing">Course</th>
+            <th scope="col" class="show-for-medium-up">Class Number</th>
             <th scope="col">Title</th>
             <th scope="col" class="show-for-medium-up">Sections</th>
           </thead>
@@ -93,6 +94,10 @@
                   <span data-ng-bind="course.scheduledSectionCount"></span>
                   <span data-ng-pluralize count="course.scheduledSectionCount" when="{'1': 'section', 'other': 'sections'}">sections</span>
                 </div>
+              </td>
+              <td class="show-for-medium-up">
+                <div data-ng-if="!course.multiplePrimaries" data-ng-bind="course.sections[0].ccn"></div>
+                <div data-ng-if="course.multiplePrimaries">Multiple</div>
               </td>
               <td data-ng-bind="course.title"></td>
               <td class="show-for-medium-up">
