@@ -40,6 +40,7 @@ describe MyAcademics::ClassEnrollments do
       feed: {
         'student' => {
           'academicStatuses' => [{'studentPlans' => student_plans}],
+          'holds' => []
         }
       }
     }
@@ -51,10 +52,6 @@ describe MyAcademics::ClassEnrollments do
       { termId: '2168', termDescr: '2016 Fall', acadCareer: 'LAW' }
     ]
   end
-  let(:cs_holds_feed) do
-    {"statusCode"=>200, "feed"=>{"serviceIndicators"=>service_indicators}}.to_json
-  end
-  let(:service_indicators) { [] }
   let(:student_plans) { [] }
   let(:compsci_ugrd_plan) do
     student_plan({
@@ -141,7 +138,6 @@ describe MyAcademics::ClassEnrollments do
   before do
     allow(subject).to receive(:is_feature_enabled).and_return(is_feature_enabled_flag)
     allow(subject).to receive(:user_is_student?).and_return(user_is_student)
-    allow_any_instance_of(CampusSolutions::MyHolds).to receive(:get_feed).and_return(cs_holds_feed)
     allow_any_instance_of(HubEdos::AcademicStatus).to receive(:get).and_return(edo_hub_academic_status_feed)
     allow_any_instance_of(CampusSolutions::EnrollmentTerms).to receive(:get).and_return(cs_enrollment_career_terms_feed)
     allow_any_instance_of(CampusSolutions::EnrollmentTerm).to receive(:get).and_return(cs_enrollment_term_detail_feed)
@@ -260,21 +256,29 @@ describe MyAcademics::ClassEnrollments do
 
   context 'when determining the users hold status' do
     let(:user_holds_status) { subject.user_has_holds? }
-    context 'when no service indicators present' do
-      let(:service_indicators) { ['service_indicator'] }
-      it 'should return true' do
-        expect(user_holds_status).to eq true
+    context 'when no holds present' do
+      it 'should return false' do
+        expect(user_holds_status).to eq false
       end
     end
     context 'when feed response fails' do
-      let(:cs_holds_feed) { {"statusCode"=>500}.to_json }
+      let(:edo_hub_academic_status_feed) { {statusCode: 500} }
       it 'should return false' do
         expect(user_holds_status).to eq false
       end
     end
     context 'when service indicators are present' do
-      it 'should return false' do
-        expect(user_holds_status).to eq false
+      let(:edo_hub_academic_status_feed) {     {
+            statusCode: 200,
+            feed: {
+              'student' => {
+                'holds' => ['hold 1', 'hold 2']
+              }
+            }
+          }
+        }
+      it 'should return true' do
+        expect(user_holds_status).to eq true
       end
     end
   end
