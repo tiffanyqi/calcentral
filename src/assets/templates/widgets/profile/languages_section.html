@@ -1,18 +1,8 @@
 <div class="cc-page-widget-profile-section" data-ng-controller="LanguagesSectionController" data-cc-spinner-directive="isLoading">
-  <div class="cc-page-widget-profile-section-label">
-    <button class="cc-button-link" data-ng-click="showAdd()" data-ng-disabled="!api.user.profile.actAsOptions.canPost" data-ng-if="!items.content.length && !items.editorEnabled">
-      <i class="fa fa-plus cc-text-small"></i> Add Language
-    </button>
-    <span data-ng-if="items.content.length || items.editorEnabled" data-ng-pluralize count="items.content.length" when="{'1': 'Language', 'other': 'Languages'}"></span>
-  </div>
+  <div class="cc-page-widget-profile-section-label">Languages</div>
   <div class="cc-page-widget-profile-section-content">
     <div class="cc-page-widget-profile-section-content-item" data-ng-if="items.editorEnabled">
       <div data-ng-include="'widgets/profile/languages_section_editor.html'"></div>
-    </div>
-    <div class="cc-page-widget-profile-section-add" data-ng-disabled="!api.user.profile.actAsOptions.canPost" data-ng-if="items.content.length && !items.editorEnabled">
-      <button class="cc-button-link cc-right" data-ng-click="showAdd()">
-        <i class="fa fa-plus cc-text-small"></i> Add <span class="cc-visuallyhidden">Language</span>
-      </button>
     </div>
     <div data-ng-repeat="item in items.content" class="cc-page-widget-profile-section-content-item" data-ng-if="!items.editorEnabled">
       <div>
@@ -28,5 +18,10 @@
         Edit <span class="cc-visuallyhidden" data-ng-bind-template="{{item.name}} credential"></span>
       </button>
     </div>
+  </div>
+  <div class="cc-page-widget-profile-section-add" data-ng-if="!items.editorEnabled && api.user.profile.actAsOptions.canPost">
+    <button class="cc-button-link" data-ng-click="showAdd()">
+      <i class="fa fa-plus"></i> Add <span class="cc-visuallyhidden">Language</span>
+    </button>
   </div>
 </div>
