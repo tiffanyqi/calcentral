@@ -15,10 +15,10 @@ angular.module('calcentral.controllers').controller('TransferCreditController', 
       if (_.get(entry, 'type.code') === 'Total') {
         $scope.transferCredit.hasCredit = entry.unitsTransferAccepted > 0 || entry.unitsTest > 0 || entry.unitsOther > 0;
         $scope.transferCredit.cumulativeUnits = entry;
-        $scope.transferCredit.isLoading = false;
         return true;
       }
     });
+    $scope.transferCredit.isLoading = false;
   };
 
   // TransferCredit functionality hidden while CS data API is not complete.
