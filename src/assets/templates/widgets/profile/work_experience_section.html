@@ -1,7 +1,5 @@
 <div class="cc-page-widget-profile-section" data-ng-controller="WorkExperienceSectionController" data-cc-spinner-directive>
-  <div class="cc-page-widget-profile-section-label">
-    Work Experience
-  </div>
+  <div class="cc-page-widget-profile-section-label">Work Experience</div>
   <div class="cc-page-widget-profile-section-content">
     <div data-ng-if="currentObject.isAdding" class="cc-page-widget-profile-section-content-item">
       <div data-ng-include="'widgets/profile/work_experience_editor.html'"></div>
@@ -24,7 +22,6 @@
       <div data-ng-if="item.isModifying" data-ng-include="'widgets/profile/work_experience_editor.html'"></div>
     </div>
     <div data-ng-if="!items.content.length" class="cc-page-widget-profile-section-not-available">
-      There is no work experience available.
     </div>
   </div>
   <div class="cc-page-widget-profile-section-add" data-ng-if="!items.editorEnabled && api.user.profile.actAsOptions.canPost">

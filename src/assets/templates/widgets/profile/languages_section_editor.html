@@ -4,7 +4,7 @@
       <label for="cc-page-widget-profile-language-code"><strong>Language</strong> <span class="cc-text-light">(Required)</span></label>
     </div>
     <div class="cc-select">
-      <select id="cc-page-widget-profile-language-code" name="cc_page_widget_profile_language_code" required aria-required="true" data-ng-if="languageCodes" data-ng-model="currentObject.data.code" data-ng-options="language.accomplishment as language.descr for language in languageCodes.content">
+      <select id="cc-page-widget-profile-language-code" name="cc_page_widget_profile_language_code" required aria-required="true" data-ng-if="languageCodes" data-ng-model="currentObject.data.code" data-ng-options="language.accomplishment as language.descr for language in languageCodes.content | orderBy:'descr'">
         <option value="" disabled selected>Choose&hellip;</option>
       </select>
     </div>
