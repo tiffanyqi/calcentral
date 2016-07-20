@@ -1,13 +1,14 @@
 <div
   data-cc-enrollment-card-header-directive
   data-count="$index + 1"
-  data-date="{{enrollmentInstruction.enrollmentPeriod[0] ? 'Prior to ' + (enrollmentInstruction.enrollmentPeriod[0].date.epoch * 1000 | date:'MMM d'): ''}}"
+  data-date="{{enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, ['concurrent']) ? 'Prior to ' + (enrollmentInstruction.enrollmentPeriod[0].date.epoch * 1000 | date:'MMM d'): ''}}"
   data-title="section.title"
 ></div>
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
   <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks">
-    <ul class="cc-list-links" data-ng-if="enrollmentInstruction.isClassScheduleAvailable">
+    <ul class="cc-list-links"
+      data-ng-if="enrollmentInstruction.isClassScheduleAvailable && isInstructionType(enrollmentInstruction, ['default'])">
       <li>
         <div
           data-cc-campus-solutions-link-item-directive
@@ -16,7 +17,29 @@
         ></div>
       </li>
     </ul>
-    <ul class="cc-list-links" data-ng-if="isInstructionType(enrollmentInstruction, 'fpf')">
+    <ul class="cc-list-links" data-ng-if="isInstructionType(enrollmentInstruction, ['concurrent'])">
+      <li>
+        <a href="http://schedule.berkeley.edu/">
+          Schedule of Classes
+        </a>
+      </li>
+      <li>
+        <a href="http://guide.berkeley.edu/">
+          Course Catalog
+        </a>
+      </li>
+      <li>
+        <a href="https://calstudentstore.berkeley.edu/textbook">
+          Class Textbook Lookup
+        </a>
+      </li>
+      <li>
+        <a href="http://schedule.berkeley.edu/examf.html">
+          Final Exam Schedule
+        </a>
+      </li>
+    </ul>
+    <ul class="cc-list-links" data-ng-if="isInstructionType(enrollmentInstruction, ['fpf'])">
       <li>
         <a href="http://fpf.berkeley.edu/your-courses">
           FPF Course Catalog
@@ -28,7 +51,7 @@
         </a>
       </li>
     </ul>
-    <ul class="cc-list-links" data-ng-if="!isInstructionType(enrollmentInstruction, 'fpf')">
+    <ul class="cc-list-links" data-ng-if="isInstructionType(enrollmentInstruction, ['default'])">
       <li>
         <a href="http://guide.berkeley.edu/">
           Berkeley Academic Guide

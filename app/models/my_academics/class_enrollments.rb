@@ -25,7 +25,8 @@ module MyAcademics
         enrollmentTermInstructionTypes: get_enrollment_term_instruction_types,
         enrollmentTermInstructions: get_enrollment_term_instructions,
         enrollmentTermAcademicPlanner: get_enrollment_term_academic_planner,
-        hasHolds: user_has_holds?
+        hasHolds: user_has_holds?,
+        links: get_links
       })
     end
 
@@ -138,6 +139,10 @@ module MyAcademics
         terms.try(:[], :feed).try(:[], :enrollmentTerms)
       end
       @career_terms ||= get_career_terms.call
+    end
+
+    def get_links
+      Settings.campus_solutions_links.class_enrollment.as_json['table']
     end
 
     private

@@ -20,7 +20,7 @@
           <div>
             <strong>Activity</strong>
           </div>
-          <div data-ng-if="enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, 'law')">
+          <div data-ng-if="enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, ['law', 'concurrent'])">
             <strong>When</strong>
           </div>
         </div>
@@ -29,9 +29,9 @@
         <li
           data-ng-repeat="section in enrollmentInstruction.sections"
           class="cc-widget-list-hover cc-enrollment-card-section"
-          data-ng-class="{'cc-widget-list-hover-opened':(section.show)}"
+          data-ng-class="{'cc-widget-list-hover-opened':(section.show),'cc-widget-list-hover-notriangle':(isInstructionType(enrollmentInstruction, ['concurrent']))}"
           data-cc-accessible-focus-directive
-          data-ng-click="api.widget.toggleShow($event, null, section, 'Class Enrollment Section - ' + section.title)"
+          data-ng-click="toggleSection($event, section, enrollmentInstruction)"
           data-ng-include="'widgets/enrollment/' + section.id + '.html'"
         ></li>
       </ul>

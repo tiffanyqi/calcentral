@@ -1,0 +1,28 @@
+<div
+  data-cc-enrollment-card-header-directive
+  data-count="$index + 1"
+  data-title="section.title"
+></div>
+
+<div class="cc-enrollment-card-section-content" data-ng-if="section.show">
+  <ul class="cc-list-links">
+    <li>
+      <a
+        data-ng-href="{{enrollmentInstruction.csLinks.concurrentApplyToClass}}"
+        data-ng-disabled="enrollmentInstruction.isGradeBaseAvailable">
+        Apply to a Class
+      </a>
+      <div>
+        The deadline to apply
+        <span data-ng-if="!enrollmentInstruction.isGradeBaseAvailable">is</span>
+        <span data-ng-if="enrollmentInstruction.isGradeBaseAvailable">was</span>
+        09/23/2016
+      </div>
+    </li>
+    <li>
+      <a data-ng-href="{{enrollmentInstruction.csLinks.concurrentSubmittedClassApplications}}">
+        Submitted Class Applications
+      </a>
+    </li>
+  </ul>
+</div>

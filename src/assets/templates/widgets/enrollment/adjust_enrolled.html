@@ -8,47 +8,46 @@
   <div
     data-cc-campus-solutions-link-item-directive
     data-link="enrollmentInstruction.links.addEnrolledClasses"
-    data-text="Add"
+    data-text="{{typeSpecificLinkTitle('add', enrollmentInstruction.instructionTypeCode)}}"
     data-cache="enrollment"
-    data-ng-if="enrollmentInstruction.isClassScheduleAvailable && !enrollmentInstruction.isGradeBaseAvailable"
+    data-ng-if="enrollmentInstruction.isClassScheduleAvailable && !enrollmentInstruction.isGradeBaseAvailable && !isInstructionType(enrollmentInstruction, ['concurrent'])"
   ></div>
   <div
     data-cc-campus-solutions-link-item-directive
     data-link="enrollmentInstruction.links.dropEnrolledClasses"
-    data-text="Drop"
+    data-text="{{typeSpecificLinkTitle('drop', enrollmentInstruction.instructionTypeCode)}}"
     data-cache="enrollment"
     data-ng-if="enrollmentInstruction.isClassScheduleAvailable && !enrollmentInstruction.isGradeBaseAvailable"
   ></div>
   <div
     data-cc-campus-solutions-link-item-directive
     data-link="enrollmentInstruction.links.swapEnrolledClasses"
-    data-text="Swap"
+    data-text="{{typeSpecificLinkTitle('swap', enrollmentInstruction.instructionTypeCode)}}"
+    data-cache="enrollment"
+    data-ng-if="enrollmentInstruction.isClassScheduleAvailable && !enrollmentInstruction.isGradeBaseAvailable && !isInstructionType(enrollmentInstruction, ['concurrent'])"
+  ></div>
+  <div
+    data-cc-campus-solutions-link-item-directive
+    data-link="enrollmentInstruction.links.gradeBase"
+    data-text="{{typeSpecificLinkTitle('options', enrollmentInstruction.instructionTypeCode)}}"
     data-cache="enrollment"
     data-ng-if="enrollmentInstruction.isClassScheduleAvailable && !enrollmentInstruction.isGradeBaseAvailable"
   ></div>
   <div
     data-cc-campus-solutions-link-item-directive
     data-link="enrollmentInstruction.links.gradeBase"
-    data-text="Options"
+    data-text="{{typeSpecificLinkTitle('changeOptions', enrollmentInstruction.instructionTypeCode)}}"
     data-cache="enrollment"
-    data-ng-if="enrollmentInstruction.isClassScheduleAvailable && !enrollmentInstruction.isGradeBaseAvailable"
-  ></div>
-  <div
-    data-cc-campus-solutions-link-item-directive
-    data-link="enrollmentInstruction.links.gradeBase"
-    data-text="Change Grading Option"
-    data-cache="enrollment"
-    data-ng-if="enrollmentInstruction.isGradeBaseAvailable && !isInstructionType(enrollmentInstruction, 'law')"
+    data-ng-if="enrollmentInstruction.isGradeBaseAvailable && !isInstructionType(enrollmentInstruction, ['law', 'concurrent'])"
   ></div>
   <div
     data-cc-campus-solutions-link-item-directive
     data-link="enrollmentInstruction.links.withdrawFromSemester"
-    data-text="Withdraw"
-    data-ng-if="enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, 'law')"
+    data-text="{{typeSpecificLinkTitle('withdraw', enrollmentInstruction.instructionTypeCode)}}"
+    data-ng-if="enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, ['law', 'concurrent'])"
     data-cache="enrollment"
   ></div>
 </div>
-
 
 <div data-ng-if="!enrollmentInstruction.enrolledClasses.length">
   You are currently not enrolled in any classes for
