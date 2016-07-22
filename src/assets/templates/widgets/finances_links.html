@@ -6,10 +6,12 @@
     <div class="cc-list-link-container" data-ng-repeat="subcategory in campusLinks.data.subcategories">
       <h3 data-ng-bind="subcategory"></h3>
       <ul class="cc-list-links">
-        <li data-ng-if="subcategory === 'Billing & Payments' && !api.user.profile.delegateActingAsUid">
+        <li data-ng-if="subcategory === 'Billing & Payments' && !api.user.profile.delegateActingAsUid && api.user.profile.roles.student &&
+          (api.user.profile.roles.undergrad || api.user.profile.roles.graduate || api.user.profile.roles.law)">
           <a data-ng-href="/profile/delegate" data-ng-attr-title="{{$parent.delegateAccess.title}}">Delegate Access</a>
         </li>
-        <li data-ng-if="subcategory === 'Billing & Payments'">
+        <li data-ng-if="subcategory === 'Billing & Payments' && api.user.profile.roles.student &&
+          (api.user.profile.roles.undergrad || api.user.profile.roles.graduate || api.user.profile.roles.law)">
           <a data-ng-href="{{$parent.eft.eftLink.url}}"
             data-ng-attr-title="{{$parent.eft.eftLink.title}}">Electronic Funds Transfer / EFT </a>
           <span class="cc-text-green-plus cc-list-links-nested-dash cc-list-links-text"
@@ -39,7 +41,8 @@
             data-ng-bind="link.name">
           </a>
         </li>
-        <li data-ng-if="subcategory === 'Billing & Payments' && $index === 1">
+        <li data-ng-if="subcategory === 'Billing & Payments' && $index === 1 && api.user.profile.roles.student &&
+          (api.user.profile.roles.undergrad || api.user.profile.roles.graduate || api.user.profile.roles.law)">
           <a data-ng-href="{{$parent.fpp.fppLink.url}}"
             data-ng-attr-title="{{$parent.fpp.fppLink.title}}">Tuition and Fees Payment Plan</a>
           <a class="cc-list-links-nested-dash"
@@ -52,7 +55,9 @@
             data-ng-if="$parent.fpp.data.fppEnrollUrl.url"><strong>Activate Plan</strong>
           </a>
         </li>
-        <li data-ng-repeat-end data-ng-if="subcategory === 'Billing & Payments' && $index === 1">
+        <li data-ng-if="subcategory === 'Billing & Payments' && $index === 1 && api.user.profile.roles.student &&
+          (api.user.profile.roles.undergrad || api.user.profile.roles.graduate || api.user.profile.roles.law)"
+          data-ng-repeat-end>
           <a data-ng-href="{{$parent.taxForm.taxFormLink.url}}"
             data-ng-attr-title="{{$parent.taxForm.taxFormLink.title}}">Tax 1098-T Form</a>
           <a class="cc-list-links-nested-dash"
