@@ -103,22 +103,22 @@ verify_sis_endpoints() {
     curl_write_out='\n\t%{http_code} HTTP status\n\tTotal time (seconds): %{time_total}\n\tURL: %{url_effective}\n'
     for path in ${endpoints[@]}; do
       case "${sis_system}" in
-        ("Campus Solutions")
+        Campus\ Solutions)
           mkdir -p "${LOG_DIRECTORY}/campus_solutions"
           log_file="${LOG_DIRECTORY}/campus_solutions/${path//\//_}.log"
           url="${CS_BASE_URL}${path}"
           response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" -u "${CS_CREDENTIALS}" "${url}" 2>&1 | tee -a ${CURL_STDOUT_LOG_FILE})
           ;;
-        ("Crosswalk")
+        Crosswalk)
           mkdir -p "${LOG_DIRECTORY}/calnet_crosswalk"
           log_file="${LOG_DIRECTORY}/calnet_crosswalk/${path//\//_}.log"
           url="${CROSSWALK_BASE_URL}${path}"
           response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" --digest -u "${CROSSWALK_CREDENTIALS}" "${url}" 2>&1 | tee -a ${CURL_STDOUT_LOG_FILE})
           ;;
-        ("Hub")
+        Hub*)
           mkdir -p "${LOG_DIRECTORY}/hub_edos"
           log_file="${LOG_DIRECTORY}/hub_edos/${path//\//_}.log"
-          url="${HUB_BASE_URL}${path}"
+          [[ "${path}" = \http* ]] && url="${path}" || url="${HUB_BASE_URL}${path}"
           response_metadata=$(curl -k -w "${curl_write_out}" -so "${log_file}" -H "Accept:application/json" -u "${HUB_CREDENTIALS}" --header "app_id: ${HUB_APP_ID}" --header "app_key: ${HUB_APP_KEY}" "${url}" 2>&1 | tee -a ${CURL_STDOUT_LOG_FILE})
           ;;
         (*)
@@ -146,8 +146,10 @@ verify_cs() {
 }
 
 verify_hub() {
+  feature=${1}; flag_value=${2}
+  shift 2
   endpoints=($@)
-  verify_sis_endpoints "Hub" endpoints
+  verify_sis_endpoints "Hub" endpoints "${feature}" "${flag_value}"
 }
 
 # cd to 'calcentral' directory
@@ -202,7 +204,8 @@ echo "  Crosswalk: ${CROSSWALK_BASE_URL}"
 echo "  Hub: ${HUB_BASE_URL}"
 echo; echo
 
-verify_crosswalk "/CAMPUS_SOLUTIONS_ID/${CAMPUS_SOLUTIONS_ID}" \
+verify_crosswalk \
+  "/CAMPUS_SOLUTIONS_ID/${CAMPUS_SOLUTIONS_ID}" \
   "/LEGACY_SIS_STUDENT_ID/${SID}" \
   "/UID/${UID_CROSSWALK}"
 
@@ -227,51 +230,60 @@ verify_cs 'cs_profile' "${yml_features_cs_profile}" \
   "/UC_SIR_CONFIG.v1/get/sir/config/?INSTITUTION=UCB01" \
   "/UC_STATE_GET.v1/state/get/?COUNTRY=ESP"
 
-verify_cs "cs_sir" "${yml_features_cs_sir}" \
+verify_cs 'cs_sir' "${yml_features_cs_sir}" \
   "/UC_CC_CHECKLIST.v1/get/checklist?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
   "/UC_DEPOSIT_AMT.v1/deposit/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&ADM_APPL_NBR=00000087" \
   "/UC_OB_HIGHER_ONE_URL_GET.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 
-verify_cs "cs_fin_aid" "${yml_features_cs_fin_aid}" \
+verify_cs 'cs_fin_aid' "${yml_features_cs_fin_aid}" \
   "/UC_FA_FINANCIAL_AID_DATA.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016" \
   "/UC_FA_FUNDING_SOURCES.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016" \
   "/UC_FA_FUNDING_SOURCES_TERM.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01&AID_YEAR=2016" \
   "/UC_FA_GET_T_C.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&INSTITUTION=UCB01"
 
-verify_cs "cs_delegated_access" "${yml_features_cs_delegated_access}" \
+verify_cs 'cs_delegated_access' "${yml_features_cs_delegated_access}" \
   "/UC_CC_DELEGATED_ACCESS.v1/DelegatedAccess/get?SCC_DA_PRXY_OPRID=${UID_CROSSWALK}" \
   "/UC_CC_DELEGATED_ACCESS_URL.v1/get" \
   "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=25000&MESSAGE_NBR=15" \
-  "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=28001&MESSAGE_NBR=2005"
+  "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=28001&MESSAGE_NBR=2005" \
+  "/UC_CC_MESSAGE_CATALOG.v1/get?MESSAGE_SET_NBR=32500"
 
-verify_cs "cs_enrollment_card" "${yml_features_cs_enrollment_card}"  \
+verify_cs 'cs_enrollment_card' "${yml_features_cs_enrollment_card}"  \
   "/UC_SR_ACADEMIC_PLANNER.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168" \
   "/UC_SR_COLLEGE_SCHDLR_URL.v1/get/?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168&ACAD_CAREER=UGRD&INSTITUTION=UCB01" \
   "/UC_SR_CURR_TERMS.v1/GetCurrentItems?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
   "/UC_SR_STDNT_CLASS_ENROLL.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}&STRM=2168"
 
-verify_cs "cs_fin_aid_award_compare" "${yml_features_cs_fin_aid_award_compare}" \
+verify_cs 'cs_fin_aid_award_compare' "${yml_features_cs_fin_aid_award_compare}" \
   "/UC_FA_AWARD_COMPARE_CURRNT.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016" \
   "/UC_FA_AWARD_COMPARE_PARMS.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016" \
   "/UC_FA_AWARD_COMPARE_PRIOR.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}&AID_YEAR=2016"
 
-verify_cs "cs_billing" "${yml_features_cs_billing}" \
+verify_cs 'cs_billing' "${yml_features_cs_billing}" \
   "/UC_SF_BILLING_DETAILS.v1/Get?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
   "/UC_SF_FPP_LINKS_GET.v1/Get"
 
-verify_cs "cs_advisor_student_lookup" "${yml_features_cs_advisor_student_lookup}" \
+verify_cs 'cs_advisor_student_lookup' "${yml_features_cs_advisor_student_lookup}" \
   "/UC_CC_USER_LOOKUP.v1/lookup?NAME1=Wavy&NAME2=Gravy&AFFILIATIONS=STUDENT,UNDERGRAD"
 
-verify_cs "cs_profile_emergency_contacts" "${yml_features_cs_profile_emergency_contacts}" \
+verify_cs 'cs_profile_emergency_contacts' "${yml_features_cs_profile_emergency_contacts}" \
   "/UcApiEmergencyContactGet.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}"
 
-verify_hub "/${CAMPUS_SOLUTIONS_ID}/academic-status" \
+verify_hub 'always_enabled' true \
+  "/${CAMPUS_SOLUTIONS_ID}/academic-status" \
   "/${CAMPUS_SOLUTIONS_ID}/affiliation" \
   "/${CAMPUS_SOLUTIONS_ID}/all" \
   "/${CAMPUS_SOLUTIONS_ID}/contacts" \
   "/${CAMPUS_SOLUTIONS_ID}/demographic" \
   "/${CAMPUS_SOLUTIONS_ID}/registrations" \
   "/${CAMPUS_SOLUTIONS_ID}/work-experiences"
+
+# Custom credentials are needed for the Hub's Term API
+export HUB_APP_ID="${yml_hub_term_proxy_app_id//\'}"
+export HUB_APP_KEY="${yml_hub_term_proxy_app_key//\'}"
+
+verify_hub 'hub_term_api' "${yml_features_hub_term_api}" \
+  "${yml_hub_term_proxy_base_url//\'}"
 
 echo; echo "----------------------------------------------------------------------------------------------------"; echo
 echo "Results can be found in the directory:"
