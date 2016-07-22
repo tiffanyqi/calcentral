@@ -106,11 +106,16 @@ describe MyAcademics::CollegeAndLevel do
         [
           {
             :code => "25345U",
-            :primary => true
+            :primary => true,
+            :expectedGraduationTerm => {
+              "id" => "2202",
+              "name" => "2020 Spring"
+            }
           },
           {
             :code => "25090U",
-            :primary => false
+            :primary => false,
+            :expectedGraduationTerm => nil
           },
         ]
       )

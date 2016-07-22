@@ -91,7 +91,8 @@ module MyAcademics
           if (plan_code = academic_plan['plan'].try(:[], 'code'))
             plans << {
               code: plan_code,
-              primary: plan_primary
+              primary: plan_primary,
+              expectedGraduationTerm: student_plan['expectedGraduationTerm']
             }
             grad_terms << student_plan['expectedGraduationTerm']
           end

@@ -4,9 +4,9 @@ var angular = require('angular');
 var _ = require('lodash');
 
 /**
- * Photo controller
+ * Academic Profile controller
  */
-angular.module('calcentral.controllers').controller('PhotoController', function($scope) {
+angular.module('calcentral.controllers').controller('AcademicProfileController', function($scope) {
   $scope.profilePictureLoading = true;
 
   /**
