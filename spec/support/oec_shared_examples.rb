@@ -3,6 +3,7 @@ shared_context 'OEC enrollment data merge' do
   let(:fake_remote_drive) { double() }
   let(:merged_course_confirmations_csv) { File.read Rails.root.join('fixtures', 'oec', 'merged_course_confirmations.csv') }
   let(:merged_supervisor_confirmations_csv) { File.read Rails.root.join('fixtures', 'oec', 'supervisors.csv') }
+  let(:previous_course_supervisors_csv) { Oec::CourseSupervisors.new.headers.join(',') }
   let(:merged_course_confirmations) { Oec::SisImportSheet.from_csv merged_course_confirmations_csv }
 
   let(:course_ids) { merged_course_confirmations_csv.scan(/2015-B-\d+/).uniq.flatten }
@@ -35,8 +36,11 @@ shared_context 'OEC enrollment data merge' do
   before(:each) do
     allow(Oec::RemoteDrive).to receive(:new).and_return fake_remote_drive
     allow(fake_remote_drive).to receive(:find_nested).and_return mock_google_drive_item
-    allow(fake_remote_drive).to receive(:export_csv)
-                                  .and_return(merged_course_confirmations_csv, merged_supervisor_confirmations_csv)
+    allow(fake_remote_drive).to receive(:export_csv).and_return(
+      merged_course_confirmations_csv,
+      merged_supervisor_confirmations_csv,
+      previous_course_supervisors_csv)
+
     allow(Settings.terms).to receive(:fake_now).and_return DateTime.parse('2015-03-09 12:00:00')
 
     allow(Oec::CourseCode).to receive(:participating_dept_names).and_return %w(GWS LGBT)
