@@ -5,19 +5,14 @@ module MyAcademics
     include User::Student
 
     def merge(data)
-      # TEMPORARY TRANSITIONAL LOGIC BETWEEN SPRING 2016 AND FALL 2016.
-      # New incoming Fall 2016 users will have no BearFacts API data.
-      # Legacy users may have Fall 2016 CS/Hub academic status data, but it will be incomplete until GL5.4 conversions.
-      # Legacy users may also have Summer 2016 BearFacts RegStatus and Spring 2016 BearFacts College-Level-Major data,
-      # but neither will be exposed in CalCentral as of Fall 2016.
       college_and_level = hub_college_and_level
-      prefer_legacy_data = Settings.features.cs_academic_profile_prefers_legacy
-      if (current_term.legacy? || prefer_legacy_data) && legacy_user?
+      if college_and_level[:empty] && !current_term.is_summer
         legacy_college_and_level = bearfacts_college_and_level
-        if college_and_level[:empty] || !current_term.is_summer || (prefer_legacy_data && !legacy_college_and_level[:empty])
+        if !legacy_college_and_level[:empty]
           college_and_level = legacy_college_and_level
         end
       end
+
       # If we have no profile at all, consider the no-profile to be active for the current term.
       if college_and_level[:empty]
         college_and_level[:termName] = Berkeley::Terms.fetch.current.to_english
@@ -47,7 +42,6 @@ module MyAcademics
       response = HubEdos::AcademicStatus.new(user_id: @uid).get
       if (status = parse_hub_academic_status response)
         response[:careers] = parse_hub_careers status
-        response[:cumulativeUnits] = parse_hub_transfer_credit_cumulative_units status
         response[:level] = parse_hub_level status
         response[:termName] = parse_hub_term_name status
         response[:termsInAttendance] = status['termsInAttendance'].to_s
@@ -67,11 +61,6 @@ module MyAcademics
       end
     end
 
-    def parse_hub_transfer_credit_cumulative_units(status)
-      return {} unless status['cumulativeUnits'].present?
-      status['cumulativeUnits']
-    end
-
     def parse_hub_level(status)
       status['currentRegistration'].try(:[], 'academicLevel').try(:[], 'level').try(:[], 'description')
     end
@@ -80,6 +69,7 @@ module MyAcademics
       majors = []
       minors = []
       plans = []
+      grad_terms = []
       status['studentPlans'].each do |student_plan|
         plan_primary = !!student_plan['primary']
         if (academic_plan = student_plan['academicPlan'])
@@ -103,13 +93,16 @@ module MyAcademics
               code: plan_code,
               primary: plan_primary
             }
+            grad_terms << student_plan['expectedGraduationTerm']
           end
         end
       end
+      last_grad_term = grad_terms.sort_by { |term| term.try(:[], 'id').to_i }.last
       {
         majors: majors,
         minors: minors,
-        plans: plans
+        plans: plans,
+        lastExpectedGraduationTerm: last_grad_term.try(:[], 'name'),
       }
     end
 
@@ -145,45 +138,45 @@ module MyAcademics
       if primary_college_abbv.in?(['GRAD DIV', 'LAW', 'CONCURNT'])
         if primary_major == 'Double' || primary_major == 'Triple'
           majors << {
-            :college => (general_profile['collegeSecond'].blank? ? primary_college : Berkeley::Colleges.get(general_profile['collegeSecond'].to_text)),
-            :major => Berkeley::Majors.get(general_profile['majorSecond'].to_text)
+            college: (general_profile['collegeSecond'].blank? ? primary_college : Berkeley::Colleges.get(general_profile['collegeSecond'].to_text)),
+            major: Berkeley::Majors.get(general_profile['majorSecond'].to_text)
           }
           majors << {
-            :college => Berkeley::Colleges.get(general_profile['collegeThird'].to_text),
-            :major => Berkeley::Majors.get(general_profile['majorThird'].to_text)
+            college: Berkeley::Colleges.get(general_profile['collegeThird'].to_text),
+            major: Berkeley::Majors.get(general_profile['majorThird'].to_text)
           }
           if primary_major == 'Triple'
             majors << {
-              :college => Berkeley::Colleges.get(general_profile['collegeFourth'].to_text),
-              :major => Berkeley::Majors.get(general_profile['majorFourth'].to_text)
+              college: Berkeley::Colleges.get(general_profile['collegeFourth'].to_text),
+              major: Berkeley::Majors.get(general_profile['majorFourth'].to_text)
             }
           end
         else
           majors << {
-            :college => primary_college,
-            :major => primary_major
+            college: primary_college,
+            major: primary_major
           }
         end
       else
         if primary_major == 'Double' || primary_major == 'Triple'
           majors << {
-            :college => primary_college,
-            :major => Berkeley::Majors.get(general_profile['majorSecond'].to_text)
+            college: primary_college,
+            major: Berkeley::Majors.get(general_profile['majorSecond'].to_text)
           }
           majors << {
-            :college => '',
-            :major => Berkeley::Majors.get(general_profile['majorThird'].to_text)
+            college: '',
+            major: Berkeley::Majors.get(general_profile['majorThird'].to_text)
           }
           if primary_major == 'Triple'
             majors << {
-              :college => '',
-              :major => Berkeley::Majors.get(general_profile['majorFourth'].to_text)
+              college: '',
+              major: Berkeley::Majors.get(general_profile['majorFourth'].to_text)
             }
           end
         else
           majors << {
-            :college => primary_college,
-            :major => primary_major
+            college: primary_college,
+            major: primary_major
           }
         end
       end

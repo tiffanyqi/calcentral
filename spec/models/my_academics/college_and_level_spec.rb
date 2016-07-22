@@ -1,46 +1,76 @@
-describe 'MyAcademics::CollegeAndLevel' do
-
+describe MyAcademics::CollegeAndLevel do
+  subject { MyAcademics::CollegeAndLevel.new(uid) }
   let(:uid) { '61889' }
-  let(:eight_digit_cs_id) { '87654321' }
-  let(:ten_digit_cs_id) { '1234567890' }
-
-  let(:feed) do
-    {}.tap { |feed| MyAcademics::CollegeAndLevel.new(uid).merge feed }
+  let(:campus_solutions_id) { '1234567890' }
+  let(:legacy_campus_solutions_id) { '11667051' }
+  let(:hub_status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
+  let(:bearfacts_proxy) { Bearfacts::Profile.new(user_id: uid, fake: true) }
+  let(:fake_spring_term) { double(is_summer: false, :year => 2015, :code => 'B') }
+  let(:feed) { {}.tap { |feed| subject.merge feed } }
+  before do
+    allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return campus_solutions_id
+    allow(HubEdos::AcademicStatus).to receive(:new).and_return hub_status_proxy
   end
 
-  context 'when legacy user but non-legacy term' do
-    let(:status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
-    before do
-      allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return eight_digit_cs_id
-      allow(Settings.terms).to receive(:fake_now).and_return('2016-10-01'.to_datetime)
-      allow(Settings.features).to receive(:cs_academic_profile_prefers_legacy).and_return(prefer_legacy)
+  context 'data sourcing' do
+    it 'always queries hub data' do
+      expect(HubEdos::AcademicStatus).to receive(:new).and_return hub_status_proxy
+      expect(feed[:collegeAndLevel][:statusCode]).to eq 200
     end
-    context 'CS-based registration data not fully baked' do
-      let(:prefer_legacy) {true}
-      let(:bearfacts_proxy) { Bearfacts::Profile.new(user_id: uid, fake: true) }
-      it 'sources from Bear Facts' do
-        expect(Bearfacts::Profile).to receive(:new).and_return bearfacts_proxy
-        expect(HubEdos::AcademicStatus).to receive(:new).and_return status_proxy
-        expect(feed[:collegeAndLevel][:level]).to eq 'Senior'
+    context 'when hub response is present' do
+      it 'sources from EDO Hub' do
+        expect(feed[:collegeAndLevel][:level]).to eq 'Junior'
+      end
+      it 'does not query for bearfacts data' do
+        expect(Bearfacts::Profile).to receive(:new).never
+        expect(feed[:collegeAndLevel][:statusCode]).to eq 200
       end
     end
-    context 'CS registration data is ready to go' do
-      let(:prefer_legacy) {false}
-      it 'sources from Hub' do
-        expect(Bearfacts::Profile).to receive(:new).never
-        expect(HubEdos::AcademicStatus).to receive(:new).and_return status_proxy
-        expect(feed[:collegeAndLevel][:statusCode]).to eq 200
+
+    context 'when hub response is empty' do
+      before { hub_status_proxy.set_response(status: 200, body: '{}') }
+      context 'when current term is summer' do
+        before { allow(subject).to receive(:current_term).and_return(double(is_summer: true)) }
+        it 'does not query for bearfacts data' do
+          expect(Bearfacts::Profile).to receive(:new).never
+          expect(feed[:collegeAndLevel][:statusCode]).to eq 200
+        end
+
+        it 'sources from empty EDO Hub response' do
+          expect(feed[:collegeAndLevel][:statusCode]).to eq 200
+          expect(feed[:collegeAndLevel][:empty]).to eq true
+          expect(feed[:collegeAndLevel][:isCurrent]).to eq true
+          expect(feed[:collegeAndLevel][:termName]).to eq 'Fall 2013'
+        end
+      end
+      context 'when current term is not summer' do
+        before { allow(subject).to receive(:current_term).and_return(fake_spring_term) }
+        it 'queries for bearfacts data' do
+          expect(Bearfacts::Profile).to receive(:new).and_return bearfacts_proxy
+          expect(feed[:collegeAndLevel][:statusCode]).to eq 200
+        end
+        context 'when bearfacts data is present' do
+          before { allow(Bearfacts::Profile).to receive(:new).and_return bearfacts_proxy }
+          let(:campus_solutions_id) { legacy_campus_solutions_id }
+          it 'sources from bearfacts' do
+            expect(feed[:collegeAndLevel][:empty]).to_not be_truthy
+            expect(feed[:collegeAndLevel][:level]).to eq 'Senior'
+            expect(feed[:collegeAndLevel][:futureTelebearsLevel]).to_not be_nil
+          end
+        end
+        context 'when bearfacts data is not present' do
+          it 'sources from empty EDO Hub response' do
+            expect(feed[:collegeAndLevel][:empty]).to eq true
+            expect(feed[:collegeAndLevel][:empty]).to eq true
+            expect(feed[:collegeAndLevel][:isCurrent]).to eq true
+            expect(feed[:collegeAndLevel][:termName]).to eq 'Fall 2013'
+          end
+        end
       end
     end
   end
 
   context 'when sourced from Hub academic status' do
-    let(:status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
-    before do
-      allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return ten_digit_cs_id
-      allow(HubEdos::AcademicStatus).to receive(:new).and_return status_proxy
-    end
-
     it 'reports success' do
       expect(feed[:collegeAndLevel][:statusCode]).to eq 200
     end
@@ -86,23 +116,23 @@ describe 'MyAcademics::CollegeAndLevel' do
       )
     end
 
+    it 'includes the farthest graduation term available from all plans' do
+      expect(feed[:collegeAndLevel][:lastExpectedGraduationTerm]).to eq '2020 Spring'
+    end
+
     it 'specifies term name' do
       expect(feed[:collegeAndLevel][:termName]).to eq 'Spring 2017'
     end
 
-    it 'includes transfer credit as cumulativeUnits' do
-      expect(feed[:collegeAndLevel][:cumulativeUnits]).to be
-    end
-
     context 'empty status feed' do
-      before { status_proxy.set_response(status: 200, body: '{}') }
+      before { hub_status_proxy.set_response(status: 200, body: '{}') }
       it 'reports empty' do
         expect(feed[:collegeAndLevel][:empty]).to eq true
       end
     end
 
     context 'errored status feed' do
-      before { status_proxy.set_response(status: 502, body: '') }
+      before { hub_status_proxy.set_response(status: 502, body: '') }
       it 'reports error' do
         expect(feed[:collegeAndLevel][:errored]).to eq true
       end
@@ -110,7 +140,7 @@ describe 'MyAcademics::CollegeAndLevel' do
 
     context 'status feed lacking some data' do
       before do
-        status_proxy.override_json do |json|
+        hub_status_proxy.override_json do |json|
           json['apiResponse']['response']['any']['students'][0]['academicStatuses'][0].delete 'currentRegistration'
         end
       end
@@ -123,21 +153,19 @@ describe 'MyAcademics::CollegeAndLevel' do
     end
   end
 
-  context 'when legacy user and in legacy term with no Hub status' do
+  context 'when sourced from Bearfacts' do
+    let(:campus_solutions_id) { legacy_campus_solutions_id }
     before do
-      allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return eight_digit_cs_id
-      allow(Berkeley::Terms).to receive(:legacy?).and_return(true)
       allow_any_instance_of(HubEdos::AcademicStatus).to receive(:get).and_return({})
+      allow(subject).to receive(:current_term).and_return(fake_spring_term)
     end
 
     context 'known test users' do
+      let(:majors) { feed[:collegeAndLevel][:majors] }
       before do
-        profile_proxy = Bearfacts::Profile.new(user_id: uid, fake: true)
-        allow(Bearfacts::Profile).to receive(:new).and_return profile_proxy
+        expect(Bearfacts::Profile).to receive(:new).and_return bearfacts_proxy
         expect(feed).not_to be_empty
       end
-
-      let(:majors) { feed[:collegeAndLevel][:majors] }
 
       it 'should get properly formatted data from fake Bearfacts' do
         expect(majors).to have(1).items
@@ -203,16 +231,17 @@ describe 'MyAcademics::CollegeAndLevel' do
       end
     end
 
-    context 'failing bearfacts proxy' do
+    context 'when bearfacts proxy is failing' do
       let(:uid) {'212381'}
       let(:feed) {{}}
       before(:each) do
         stub_request(:any, /#{Regexp.quote(Settings.bearfacts_proxy.base_url)}.*/).to_raise(Errno::EHOSTUNREACH)
         Bearfacts::Profile.new({user_id: uid, fake: false})
       end
-      it 'indicates a server failure' do
+      it 'sources from failed EDO Hub response' do
         MyAcademics::CollegeAndLevel.new(uid).merge(feed)
-        expect(feed[:collegeAndLevel][:errored]).to be_truthy
+        expect(feed[:collegeAndLevel][:empty]).to be_truthy
+        expect(feed[:collegeAndLevel][:termName]).to eq 'Fall 2013'
       end
     end
 

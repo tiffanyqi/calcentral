@@ -6,9 +6,10 @@ var _ = require('lodash');
 /**
  * Transfer Credit Controller
  */
-angular.module('calcentral.controllers').controller('TransferCreditController', function(apiService, $scope, academicsFactory) {
+angular.module('calcentral.controllers').controller('TransferCreditController', function(apiService, $scope, transferCreditFactory) {
 
   // Temporary MVP functionality, using cumulativeUnits from the academics feed.
+  /*
   var parseCumulativeUnits = function(data) {
     var cumulativeUnits = _.get(data, 'data.collegeAndLevel.cumulativeUnits');
     _.some(cumulativeUnits, function(entry) {
@@ -20,9 +21,9 @@ angular.module('calcentral.controllers').controller('TransferCreditController', 
     });
     $scope.transferCredit.isLoading = false;
   };
+  */
 
   // TransferCredit functionality hidden while CS data API is not complete.
-  /*
   var parseTransferCredit = function(data) {
     var transferCredit = _.get(data, 'data.feed.transferCredit');
     if (transferCredit) {
@@ -31,15 +32,16 @@ angular.module('calcentral.controllers').controller('TransferCreditController', 
     }
     $scope.transferCredit.isLoading = false;
   };
-  */
 
   var loadTransferCredit = function() {
     $scope.transferCredit = {
       isLoading: true,
       cumulativeUnits: ''
     };
-    // transferCreditFactory.getTransferCredit().then(parseTransferCredit);
-    academicsFactory.getAcademics().then(parseCumulativeUnits);
+    // cumulativeUnits removed from MyAcademics::CollegeAndLevel as requirement in SISRP-22377
+    // academicsFactory.getAcademics().then(parseCumulativeUnits);
+
+    transferCreditFactory.getTransferCredit().then(parseTransferCredit);
   };
 
   loadTransferCredit();
