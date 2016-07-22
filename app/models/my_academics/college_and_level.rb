@@ -108,10 +108,7 @@ module MyAcademics
       {
         majors: majors,
         minors: minors,
-        plans: plans,
-        roles: {
-          fpf: plans.any? { |plan| plan[:code] == '25000FPFU' }
-        }
+        plans: plans
       }
     end
 

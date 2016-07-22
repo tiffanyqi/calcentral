@@ -86,20 +86,6 @@ describe 'MyAcademics::CollegeAndLevel' do
       )
     end
 
-    it 'specifies cpp roles' do
-      expect(feed[:collegeAndLevel][:roles]).to eq({
-        fpf: false
-      })
-    end
-
-    context 'fpf plan is present' do
-      it 'includes fpf role' do
-        expect(feed[:collegeAndLevel][:roles]).to eq({
-          fpf: false
-        })
-      end
-    end
-
     it 'specifies term name' do
       expect(feed[:collegeAndLevel][:termName]).to eq 'Spring 2017'
     end
