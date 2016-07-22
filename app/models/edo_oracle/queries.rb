@@ -57,7 +57,7 @@ module EdoOracle
           enr."TERM_ID" = sec."term-id" AND
           enr."SESSION_ID" = sec."session-id" AND
           enr."CLASS_SECTION_ID" = sec."id" AND
-          sec."status-code" = 'A')
+          sec."status-code" IN ('A','S') )
         #{JOIN_SECTION_TO_COURSE}
         WHERE enr."TERM_ID" IN (#{terms_query_list terms})
           AND enr."CAMPUS_UID" = '#{person_id}'
@@ -84,7 +84,7 @@ module EdoOracle
           instr."offeringNumber" = sec."offeringNumber" AND
           instr."number" = sec."sectionNumber")
         #{JOIN_SECTION_TO_COURSE}
-        WHERE sec."status-code" = 'A'
+        WHERE sec."status-code" IN ('A','S')
           AND instr."term-id" IN (#{terms_query_list terms})
           AND instr."campus-uid" = '#{person_id}'
         ORDER BY term_id DESC, #{CANONICAL_SECTION_ORDERING}
@@ -103,7 +103,7 @@ module EdoOracle
           sec."cs-course-id" AS cs_course_id
         FROM SISEDO.CLASSSECTIONV00_VW sec
         #{JOIN_SECTION_TO_COURSE}
-        WHERE sec."status-code" = 'A'
+        WHERE sec."status-code" IN ('A','S')
           AND sec."primary" = 'false'
           AND sec."term-id" = '#{term_id}'
           AND sec."primaryAssociatedSectionId" = '#{section_id}'
@@ -374,7 +374,7 @@ module EdoOracle
           sec."term-id" = '#{term_id}' AND
           crs."subjectArea" = '#{department}' AND
           crs."catalogNumber-formatted" = '#{catalog_id}' AND
-          sec."status-code" = 'A'
+          sec."status-code" IN ('A','S')
           #{section_type_restriction}
         ORDER BY
           sec."component-code",
