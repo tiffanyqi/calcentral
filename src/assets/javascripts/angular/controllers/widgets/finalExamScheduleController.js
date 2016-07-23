@@ -5,119 +5,64 @@ var angular = require('angular');
 /**
  * Final exam schedule controller
  */
-angular.module('calcentral.controllers').controller('FinalExamScheduleController', function(apiService, academicsService, myClassesFactory, $scope) {
-
-    // ref: http://stackoverflow.com/a/1293163/2343
-    // This will parse a delimited string into an array of
-    // arrays. The default delimiter is the comma, but this
-    // can be overriden in the second argument.
-    function CSVToArray( strData, strDelimiter ){
-        // Check to see if the delimiter is defined. If not,
-        // then default to comma.
-        strDelimiter = (strDelimiter || ",");
-
-        // Create a regular expression to parse the CSV values.
-        var objPattern = new RegExp(
-            (
-                // Delimiters.
-                "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-
-                // Quoted fields.
-                "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-
-                // Standard fields.
-                "([^\"\\" + strDelimiter + "\\r\\n]*))"
-            ),
-            "gi"
-            );
+angular.module('calcentral.controllers').controller('FinalExamScheduleController', function(apiService, enrollmentFactory, $scope) {
 
 
-        // Create an array to hold our data. Give the array
-        // a default empty first row.
-        var arrData = [[]];
-
-        // Create an array to hold our individual pattern
-        // matching groups.
-        var arrMatches = null;
-
-
-        // Keep looping over the regular expression matches
-        // until we can no longer find a match.
-        while (arrMatches = objPattern.exec( strData )){
-
-            // Get the delimiter that was found.
-            var strMatchedDelimiter = arrMatches[ 1 ];
-
-            // Check to see if the given delimiter has a length
-            // (is not the start of string) and if it matches
-            // field delimiter. If id does not, then we know
-            // that this delimiter is a row delimiter.
-            if (
-                strMatchedDelimiter.length &&
-                strMatchedDelimiter !== strDelimiter
-                ){
-
-                // Since we have reached a new row of data,
-                // add an empty row to our data array.
-                arrData.push( [] );
-
-            }
-
-            var strMatchedValue;
-
-            // Now that we have our delimiter out of the way,
-            // let's check to see which kind of value we
-            // captured (quoted or unquoted).
-            if (arrMatches[ 2 ]){
-
-                // We found a quoted value. When we capture
-                // this value, unescape any double quotes.
-                strMatchedValue = arrMatches[ 2 ].replace(
-                    new RegExp( "\"\"", "g" ),
-                    "\""
-                    );
-
-            } else {
-
-                // We found a non-quoted value.
-                strMatchedValue = arrMatches[ 3 ];
-
-            }
-
-
-            // Now that we have our value string, let's add
-            // it to the data array.
-            arrData[ arrData.length - 1 ].push( strMatchedValue );
-        }
-
-        // Return the parsed data.
-        return( arrData );
-    }
-
-
-
-  var getMyClasses = function(options) {
-    myClassesFactory.getClasses(options).then(function(data) {
-      if (_.get(data, 'feedName')) {
-        apiService.updatedFeeds.feedLoaded(data);
-        bindScopes(data.classes);
+  /*
+   * Convert the CSV to a string used for the Fall 2016 semester.
+   */
+  var convertCSV = function(csv) {
+    var reader = new FileReader();
+    reader.onload = function(progressEvent){
+      console.log(this.result);
+      var lines = this.result.split('\n');
+      for(var line = 0; line < lines.length; line++){
+        console.log(lines[line]);
       }
-      angular.extend($scope, data);
-    });
+    };
+    reader.readAsText(csv);
   };
 
-  var schedule = CSVtoArray('../../../../../db/fa16-final-exam-schedule.csv');
+  convertCSV('../../../../../db/fa16-final-exam-schedule.csv');
   // src/assets/javascripts/controllers/widgets/FinalExamScheduleController
   // db/fa-16-final-exam-schedule.csv
 
-  $scope.schedule = schedule;
-
-  // function createCourseTimeToExam(csv) {
+  /*
+   * Create hashes that represent course to exam logic
+   */
+  var createCourseTimeToExam = function(data) {
   //   var courseTimeToExam = new Object();
-  //   for (int row; row < csv.length; row++) {
+  //   for (int row; row < data.length; row++) {
 
   //   }
-  // }
+  };
+
+  /*
+   * Assign exam slots to courses
+   */
+  var assignExams = function() {
+
+  };
+
+  /*
+   * Courses that belong to slot 10 (elementary and intermediate)
+   * http://blc.berkeley.edu/languages/?sort=department_name
+   * https://docs.google.com/spreadsheets/d/1VIbR_1J44mCeVhnv-fFb8yLB3PhSOzIH45fwVHDde6k/edit#gid=0
+   */
+  var foreignLanguages = [];
+  var chem = ["CHEM 1A", "CHEM 1B"]; // courses for slot 3
+  var econ = ["ECON 1", "ECON 100B"]; // courses for slot 6
+
+  /*
+   * Load exam data
+   */
+  var loadExamData = function() {
+
+  };
+
+  loadExamData();
+
+
 
 // # parses the final exam schedule: http://schedule.berkeley.edu/examf.html
 // @course_time_to_exam = Hash.new
@@ -192,17 +137,6 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
 //   end
 //   course.save
 // end
-
-
-
-
-  var getMyExams = function(options) {
-
-  }
-
-  var foreignLanguages = []
-  // chem1a, chem 1b, econ1, econ 100b
-
   
 
 });
