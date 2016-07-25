@@ -54,21 +54,59 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
       var dates = new Array();
 
       for (var j = 0; j < classTimes.length; j++) {
-        var time = classTimes[j];
-        if (time.includes(":")) {
-          times.push(time); // replace the comma too
-        } else if (time.includes("M") || time.includes("TuTh") || time.includes("S") ) {
-          dates.push(time);
-        } else if (time === "after") {
+        var element = classTimes[j];
+        // add time to times
+        if (element.includes(":")) {
+          times.push(element); // replace the comma too
+        // add date to times
+        } else if (element.includes("M") || element.includes("TuTh") || element.includes("S") ) {
+          dates.push(element);
+          // add potential class times that are after 5pm
+        } else if (element === "after") {
           times.push("5:30pm");
           times.push("6:00pm");
           times.push("6:30pm");
           times.push("7:00pm");
           times.push("7:30pm");
-        }
-      }
+        };
+      };
+
+      if (dates !== []) {
+        for (var d = 0; d < dates.length; d++) {
+          // stores weekends first
+          var date = dates[d];
+          console.log(date);
+      //     if (date.includes("S")) {
+      //       // add course and exam mapping
+      //       courseTimeToExam["S"] = examSlot;
+      //     } else {
+      //       var time = times[d];
+      //       days = date.split(/(?=[A-Z])/);
+      //       for (var j = 0; j < days.length; j++) {
+      //         key = days[j] + "-" + time;
+      //         courseTimeToExam[key] = examSlot;
+      //       };
+      //     };
+        };
+      };
+
+
+//   if dates != []
+//     dates.each do |date|
+//       # stores weekends first
+//       if date.include?("S")
+//         # add course and exam mapping
+//         @course_time_to_exam["S"] = row["Exam Group"]
+
+//       else
+//         times.each do |time|
+//           # add course and exam mapping like M-10:00am => 1
+//           date.split(/(?=[A-Z])/).each do |day|
+//             key = day + "-" + time
+//             @course_time_to_exam[key] = row["Exam Group"]
+
     };
-    console.log(examToTime);
+    // console.log(courseTimeToExam);
   };
 
 // @course_time_to_exam = Hash.new
