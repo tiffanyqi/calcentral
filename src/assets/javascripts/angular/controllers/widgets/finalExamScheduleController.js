@@ -43,15 +43,15 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
       var examDay = items[1];
       var examDate = items[2];
       var examTime = items[3];
-      var classTimes = items[4].split(",");
+      var classTimes = items[4].split(" ");
 
       // populates examToTime with slot to exam time
       var examTime = examDay + ", " + examDate;
       examToTime[examSlot] = examTime;
 
       // populate courseTimeToExam
-      var times = new Array();
-      var dates = new Array();
+      var times = [];
+      var dates = [];
 
       for (var j = 0; j < classTimes.length; j++) {
         var element = classTimes[j];
@@ -75,92 +75,22 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
         for (var d = 0; d < dates.length; d++) {
           // stores weekends first
           var date = dates[d];
-          console.log(date);
-      //     if (date.includes("S")) {
-      //       // add course and exam mapping
-      //       courseTimeToExam["S"] = examSlot;
-      //     } else {
-      //       var time = times[d];
-      //       days = date.split(/(?=[A-Z])/);
-      //       for (var j = 0; j < days.length; j++) {
-      //         key = days[j] + "-" + time;
-      //         courseTimeToExam[key] = examSlot;
-      //       };
-      //     };
+          if (date.includes("S")) {
+            // add course and exam mapping
+            courseTimeToExam["S"] = examSlot;
+          } else {
+            var time = times[d];
+            var days = date.split(/(?=[A-Z])/);
+            for (var j = 0; j < days.length; j++) {
+              var key = days[j] + "-" + time;
+              courseTimeToExam[key] = examSlot;
+            };
+          };
         };
       };
-
-
-//   if dates != []
-//     dates.each do |date|
-//       # stores weekends first
-//       if date.include?("S")
-//         # add course and exam mapping
-//         @course_time_to_exam["S"] = row["Exam Group"]
-
-//       else
-//         times.each do |time|
-//           # add course and exam mapping like M-10:00am => 1
-//           date.split(/(?=[A-Z])/).each do |day|
-//             key = day + "-" + time
-//             @course_time_to_exam[key] = row["Exam Group"]
-
     };
-    // console.log(courseTimeToExam);
+    console.log(courseTimeToExam);
   };
-
-// @course_time_to_exam = Hash.new
-// CSV.foreach("db/exam_schedule.csv",{:headers=>true}) do |row|
-//   # split each row's output by time and day
-//   row_output = row["For Class Start Times"].split(" ")
-  
-//   # prepare the map and sets of dates and times
-//   times = Array.new
-//   courses = Array.new
-//   dates = Array.new
-
-//   # iterate through every row
-//   row_output.each do |element|
-//     # separate the dates and times of each row
-//     if element.include?(":")
-//       times << element.tr(',', '') # remove the comma from some of the times
-//     elsif element.include?("M") or element.include?("TuTh") or element.include?("S")
-//       dates << element
-//     # takes care of whenever it says "date after 5pm"
-//     elsif element == "after"
-//       times << "5:30pm"
-//       times << "6:00pm"
-//       times << "6:30pm"
-//       times << "7:00pm"
-//       times << "7:30pm"
-//     # everything else is a course
-//     elsif element != "&"
-//       courses << element
-//     end
-//   end
-  
-//   # add the dates to the mapping
-//   if dates != []
-//     dates.each do |date|
-//       # stores weekends first
-//       if date.include?("S")
-//         # add course and exam mapping
-//         @course_time_to_exam["S"] = row["Exam Group"]
-
-//       else
-//         times.each do |time|
-//           # add course and exam mapping like M-10:00am => 1
-//           date.split(/(?=[A-Z])/).each do |day|
-//             key = day + "-" + time
-//             @course_time_to_exam[key] = row["Exam Group"]
-//           end
-//         end
-//       end # ends conditional
-
-//     end # ends date loop
-//   end # ends conditional
-// end
-
 
   /*
    * Assign exam slots to courses
