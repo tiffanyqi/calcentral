@@ -1,4 +1,3 @@
-
 Calcentral::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/ccadmin', :as => 'rails_admin'
@@ -38,6 +37,7 @@ Calcentral::Application.routes.draw do
   get '/api/my/updated_feeds' => 'is_updated#list', :defaults => {:format => 'json'}
   get '/api/service_alerts' => 'service_alerts#get_feed', :as => :service_alerts, :defaults => { :format => 'json' }
   get '/api/media/:term_yr/:term_cd/:dept_name/:catalog_id' => 'mediacasts#get_media', :defaults => { :format => 'json' }
+  get '/api/final_exam_schedule' => 'final_exam_schedule#get_feed', :as => :final_exam_schedule, :defaults => { :format => 'json' }
 
   # Google API writing endpoints
   post '/api/my/event' => 'my_events#create', via: :post, defaults: { format: 'json' }
