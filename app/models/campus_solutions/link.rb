@@ -48,7 +48,7 @@ module CampusSolutions
 
           link[:properties].each do |property|
             if property[:name] == 'NEW_WINDOW' && property[:value] == 'Y'
-              link[:show_new_window] = true
+              link[:showNewWindow] = true
             end
           end
         end
