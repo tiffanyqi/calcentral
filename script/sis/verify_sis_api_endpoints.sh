@@ -213,7 +213,7 @@ verify_cs 'always_enabled' true \
   "/UC_AA_ADVISING_RESOURCES.v1/UC_ADVISING_RESOURCES?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
   "/UC_CC_COMM_DB_URL.v1/dashboard/url/" \
   "/UC_SR_SLR_LINKS.v1/UC_SR_SLR_LINKS_GET" \
-  "/UC_LINK_API.v1/get?PROPNAME=UC_CX_LINK"
+  "/UC_LINK_API.v1/get?PROPNAME=CALCENTRAL"
 
 verify_cs 'cs_profile' "${yml_features_cs_profile}" \
   "/UC_CC_ADDR_LBL.v1/get?COUNTRY=ESP" \
