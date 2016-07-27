@@ -22,7 +22,6 @@ module MyRegistrations
     end
 
     def get_terms
-      berkeley_term = Berkeley::Term.new
       berkeley_terms = Berkeley::Terms.fetch
       terms = {}
       # ':previous' and ':grading_in_progress' methods are not included here because Campus::Oracle does not keep information prior to the current term.
@@ -35,11 +34,12 @@ module MyRegistrations
           if (term_method == :current || term_method == :next)
             temporal_position = term_method == :current ? HubTerm::Proxy::CURRENT_TERM : HubTerm::Proxy::NEXT_TERM
             cs_feed = HubTerm::Proxy.new(temporal_position: temporal_position).get_term
+            berkeley_term = Berkeley::Term.new.from_cs_api(cs_feed)
             terms[term_method] = terms[term_method].merge(
               {
-                classesStart: berkeley_term.from_cs_api(cs_feed).classes_start,
-                end: berkeley_term.from_cs_api(cs_feed).end,
-                endDropAdd: berkeley_term.from_cs_api(cs_feed).end_drop_add
+                classesStart: berkeley_term.classes_start,
+                end: berkeley_term.end,
+                endDropAdd: berkeley_term.end_drop_add
               }
             )
             terms[term_method] = set_term_flags(terms[term_method])
