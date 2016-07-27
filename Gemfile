@@ -124,7 +124,7 @@ group :development, :test , :testext do
   gem 'minitest-reporters', '~> 1.0.8'
 
   # We need to specify the latest webdriver here, to support the latest firefox
-  gem 'selenium-webdriver', '~> 2.46.2'
+  gem 'selenium-webdriver', '~> 2.53.4'
 
   # Code coverage for Ruby 1.9 with a powerful configuration library and automatic merging of coverage across test suites
   # https://rubygems.org/gems/simplecov
