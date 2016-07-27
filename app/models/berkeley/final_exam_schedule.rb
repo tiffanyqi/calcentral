@@ -1,7 +1,8 @@
 require 'csv'
 
 module Berkeley
-  # Represents temporary final exam 
+  # Represents temporary final exam as told: schedule.berkeley.edu/examf.html
+  # The Interim schedule before Campus Solutions sets in
   class FinalExamSchedule
 
     def self.get_feed
