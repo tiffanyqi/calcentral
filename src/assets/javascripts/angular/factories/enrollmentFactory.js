@@ -8,9 +8,9 @@ var _ = require('lodash');
  * The second set of URLs relate to Advisors doing student lookup, NOT a view-as mode.
  */
 angular.module('calcentral.factories').factory('enrollmentFactory', function(apiService, $route, $routeParams) {
-  var urlEnrollmentInstructions = '/api/my/class_enrollments';
-  // var urlEnrollmentInstructions = '/dummy/json/enrollment_instructions.json';
-  var urlAdvisingEnrollmentInstructions = '/api/advising/class_enrollments/';
+  // var urlEnrollmentInstructions = '/api/my/class_enrollments';
+  var urlEnrollmentInstructions = '/dummy/json/enrollment_instructions.json';
+  // var urlAdvisingEnrollmentInstructions = '/api/advising/class_enrollments/';
   // var urlAdvisingEnrollmentInstructions = '/dummy/json/enrollment_instructions.json';
 
   /**
