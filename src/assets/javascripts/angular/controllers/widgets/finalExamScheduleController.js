@@ -6,12 +6,12 @@ var _ = require('lodash');
 /**
  * Final exam schedule controller
  */
-angular.module('calcentral.controllers').controller('FinalExamScheduleController', function(apiService, finalExamScheduleFactory, enrollmentFactory, $scope, $route) {
+angular.module('calcentral.controllers').controller('FinalExamScheduleController', function(apiService, finalExamScheduleFactory, enrollmentFactory, $scope) {
 
   // classes that are not calculated by start time
-  var chem = ['CHEM 1A', 'CHEM 1B']; // for slot 3, Monday, 12/12/16, 3-6pm
-  var econ = ['ECON 1', 'ECON 100B']; // for slot 6, Tuesday, 12/13/16, 11:30-2:30pm
-  var forlang = ['']; // for slot 10, Wednesday, 12/14/16, 11:30-2:30pm
+  var chem = ['CHEM 1A', 'CHEM 1B']; // for slot 3
+  var econ = ['ECON 1', 'ECON 100B']; // for slot 6
+  var forlang = ['']; // for slot 10
 
   // create empty hashes to prepare for methods
   var courses = { };
@@ -70,10 +70,24 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
       } else {
         startTime += "am";
       }
-
       var examKey = day + "-" + startTime;
-      schedule[course] = examSchedule[examKey];
-      
+
+      // check to see if course is chem, econ, or forlang
+      if (chem.includes(course)) {
+        schedule[course] = ["Mon Dec 12", "3-6pm"];
+      } else if (econ.includes(course)) {
+        schedule[course] = ["Tue Dec 13", "11:30-2:30pm"];
+      } else if (forlang.includes(course)) {
+        schedule[course] = ["Wed Dec 14", "11:30-2:30pm"];
+      } else {
+        var exam = examSchedule[examKey].split(",");
+        var examDay = exam[0].substr(0, 3);
+        var examDate = exam[1];
+        var e = examDay + " " + examDate;
+        var examTime = exam[2];
+
+        schedule[course] = [e, examTime];
+      }
     }
     $scope.schedule = schedule;
   }
