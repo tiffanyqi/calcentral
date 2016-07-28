@@ -1,5 +1,5 @@
 module Advising
-  class MyAdvising < UserSpecificModel
+  class LegacyMyAdvising < UserSpecificModel
     include Cache::CachedFeed
     include Cache::FeedExceptionsHandled
     include Cache::UserCacheExpiry

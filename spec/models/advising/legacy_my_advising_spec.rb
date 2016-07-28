@@ -1,13 +1,13 @@
-describe Advising::MyAdvising do
+describe Advising::LegacyMyAdvising do
   let (:uid) { '61889' }
-  let (:fake_oski_model) { Advising::MyAdvising.new(uid, fake: true) }
-  let (:real_oski_model) { Advising::MyAdvising.new(uid, fake: false) }
+  let (:fake_oski_model) { Advising::LegacyMyAdvising.new(uid, fake: true) }
+  let (:real_oski_model) { Advising::LegacyMyAdvising.new(uid, fake: false) }
   let (:advising_uri) { URI.parse(Settings.advising_proxy.base_url) }
 
   describe 'proper caching behaviors' do
     before do
       # Avoid caching student ID checks.
-      allow_any_instance_of(Advising::MyAdvising).to receive(:lookup_student_id).and_return(11667051)
+      allow_any_instance_of(Advising::LegacyMyAdvising).to receive(:lookup_student_id).and_return(11667051)
     end
 
     context 'on success' do
@@ -112,7 +112,7 @@ describe Advising::MyAdvising do
     end
 
     context 'with a non-student' do
-      subject { Advising::MyAdvising.new('211159').get_parsed_response }
+      subject { Advising::LegacyMyAdvising.new('211159').get_parsed_response }
       it 'should return empty response' do
         expect(subject).to eq({})
       end
