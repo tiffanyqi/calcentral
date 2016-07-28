@@ -33,11 +33,15 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
       for (var c = 0; c < classObject.length; c++) {
         var course = classObject[c];
 
-        // add course and time to the course hash if it has units
-        if (course['units'] != 0) {
+        // add course and time to the course hash if it is a lecture
+        if (course['ssrComponent'] === "LEC") {
           var courseCode = course['subjectCatalog'];
           var time = course['when'];
-          courses[courseCode] = time;
+          if (i === 0) {
+            courses[courseCode] = [time, false]; // false means class is enrolled
+          } else {
+            courses[courseCode] = [time, true];
+          }
         }
       }
     }
@@ -53,7 +57,9 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
     // iterate through each course in enrollments
     for (var course in courses) {
 
-      var courseTime = courses[course].split(' ');
+      var courseArray = courses[course];
+      var courseTime = courseArray[0].split(' ');
+      var courseWaitlisted = courseArray[1];
 
       // days like MWF is the first, take the first letter for the key
       var day = courseTime[0].split(/(?=[A-Z])/)[0];
@@ -81,12 +87,10 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
         schedule[course] = ["Wed Dec 14", "11:30-2:30pm"];
       } else {
         var exam = examSchedule[examKey].split(",");
-        var examDay = exam[0].substr(0, 3);
-        var examDate = exam[1];
-        var e = examDay + " " + examDate;
+        var examDate = exam[0].substr(0, 3) + " " + exam[1];
         var examTime = exam[2];
 
-        schedule[course] = [e, examTime];
+        schedule[course] = [examDate, examTime, courseWaitlisted];
       }
     }
     $scope.schedule = schedule;
