@@ -59,7 +59,7 @@ describe CampusSolutions::Link do
       it_should_behave_like 'a proxy that gets data'
       it 'returns data with the expected structure' do
         expect(link_get_url_response[:feed][:link][:urlId]).to eq url_id
-        expect(link_get_url_response[:feed][:link][:properties].count).to eq 3
+        expect(link_get_url_response[:feed][:link][:properties]).not_to be
         expect(link_get_url_response[:feed][:link][:showNewWindow]).to eq true
 
         # Verify that {placeholder} text is present
