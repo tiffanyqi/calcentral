@@ -4,6 +4,7 @@ module EdoOracle
 
     def self.get_all_courses
       term_ids = get_campus_solutions_term_ids
+      return [] if term_ids.blank?
       safe_query <<-SQL
         SELECT DISTINCT
           mtg."term-id" AS term_id,
@@ -33,7 +34,7 @@ module EdoOracle
       SQL
     end
 
-    def self.get_whitelisted_students_in_course(users, term_id, course_id)
+    def self.get_whitelisted_students(users, term_id, course_id)
       return [] if users.blank?
       users_clause = chunked_whitelist('enroll."CAMPUS_UID"', users.map(&:uid))
       safe_query <<-SQL

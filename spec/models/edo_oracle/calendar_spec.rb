@@ -39,7 +39,7 @@ describe EdoOracle::Calendar do
   context 'querying for students' do
     let(:term_id) { '2168' }
     let(:course_id) { '7309' }
-    let(:run_query) { EdoOracle::Calendar.get_whitelisted_students_in_course(users, term_id, course_id) }
+    let(:run_query) { EdoOracle::Calendar.get_whitelisted_students(users, term_id, course_id) }
     context 'empty users list' do
       let(:users) { [] }
       it 'does not query and returns empty results' do

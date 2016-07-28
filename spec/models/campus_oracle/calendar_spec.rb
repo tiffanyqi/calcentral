@@ -17,8 +17,8 @@ describe CampusOracle::Calendar do
     end
   end
 
-  describe '#get_whitelisted_students_in_course' do
-    subject { CampusOracle::Calendar.get_whitelisted_students_in_course(users, term_yr, term_cd, ccn) }
+  describe '#get_whitelisted_students' do
+    subject { CampusOracle::Calendar.get_whitelisted_students(users, term_yr, term_cd, ccn) }
     let(:term_yr) { 2013 }
     let(:term_cd) { 'D' }
     let(:ccn) { 7309 }
@@ -37,7 +37,7 @@ describe CampusOracle::Calendar do
     end
 
     context 'with an empty whitelist' do
-      subject { CampusOracle::Calendar.get_whitelisted_students_in_course([], term_yr, term_cd, ccn) }
+      subject { CampusOracle::Calendar.get_whitelisted_students([], term_yr, term_cd, ccn) }
       it 'returns an empty list' do
         expect(subject).to be_empty
       end
