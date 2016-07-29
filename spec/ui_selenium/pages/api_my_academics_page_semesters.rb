@@ -390,7 +390,7 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
 
   def wait_list_course_sections(course)
     wait_list_sections = []
-    course_sections(course).each { |section| wait_list_sections << section unless wait_list_position(section).nil? }
+    course_sections(course).each { |section| wait_list_sections << section unless wait_list_position(section).blank? }
     wait_list_sections
   end
 
@@ -426,14 +426,14 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
 
   def wait_list_positions(sections)
     positions = []
-    sections.each { |section| positions << wait_list_position(section).to_s }
+    sections.each { |section| positions << wait_list_position(section).to_s unless wait_list_position(section).zero? }
     positions
   end
 
   def enrollment_limits(wait_list_courses)
     limits = []
     wait_list_courses.each do |course|
-      course_primary_sections(course).each { |section| limits << section['enroll_limit'].to_s }
+      course_primary_sections(course).each { |section| limits << section['enroll_limit'].to_s unless section['enroll_limit'].nil? }
     end
     limits
   end

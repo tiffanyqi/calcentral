@@ -1,6 +1,6 @@
 describe 'My Finances Campus Solutions student financials', :testui => true do
 
-  if ENV["UI_TEST"] && Settings.ui_selenium.layer == 'local'
+  if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 
@@ -41,6 +41,8 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
           # Get data from billing API
           fin_api = ApiCSBillingPage.new driver
           fin_api.get_json driver
+          fin_legacy_api = ApiMyFinancialsPage.new driver
+          fin_legacy_api.get_json driver
 
           if (has_finances_tab = @status_api.has_finances_tab?)
 
@@ -48,8 +50,8 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
 
               @my_finances_landing.load_page
 
-              shows_error_msg = WebDriverUtils.verify_block { @my_finances_billing.error_msg_element.when_visible WebDriverUtils.page_load_timeout }
-              it("shows an 'unavailable' message for UID #{uid}") { expect(shows_error_msg).to be true }
+              shows_billing = WebDriverUtils.verify_block { @my_finances_billing.amt_due_now_label_cs_element.when_visible WebDriverUtils.page_load_timeout }
+              it("shows no CS Billing UI for UID #{uid}") { expect(shows_billing).to be false }
 
             elsif fin_api.feed.empty?
 
@@ -132,8 +134,6 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
               fin_api.account_balance.zero? ?
                   it("shows no make payment link for UID #{uid}") { expect(my_fin_pmt_link).to be false } :
                   it("shows a make payment link for UID #{uid}") { expect(my_fin_pmt_link).to be true }
-
-              # TODO - status popover
 
               # TRANSACTION DETAIL CARD
 
@@ -350,6 +350,40 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
 
             # TODO - other transaction types (deposits, refunds)
 
+            # STATUS POPOVER
+
+              if @status_api.is_student? || @status_api.is_ex_student?
+
+                @my_finances_billing.open_profile_popover
+
+                has_amt_due_alert = WebDriverUtils.verify_block { @my_finances_billing.amount_due_status_alert_element.when_visible WebDriverUtils.page_event_timeout }
+                popover_amt_due = @my_finances_billing.alert_amt_due if has_amt_due_alert
+
+                # Popover alert will combine amounts from legacy and CS
+                legacy_amt_due_now = fin_legacy_api.min_amt_due.nil? ? 0 : BigDecimal(fin_legacy_api.amt_to_s fin_legacy_api.min_amt_due)
+                cs_amt_due_now = fin_api.amount_due_now.nil? ? 0 : BigDecimal(fin_api.amt_to_s fin_api.amount_due_now)
+                ttl_due_now = legacy_amt_due_now + cs_amt_due_now
+
+                if ttl_due_now > 0
+                  it("shows an Amount Due alert for UID #{uid}") { expect(has_amt_due_alert).to be true }
+                  if has_amt_due_alert
+                    it("shows the amount due on the Amount Due alert for UID #{uid}") { expect(popover_amt_due).to eql(fin_api.amt_to_s ttl_due_now) }
+                  end
+                else
+                  it("shows no Amount Due alert for UID #{uid}") { expect(has_amt_due_alert).to be false }
+                end
+
+                if has_amt_due_alert
+                  @dashboard_page.load_page
+                  @dashboard_page.open_profile_popover
+                  @dashboard_page.click_amt_due_alert
+
+                  amt_due_link_works = (@my_finances_billing.current_url == "#{WebDriverUtils.base_url}/finances")
+
+                  it("offers a link from the profile popover amount due alert to the My Finances page for UID #{uid}") { expect(amt_due_link_works).to be true }
+
+                end
+              end
             end
           end
 

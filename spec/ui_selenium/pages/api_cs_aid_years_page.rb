@@ -40,7 +40,7 @@ class ApiCSAidYearsPage
   def fin_aid_ui_semesters(year)
     case fin_aid_semesters(year).length
       when 1
-        "#{fin_aid_semesters(year)[0]} only"
+        "#{fin_aid_semesters(year)[0]}"
       when 2
         "#{fin_aid_semesters(year)[0]} and #{fin_aid_semesters(year)[1]}"
       when 3

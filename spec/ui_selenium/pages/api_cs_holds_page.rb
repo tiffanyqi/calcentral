@@ -10,7 +10,10 @@ class ApiCSHoldsPage
   end
 
   def holds
-    @parsed['feed'] && @parsed['feed']['serviceIndicators']
+    service_indicators = @parsed['feed'] && @parsed['feed']['serviceIndicators']
+    # For now, specifically exclude one type of (positive) SI
+    service_indicators.delete_if { |si| si['serviceIndicatorDescr'] == 'Tuition Calculated' } unless service_indicators.nil?
+    service_indicators
   end
 
   def hold_reasons

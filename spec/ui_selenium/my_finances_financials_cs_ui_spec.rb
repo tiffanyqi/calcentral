@@ -1,6 +1,6 @@
 describe 'My Finances Campus Solutions billing details page', :testui => true do
 
-  if ENV["UI_TEST"] && Settings.ui_selenium.layer == 'local'
+  if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 

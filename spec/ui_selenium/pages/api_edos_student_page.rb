@@ -27,7 +27,7 @@ class ApiEdosStudentPage
   end
 
   def residency_desc
-    residency_official['description'].blank? ? 'Not Yet Submitted' : residency_official['description']
+    residency_official && (residency_official['description'].blank? ? 'Not Yet Submitted' : residency_official['description'])
   end
 
   def residency_from_term

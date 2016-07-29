@@ -21,6 +21,19 @@ class ApiMyRegistrationsPage
     terms && terms['next']
   end
 
+  def future_term
+    terms && terms['future']
+  end
+
+  def active_reg_status_terms
+    [future_term, next_term, current_term].compact
+  end
+
+  def terms_with_registrations
+    terms = active_reg_status_terms.map { |term| term_registrations(term_id term) }
+    terms.compact.flatten
+  end
+
   def term_id(term)
     term['id']
   end
@@ -38,15 +51,23 @@ class ApiMyRegistrationsPage
   end
 
   def reg_status(term_id, index)
-    term_registrations(term_id) && term_registrations(term_id)[index]['regStatus']
+    term_registrations(term_id) && (term_registrations(term_id)[index]['regStatus'] if term_registrations(term_id).any?)
   end
 
   def reg_status_summary(term_id, index)
     reg_status(term_id, index) && reg_status(term_id, index)['summary']
   end
 
+  def registered?(term, index)
+    if term_name(term) == 'Summer 2016'
+      reg_status(term_id(term), index) && term_registrations(term_id(term))[index]['roles']['registered']
+    else
+      term_registrations(term_id(term))[index]['registered']
+    end
+  end
+
   def current_term_reg_status
-    reg_status_summary(term_id(current_term), 0).include? 'Registered' if (current_term && term_registrations(term_id current_term))
+    reg_status(term_id(current_term), 0) && (reg_status_summary(term_id(current_term), 0).include?('Registered') if (current_term && term_registrations(term_id current_term)))
   end
 
 end

@@ -22,23 +22,23 @@ class ApiCSBillingPage
   end
 
   def current_term
-    summary['currentTerm']
+    summary && summary['currentTerm']
   end
 
   def amount_due_now
-    summary['amountDueNow']
+    summary && summary['amountDueNow']
   end
 
   def past_due_amount
-    summary['pastDueAmount']
+    summary && summary['pastDueAmount']
   end
 
   def charges_not_yet_due
-    summary['chargesNotYetDue']
+    summary && summary['chargesNotYetDue']
   end
 
   def account_balance
-    summary['accountBalance']
+    summary && summary['accountBalance']
   end
 
   def activity

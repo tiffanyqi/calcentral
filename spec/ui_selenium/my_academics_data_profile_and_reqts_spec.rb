@@ -8,7 +8,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
       driver = WebDriverUtils.launch_browser
       test_users = UserUtils.load_test_users.select { |user| user['profile'] }
       testable_users = []
-      test_output_heading = ['UID', 'User Type', 'Term Transition', 'Colleges', 'Majors', 'Careers', 'Units', 'GPA', 'Level',
+      test_output_heading = ['UID', 'Term Transition', 'Colleges', 'Majors', 'Careers', 'Units', 'GPA', 'Level',
                              'Level No AP', 'Writing', 'History', 'Institutions', 'Cultures']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
@@ -21,7 +21,6 @@ describe 'My Academics profile and university requirements cards', :testui => tr
       test_users.each do |user|
         uid = user['uid']
         logger.info "UID is #{uid}"
-        user_type = nil
         term_transition = false
         api_colleges = []
         api_majors = []
@@ -53,7 +52,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
             it ("show the full name of UID #{uid}") { expect(my_academics_full_name).to eql(api_full_name) }
 
             # GPA
-            if academics_api_page.gpa == '0.0' || academics_api_page.gpa.nil? || status_api_page.is_concurrent_enroll_student?
+            if %w(0.0 0).include?(academics_api_page.gpa) || academics_api_page.gpa.nil? || status_api_page.is_concurrent_enroll_student?
               has_gpa = profile_card.gpa?
               it ("show no GPA for UID #{uid}") { expect(has_gpa).to be false }
             else
@@ -118,7 +117,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
 
             # UNDERGRAD REQUIREMENTS
 
-            if academics_api_page.has_no_standing? || (!academics_api_page.careers.include? 'Undergraduate')
+            if academics_api_page.has_no_standing? || (!academics_api_page.careers.include? 'Undergraduate') || academics_api_page.requirements.nil?
 
               has_reqts_card = reqts_card.reqts_table?
               it ("show no 'University Requirements' UI for UID #{uid}") { expect(has_reqts_card).to be false }
@@ -185,25 +184,21 @@ describe 'My Academics profile and university requirements cards', :testui => tr
 
               if status_api_page.is_student?
                 if status_api_page.is_registered?
-                  user_type = 'registered student no standing'
                   has_reg_no_standing_msg = profile_card.reg_no_standing_msg?
                   it ("show a registered but not fully active message to UID #{uid}") { expect(has_reg_no_standing_msg).to be true }
                 else
                   if academics_api_page.units_attempted == 0
-                    user_type = 'new student'
                     has_non_reg_msg = profile_card.non_reg_student_msg?
                     has_new_student_msg = profile_card.new_student_msg?
                     it ("show a 'not registered' message to UID #{uid}") { expect(has_non_reg_msg).to be true }
                     it ("show a new student message to UID #{uid}") { expect(has_new_student_msg).to be true }
                   else
-                    user_type = 'unregistered student'
                     has_non_reg_msg = profile_card.non_reg_student_msg?
                     it ("show a 'not registered' message to UID #{uid}") { expect(has_non_reg_msg).to be true }
                   end
                 end
 
               elsif status_api_page.is_concurrent_enroll_student?
-                user_type = 'concurrent enrollment'
                 has_concur_student_msg = profile_card.concur_student_msg?
                 has_uc_ext_link = WebDriverUtils.verify_external_link(driver, profile_card.uc_ext_link_element, 'Concurrent Enrollment | Student Services | UC Berkeley Extension')
                 has_eap_link = WebDriverUtils.verify_external_link(driver, profile_card.eap_link_element, 'Exchange Students | Berkeley International Office')
@@ -212,7 +207,6 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 it ("show a concurrent enrollment EAP link to UID #{uid}") { expect(has_eap_link).to be true }
 
               else
-                user_type = 'ex-student'
                 has_ex_student_msg = profile_card.ex_student_msg?
                 it ("show an ex-student message to UID #{uid}") { expect(has_ex_student_msg).to be true }
               end
@@ -223,11 +217,9 @@ describe 'My Academics profile and university requirements cards', :testui => tr
                 term_transition = true
                 api_term_transition = "Academic status as of #{academics_api_page.term_name}"
                 if status_api_page.is_student?
-                  user_type = 'existing student'
                   my_academics_term_transition = profile_card.term_transition_heading
                   it ("show the term transition heading to UID #{uid}") { expect(my_academics_term_transition).to eql(api_term_transition) }
                 else
-                  user_type = 'ex-student'
                   has_transition_heading = profile_card.term_transition_heading?
                   it ("shows no term transition heading to UID #{uid}") { expect(has_transition_heading).to be false }
                 end
@@ -236,7 +228,6 @@ describe 'My Academics profile and university requirements cards', :testui => tr
 
           elsif academics_api_page.all_teaching_semesters.nil?
 
-            user_type = 'no data'
             no_data_msg = profile_card.not_found_element.when_visible WebDriverUtils.page_load_timeout
             it ("show a 'Data not available' message to UID #{uid}") { expect(no_data_msg).to be_truthy }
 
@@ -249,7 +240,7 @@ describe 'My Academics profile and university requirements cards', :testui => tr
         rescue => e
           logger.error "#{e.message + "\n"} #{e.backtrace.join("\n ")}"
         ensure
-          test_output_row = [uid, user_type, term_transition, api_colleges * '; ', api_majors * '; ', api_careers * '; ',
+          test_output_row = [uid, term_transition, api_colleges * '; ', api_majors * '; ', api_careers * '; ',
                              api_units, api_gpa, api_level, api_level_no_ap, api_writing_reqt, api_history_reqt,
                              api_institutions_reqt, api_cultures_reqt]
           UserUtils.add_csv_row(test_output, test_output_row)
@@ -261,7 +252,6 @@ describe 'My Academics profile and university requirements cards', :testui => tr
     rescue => e
       logger.error "#{e.message + "\n"} #{e.backtrace.join("\n ")}"
     ensure
-      logger.info 'Quitting the browser'
       WebDriverUtils.quit_browser driver
     end
   end

@@ -7,36 +7,25 @@ module CalCentralPages
     include ClassLogger
 
     div(:status_holds_section, :class => 'cc-status-holds-section')
+    elements(:reg_status, :div, :xpath => '//div[contains(@data-ng-repeat, "registration in regStatus")]')
 
     # Registration
 
     def reg_status_summary_element(term_name, index)
-      span_element(:xpath => "//h4[@data-ng-bind='regStatus.term'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}]//span[@data-ng-bind='regStatus.summary']")
+      span_element(:xpath => "//h4[@data-ng-bind='registration.name'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}]//span[@data-ng-bind='registration.summary']")
     end
 
     def reg_status_collapsed_element(term_name, index)
-      list_item_element(:xpath => "//h4[@data-ng-bind='regStatus.term'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}][@class='cc-widget-list-hover']")
-    end
-
-    def reg_status_expanded_element(term_name, index)
-      list_item_element(:xpath => "//h4[@data-ng-bind='regStatus.term'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}][@class='cc-widget-list-hover cc-widget-list-hover-opened']")
-    end
-
-    def reg_status_detail_element(term_name, index)
-      div_element(:xpath => "//h4[@data-ng-bind='regStatus.term'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}]//div[@data-ng-bind='regStatus.explanation']")
-    end
-
-    def reg_status_icon_green_element(term_name, index)
-      image_element(:xpath => "//h4[@data-ng-bind='regStatus.term'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}]//i[@class='cc-icon fa fa-check-circle cc-icon-green']")
-    end
-
-    def reg_status_icon_red_element(term_name, index)
-      image_element(:xpath => "//h4[@data-ng-bind='regStatus.term'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}]//i[@class='cc-icon fa fa-exclamation-circle cc-icon-red']")
+      list_item_element(:xpath => "//h4[@data-ng-bind='registration.name'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}][@class='cc-widget-list-hover']")
     end
 
     def show_reg_status_detail(term_name, index)
       WebDriverUtils.wait_for_element_and_click reg_status_collapsed_element(term_name, index)
-      reg_status_expanded_element(term_name, index).when_visible WebDriverUtils.page_event_timeout
+      reg_status_detail_element(term_name, index).when_visible WebDriverUtils.page_event_timeout
+    end
+
+    def reg_status_detail_element(term_name, index)
+      span_element(:xpath => "//h4[@data-ng-bind='registration.name'][contains(.,'#{term_name}')]/following-sibling::ul/li[#{index + 1}]//div[@class='cc-status-holds-expanded-text']")
     end
 
     # Residency
@@ -85,10 +74,10 @@ module CalCentralPages
     # Holds (service indicators)
 
     h3(:active_holds_heading, :xpath => '//h3[text()="Active Holds"]')
-    table(:active_holds_table, :xpath => '//div[@data-ng-if="holds.serviceIndicators.length"]/table')
-    elements(:active_holds_row, :row, :xpath => '//div[@data-ng-if="holds.serviceIndicators.length"]/table//tr')
-    div(:active_hold_message, :xpath => '//div[@data-ng-if="indicator.instructions"]')
-    span(:active_hold_term, :xpath => '//span[@data-ng-bind="indicator.startTermDescr"]')
+    table(:active_holds_table, :xpath => '//div[@data-ng-if="holds.length"]/table')
+    elements(:active_holds_row, :row, :xpath => '//div[@data-ng-if="holds.length"]/table//tr')
+    div(:active_hold_message, :xpath => '//div[@data-ng-if="hold.reason.formalDescription"]')
+    span(:active_hold_term, :xpath => '//span[@data-ng-bind="hold.fromTerm.name"]')
     div(:no_active_holds_message, :xpath => '//div[contains(text(),"You have no active holds at this time.")]')
 
     def active_hold_count

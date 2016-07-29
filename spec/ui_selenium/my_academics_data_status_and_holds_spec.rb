@@ -8,8 +8,8 @@ describe 'My Academics Status and Holds', :testui => true do
       driver = WebDriverUtils.launch_browser
 
       test_users = UserUtils.load_test_users.select { |user| user['status'] }
-      test_output_heading = ['UID', 'Affiliations', 'Student', 'Ex-Student', 'Registered', 'Reg Status',
-                             'Resident', 'Residency Message', 'Active Hold', 'Hold Reasons', 'Active Block']
+      test_output_heading = ['UID', 'Affiliations', 'Student', 'Ex-Student', 'Reg Statuses', 'Has Popover', 'Resident',
+                             'Residency Message', 'Active Hold', 'Hold Reasons', 'Active Block']
       test_output = UserUtils.initialize_output_csv(self, test_output_heading)
 
       registered_users = []
@@ -29,7 +29,9 @@ describe 'My Academics Status and Holds', :testui => true do
       test_users.each do |user|
         uid = user['uid']
         logger.info "UID is #{uid}"
-        api_reg_status = nil
+        has_reg_status = nil
+        term_statuses = []
+        has_status_heading = nil
         api_res_status = nil
         api_residency_msg = nil
         has_hold = nil
@@ -43,22 +45,28 @@ describe 'My Academics Status and Holds', :testui => true do
           splash_page.basic_auth uid
 
           # Get user data from feeds
+
+          # Status API
           status_api_page.get_json driver
           is_student = status_api_page.is_student?
           is_ex_student = status_api_page.is_ex_student?
           is_applicant = status_api_page.is_applicant?
-          is_registered = status_api_page.is_registered?
 
+          # Student API
           student_api_page.get_json driver
           affiliations = student_api_page.affiliation_types
 
-          # For now, only check the reg status for current term
+          # Registrations API
           registrations_api_page.get_json driver
-          api_reg_status = registrations_api_page.current_term_reg_status
+          if !registrations_api_page.current_term_reg_status && registrations_api_page.terms_with_registrations.length == 1
+            has_reg_status = true
+          end
           api_term_name = registrations_api_page.term_name registrations_api_page.current_term
 
+          # Academics API
           academics_api_page.get_json driver
 
+          # Holds API
           holds_api_page.get_json driver
           has_hold = holds_api_page.holds.any? unless holds_api_page.holds.nil?
 
@@ -71,66 +79,84 @@ describe 'My Academics Status and Holds', :testui => true do
           popover_hold_count = my_academics_page.hold_status_alert_number if has_hold_alert
           has_block_alert = my_academics_page.block_status_alert?
 
-          # Students, ex-students, and new admits could have status info
-          if is_student || is_applicant || (is_ex_student && academics_api_page.all_student_semesters.any?)
+          # Students and new admits could have status info
+          if is_student || is_applicant
 
             # New admits with no reg status info and no holds should have no status in the popover
-            (is_applicant && !is_student && api_reg_status.nil? && !has_hold) ?
+            (is_applicant && !is_student && !has_reg_status && !has_hold) ?
                 (it ("is not available via a person icon in the header for UID #{uid}") { expect(has_status_heading).to be false }) :
                 (it ("is available via a person icon in the header for UID #{uid}") { expect(has_status_heading).to be true })
 
             my_academics_page.page_heading_element.when_visible timeout=WebDriverUtils.page_load_timeout
+            has_status_card = my_academics_page.status_holds_section?
+
+            it("appears on the Status and Holds card for UID #{uid}") { expect(has_status_card).to be true }
 
             # REGISTRATION STATUS
 
-            # Status info can take a while to load, so wait a few seconds to see whether or not it appears
-            has_reg_status_summary = WebDriverUtils.verify_block { my_academics_page.reg_status_summary_element(api_term_name, 0).when_visible 5 }
-            has_reg_status_explanation = WebDriverUtils.verify_block { my_academics_page.show_reg_status_detail(api_term_name, 0) }
+            my_acad_reg_statuses = my_academics_page.reg_status_elements
+            has_ui_reg_statuses = WebDriverUtils.verify_block { my_academics_page.wait_until(10) { my_acad_reg_statuses.any? } }
 
-            if api_reg_status.nil?
-              it "shows no registration status summary or explanation for UID #{uid}" do
-                expect(has_reg_status_summary).to be false
-                expect(has_reg_status_explanation).to be false
-              end
-            else
-              it "shows a registration status summary and explanation for UID #{uid}" do
-                expect(has_reg_status_summary).to be true
-                expect(has_reg_status_explanation).to be true
-              end
+            registrations_api_page.active_reg_status_terms.each do |term|
 
-              if has_reg_status_summary
-                my_acad_reg_status_summary = my_academics_page.reg_status_summary_element(api_term_name, 0).text
-                my_acad_reg_status_explanation = my_academics_page.reg_status_detail_element(api_term_name, 0).text
+              api_term_name = registrations_api_page.term_name term
+              api_term_registrations = registrations_api_page.term_registrations registrations_api_page.term_id(term)
 
-                if api_reg_status
-                  registered_users << uid if my_acad_reg_status_summary == 'Officially Registered'
+              if api_term_registrations.present? && has_ui_reg_statuses
+                logger.debug "Checking registration status for #{api_term_name}"
+                logger.debug "There are #{api_term_registrations.length} registration statuses"
 
-                  it ("shows 'Registered' for UID #{uid}") { expect(my_acad_reg_status_summary).to eql('Officially Registered') }
-                  it ("shows a you-are-registered explanation for UID #{uid}") { expect(my_acad_reg_status_explanation).to eql('You are officially registered for this term.') }
-                  it ("does not show a popover registration alert for UID #{uid}") { expect(has_reg_alert).to be false }
+                # For now, only look for a single registration status per term
+                api_reg_status = registrations_api_page.registered?(term, 0)
+                term_statuses << "#{api_term_name} - #{api_reg_status}"
+
+                if api_reg_status && has_ui_reg_statuses
+
+                  my_acad_reg_status_summary = my_academics_page.reg_status_summary_element(api_term_name, 0).text
+                  my_academics_page.reg_status_collapsed_element(api_term_name, 0).click
+                  my_acad_reg_status_explanation = my_academics_page.reg_status_detail_element(api_term_name, 0).text
+
+                  it ("shows 'Registered' for UID #{uid} in #{api_term_name}") { expect(my_acad_reg_status_summary).to eql('Officially Registered') }
+                  it ("shows a you-are-registered explanation for UID #{uid} in #{api_term_name}") { expect(my_acad_reg_status_explanation).to include('You are officially registered') }
+
+                  if term == registrations_api_page.current_term
+                    registered_users << uid
+                    it ("does not show a popover registration alert for UID #{uid} in #{api_term_name}") { expect(has_reg_alert).to be false }
+                  end
 
                 else
 
-                  it ("shows 'Not Registered' status during the regular term for UID #{uid}") { expect(my_acad_reg_status_summary).to eql('Not Officially Registered') }
-                  it ("shows a you-are-not-registered explanation during the regular term for UID #{uid}") { expect(my_acad_reg_status_explanation).to include('You are not officially registered for this term.') }
+                  unless academics_api_page.careers.nil? || registrations_api_page.reg_status(registrations_api_page.term_id(term), 0).nil?
 
-                  # For now, explicitly check for summer rather than 'term transition'
-                  if api_term_name.include? 'Summer'
-                    it ("does not show a profile popover registration alert during term transition for UID #{uid}") { expect(has_reg_alert).to be false }
-                  else
-                    if api_reg_status
-                      it ("shows no registration alert on the popover during the regular term for UID #{uid}") { expect(has_reg_alert).to be false }
+                    my_acad_reg_status_summary = my_academics_page.reg_status_summary_element(api_term_name, 0).text
+                    my_academics_page.reg_status_collapsed_element(api_term_name, 0).click
+                    my_acad_reg_status_explanation = my_academics_page.reg_status_detail_element(api_term_name, 0).text
+
+                    it ("shows 'Not Registered' status during the regular term for UID #{uid} in #{api_term_name}") { expect(my_acad_reg_status_summary).to eql('Not Officially Registered') }
+
+                    if api_term_name.include?('Summer')
+                      it ("shows a you-are-not-registered explanation during the summary term for UID #{uid} in #{api_term_name}") { expect(my_acad_reg_status_explanation).to include('You are not officially registered for this term.') }
                     else
-                      it ("shows a registration alert on the popover during the regular term for UID #{uid}") { expect(has_reg_alert).to be true }
+                      it ("shows a you-are-not-registered explanation during the regular term for UID #{uid} in #{api_term_name}") { expect(my_acad_reg_status_explanation).to include('You may have limited access to campus services until you are officially registered.') }
+                    end
+
+                    if term == registrations_api_page.current_term && !api_term_name.include?('Summer')
+
+                      it ("shows a registration alert on the popover during the regular term for UID #{uid} in #{api_term_name}") { expect(has_reg_alert).to be true }
 
                       if has_reg_alert
                         reg_alert_text = my_academics_page.reg_status_alert
-                        it ("shows a registration alert message on the popover during the regular term for UID #{uid}") { expect(reg_alert_text).to include('Not Registered') }
+                        it ("shows a registration alert message on the popover during the regular term for UID #{uid} in #{api_term_name}") { expect(reg_alert_text).to include('Not Registered') }
                       end
+
+                    else
+                      it ("does not show a profile popover registration alert during term transition for UID #{uid} in #{api_term_name}") { expect(has_reg_alert).to be false }
                     end
+
                   end
                 end
               end
+
             end
 
             # CALIFORNIA RESIDENCY
@@ -139,7 +165,7 @@ describe 'My Academics Status and Holds', :testui => true do
             has_res_status = WebDriverUtils.verify_block { my_academics_page.res_status_summary_element(0).when_present 5 }
             has_res_status_explanation = WebDriverUtils.verify_block { my_academics_page.show_res_status_detail 0 }
 
-            if has_reg_status_summary && student_api_page.has_residency?
+            if has_ui_reg_statuses && student_api_page.has_residency?
 
               it ("shows residency status for UID #{uid}") do
                 expect(has_res_status).to be true
@@ -217,7 +243,7 @@ describe 'My Academics Status and Holds', :testui => true do
               it ("shows the hold reason on the academics page for UID #{uid}") { expect(hold_reasons).to eql(holds_api_hold_reasons) }
               it ("shows the hold date on the academics page for UID #{uid}") { expect(hold_dates).to eql(holds_api_hold_dates) }
 
-            elsif (is_applicant && !is_student) || api_reg_status.nil?
+            elsif is_applicant && !is_student
 
               has_holds_heading = my_academics_page.active_holds_heading?
 
@@ -261,7 +287,7 @@ describe 'My Academics Status and Holds', :testui => true do
               it ("offers a link from the profile popover active hold alert to My Academics for UID #{uid}") { expect(hold_alert_link_works).to be_truthy }
             end
 
-          elsif is_ex_student && !status_api_page.is_faculty?
+          elsif is_ex_student && has_reg_status && !status_api_page.is_faculty?
 
             it ("is available via a person icon in the header for UID #{uid}") { expect(has_status_heading).to be true }
             it ("shows no hold alert on the popover for UID #{uid}") { expect(has_hold_alert).to be false }
@@ -277,13 +303,13 @@ describe 'My Academics Status and Holds', :testui => true do
         rescue => e
           logger.error "#{e.message + "\n"} #{e.backtrace.join("\n ")}"
         ensure
-          test_output_row = [uid, affiliations * ', ', is_student, is_ex_student, is_registered, api_reg_status,
+          test_output_row = [uid, affiliations * ', ', is_student, is_ex_student, term_statuses * ', ', has_status_heading,
                              api_res_status, api_residency_msg, has_hold, hold_reasons * ', ', has_active_block]
           UserUtils.add_csv_row(test_output, test_output_row)
         end
       end
 
-      it ('shows "Registered" for at least one of the test UIDs') { expect(registered_users.any?).to be true }
+      it ('shows "Registered" in the current term for at least one of the test UIDs') { expect(registered_users.any?).to be true }
       it ('shows "Resident" for at least one of the test UIDs') { expect(resident_users.any?).to be true }
 
     rescue => e
