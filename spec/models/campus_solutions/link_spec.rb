@@ -1,7 +1,8 @@
 describe CampusSolutions::Link do
+  let(:placeholder_text) { "REPLACED_PLACEHOLDER" }
   let(:proxy) { CampusSolutions::Link.new(fake: fake_proxy) }
   let(:url_id) { "UC_CX_TEST_LINK" }
-  let(:placeholder_text) { "REPLACED_PLACEHOLDER" }
+  let(:url_id_for_properties) { "UC_CX_GT_FAEMRLAON_ADD" }
 
   shared_examples 'a proxy that gets data' do
     subject { proxy.get }
@@ -12,11 +13,12 @@ describe CampusSolutions::Link do
 
   context 'mock proxy' do
     let(:fake_proxy) { true }
+    let(:placeholders) { {:PLACEHOLDER => placeholder_text, :ANOTHER_PLACEHOLDER => "not used"} }
+
     let(:link_set_response) { proxy.get }
     let(:link_get_url_response) { proxy.get_url(url_id) }
-
-    let(:placeholders) { {:PLACEHOLDER => placeholder_text, :ANOTHER_PLACEHOLDER => "not used"} }
     let(:link_get_url_and_replace_placeholders_response) { proxy.get_url(url_id, placeholders) }
+    let(:link_get_url_for_properties_response) { proxy.get_url(url_id_for_properties) }
 
     before do
       allow_any_instance_of(CampusSolutions::Link).to receive(:xml_filename).and_return filename
@@ -39,7 +41,7 @@ describe CampusSolutions::Link do
 
         it_should_behave_like 'a proxy that gets data'
         it 'returns data with the expected structure' do
-          expect(link_set_response[:feed][:ucLinkResources][:links].count).to eq 3
+          expect(link_set_response[:feed][:ucLinkResources][:links].count).to be > 1
         end
       end
 
@@ -54,26 +56,35 @@ describe CampusSolutions::Link do
     end
 
     context 'returns a single link by its urlId' do
-      let(:filename) { 'link_api.xml' }
+      let(:filename) { 'link_api_multiple.xml' }
 
       it_should_behave_like 'a proxy that gets data'
       it 'returns data with the expected structure' do
         expect(link_get_url_response[:feed][:link][:urlId]).to eq url_id
-        expect(link_get_url_response[:feed][:link][:properties]).not_to be
-        expect(link_get_url_response[:feed][:link][:showNewWindow]).to eq true
-
         # Verify that {placeholder} text is present
         expect(link_get_url_response[:feed][:link][:url]).to include("PLACEHOLDER={PLACEHOLDER}")
       end
+    end
 
-      context 'replaces any placeholders' do
-        let(:filename) { 'link_api.xml' }
+    context 'replaces any placeholders' do
+      let(:filename) { 'link_api_multiple.xml' }
 
-        it_should_behave_like 'a proxy that gets data'
-        it 'returns data with the expected structure' do
-          # Verify that {placeholder} text is replaced
-          expect(link_get_url_and_replace_placeholders_response[:feed][:link][:url]).to include("PLACEHOLDER=#{placeholder_text}")
-        end
+      it_should_behave_like 'a proxy that gets data'
+      it 'returns data with the expected structure' do
+        # Verify that {placeholder} text is replaced
+        expect(link_get_url_and_replace_placeholders_response[:feed][:link][:url]).to include("PLACEHOLDER=#{placeholder_text}")
+      end
+    end
+
+    context 'replaces the properties hash with only certain properties' do
+      let(:filename) { 'link_api_multiple.xml' }
+
+      it_should_behave_like 'a proxy that gets data'
+      it 'returns data with the expected structure' do
+        expect(link_get_url_response[:feed][:link][:properties]).not_to be
+        expect(link_get_url_for_properties_response[:feed][:link][:ucFrom]).to be
+        expect(link_get_url_for_properties_response[:feed][:link][:ucFromLink]).to be
+        expect(link_get_url_for_properties_response[:feed][:link][:ucFromText]).to be
       end
     end
   end

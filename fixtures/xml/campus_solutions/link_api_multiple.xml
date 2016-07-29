@@ -21,6 +21,66 @@
     <COMMENTS></COMMENTS>
   </Link>
   <Link>
+    <URL_ID>UC_CX_EMERGENCY_LOAN_FORM</URL_ID>
+    <Description>Apply for an Emergency Loan</Description>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>FORM</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>DEV_NODE</NAME>
+        <value>bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>PRD_NODE</NAME>
+        <value>bcsweb.is.berkeley.edu/psp/bcsprd/</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>QAT_NODE</NAME>
+        <value>bcswebqat.is.berkeley.edu/psp/bcsqat/</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>TST_NODE</NAME>
+        <value>bcs-web-test-01.ist.1918.berkeley.edu:8443/psp/bcstst/</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?&amp;G3FORM_FAMILY=FAEMRLOAN&amp;G3FORM_TYPE=FAEMRLAON&amp;G3FORM_CONDITION=Default&amp;G3FORM_TASK=ADD</URL>
+    <COMMENTS></COMMENTS>
+  </Link>
+  <Link>
+    <URL_ID>UC_CX_GT_FAEMRLAON_ADD</URL_ID>
+    <Description>Apply for an Emergency Loan</Description>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>FORM</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>DEV_NODE</NAME>
+        <value>bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>UCFROM</NAME>
+        <value>CalCentral</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>UCFROMLINK</NAME>
+        <value>https://calcentral-sis-dev-01.ist.berkeley.edu/</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>UCFROMTEXT</NAME>
+        <value>CalCentral</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?&amp;G3FORM_FAMILY=FAEMRLOAN&amp;G3FORM_TYPE=FAEMRLAON&amp;G3FORM_CONDITION=Default&amp;G3FORM_TASK=ADD</URL>
+    <COMMENTS></COMMENTS>
+  </Link>
+  <Link>
     <URL_ID>UC_CX_TEST_CONCEPT</URL_ID>
     <Description>Test URL</Description>
     <PROPERTIES type="array">
@@ -59,5 +119,37 @@
     </PROPERTIES>
     <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/path/to/endpoint?PLACEHOLDER={PLACEHOLDER}</URL>
     <COMMENTS>Test URL for verifying that {PLACEHOLDER} is returned as part of the URL, and replaced by the caller (client).</COMMENTS>
+  </Link>
+  <Link>
+    <URL_ID>UC_CX_WEBNOW_STUDENT_URI</URL_ID>
+    <Description>Advisee's WebNow Documents</Description>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>NOTES-STU</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>DEV_NODE</NAME>
+        <value>imaginewebqa.berkeley.edu/webnow/</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>PRD_NODE</NAME>
+        <value>imagineweb.berkeley.edu/webnow/</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>QAT_NODE</NAME>
+        <value>imaginewebqa.berkeley.edu/webnow/</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>TST_NODE</NAME>
+        <value>imaginewebqa.berkeley.edu/webnow/</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>https://imaginewebqa.berkeley.edu/webnow/index.jsp?action=document&amp;viewname=OUA_SIS%20Advisors%20View&amp;filtername=Query%20By%20Student%20ID&amp;filterparam1={EMPLID}</URL>
+    <COMMENTS></COMMENTS>
   </Link>
 </UC_LINK_RESOURCES>
