@@ -55,7 +55,7 @@ describe 'My Dashboard My Classes card', :testui => true do
               student_classes = academics_api.semester_courses(current_student_semester)
 
               # Courses listed once for each enrolled primary section
-              api_student_course_ids = academics_api.semester_card_course_codes(academics_api.all_student_semesters, current_student_semester)
+              api_student_course_ids = academics_api.semester_card_course_codes(academics_api.all_student_semesters, current_student_semester, student_classes)
               api_student_course_titles = academics_api.course_titles academics_api.courses_by_primary_section(student_classes)
               api_wait_list_prim_sections = academics_api.wait_list_primary_sections(student_classes)
               api_wait_list_positions = academics_api.wait_list_positions api_wait_list_prim_sections
@@ -362,7 +362,7 @@ describe 'My Dashboard My Classes card', :testui => true do
                 sched_classes_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.schedule_of_classes_element, 'Home Page - Online Schedule Of Classes')
                 it ("offers a valid link to Schedule of Classes for UID #{uid}") { expect(sched_classes_link_works).to be true }
 
-                class_catalog_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.class_catalog_element, '2015-2016 Berkeley Academic Guide < University of California, Berkeley')
+                class_catalog_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.class_catalog_element, '2016-2017 Berkeley Academic Guide < University of California, Berkeley')
                 it ("offers a valid link to Class Catalog for UID #{uid}") { expect(class_catalog_link_works).to be true }
 
                 assist_tech_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.assistive_tech_element, 'Assistive Technology | Educational Technology Services')

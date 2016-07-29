@@ -50,6 +50,8 @@ describe 'My Finances legacy student financials', :testui => true do
           # Get data from financials API
           fin_api = ApiMyFinancialsPage.new driver
           fin_api.get_json driver
+          fin_cs_api = ApiCSBillingPage.new driver
+          fin_cs_api.get_json driver
 
           @my_finances.load_page
 
@@ -512,14 +514,20 @@ describe 'My Finances legacy student financials', :testui => true do
             if @status_api.is_student? || @status_api.is_ex_student?
 
               @my_finances.open_profile_popover
-              @my_finances.status_popover_heading_element.when_visible WebDriverUtils.page_event_timeout
 
-              has_amt_due_alert = @my_finances.amount_due_status_alert?
+              has_amt_due_alert = WebDriverUtils.verify_block { @my_finances.amount_due_status_alert_element.when_visible WebDriverUtils.page_event_timeout }
               popover_amt_due = @my_finances.alert_amt_due if has_amt_due_alert
 
-              if fin_api.min_amt_due > 0
+              # Popover alert will combine amounts from legacy and CS
+              legacy_amt_due_now = fin_api.min_amt_due.nil? ? 0 : BigDecimal(fin_api.amt_to_s fin_api.min_amt_due)
+              cs_amt_due_now = fin_cs_api.amount_due_now.nil? ? 0 : BigDecimal(fin_cs_api.amt_to_s fin_cs_api.amount_due_now)
+              ttl_due_now = legacy_amt_due_now + cs_amt_due_now
+
+              if ttl_due_now > 0
                 it("shows an Amount Due alert for UID #{uid}") { expect(has_amt_due_alert).to be true }
-                it("shows the amount due on the Amount Due alert for UID #{uid}") { expect(popover_amt_due).to eql(fin_api.amt_to_s fin_api.min_amt_due) }
+                if has_amt_due_alert
+                  it("shows the amount due on the Amount Due alert for UID #{uid}") { expect(popover_amt_due).to eql(fin_api.amt_to_s ttl_due_now) }
+                end
               else
                 it("shows no Amount Due alert for UID #{uid}") { expect(has_amt_due_alert).to be false }
               end
@@ -528,9 +536,8 @@ describe 'My Finances legacy student financials', :testui => true do
                 @dashboard_page.load_page
                 @dashboard_page.open_profile_popover
                 @dashboard_page.click_amt_due_alert
-                @my_finances.billing_summary_list_element.when_present WebDriverUtils.page_event_timeout
 
-                amt_due_link_works = @my_finances.min_amt_due?
+                amt_due_link_works = (@my_finances.current_url == "#{WebDriverUtils.base_url}/finances")
 
                 it("offers a link from the profile popover amount due alert to the My Finances page for UID #{uid}") { expect(amt_due_link_works).to be true }
               end

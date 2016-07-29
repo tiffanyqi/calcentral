@@ -225,7 +225,7 @@ describe 'Delegated access', :testui => true do
 
                     # Profile - GPA
                     shows_gpa = @academic_profile_card.gpa?
-                    if @academics_api.gpa.nil? || @academics_api.gpa == '0.0' || !privileges['viewGrades']
+                    if @academics_api.gpa.nil? || %w(0.0 0).include?(@academics_api.gpa) || !privileges['viewGrades']
                       it ("shows delegate UID #{uid} no GPA for UID #{student_uid}") { expect(shows_gpa).to be false }
                     else
                       it ("shows delegate UID #{uid} the GPA for UID #{student_uid}") { expect(shows_gpa).to be true }
@@ -416,7 +416,7 @@ describe 'Delegated access', :testui => true do
                     if @financials_api.has_cars_data?
                       shows_details_summary = WebDriverUtils.verify_block do
                         @finances_details_page.load_page
-                        @finances_details_page.account_balance_element_element.when_visible timeout
+                        @finances_details_page.account_bal_element.when_visible timeout
                       end
                       it ("shows delegate UID #{uid} the billing summary on the Details page for UID #{student_uid}") { expect(shows_details_summary).to be true }
 

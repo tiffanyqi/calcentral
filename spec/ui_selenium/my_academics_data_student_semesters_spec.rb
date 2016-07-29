@@ -140,7 +140,7 @@ describe 'My Academics student semesters UI', :testui => true do
                       # WAIT LIST COURSES
 
                       if wait_list_courses.any?
-                        api_wait_list_primary_sections = academics_api_page.wait_list_primary_sections(wait_list_courses)
+                        api_wait_list_primary_sections = academics_api_page.wait_list_semester_sections wait_list_courses
 
                         sem_page_wait_list_codes = semester_page.all_waitlist_course_codes
                         sem_page_wait_list_titles = semester_page.all_waitlist_course_titles
@@ -157,7 +157,7 @@ describe 'My Academics student semesters UI', :testui => true do
                           expect(sem_page_wait_list_titles.all? &:blank?).to be false
                         end
                         it "shows the wait list sections on the #{semester_name} semester page for UID #{uid}" do
-                          expect(sem_page_wait_list_sections).to eql(academics_api_page.courses_section_labels wait_list_courses)
+                          expect(sem_page_wait_list_sections).to eql(academics_api_page.sections_labels api_wait_list_primary_sections)
                           expect(sem_page_wait_list_sections.all? &:blank?).to be false
                         end
                         it "shows the wait list positions on the #{semester_name} semester page for UID #{uid}" do

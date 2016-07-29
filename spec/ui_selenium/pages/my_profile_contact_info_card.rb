@@ -275,6 +275,7 @@ module CalCentralPages
     end
 
     def formatted_address(index)
+      logger.debug "Looking for a formatted address at index position #{index}"
       address_formatted_elements[index].text
     end
 
@@ -381,6 +382,8 @@ module CalCentralPages
 
     def verify_address(address, index, inputs, selections)
       wait_until(WebDriverUtils.campus_solutions_timeout, 'Timed out waiting for the new address to appear') do
+        logger.debug "There are #{all_formatted_addresses.length} saved addresses visible"
+        all_formatted_addresses.length == 2
         all_formatted_addresses.find { |item| item.include? trimmed_input(inputs[0]) } rescue Selenium::WebDriver::Error::StaleElementReferenceError
       end
       logger.debug "Address displayed is \n#{formatted_address(index)}"

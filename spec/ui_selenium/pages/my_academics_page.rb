@@ -34,7 +34,7 @@ module CalCentralPages
 
     def click_student_semester_link(semester_name)
       logger.info("Clicking link for #{semester_name}")
-      WebDriverUtils.wait_for_page_and_click student_semesters_element.link_element(:xpath => "//a[contains(.,'#{semester_name}')]")
+      WebDriverUtils.wait_for_page_and_click student_semesters_element.link_element(:xpath => "//a[text()='#{semester_name}']")
     end
 
     def click_teaching_semester_link(semester_name)

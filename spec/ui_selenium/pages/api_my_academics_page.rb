@@ -109,7 +109,7 @@ class ApiMyAcademicsPage
   # UNDERGRAD REQUIREMENTS
 
   def requirements
-    @parsed['requirements'].inject({}) { |map, reqt| map[reqt['name']] = reqt; map }
+    @parsed['requirements'] && @parsed['requirements'].inject({}) { |map, reqt| map[reqt['name']] = reqt; map }
   end
 
   def requirement_status(requirement)

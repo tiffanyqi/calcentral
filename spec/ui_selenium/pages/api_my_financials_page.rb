@@ -24,7 +24,7 @@ class ApiMyFinancialsPage
   end
 
   def min_amt_due
-    summary['minimumAmountDue']
+    summary && summary['minimumAmountDue']
   end
 
   def total_current_balance
