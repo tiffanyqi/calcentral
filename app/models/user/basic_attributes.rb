@@ -5,9 +5,13 @@ module User
     def attributes_for_uids(uids)
       return [] if uids.blank?
       uid_set = uids.to_set
-      attrs = CampusOracle::Queries.get_basic_people_attributes(uids).map do |result|
-        uid_set.delete result['ldap_uid']
-        transform_campus_row result
+      attrs = []
+      # Oracle dislikes ' IN ()' queries with more than 1000 items.
+      uids.each_slice(1000) do |next_batch|
+        CampusOracle::Queries.get_basic_people_attributes(next_batch).each do |result|
+          uid_set.delete result['ldap_uid']
+          attrs << transform_campus_row(result)
+        end
       end
       attrs.concat CalnetLdap::UserAttributes.get_bulk_attributes(uid_set) if uid_set.any?
       attrs
