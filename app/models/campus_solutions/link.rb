@@ -37,22 +37,32 @@ module CampusSolutions
       if url_id
         # Need this due to side-effect of the lift process in normalize_response.
         link_id = url_id.downcase.camelize(:lower).to_sym
-        link = link_resources[:feed][:ucLinkResources][:links][link_id]
+        entry = link_resources[:feed][:ucLinkResources][:links][link_id]
 
-        if link
+        if entry
+          link = entry.slice(:url, :urlId, :description)
+
           if placeholders.present?
             placeholders.each do |k, v|
               link[:url] = link[:url].gsub("{#{k}}", v)
             end
           end
 
-          # promote properties we're interested in, delete the rest
-          link[:properties].each do |property|
+          # promote properties we're interested in
+          entry[:properties].each do |property|
             if property[:name] == 'NEW_WINDOW' && property[:value] == 'Y'
               link[:showNewWindow] = true
             end
+            if property[:name] == 'UCFROM'
+              link[:ucFrom] = property[:value]
+            end
+            if property[:name] == 'UCFROMLINK'
+              link[:ucFromLink] = property[:value]
+            end
+            if property[:name] == 'UCFROMTEXT'
+              link[:ucFromText] = property[:value]
+            end
           end
-          link.delete(:properties)
         end
       end
 
