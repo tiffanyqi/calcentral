@@ -23,11 +23,21 @@
     "majors": [
       {
         "college": "ENGR",
-        "major": "Civil Engineering"
+        "major": "Civil Engineering BS"
       }
     ],
     "nonApLevel": "Junior",
     "noStudentId": false,
+    "plans": [
+        {
+            "code": "16300U",
+            "expectedGraduationTerm": {
+                "id": "2172",
+                "name": "2017 Spring"
+            },
+            "primary": true
+        }
+    ],
     "termName": "Fall 2013",
     "termsInAttendance": "4",
     "lastExpectedGraduationTerm": "2017 Spring"

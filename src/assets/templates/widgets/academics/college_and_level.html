@@ -69,7 +69,7 @@
 </div>
 
 <div class="cc-table cc-table-top-border cc-clearfix"
-  data-ng-if="collegeAndLevel.termsInAttendance || collegeAndLevel.lastExpectedGraduationTerm">
+  data-ng-if="collegeAndLevel.termsInAttendance || expectedGradTerm(collegeAndLevel)">
   <table>
     <tbody>
     <tr>
@@ -81,10 +81,10 @@
             <strong data-ng-bind="collegeAndLevel.termsInAttendance"></strong>
           </div>
         </div>
-        <div class="cc-widget-profile-section-block" data-ng-if="collegeAndLevel.lastExpectedGraduationTerm">
+        <div class="cc-widget-profile-section-block" data-ng-if="expectedGradTerm(collegeAndLevel)">
           <div class="cc-text-light">Expected Graduation</div>
           <div>
-            <strong data-ng-bind="collegeAndLevel.lastExpectedGraduationTerm"></strong>
+            <strong data-ng-bind="expectedGradTerm(collegeAndLevel)"></strong>
           </div>
           <div class="cc-widget-profile-footnote">
             Consult your college advisor with questions or concerns.
