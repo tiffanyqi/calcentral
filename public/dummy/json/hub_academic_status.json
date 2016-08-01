@@ -105,10 +105,25 @@
               {
                 "academicPlan": {
                   "academicProgram": {
+                    "academicCareer": {
+                      "code": "UGRD",
+                      "description": "Undergraduate"
+                    },
                     "program": {
                       "code": "UCLS",
                       "description": "Undergrad Letters & Science"
                     }
+                  },
+                  "ownedBy": {
+                    "administrativeOwners": [
+                      {
+                        "organization": {
+                          "code": "CLS",
+                          "description": "Clg of Letters & Science"
+                        },
+                        "percentage": 100
+                      }
+                    ]
                   },
                   "plan": {
                     "code": "25345U",
