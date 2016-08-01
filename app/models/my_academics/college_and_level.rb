@@ -69,6 +69,7 @@ module MyAcademics
       majors = []
       minors = []
       plans = []
+      grad_terms = []
       status['studentPlans'].each do |student_plan|
         plan_primary = !!student_plan['primary']
         if (academic_plan = student_plan['academicPlan'])
@@ -93,13 +94,16 @@ module MyAcademics
               primary: plan_primary,
               expectedGraduationTerm: student_plan['expectedGraduationTerm']
             }
+            grad_terms << student_plan['expectedGraduationTerm']
           end
         end
       end
+      last_grad_term = grad_terms.sort_by { |term| term.try(:[], 'id').to_i }.last
       {
         majors: majors,
         minors: minors,
-        plans: plans
+        plans: plans,
+        lastExpectedGraduationTerm: last_grad_term.try(:[], 'name'),
       }
     end
 
