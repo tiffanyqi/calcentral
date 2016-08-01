@@ -6,7 +6,7 @@ var _ = require('lodash');
 /**
  * Final exam schedule controller
  */
-angular.module('calcentral.controllers').controller('FinalExamScheduleController', function(apiService, finalExamScheduleFactory, enrollmentFactory, $scope) {
+angular.module('calcentral.controllers').controller('FinalExamScheduleController', function(apiService, finalExamScheduleFactory, academicsFactory, $scope) {
 
   // classes that are not calculated by start time
   var chem = ['CHEM 1A', 'CHEM 1B']; // for slot 3
@@ -18,29 +18,44 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
   var schedule = { };
 
   /*
-   * Takes the enrollment json and adds the course and start time to the courses hash
+   * Takes the academics json and adds the course and start time to the courses hash
    */
-  var parseEnrollmentData = function(data) {
-    // enrollment data
-    var enrollmentInstructions = _.get(data, 'enrollmentInstructions');
-    var sections = ['enrolledClasses', 'waitlistedClasses'];
+  var parseAcademicsData = function(data) {
+    // academics data
+    var semesters = _.get(data, 'data.semesters');
+    var currSemester = '';
+    var futureSemester = '';
 
-    // iterate through enrolled and waitlisted classes
-    for (var i = 0; i < sections.length; i++) {
-      var classObject = enrollmentInstructions[0][sections[i]]; // fix 0 later
+    // iterate through the semesters to select the current and future ones
+    for (var i = 0; i < semesters.length; i++) {
+      var sem = semesters[i];
+      if (sem.timeBucket !== null && sem.timeBucket === 'future' && sem.termCode !== 'C') {
+        futureSemester = sem;
+      } else if (sem.timeBucket !== null && sem.timeBucket === 'current' && sem.termCode !== 'C') {
+        currSemester = semesters[i];
+      }
+    }
 
-      // iterate through each class
-      for (var c = 0; c < classObject.length; c++) {
-        var course = classObject[c];
-
-        // add course and time to the course hash if it is a lecture
-        if (course.ssrComponent === 'LEC') {
-          var courseCode = course.subjectCatalog;
-          var time = course.when;
-          if (i === 0) {
-            courses[courseCode] = [time, false]; // false means class is enrolled
-          } else {
-            courses[courseCode] = [time, true];
+    if (futureSemester) {
+      for (var i = 0; i < futureSemester.classes.length; i++) {
+        var course = futureSemester.classes[i];
+        // only include classes in which they are a student
+        if (course.role === 'Student') {
+          var courseCode = course.course_code;
+          // iterate through each of the sections
+          for (var s = 0; s < course.sections.length; s++) {
+            var section = course.sections[s];
+            // select only the primary sections
+            if (section.is_primary_section) {
+              var time = section.schedules.recurring[0].schedule;
+              var waitlisted;
+              if (section.waitlisted === null) {
+                waitlisted = false;
+              } else {
+                waitlisted = section.waitlisted;
+              }
+              courses[courseCode] = [time, waitlisted];
+            }
           }
         }
       }
@@ -100,7 +115,7 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
    * Load the enrollment data and fire off subsequent events
    */
   var loadEnrollmentData = function() {
-    enrollmentFactory.getEnrollmentInstructions().then(parseEnrollmentData);
+    academicsFactory.getAcademics().then(parseAcademicsData);
     finalExamScheduleFactory.getSchedule().then(assignExams);
   };
 

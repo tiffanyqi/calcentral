@@ -6,8 +6,8 @@ var angular = require('angular');
  * Academics Factory
  */
 angular.module('calcentral.factories').factory('academicsFactory', function(apiService) {
-  var url = '/api/my/academics';
-  // var url = '/dummy/json/academics.json';
+  // var url = '/api/my/academics';
+  var url = '/dummy/json/academics_2.json';
 
   var getAcademics = function(options) {
     return apiService.http.request(options, url);
