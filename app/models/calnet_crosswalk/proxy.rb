@@ -83,11 +83,11 @@ module CalnetCrosswalk
       cache_id('CAMPUS_SOLUTIONS_ID', value)
     end
 
-    def lookup_student_id
+    def lookup_legacy_student_id
       lookup_id 'LEGACY_SIS_STUDENT_ID'
     end
 
-    def cache_student_id(value)
+    def cache_legacy_student_id(value)
       cache_id('LEGACY_SIS_STUDENT_ID', value)
     end
 

@@ -12,7 +12,7 @@ module User
           results = Set.new
           [CalnetCrosswalk::ByUid, CalnetCrosswalk::BySid, CalnetCrosswalk::ByCsId].each do |proxy_class|
             proxy = proxy_class.new(user_id: @id)
-            sid = proxy.lookup_student_id
+            sid = proxy.lookup_legacy_student_id
             uid = proxy.lookup_ldap_uid
             if sid.present? || uid.present?
               results << {

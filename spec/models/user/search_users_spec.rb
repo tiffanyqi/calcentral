@@ -22,15 +22,15 @@ describe User::SearchUsers do
     allow(CalnetCrosswalk::ByCsId).to receive(:new).and_return fake_cs_id_proxy
 
     allow(fake_uid_proxy).to receive(:lookup_ldap_uid).and_return uid_proxy_ldap_uid
-    allow(fake_uid_proxy).to receive(:lookup_student_id).and_return uid_proxy_student_id
+    allow(fake_uid_proxy).to receive(:lookup_legacy_student_id).and_return uid_proxy_student_id
     allow(fake_uid_proxy).to receive(:lookup_campus_solutions_id).and_return uid_proxy_campus_solutions_id
 
     allow(fake_sid_proxy).to receive(:lookup_ldap_uid).and_return sid_proxy_ldap_uid
-    allow(fake_sid_proxy).to receive(:lookup_student_id).and_return sid_proxy_student_id
+    allow(fake_sid_proxy).to receive(:lookup_legacy_student_id).and_return sid_proxy_student_id
     allow(fake_sid_proxy).to receive(:lookup_campus_solutions_id).and_return sid_proxy_campus_solutions_id
 
     allow(fake_cs_id_proxy).to receive(:lookup_ldap_uid).and_return cs_id_proxy_ldap_uid
-    allow(fake_cs_id_proxy).to receive(:lookup_student_id).and_return cs_id_proxy_student_id
+    allow(fake_cs_id_proxy).to receive(:lookup_legacy_student_id).and_return cs_id_proxy_student_id
     allow(fake_cs_id_proxy).to receive(:lookup_campus_solutions_id).and_return cs_id_proxy_campus_solutions_id
   end
   context 'ByUid returns results' do

@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
       cs_id = auth.extra['berkeleyEduCSID']
       if sid.present?
         logger.debug "Caching student ID #{sid} for UID #{auth_uid} based on SAML assertion"
-        crosswalk.cache_student_id sid
+        crosswalk.cache_legacy_student_id sid
       end
       if cs_id.present?
         # TODO reduce this log level once CAS reliably sends us the CS ID
