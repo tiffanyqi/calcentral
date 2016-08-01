@@ -34,9 +34,9 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
         var course = classObject[c];
 
         // add course and time to the course hash if it is a lecture
-        if (course['ssrComponent'] === "LEC") {
-          var courseCode = course['subjectCatalog'];
-          var time = course['when'];
+        if (course.ssrComponent === 'LEC') {
+          var courseCode = course.subjectCatalog;
+          var time = course.when;
           if (i === 0) {
             courses[courseCode] = [time, false]; // false means class is enrolled
           } else {
@@ -67,34 +67,34 @@ angular.module('calcentral.controllers').controller('FinalExamScheduleController
       // times like 5:00P-6:29P is the first, take the first as its the start
       var startTime = courseTime[1].split('-')[0];
       // transform start time so that it's searchable in the exam data
-      if (startTime.substr(startTime.length - 1) === "P") {
-        startTime = startTime.replace("P", "pm");
-      } else if (startTime.substr(startTime.length - 1) === "A") {
-        startTime = startTime.replace("A", "am");
+      if (startTime.substr(startTime.length - 1) === 'P') {
+        startTime = startTime.replace('P', 'pm');
+      } else if (startTime.substr(startTime.length - 1) === 'A') {
+        startTime = startTime.replace('A', 'am');
       } else if (startTime[0] < 8) {
-        startTime += "pm";
+        startTime += 'pm';
       } else {
-        startTime += "am";
+        startTime += 'am';
       }
-      var examKey = day + "-" + startTime;
+      var examKey = day + '-' + startTime;
 
       // check to see if course is chem, econ, or forlang
       if (chem.includes(course)) {
-        schedule[course] = ["Mon Dec 12", "3-6pm"];
+        schedule[course] = ['Mon Dec 12', '3-6pm'];
       } else if (econ.includes(course)) {
-        schedule[course] = ["Tue Dec 13", "11:30-2:30pm"];
+        schedule[course] = ['Tue Dec 13', '11:30-2:30pm'];
       } else if (forlang.includes(course)) {
-        schedule[course] = ["Wed Dec 14", "11:30-2:30pm"];
+        schedule[course] = ['Wed Dec 14', '11:30-2:30pm'];
       } else {
-        var exam = examSchedule[examKey].split(",");
-        var examDate = exam[0].substr(0, 3) + " " + exam[1];
+        var exam = examSchedule[examKey].split(',');
+        var examDate = exam[0].substr(0, 3) + ' ' + exam[1];
         var examTime = exam[2];
 
         schedule[course] = [examDate, examTime, courseWaitlisted];
       }
     }
     $scope.schedule = schedule;
-  }
+  };
 
   /**
    * Load the enrollment data and fire off subsequent events
