@@ -124,6 +124,7 @@ describe Calendar::Preprocessor do
         it_behaves_like 'it has a non-empty array of ClassCalendarQueue entries'
         it 'queues up event creation with correct times and locations' do
           json = JSON.parse(subject[0].event_data)
+          expect(json['summary']).to eq 'Dancing With Deontologists LAB 001'
           expect(json['location']).to eq 'Pauley Ballroom, Berkeley, CA'
           expect(json['start']['dateTime']).to eq '2016-08-24T14:00:00.000-07:00'
           expect(json['end']['dateTime']).to eq '2016-08-24T14:59:00.000-07:00'

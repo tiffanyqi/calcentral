@@ -36,7 +36,8 @@ module Calendar
     end
 
     def self.from_edo_row(row)
-      logger.info "Preprocessing #{row['section_display_name']}; section_id = #{row['section_id']}; term_id = #{row['term_id']}; meeting_num = #{row['meeting_num']}"
+      section_name = row.values_at('section_display_name', 'instruction_format', 'section_num').reject(&:blank?).join ' '
+      logger.info "Preprocessing #{section_name}; section_id = #{row['section_id']}; term_id = #{row['term_id']}; meeting_num = #{row['meeting_num']}"
       return nil unless (schedule = Calendar::Schedule::EdoOracle.from_meeting_data row)
 
       term_code = Berkeley::TermCodes.from_edo_id row['term_id']
@@ -50,7 +51,7 @@ module Calendar
         multi_entry_cd: row['meeting_num'].to_s
       ).first_or_initialize
 
-      entry.name = row['section_display_name']
+      entry.name = section_name
       entry.schedule = schedule
       entry.location = "#{row['location']}, Berkeley, CA" if row['location'].present?
 
