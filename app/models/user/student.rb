@@ -12,8 +12,8 @@ module User
       CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_campus_solutions_id
     end
 
-    def lookup_student_id_from_crosswalk
-      CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_student_id
+    def lookup_legacy_student_id_from_crosswalk
+      CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_legacy_student_id
     end
 
     def lookup_delegate_user_id

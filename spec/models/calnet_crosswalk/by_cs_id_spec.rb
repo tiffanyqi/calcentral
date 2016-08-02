@@ -16,7 +16,7 @@ describe CalnetCrosswalk::ByCsId do
     end
 
     context 'looking up student id' do
-      subject { proxy.lookup_student_id }
+      subject { proxy.lookup_legacy_student_id }
       it 'should be nil' do
         # Always nil because feed does not give LEGACY_SIS_STUDENT_ID.
         expect(subject).to be_nil

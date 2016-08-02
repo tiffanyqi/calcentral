@@ -16,7 +16,7 @@ describe CalnetCrosswalk::ByUid do
     end
 
     context 'looking up student id' do
-      subject { proxy.lookup_student_id }
+      subject { proxy.lookup_legacy_student_id }
       it 'should return the Student ID' do
         expect(subject).to be
       end
