@@ -61,7 +61,7 @@ describe 'Calendar integration full stack against EDO DB', testext: true do
       event_on_google = get_proxy.get_event event_id
       expect(event_on_google).to be
       json = JSON.parse(event_on_google.body)
-      expect(json['location']).to eq 'Pauley Ballroom, Berkeley, CA'
+      expect(json['location']).to eq 'Pauley Ballroom, UC Berkeley'
       expect(json['start']['dateTime']).to eq '2016-08-24T14:00:00-07:00'
       expect(json['end']['dateTime']).to eq '2016-08-24T14:59:00-07:00'
 
@@ -109,7 +109,7 @@ describe 'Calendar integration full stack against EDO DB', testext: true do
       event_on_google = get_proxy.get_event event_id
       expect(event_on_google).to be
       json = JSON.parse(event_on_google.body)
-      expect(json['location']).to eq 'Valley Life Sciences 100, Berkeley, CA'
+      expect(json['location']).to eq 'Valley Life Sciences 100, UC Berkeley'
       expect(json['start']['dateTime']).to eq '2016-08-24T16:00:00-07:00'
       expect(json['end']['dateTime']).to eq '2016-08-24T16:59:00-07:00'
 
@@ -157,7 +157,7 @@ describe 'Calendar integration full stack against EDO DB', testext: true do
       event_on_google = get_proxy.get_event event_id
       expect(event_on_google).to be
       json = JSON.parse(event_on_google.body)
-      expect(json['location']).to eq 'Dwinelle 155, Berkeley, CA'
+      expect(json['location']).to eq 'Dwinelle 155, UC Berkeley'
       expect(json['start']['dateTime']).to eq '2016-08-24T10:00:00-07:00'
       expect(json['end']['dateTime']).to eq '2016-08-24T10:59:00-07:00'
 
@@ -259,7 +259,7 @@ describe 'Calendar integration full stack against legacy Oracle', testext: true 
       event_on_google = get_proxy.get_event event_id
       expect(event_on_google).to be
       json = JSON.parse(event_on_google.body)
-      expect(json['location']).to eq '117 Dwinelle Hall, Berkeley, CA'
+      expect(json['location']).to eq '117 Dwinelle Hall, UC Berkeley'
       expect(json['start']['dateTime']).to eq '2013-09-02T14:00:00-07:00'
       expect(json['end']['dateTime']).to eq '2013-09-02T15:00:00-07:00'
 
@@ -308,7 +308,7 @@ describe 'Calendar integration full stack against legacy Oracle', testext: true 
       event_on_google = get_proxy.get_event event_id
       expect(event_on_google).to be
       json = JSON.parse(event_on_google.body)
-      expect(json['location']).to eq '100 Foothill Student Housing, Berkeley, CA'
+      expect(json['location']).to eq '100 Foothill Student Housing, UC Berkeley'
       expect(json['start']['dateTime']).to eq '2013-09-02T16:00:00-07:00'
       expect(json['end']['dateTime']).to eq '2013-09-02T17:00:00-07:00'
 
@@ -357,7 +357,7 @@ describe 'Calendar integration full stack against legacy Oracle', testext: true 
       event_on_google = get_proxy.get_event event_id
       expect(event_on_google).to be
       json = JSON.parse(event_on_google.body)
-      expect(json['location']).to eq '155 Dwinelle Hall, Berkeley, CA'
+      expect(json['location']).to eq '155 Dwinelle Hall, UC Berkeley'
       expect(json['start']['dateTime']).to eq '2013-09-02T16:00:00-07:00'
       expect(json['end']['dateTime']).to eq '2013-09-02T17:00:00-07:00'
 

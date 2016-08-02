@@ -125,7 +125,7 @@ describe Calendar::Preprocessor do
         it 'queues up event creation with correct times and locations' do
           json = JSON.parse(subject[0].event_data)
           expect(json['summary']).to eq 'Dancing With Deontologists LAB 001'
-          expect(json['location']).to eq 'Pauley Ballroom, Berkeley, CA'
+          expect(json['location']).to eq 'Pauley Ballroom, UC Berkeley'
           expect(json['start']['dateTime']).to eq '2016-08-24T14:00:00.000-07:00'
           expect(json['end']['dateTime']).to eq '2016-08-24T14:59:00.000-07:00'
           expect(json['recurrence'][0]).to eq 'RRULE:FREQ=WEEKLY;UNTIL=20161209T000000Z;BYDAY=MO,WE,FR'
@@ -242,7 +242,7 @@ describe Calendar::Preprocessor do
       }
       it 'has the meeting place and times for the summer Biology course from test data' do
         json = JSON.parse(subject[0].event_data)
-        expect(json['location']).to eq '2030 Valley Life Sciences Building, Berkeley, CA'
+        expect(json['location']).to eq '2030 Valley Life Sciences Building, UC Berkeley'
         expect(json['start']['dateTime']).to eq '2014-05-26T16:00:00.000-07:00'
         expect(json['end']['dateTime']).to eq '2014-05-26T17:00:00.000-07:00'
         expect(json['recurrence'][0]).to eq 'RRULE:FREQ=WEEKLY;UNTIL=20140703T065959Z;BYDAY=MO'
@@ -274,7 +274,7 @@ describe Calendar::Preprocessor do
       it_behaves_like 'it has a non-empty array of ClassCalendarQueue entries'
       it 'has the meeting place and times for a multi-scheduled Biology 1a' do
         json = JSON.parse(subject[0].event_data)
-        expect(json['location']).to eq '2030 Valley Life Sciences Building, Berkeley, CA'
+        expect(json['location']).to eq '2030 Valley Life Sciences Building, UC Berkeley'
         expect(json['start']['dateTime']).to eq '2013-09-02T16:00:00.000-07:00'
         expect(json['end']['dateTime']).to eq '2013-09-02T17:00:00.000-07:00'
         expect(json['recurrence'][0]).to eq 'RRULE:FREQ=WEEKLY;UNTIL=20131207T075959Z;BYDAY=MO'
@@ -284,7 +284,7 @@ describe Calendar::Preprocessor do
         expect(subject[0].transaction_type).to eq 'C'
 
         json = JSON.parse(subject[1].event_data)
-        expect(json['location']).to eq '60 Evans Hall, Berkeley, CA'
+        expect(json['location']).to eq '60 Evans Hall, UC Berkeley'
         expect(json['start']['dateTime']).to eq '2013-09-04T14:00:00.000-07:00'
         expect(json['end']['dateTime']).to eq '2013-09-04T15:00:00.000-07:00'
         expect(json['recurrence'][0]).to eq 'RRULE:FREQ=WEEKLY;UNTIL=20131207T075959Z;BYDAY=WE'
@@ -294,7 +294,7 @@ describe Calendar::Preprocessor do
         expect(subject[1].transaction_type).to eq 'C'
       end
       it 'has the meeting place and times for Biology 1a' do
-        expect(JSON.parse(subject[2].event_data)['location']).to eq '2030 Valley Life Sciences Building, Berkeley, CA'
+        expect(JSON.parse(subject[2].event_data)['location']).to eq '2030 Valley Life Sciences Building, UC Berkeley'
         expect(subject[2].multi_entry_cd).to eq '-'
         expect(subject[2].transaction_type).to eq 'C'
       end
