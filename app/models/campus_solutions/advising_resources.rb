@@ -32,6 +32,7 @@ module CampusSolutions
     def build_feed(response)
       return {} unless response && (feed = response['ROOT'])
       links = (resources = feed['UC_ADVISING_RESOURCES']) && resources['UC_ADVISING_LINKS']
+
       if links
         # The following links are hard-coded, for now. Ideally they would be served by CS API but there is an urgent need
         # thus we manage the content via CalCentral settings.
@@ -41,6 +42,23 @@ module CampusSolutions
         add_cs_link links, :multi_year_academic_planner_generic, 'MULTI_YEAR_ACADEMIC_PLANNER_GENERIC', 'Multi-Year Planner'
         add_cs_link links, :multi_year_academic_planner, 'MULTI_YEAR_ACADEMIC_PLANNER_STUDENT_SPECIFIC', 'Multi-Year Planner', "?UCemplid=#{lookup_student_id}"
         add_cs_link links, :schedule_planner, 'SCHEDULE_PLANNER_STUDENT_SPECIFIC', 'Schedule Planner', "?EMPLID=#{lookup_student_id}"
+
+        # LINK-API CALLS
+        advisor_notes = CampusSolutions::Link.new.get_url('UC_CX_SCI_NOTE_FLU', {
+          :EMPLID => "#{@campus_solutions_id}"
+        })
+        advisor_notes_link = advisor_notes[:feed][:link]
+        if advisor_notes_link
+          links['uc_advisor_notes'] = advisor_notes_link
+        end
+
+        appointment_system = CampusSolutions::Link.new.get_url('UC_CX_APPOINTMENT_ADV_SETUP', {
+          :EMPLID => "#{@campus_solutions_id}"
+        })
+        appointment_system_link = appointment_system[:feed][:link]
+        if appointment_system_link
+          links['uc_appointment_system'] = appointment_system_link
+        end
       end
       feed
     end
