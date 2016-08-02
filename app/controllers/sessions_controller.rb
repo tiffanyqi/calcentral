@@ -20,8 +20,7 @@ class SessionsController < ApplicationController
         crosswalk.cache_legacy_student_id sid
       end
       if cs_id.present?
-        # TODO reduce this log level once CAS reliably sends us the CS ID
-        logger.warn "Caching Campus Solutions ID #{cs_id} for UID #{auth_uid} based on SAML assertion"
+        logger.debug "Caching Campus Solutions ID #{cs_id} for UID #{auth_uid} based on SAML assertion"
         crosswalk.cache_campus_solutions_id cs_id
       end
       delegate_id = auth.extra['berkeleyEduCSDelegateID']

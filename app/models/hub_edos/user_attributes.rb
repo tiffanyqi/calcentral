@@ -27,10 +27,10 @@ module HubEdos
       wrapped_result = handling_exceptions(@uid) do
         result = {}
         if (edo = get_edo)
-          set_ids(result)
+          extract_roles(edo, result)
+          extract_ids(edo, result)
           extract_passthrough_elements(edo, result)
           extract_names(edo, result)
-          extract_roles(edo, result)
           extract_emails(edo, result)
           result[:statusCode] = 200
         else
@@ -55,12 +55,30 @@ module HubEdos
       false
     end
 
-    def set_ids(result)
-      result[:ldap_uid] = @uid
-      result[:campus_solutions_id] = campus_solutions_id
-      result[:is_legacy_user] = legacy_user?
-      result[:student_id] = lookup_legacy_student_id_from_crosswalk
+    def extract_ids(edo, result)
+      # Users who are delegates-only, with no other role on campus, will be identified only through
+      # Crosswalk or SAML assertions.
       result[:delegate_user_id] = lookup_delegate_user_id
+
+      # Pre-CS student IDs should have been migrated, but note them if Crosswalk or SAML assertions
+      # provided one.
+      result[:legacy_student_id] = lookup_legacy_student_id_from_crosswalk
+
+      result[:ldap_uid] = @uid
+
+      # CS Identifiers simply treat 'student-id' as a synonym for the Campus Solutions ID / EmplID, regardless
+      # of whether the user has ever been a student. (In contrast, CalNet LDAP's 'berkeleyedustuid' attribute
+      # only appears for current or former students.)
+      if (cs_id_hash = edo[:identifiers].select {|id| id[:type] == 'student-id'}.first)
+        @campus_solutions_id ||= cs_id_hash[:id]
+        result[:campus_solutions_id] = @campus_solutions_id
+        result[:student_id] = @campus_solutions_id if result[:roles].slice(:student, :exStudent, :applicant).has_value?(true)
+      else
+        logger.error "No 'student-id' found in CS Identifiers #{edo[:identifiers]} for UID #{@uid}"
+        result[:student_id] = result[:legacy_student_id]
+      end
+
+      result[:is_legacy_user] = legacy_user?
     end
 
     def extract_passthrough_elements(edo, result)
