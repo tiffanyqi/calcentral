@@ -29,7 +29,7 @@ module Calendar
       if (building_name = row['building_name']).present?
         building_translation = Berkeley::Buildings.get building_name
         building_name = building_translation['display'] if building_translation.present?
-        entry.location = "#{row['room_number'].to_s.gsub(/^0+/, '')} #{building_name}, Berkeley, CA"
+        entry.location = "#{row['room_number'].to_s.gsub(/^0+/, '')} #{building_name}, UC Berkeley"
       end
 
       entry
@@ -53,7 +53,7 @@ module Calendar
 
       entry.name = section_name
       entry.schedule = schedule
-      entry.location = "#{row['location']}, Berkeley, CA" if row['location'].present?
+      entry.location = "#{row['location']}, UC Berkeley" if row['location'].present?
 
       entry
     end
