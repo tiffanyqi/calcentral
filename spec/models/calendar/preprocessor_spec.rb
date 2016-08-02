@@ -135,6 +135,28 @@ describe Calendar::Preprocessor do
         end
       end
 
+      context 'enrollment with no attached bmail address' do
+        let(:whitelisted_students) { [{'ldap_uid' => '300939', 'official_bmail_address' => nil}] }
+        before do
+          Calendar::User.create(uid: '300939')
+          allow_any_instance_of(CalnetLdap::UserAttributes).to receive(:get_feed).and_return(
+            official_bmail_address: ldap_bmail_address)
+        end
+        context 'bmail address available from LDAP' do
+          let(:ldap_bmail_address) { 'tammi.chang.from.ldap@gmail.com' }
+          it 'queues an event entry with the LDAP address' do
+            json = JSON.parse(subject[0].event_data)
+            expect(json['attendees'][0]['email']).to eq ldap_bmail_address
+          end
+        end
+        context 'no bmail address available from LDAP' do
+          let(:ldap_bmail_address) { nil }
+          it 'queues no event entries' do
+            expect(subject).to be_empty
+          end
+        end
+      end
+
       context 'when a course exists but has no schedule data' do
         let(:courses) do
           [{

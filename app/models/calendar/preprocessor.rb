@@ -46,15 +46,24 @@ module Calendar
     end
 
     def user_email_addresses(enrollments)
-      # Get list of attendee emails, preferentially from the test override table in Postgres (class_calendar_users.alternate_email),
-      # otherwise from enrollment data.
-      enrollments.inject([]) do |emails, enrollment|
-        if (email_address = @users_with_alternate_email[enrollment['ldap_uid']] || enrollment['official_bmail_address'])
-          emails << {
-            email: email_address
-          }
-        end
-        emails
+      # Get list of attendee emails, preferring, in order:
+      # - the test override table in Postgres (class_calendar_users.alternate_email);
+      # - enrollment data;
+      # - LDAP lookup.
+      emails = []
+      enrollments.each do |enrollment|
+        email_address = @users_with_alternate_email[enrollment['ldap_uid']] ||
+          enrollment['official_bmail_address'] ||
+          email_address_from_ldap(enrollment)
+        emails << {email: email_address} if email_address
+      end
+      emails
+    end
+
+    def email_address_from_ldap(enrollment)
+      # If we do find a match in LDAP, store it in @users_with_alternate_email for the duration of the job.
+      if (email_address = CalnetLdap::UserAttributes.new(user_id: enrollment['ldap_uid']).get_feed[:official_bmail_address])
+        @users_with_alternate_email[enrollment['ldap_uid']] = email_address
       end
     end
 
