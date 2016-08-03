@@ -134,7 +134,7 @@ angular.module('calcentral.controllers').controller('AcademicsGpaController', fu
               };
               if (transcriptRow.gradeOption === 'Letter') {
                 transcriptRow.estimatedGrade = 4;
-              } else if (transcriptRow.gradeOption === 'P/NP' || transcriptRow.gradeOption === 'S/U') {
+              } else if (transcriptRow.gradeOption === 'P/NP' || transcriptRow.gradeOption === 'S/U' || transcriptRow.gradeOption === 'C/NC') {
                 transcriptRow.estimatedGrade = -1;
               }
               estimatedTranscript.push(transcriptRow);

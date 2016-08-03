@@ -25,7 +25,7 @@ module EdoOracle
       def adapt_pnp_flag(row)
         grade_option = Berkeley::GradeOptions.grade_option_from_basis row['grading_basis']
         row['pnp_flag'] = case grade_option
-                            when 'P/NP', 'S/U' then 'Y'
+                            when 'P/NP', 'S/U', 'C/NC' then 'Y'
                             else 'N'
                           end
       end
