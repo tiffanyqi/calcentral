@@ -70,8 +70,8 @@ class ApiMyStatusPage
     @parsed['inEducationAbroadProgram']
   end
 
-  def is_campus_solutions_student?
-    @parsed['isCampusSolutionsStudent']
+  def is_legacy_user?
+    @parsed['isLegacyUser']
   end
 
   def has_student_history?

@@ -38,7 +38,7 @@ describe User::AggregatedAttributes do
   describe 'all systems available' do
     context 'Hub feed' do
       it 'should return edo user attributes' do
-        expect(subject[:campusSolutionsStudent]).to be true
+        expect(subject[:isLegacyUser]).to be false
         expect(subject[:sisProfileVisible]).to be true
         expect(subject[:officialBmailAddress]).to eq bmail_from_edo
         expect(subject[:campusSolutionsId]).to eq campus_solutions_id
@@ -131,27 +131,6 @@ describe User::AggregatedAttributes do
         expect(subject[:officialBmailAddress]).to eq bmail_from_ldap
         expect(subject[:roles][:recentStudent]).to be false
       end
-    end
-  end
-
-  describe 'has legacy data' do
-    let(:legacy_id) { random_id } # 8-digit ID means legacy
-    let(:edo_attributes) do
-      {
-        person_name: preferred_name,
-        campus_solutions_id: legacy_id,
-        is_legacy_user: true,
-        roles: {
-          student: true,
-          exStudent: false,
-          faculty: false,
-          staff: false
-        }
-      }
-    end
-    it 'should show SIS profile for legacy students' do
-      expect(subject[:campusSolutionsStudent]).to be false
-      expect(subject[:sisProfileVisible]).to be true
     end
   end
 
