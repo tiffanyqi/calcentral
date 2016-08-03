@@ -200,7 +200,7 @@ describe User::Api do
     end
   end
 
-  context 'with a legacy student' do
+  context 'with legacy data' do
     let(:delegate_students) { {} }
     let(:api) { User::Api.new(uid).get_feed }
     let(:edo_attributes) do
@@ -216,23 +216,9 @@ describe User::Api do
         }
       }
     end
-    context 'with the fallback enabled' do
-      before do
-        allow(Settings.features).to receive(:cs_profile_visible_for_legacy_users).and_return false
-      end
-      it 'should hide SIS profile for legacy students' do
-        expect(api[:isCampusSolutionsStudent]).to be false
-        expect(api[:showSisProfileUI]).to be false
-      end
-    end
-    context 'with the fallback disabled' do
-      before do
-        allow(Settings.features).to receive(:cs_profile_visible_for_legacy_users).and_return true
-      end
-      it 'should show SIS profile for legacy students' do
-        expect(api[:isCampusSolutionsStudent]).to be false
-        expect(api[:showSisProfileUI]).to be true
-      end
+    it 'should show SIS profile for legacy students' do
+      expect(api[:isCampusSolutionsStudent]).to be false
+      expect(api[:showSisProfileUI]).to be true
     end
   end
 

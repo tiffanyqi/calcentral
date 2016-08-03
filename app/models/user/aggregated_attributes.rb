@@ -11,7 +11,7 @@ module User
       @oracle_attributes = CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       @edo_attributes = HubEdos::UserAttributes.new(user_id: @uid).get if is_cs_profile_feature_enabled
       campus_solutions_student = @edo_attributes.present? && (@edo_attributes[:is_legacy_user] == false)
-      @sis_profile_visible = is_cs_profile_feature_enabled && (campus_solutions_student || is_profile_visible_for_legacy_users)
+      @sis_profile_visible = is_cs_profile_feature_enabled
       @roles = get_campus_roles
       first_name = get_campus_attribute('first_name', :string) || ''
       last_name = get_campus_attribute('last_name', :string) || ''
