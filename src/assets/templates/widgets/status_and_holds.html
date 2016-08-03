@@ -41,9 +41,9 @@
                 </div>
               </li>
               <li class="cc-widget-list-hover"
-                  data-ng-if="(api.user.profile.roles.undergrad && !registration.pastClassesStart) ||
-                  ((api.user.profile.roles.graduate || api.user.profile.roles.law || api.user.profile.roles.advisor) && !registration.pastAddDrop) &&
-                  !registration.isLegacy && !registration.isSummer"
+                  data-ng-if="((api.user.profile.roles.undergrad && !registration.pastClassesStart) ||
+                  ((api.user.profile.roles.graduate || api.user.profile.roles.law || api.user.profile.roles.advisor) && !registration.pastAddDrop)) &&
+                  !registration.isLegacy && !registration.isSummer && registration.summary !== 'Officially Registered'"
                   data-ng-class="{'cc-widget-list-hover-opened':(registration.positiveIndicators.show)}"
                   data-cc-accessible-focus-directive
                   data-ng-click="api.widget.toggleShow($event, null, registration.positiveIndicators, 'My Academics - Status and Holds')">
