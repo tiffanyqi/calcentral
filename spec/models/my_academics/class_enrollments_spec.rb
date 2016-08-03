@@ -161,9 +161,9 @@ describe MyAcademics::ClassEnrollments do
       let(:student_plans) { [compsci_ugrd_plan] }
       let(:cs_enrollment_career_terms) { [{ termId: '2168', termDescr: '2016 Fall', acadCareer: 'UGRD' }] }
       let(:user_is_student) { true }
+      let(:feed) { subject.get_feed }
       it 'include enrollment instruction types' do
-        result = subject.get_feed
-        types = result[:enrollmentTermInstructionTypes]
+        types = feed[:enrollmentTermInstructionTypes]
         expect(types.count).to eq 1
         expect(types[0][:instructionTypeCode]).to eq 'default'
         expect(types[0][:careerCode]).to eq 'UGRD'
@@ -172,23 +172,24 @@ describe MyAcademics::ClassEnrollments do
         expect(types[0][:term][:termDescr]).to eq '2016 Fall'
       end
       it 'includes enrollment instructions for each active term' do
-        result = subject.get_feed
-        instructions = result[:enrollmentTermInstructions]
+        instructions = feed[:enrollmentTermInstructions]
         expect(instructions.keys.count).to eq 1
         expect(instructions[:'2168'][:studentId]).to eq student_emplid
         expect(instructions[:'2168'][:term]).to eq '216X'
       end
       it 'includes academic planner data for each term' do
-        result = subject.get_feed
-        plans = result[:enrollmentTermAcademicPlanner]
+        plans = feed[:enrollmentTermAcademicPlanner]
         expect(plans.keys.count).to eq 1
         expect(plans[:'2168']).to have_key(:studentId)
         expect(plans[:'2168'][:updateAcademicPlanner][:name]).to eq 'Update'
         expect(plans[:'2168'][:academicplanner].count).to eq 1
       end
       it 'includes users hold status' do
-        result = subject.get_feed
-        expect(result[:hasHolds]).to eq false
+        expect(feed[:hasHolds]).to eq false
+      end
+      it 'includes campus solutions deeplinks' do
+        expect(feed[:links][:concurrentApplyToClass]).to eq Settings.campus_solutions_links.class_enrollment.concurrent_apply_to_class
+        expect(feed[:links][:concurrentSubmittedClassApplications]).to eq Settings.campus_solutions_links.class_enrollment.concurrent_submitted_class_applications
       end
     end
   end

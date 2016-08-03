@@ -40,6 +40,7 @@ angular.module('calcentral.factories').factory('enrollmentFactory', function(api
     var academicPlanner = _.get(data, 'data.enrollmentTermAcademicPlanner');
     var instructions = _.get(data, 'data.enrollmentTermInstructions');
     var hasHolds = _.get(data, 'data.hasHolds');
+    var links = _.get(data, 'data.links');
     if (!instructionTypes || !academicPlanner || !instructions) {
       return;
     }
@@ -49,6 +50,7 @@ angular.module('calcentral.factories').factory('enrollmentFactory', function(api
         var typeTermId = _.get(type, 'term.termId');
         angular.extend(type, instructions[typeTermId]);
         type.hasHolds = hasHolds;
+        type.csLinks = links;
         type = setAcademicPlanner(type, typeTermId, academicPlanner);
         return type;
       });

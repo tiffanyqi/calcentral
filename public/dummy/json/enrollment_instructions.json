@@ -1,26 +1,26 @@
 {
   "enrollmentTermAcademicPlanner": {
-      "2168": {
-          "academicplanner": [
-              {
-                  "term": "2168",
-                  "termDescr": "2016 Fall",
-                  "classes": [{
-                    "id": "124039",
-                    "subjectCatalog": "PSYCHC115B",
-                    "title": null,
-                    "units": 4.0
-                  }],
-                  "totalUnits": 4.0
-              }
-          ],
-          "studentId": "12701798",
-          "updateAcademicPlanner": {
-              "isCsLink": true,
-              "name": "Update",
-              "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_PLNR_FL.SCI_PLNR_FL.GBL?ucInstitution=UCB01"
-          }
+    "2168": {
+      "academicplanner": [
+        {
+          "term": "2168",
+          "termDescr": "2016 Fall",
+          "classes": [{
+            "id": "124039",
+            "subjectCatalog": "PSYCHC115B",
+            "title": null,
+            "units": 4.0
+          }],
+          "totalUnits": 4.0
+        }
+      ],
+      "studentId": "12701798",
+      "updateAcademicPlanner": {
+        "isCsLink": true,
+        "name": "Update",
+        "url": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_PLNR_FL.SCI_PLNR_FL.GBL?ucInstitution=UCB01"
       }
+    }
   },
   "enrollmentTermInstructionTypes": [
     {
@@ -35,6 +35,26 @@
           "plan": {
             "code": "04606U",
             "description": "Nutritional Science BS"
+          }
+        }
+      ],
+      "term": {
+        "termDescr": "2016 Fall",
+        "termId": "2168"
+      }
+    },
+    {
+      "careerCode": "UCBX",
+      "instructionTypeCode": "concurrent",
+      "academicPlans": [
+        {
+          "career": {
+            "code": "UCBX",
+            "description": "UC Extension"
+          },
+          "plan": {
+            "code": "12345U",
+            "description": "Clinical Lab Prep"
           }
         }
       ],
@@ -242,5 +262,9 @@
       "waitlistedClassesTotalUnits": 2.0
     }
   },
-  "hasHolds": false
+  "hasHolds": false,
+  "links": {
+    "concurrentApplyToClass": "https://bcswebqat.is.berkeley.edu/psp/bcsqat/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?",
+    "concurrentSubmittedClassApplications": "https://bcswebqat.is.berkeley.edu/psp/bcsqat/EMPLOYEE/HRMS/c/G3ACTION_CENTER.G3ACTION_CENTER.GBL?FolderPath=PORTAL_ROOT_OBJECT.UC_CMPONENTS.UC_FORMS.G3EFORM3_FOLDER.G3ACTION_CENTER_GBL&IsFolder=false&IgnoreParamTempl=FolderPath%2cIsFolder"
+  }
 }

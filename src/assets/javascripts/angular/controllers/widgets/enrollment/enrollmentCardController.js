@@ -50,6 +50,28 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
       show: true
     }
   ];
+  var sectionsConcurrent = [
+    {
+      id: 'decide_concurrent',
+      title: 'Enroll',
+      show: true
+    },
+    {
+      id: 'explore',
+      title: 'Class Search',
+      show: true
+    },
+    {
+      id: 'adjust',
+      title: 'Class Adjustment',
+      show: true
+    },
+    {
+      id: 'sites_concurrent',
+      title: 'UC Extension Sites',
+      show: true
+    }
+  ];
 
   /**
    * Groups enrolled and waitlisted classes by career description
@@ -70,6 +92,10 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     switch (enrollmentInstruction.instructionTypeCode) {
       case 'law': {
         enrollmentInstruction.sections = angular.copy(sectionsLaw);
+        break;
+      }
+      case 'concurrent': {
+        enrollmentInstruction.sections = angular.copy(sectionsConcurrent);
         break;
       }
       default: {
@@ -137,11 +163,44 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
     $scope.isLoading = false;
   };
 
-  /*
-   * Returns true if instruction type code matches
+  /**
+   *
+   * Returns true if any of the types codes provided match the instruction type code
+   * @param  {object} instruction class enrollment instruction object
+   * @param  {array}  typeCodes   array of strings representing instruction types
+   * @return {Boolean}            True when any type code provided matches
    */
-  $scope.isInstructionType = function(instruction, typeCode) {
-    return instruction.instructionTypeCode === typeCode;
+  $scope.isInstructionType = function(instruction, typeCodes) {
+    return typeCodes.indexOf(instruction.instructionTypeCode) !== -1;
+    // return instruction.instructionTypeCode === typeCode;
+  };
+
+  /**
+   * Toggles display of section when instruction type is not concurrent
+   */
+  $scope.toggleSection = function($event, section, enrollmentInstruction) {
+    if (!$scope.isInstructionType(enrollmentInstruction, ['concurrent'])) {
+      $scope.api.widget.toggleShow($event, null, section, 'Class Enrollment Section - ' + section.title);
+    }
+  };
+
+  /**
+   * Provides title for certain deep links based on the instruction type
+   */
+  $scope.typeSpecificLinkTitle = function(linkId, instructionTypeCode) {
+    var titles = {
+      'add': 'Add',
+      'drop': 'Drop',
+      'swap': 'Swap',
+      'options': 'Options',
+      'changeOptions': 'Change Grading Option',
+      'withdraw': 'Withdraw'
+    };
+    if (instructionTypeCode === 'concurrent') {
+      titles.drop = 'Drop a Class';
+      titles.options = 'Edit Class Options';
+    }
+    return titles[linkId];
   };
 
   /*

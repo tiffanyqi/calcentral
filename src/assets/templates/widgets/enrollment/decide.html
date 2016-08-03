@@ -1,13 +1,13 @@
 <div
   data-cc-enrollment-card-header-directive
   data-count="$index + 1"
-  data-date="{{enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, 'law') ? (enrollmentInstruction.enrollmentPeriod[0].date.epoch * 1000 | date:'h:mm a') : ''}}"
-  data-date-important="{{enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, 'law') ? (enrollmentInstruction.enrollmentPeriod[0].date.epoch * 1000 | date:'EEE MMM d'): ''}}"
+  data-date="{{enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, ['law', 'concurrent']) ? (enrollmentInstruction.enrollmentPeriod[0].date.epoch * 1000 | date:'h:mm a') : ''}}"
+  data-date-important="{{enrollmentInstruction.enrollmentPeriod[0] && !isInstructionType(enrollmentInstruction, ['law']) ? (enrollmentInstruction.enrollmentPeriod[0].date.epoch * 1000 | date:'EEE MMM d'): ''}}"
   data-title="section.title"
 ></div>
 
 <div class="cc-enrollment-card-section-content" data-ng-if="section.show">
-  <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks && !isInstructionType(enrollmentInstruction, 'law')">
+  <div data-ng-if="api.user.profile.actAsOptions.canSeeCSLinks && !isInstructionType(enrollmentInstruction, ['law'])">
     <div data-ng-if="enrollmentInstruction.isClassScheduleAvailable">
       <span
         data-cc-campus-solutions-link-item-directive
@@ -20,7 +20,7 @@
   <div data-ng-if="!enrollmentInstruction.isClassScheduleAvailable">
     Ability to enroll coming soon. Please try again later.
   </div>
-  <div data-ng-if="!isInstructionType(enrollmentInstruction, 'law')">
+  <div data-ng-if="!isInstructionType(enrollmentInstruction, ['law'])">
     Learn more about <a href="http://registrar.berkeley.edu/Records/tbinfo.html">enrollment rules and information</a>.
   </div>
 
@@ -30,7 +30,7 @@
   </div>
 
   <div data-ng-if="enrollmentInstruction.enrollmentPeriod.length">
-    <div data-ng-if="isInstructionType(enrollmentInstruction, 'law')"
+    <div data-ng-if="isInstructionType(enrollmentInstruction, ['law'])"
       class="cc-enrollment-card-margin-bottom">
       Below are your enrollment appointment start times. You will have continuous access to the system until the semester's add/drop deadline:
     </div>
