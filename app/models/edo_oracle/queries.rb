@@ -157,7 +157,6 @@ module EdoOracle
           mtg."sectionNumber" = sec."sectionNumber"
         )
         WHERE
-          sec."printInScheduleOfClasses" = 'Y' AND
           sec."term-id" = '#{term_id}' AND
           sec."id" = '#{section_id}' AND
           mtg."location-code" IS NOT NULL
