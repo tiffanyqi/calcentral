@@ -38,6 +38,7 @@ module Notifications
       'sis:student:delegate' => CampusSolutions::DelegateStudentsExpiry,
       'sis:student:deposit' => CampusSolutions::MyDeposit,
       'sis:student:enrollment' => CampusSolutions::EnrollmentTermExpiry,
+      'sis:student:eft' => Eft::MyEftEnrollment,
       'sis:student:ferpa' => nil,
       'sis:student:finaid' => CampusSolutions::FinancialAidExpiry,
       'sis:student:financials' => CampusSolutions::MyBilling,
