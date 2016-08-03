@@ -154,6 +154,12 @@ calmail_proxy:
   owner_address: 'owner@example.com'
   owner_uid: '211159'
 
+clearing_house_proxy:
+  fake: false
+  base_url: 'https://secure.studentclearinghouse.org/sssportalui/authenticate'
+  app_id: ''
+  app_key: ''
+
 eft_proxy:
   fake: true
   # QA Environment

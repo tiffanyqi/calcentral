@@ -81,6 +81,7 @@ features:
   cs_profile_languages: true
   cs_profile_work_experience: true
   cs_transfer_credit: true
+  enrollment_verification: true
   financials: true
   legacy_advising: true
   textbooks: true

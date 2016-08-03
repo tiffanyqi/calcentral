@@ -20,6 +20,16 @@
           <div class="cc-enrollment-verification-message">
             <span data-ng-bind-html="enrollmentMessages.messages.viewOnline.descrlong"></span>
           </div>
+          <div class="cc-enrollment-verification-link">
+            <div data-ng-if="api.user.profile.isDirectlyAuthenticated">
+              <strong><a data-cc-outbound-enabled="true" href="/clearing_house/clearing_house_url">View or Print Enrollment via Self Service</a></strong>
+            </div>
+            <div data-ng-if="!api.user.profile.isDirectlyAuthenticated">
+              <p class="cc-enrollment-verification-link-disabled">
+                <strong>View or Print Enrollment via Self Service</strong><i> (Functionality is not available in view-as mode.)</i>
+              </p>
+            </div>
+          </div>
         </li>
         <li>
           <div class="cc-enrollment-verification-subtitle">
