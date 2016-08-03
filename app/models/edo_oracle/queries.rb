@@ -43,8 +43,9 @@ module EdoOracle
     #   - 'course_option' removed
     #   - 'cred_cd' and 'pnp_flag' replaced by 'grading_basis'
     def self.get_enrolled_sections(person_id, terms = nil)
+      # The push_pred hint below alerts Oracle to use indexes on SISEDO.API_COURSEV00_VW, aka crs.
       safe_query <<-SQL
-        SELECT
+        SELECT /*+ push_pred(crs) */
           #{SECTION_COLUMNS},
           sec."maxEnroll" AS enroll_limit,
           enr."STDNT_ENRL_STATUS_CODE" AS enroll_status,
