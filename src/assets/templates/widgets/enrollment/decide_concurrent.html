@@ -4,25 +4,32 @@
   data-title="section.title"
 ></div>
 
-<div class="cc-enrollment-card-section-content" data-ng-if="section.show">
+<div class="cc-enrollment-card-section-content" data-ng-if="section.show && api.user.profile.actAsOptions.canSeeCSLinks">
   <ul class="cc-list-links">
     <li>
       <a
         data-ng-href="{{enrollmentInstruction.csLinks.concurrentApplyToClass}}"
-        data-ng-disabled="enrollmentInstruction.isGradeBaseAvailable">
+        data-ng-disabled="enrollmentInstruction.isGradeBaseAvailable || !enrollmentInstruction.csLinks.concurrentApplyToClass">
         Apply to a Class
       </a>
-      <div>
+      <div data-ng-if="!enrollmentInstruction.csLinks.concurrentApplyToClass">
+        Application process temporarily unavailable at this time
+      </div>
+      <div data-ng-if="enrollmentInstruction.csLinks.concurrentApplyToClass">
         The deadline to apply
         <span data-ng-if="!enrollmentInstruction.isGradeBaseAvailable">is</span>
         <span data-ng-if="enrollmentInstruction.isGradeBaseAvailable">was</span>
         09/23/2016
       </div>
     </li>
-    <li>
+    <li data-ng-if="enrollmentInstruction.csLinks.concurrentSubmittedClassApplications">
       <a data-ng-href="{{enrollmentInstruction.csLinks.concurrentSubmittedClassApplications}}">
         Submitted Class Applications
       </a>
     </li>
   </ul>
+</div>
+<div
+  data-ng-if="!api.user.profile.actAsOptions.canSeeCSLinks"
+  data-ng-include="'widgets/enrollment/enrollment_hide_links.html'">
 </div>
