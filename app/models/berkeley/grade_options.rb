@@ -11,10 +11,12 @@ module Berkeley
           'Letter'
         when 'LAW'
           'Law'
-        when 'CNC', 'EPN', 'PNP'
+        when 'EPN', 'PNP'
           'P/NP'
         when 'ESU', 'SUS'
           'S/U'
+        when 'CNC'
+          'C/NC'
         else
           ''
       end

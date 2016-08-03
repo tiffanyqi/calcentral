@@ -14,7 +14,7 @@ describe Berkeley::GradeOptions do
         it {should eq 'Law'}
       end
     end
-    %w(CNC EPN PNP).each do |basis|
+    %w(EPN PNP).each do |basis|
       context "when #{basis} basis" do
         let(:grading_basis) {basis}
         it {should eq 'P/NP'}
@@ -24,6 +24,12 @@ describe Berkeley::GradeOptions do
       context "when #{basis} basis" do
         let(:grading_basis) {basis}
         it {should eq 'S/U'}
+      end
+    end
+    %w(CNC).each do |basis|
+      context "when #{basis} basis" do
+        let(:grading_basis) {basis}
+        it {should eq 'C/NC'}
       end
     end
     %w(BMT CNV NON OPT).each do |basis|
