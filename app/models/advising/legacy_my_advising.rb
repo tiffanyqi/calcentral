@@ -20,7 +20,7 @@ module Advising
     end
 
     def get_feed_internal
-      if Settings.features.advising
+      if Settings.features.legacy_advising
         get_parsed_response
       else
         {}

@@ -105,6 +105,7 @@ features:
   cs_profile_work_experience: true
   cs_transfer_credit: true
   financials: true
+  legacy_advising: true
   legacy_regblocks: true
   textbooks: true
   videos: true

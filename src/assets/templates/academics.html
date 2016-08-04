@@ -31,7 +31,9 @@
 
       <div data-ng-include="'widgets/final_exam_schedule.html'" data-ng-if="examSchedule.length && api.user.profile.roles.student && !studentInfo.isLawStudent"></div>
 
-      <div data-ng-include="'academics_ls_advising.html'" data-ng-if="showAdvising"></div>
+      <div data-ng-include="'academics_my_advising.html'" data-ng-if="showAdvising"></div>
+
+      <div data-ng-include="'academics_ls_advising.html'" data-ng-if="showLegacyAdvising"></div>
 
       <div data-ng-include="'widgets/student_university_requirements.html'" data-ng-if="academics.universityRequirements && isUndergraduate"></div>
 

@@ -72,7 +72,7 @@ describe Advising::LegacyMyAdvising do
     context 'disabled feature flag' do
       subject { real_oski_model }
       before do
-        Settings.features.stub(:advising).and_return(false)
+        Settings.features.stub(:legacy_advising).and_return(false)
       end
       it 'returns an empty feed' do
         feed = subject.get_feed
