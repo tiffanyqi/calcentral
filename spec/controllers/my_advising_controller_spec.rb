@@ -15,7 +15,10 @@ describe MyAdvisingController do
         get :get_feed
         json_response = JSON.parse(response.body)
         expect(json_response['statusCode']).to eq 200
-        expect(json_response['feed']['advisorAppointments']['ucAaAdvisingAppts']['advisingAppts']).to be
+        expect(json_response['feed']['actionItems']).to be
+        expect(json_response['feed']['advisors']).to be
+        expect(json_response['feed']['appointments']).to be
+        expect(json_response['feed']['links']).to be
       end
     end
   end

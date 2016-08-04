@@ -1,139 +1,155 @@
 {
 	"statusCode": 200,
 	"feed": {
-  	"advisorActionItems": {
-      "ucAaActionItems": {
-        "actionItems": [
-          {
-            "actionItemAssignedAdvisor": null,
-            "actionItemAssignedDate": "2016-07-22",
-            "actionItemDescription": "Testing 123",
-            "actionItemDueDate": "2016-07-25",
-            "actionItemStatus": "Incomplete",
-            "actionItemTitle": "Action Item test",
-            "actionItemView": "Complete",
-            "debug": {
-              "actionItemAdvisorAssignedId": "1121122",
-              "actionItemNoteId": "00000",
-              "actionItemNoteSeq": "1",
-              "callerType": "ADVISOR"
-            }
-          },
-          {
-            "actionItemAssignedAdvisor": null,
-            "actionItemAssignedDate": "2016-07-22",
-            "actionItemDescription": "test test test",
-            "actionItemDueDate": "2016-07-25",
-            "actionItemStatus": "Incomplete",
-            "actionItemTitle": "Action Item test 2",
-            "actionItemView": "Complete",
-            "debug": {
-              "actionItemAdvisorAssignedId": "1121122",
-              "actionItemNoteId": "00000",
-              "actionItemNoteSeq": "2",
-              "callerType": "ADVISOR"
-            }
-          },
-          {
-            "actionItemAssignedAdvisor": null,
-            "actionItemAssignedDate": "2016-07-22",
-            "actionItemDescription": "TESTING TESTING",
-            "actionItemDueDate": "2016-07-28",
-            "actionItemStatus": "Incomplete",
-            "actionItemTitle": "TEST",
-            "actionItemView": "Complete",
-            "debug": {
-              "actionItemAdvisorAssignedId": "1121122",
-              "actionItemNoteId": "00001",
-              "actionItemNoteSeq": "1",
-              "callerType": "ADVISOR"
-            }
-          }
-        ]
+    "actionItems": [
+      {
+        "actionItemAssignedAdvisor": "Jane Doe",
+        "actionItemAssignedDate": {
+          "dateString": "7/22",
+          "dateTime": "2016-07-22T17:00:00+00:00",
+          "epoch": 1469170800
+        },
+        "actionItemDescription": "Please fill out the form at <a href=\"http://ucbstudentforms.com/changeofmajorform\">http://ucbstudentforms.com/changeofmajorform</a> to change your major.",
+        "actionItemDueDate": {
+          "dateString": "7/25",
+          "dateTime": "2016-07-25T17:00:00+00:00",
+          "epoch": 1469491200
+        },
+        "actionItemStatus": "Incomplete",
+        "actionItemTitle": "Submit the Change of Major eForm",
+        "actionItemView": "Complete",
+        "debug": {
+          "actionItemAdvisorAssignedId": "1121122",
+          "actionItemNoteId": "00000",
+          "actionItemNoteSeq": "1",
+          "callerType": "ADVISOR"
+        }
+      },
+      {
+        "actionItemAssignedAdvisor": "Jane Doe",
+        "actionItemAssignedDate": {
+          "dateString": "7/22",
+          "dateTime": "2016-07-22T17:00:00+00:00",
+          "epoch": 1469170800
+        },
+        "actionItemDescription": null,
+        "actionItemDueDate": {
+          "dateString": "7/25",
+          "dateTime": "2016-07-25T17:00:00+00:00",
+          "epoch": 1469491200
+        },
+        "actionItemStatus": "Incomplete",
+        "actionItemTitle": "Schedule Another Appointment",
+        "actionItemView": "Complete",
+        "debug": {
+          "actionItemAdvisorAssignedId": "1121122",
+          "actionItemNoteId": "00000",
+          "actionItemNoteSeq": "2",
+          "callerType": "ADVISOR"
+        }
+      },
+      {
+        "actionItemAssignedAdvisor": "Jane Doe",
+        "actionItemAssignedDate": {
+          "dateString": "7/22",
+          "dateTime": "2016-07-22T17:00:00+00:00",
+          "epoch": 1469170800
+        },
+        "actionItemDescription": null,
+        "actionItemDueDate": {
+          "dateString": "7/28",
+          "dateTime": "2016-07-28T17:00:00+00:00",
+          "epoch": 1469689200
+        },
+        "actionItemStatus": "Incomplete",
+        "actionItemTitle": "Visit California residency office",
+        "actionItemView": "Complete",
+        "debug": {
+          "actionItemAdvisorAssignedId": "1121122",
+          "actionItemNoteId": "00001",
+          "actionItemNoteSeq": "1",
+          "callerType": "ADVISOR"
+        }
       }
-    },
-  	"advisorAppointments": {
-      "ucAaAdvisingAppts": {
-        "advisingAppts": [
-          {
-            "apptAdvisorId": "3030312345",
-            "apptAdvisorName": "Jane Smith",
-            "apptCategory": "Academic Advising",
-            "apptDate": "2016-07-25",
-            "apptDuration": "30",
-            "apptReason": "Add",
-            "apptReasonAddl": null,
-            "apptScheduledTime": "08.00.00.000000",
-            "apptStatus": "CANCEL",
-            "apptType": "Drop-in",
-            "apptTypeDetail": null,
-            "debug": {
-              "apptCategoryCode": "ADV",
-              "apptReasonCode": "A",
-              "sciApptAdvUnit": null,
-              "sciApptEnd": "08.30.00.000000",
-              "sciApptSeq": "4"
-            }
-          },
-          {
-            "apptAdvisorId": "3030312345",
-            "apptAdvisorName": "Jane Smith",
-            "apptCategory": "Academic Advising",
-            "apptDate": "2016-07-29",
-            "apptDuration": "30",
-            "apptReason": "Add",
-            "apptReasonAddl": "hello, some more information.",
-            "apptScheduledTime": "10.00.00.000000",
-            "apptStatus": "CANCEL",
-            "apptType": "Skype",
-            "apptTypeDetail": null,
-            "debug": {
-              "apptCategoryCode": "ADV",
-              "apptReasonCode": "A",
-              "sciApptAdvUnit": null,
-              "sciApptEnd": "10.30.00.000000",
-              "sciApptSeq": "2"
-            }
-          },
-          {
-            "apptAdvisorId": "3030312345",
-            "apptAdvisorName": "Jane Smith",
-            "apptCategory": "Academic Advising",
-            "apptDate": "2016-07-26",
-            "apptDuration": "30",
-            "apptReason": "Add",
-            "apptReasonAddl": null,
-            "apptScheduledTime": "13.00.00.000000",
-            "apptStatus": "CANCEL",
-            "apptType": "In Person",
-            "apptTypeDetail": null,
-            "debug": {
-              "apptCategoryCode": "ADV",
-              "apptReasonCode": "A",
-              "sciApptAdvUnit": null,
-              "sciApptEnd": "13.30.00.000000",
-              "sciApptSeq": "2"
-            }
-          }
-        ]
+    ],
+    "advisors": [
+      {
+        "assignedAdvisor": null,
+        "assignedAdvisorEmail": "janed@example.com",
+        "assignedAdvisorLocation": "1234 Barrows",
+        "assignedAdvisorName": "Jane Doe",
+        "assignedAdvisorProgram": "Undergrad Chemistry",
+        "assignedAdvisorType": "College Advisor",
+        "debug": {
+          "assignedAdvisorId": "3000123456"
+        }
       }
-    },
-  	"advisorRelationships": {
-      "ucAaStudentAdvisor": {
-        "studentAdvisor": [
-          {
-            "assignedAdvisor": null,
-            "assignedAdvisorEmail": "janed@example.com",
-            "assignedAdvisorLocation": null,
-            "assignedAdvisorName": "Jane Doe",
-            "assignedAdvisorProgram": "Undergrad Chemistry",
-            "assignedAdvisorType": "College Advisor",
-            "debug": {
-              "assignedAdvisorId": "3000123456"
-            }
-          }
-        ]
+    ],
+    "appointments": [
+      {
+        "apptAdvisorId": "3030312345",
+        "apptAdvisorName": "Jane Smith",
+        "apptCategory": "Academic Advising",
+        "apptDate": "2016-07-25",
+        "apptDuration": "30",
+        "apptReason": "Add",
+        "apptReasonAddl": null,
+        "apptScheduledTime": "08.00.00.000000",
+        "apptStatus": "CANCEL",
+        "apptType": "Drop-in",
+        "apptTypeDetail": null,
+        "debug": {
+          "apptCategoryCode": "ADV",
+          "apptReasonCode": "A",
+          "sciApptAdvUnit": null,
+          "sciApptEnd": "08.30.00.000000",
+          "sciApptSeq": "4"
+        }
+      },
+      {
+        "apptAdvisorId": "3030312345",
+        "apptAdvisorName": "Jane Smith",
+        "apptCategory": "Academic Advising",
+        "apptDate": "2016-07-29",
+        "apptDuration": "30",
+        "apptReason": "Add",
+        "apptReasonAddl": "hello, some more information.",
+        "apptScheduledTime": "10.00.00.000000",
+        "apptStatus": "CANCEL",
+        "apptType": "Skype",
+        "apptTypeDetail": null,
+        "debug": {
+          "apptCategoryCode": "ADV",
+          "apptReasonCode": "A",
+          "sciApptAdvUnit": null,
+          "sciApptEnd": "10.30.00.000000",
+          "sciApptSeq": "2"
+        }
+      },
+      {
+        "apptAdvisorId": "3030312345",
+        "apptAdvisorName": "Jane Smith",
+        "apptCategory": "Academic Advising",
+        "apptDate": "2016-07-26",
+        "apptDuration": "30",
+        "apptReason": "Add",
+        "apptReasonAddl": null,
+        "apptScheduledTime": "13.00.00.000000",
+        "apptStatus": "CANCEL",
+        "apptType": "In Person",
+        "apptTypeDetail": null,
+        "debug": {
+          "apptCategoryCode": "ADV",
+          "apptReasonCode": "A",
+          "sciApptAdvUnit": null,
+          "sciApptEnd": "13.30.00.000000",
+          "sciApptSeq": "2"
+        }
       }
+    ],
+    "links": {
+      "manageAppointments": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_APPT_STUSS.SCI_APPT_MY_APPTS.GBL",
+      "newAppointment": "https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_APPT_STUSS.SCI_APPT_SS_FLU.GBL"
     }
   }
 }
