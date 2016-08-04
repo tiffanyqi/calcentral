@@ -253,7 +253,9 @@ cache:
     CanvasBackgroundJobs: <%= 24.hours %>
     CanvasLti::Egrades: <%= 1.minute %>
     CanvasLti::Lti: <%= 5.minutes %>
+
     Advising::LegacyMyAdvising: <%= 2.hours %>
+    Advising::MyAdvising: <%= 2.hours %>
 
     MyAcademics::CollegeAndLevel: NEXT_08_00
     MyAcademics::GpaUnits: NEXT_08_00

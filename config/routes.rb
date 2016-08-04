@@ -16,6 +16,7 @@ Calcentral::Application.routes.draw do
   post '/api/my/calendar/opt_out' => 'user_api#calendar_opt_out', :via => :post
 
   # Feeds of read-only content
+  get '/api/advising/my_advising' => 'my_advising#get_feed', :as => :advising, :defaults => {:format => 'json'}
   get '/api/my/classes' => 'my_classes#get_feed', :as => :my_classes, :defaults => { :format => 'json' }
   get '/api/my/photo' => 'photo#my_photo', :as => :my_photo, :defaults => {:format => 'jpeg' }
   get '/api/my/textbooks_details' => 'my_textbooks#get_feed', :as => :my_textbooks, :defaults => { :format => 'json' }
@@ -30,7 +31,8 @@ Calcentral::Application.routes.draw do
   get '/api/my/financials' => 'my_financials#get_feed', :as => :my_financials, :defaults => {:format => 'json'}
   get '/api/my/finaid' => 'my_finaid#get_feed', :as => :my_finaid, :defaults => {:format => 'json'}
   get '/api/my/cal1card' => 'my_cal1card#get_feed', :as => :my_cal1card, :defaults => {:format => 'json'}
-  get '/api/my/advising' => 'my_advising#get_feed', :as => :my_advising, :defaults => {:format => 'json'}
+  # TODO This legacy advising endpoint will not remain long.
+  get '/api/my/advising' => 'my_advising#get_legacy_feed', :as => :my_advising, :defaults => {:format => 'json'}
   get '/api/my/campuslinks' => 'my_campus_links#get_feed', :as => :my_campus_links, :defaults => { :format => 'json' }
   get '/api/my/campuslinks/expire' => 'my_campus_links#expire'
   get '/api/my/campuslinks/refresh' => 'my_campus_links#refresh', :defaults => { :format => 'json' }
