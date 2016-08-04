@@ -395,7 +395,7 @@ describe MyAcademics::ClassEnrollments do
         career: { code: 'UCBX', description: 'UC Berkeley Extension' },
         plan: { code: '30XCECCENX', description: 'UCBX Concurrent Enrollment'}
       }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'ucbx'
+      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'concurrent'
     end
 
     it 'identifies a fall program for freshmen plan' do

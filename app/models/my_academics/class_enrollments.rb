@@ -15,7 +15,7 @@ module MyAcademics
       ],
       career: [
         {instruction_type_code: 'law', match: 'LAW'},
-        {instruction_type_code: 'ucbx', match: 'UCBX'},
+        {instruction_type_code: 'concurrent', match: 'UCBX'},
       ]
     }
 
