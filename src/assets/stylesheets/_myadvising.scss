@@ -1,3 +1,26 @@
 .cc-widget-myadvising {
-  padding: 0;
+  .cc-widget-myadvising-header {
+    margin-top: 20px;
+  }
+  .cc-widget-myadvising-link {
+    margin-top: 5px;
+  }
+  .cc-widget-myadvising-list {
+    border-bottom: 1px solid $cc-color-widget-background;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 0;
+    padding: 0;
+    .cc-widget-myadvising-list-item {
+      padding: 8px 20px 8px 0;
+    }
+    .cc-widget-myadvising-list-subitem {
+      padding-top: 10px;
+    }
+  }
+  .cc-widget-myadvising-section {
+    &:not(:first-of-type) {
+      margin-top: 15px;
+    }
+  }
 }
