@@ -1,6 +1,9 @@
 .cc-enrollment-verification {
   .cc-enrollment-verification-link {
     margin-bottom: 12px;
+    .cc-enrollment-verification-link-disabled {
+      color: $cc-color-light-medium-grey;
+    }
   }
   .cc-enrollment-verification-footer {
     margin-top: 12px;

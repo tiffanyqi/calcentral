@@ -3,7 +3,7 @@
     <h2 class="cc-left">Semesters</h2>
   </div>
 
-  <div class="cc-academics-enrollment-verification-link" data-ng-if="api.user.profile.features.enrollmentVerification && api.user.profile.isDirectlyAuthenticated && !isAdvisingStudentLookup">
+  <div class="cc-academics-enrollment-verification-link" data-ng-if="api.user.profile.features.enrollmentVerification && (api.user.profile.isDirectlyAuthenticated || api.user.profile.actingAsUid) && !isAdvisingStudentLookup">
     <a href="academics/enrollment_verification">Request Enrollment Verification</a>
   </div>
 
