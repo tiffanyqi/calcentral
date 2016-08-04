@@ -8,7 +8,6 @@ describe MyRegistrationsController do
     session['user_id'] = '0'
     get :get_feed
     json_response = JSON.parse(response.body)
-    puts json_response
     expect(json_response['affiliations'][0]['type']['code']).to eq "EMPLOYEE"
   end
 
