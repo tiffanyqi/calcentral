@@ -29,17 +29,24 @@
             <span data-ng-bind-html="enrollmentMessages.messages.requestOfficial.descrlong"></span>
           </div>
           <div class="cc-enrollment-verification-link">
-            <div data-ng-if="!api.user.profile.features.enrollmentVerificationDeeplink">
-              <strong><a data-ng-href="{{enrollmentGoogleLink.url}}" data-ng-attr-title="{{enrollmentGoogleLink.title}}">Request Official Verification</a></strong>
+            <div data-ng-if="api.user.profile.isDirectlyAuthenticated">
+              <div data-ng-if="!api.user.profile.features.enrollmentVerificationDeeplink">
+                <strong><a data-ng-href="{{enrollmentGoogleLink.url}}" data-ng-attr-title="{{enrollmentGoogleLink.title}}">Request Official Verification</a></strong>
+              </div>
+              <div data-ng-if="api.user.profile.features.enrollmentVerificationDeeplink">
+                <strong>
+                  <a data-cc-campus-solutions-link-directive="enrollmentCsDeeplink.url"
+                  data-cc-campus-solutions-link-directive-enabled="{{enrollmentCsDeeplink.isCsLink}}"
+                  data-cc-campus-solutions-link-directive-text="enrollmentCsDeeplink.backToText"
+                  data-cc-campus-solutions-link-directive-cache="'academics'"
+                  data-cc-outbound-enabled="false">Request Official Verification</a>
+                </strong>
+              </div>
             </div>
-            <div data-ng-if="api.user.profile.features.enrollmentVerificationDeeplink">
-              <strong>
-                <a data-cc-campus-solutions-link-directive="enrollmentCsDeeplink.url"
-                data-cc-campus-solutions-link-directive-enabled="{{enrollmentCsDeeplink.isCsLink}}"
-                data-cc-campus-solutions-link-directive-text="enrollmentCsDeeplink.backToText"
-                data-cc-campus-solutions-link-directive-cache="'academics'"
-                data-cc-outbound-enabled="false">Request Official Verification</a>
-              </strong>
+            <div data-ng-if="!api.user.profile.isDirectlyAuthenticated">
+              <p class="cc-enrollment-verification-link-disabled">
+                <strong>Request Official Verification</strong><i> (Functionality is not available in view-as mode.)</i>
+              </p>
             </div>
           </div>
         </li>
