@@ -40,7 +40,7 @@ module CampusSolutions
         entry = link_resources[:feed][:ucLinkResources][:links][link_id]
 
         if entry
-          link = entry.slice(:url, :urlId, :description)
+          link = entry.slice(:url, :urlId, :description, :comments)
 
           if placeholders.present?
             placeholders.each do |k, v|
@@ -62,6 +62,13 @@ module CampusSolutions
             if property[:name] == 'UCFROMTEXT'
               link[:ucFromText] = property[:value]
             end
+          end
+
+          # convert campus solutions property names to calcentral
+          link[:name] = link.delete(:description)
+          link[:title] = link.delete(:comments)
+          if !link[:showNewWindow]
+            link['IS_CS_LINK'] = true
           end
         end
       end
