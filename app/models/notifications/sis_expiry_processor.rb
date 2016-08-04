@@ -32,7 +32,7 @@ module Notifications
 
     #TODO Mapping of event topics to expiry modules is incomplete.
     EXPIRY_BY_TOPIC = {
-      'sis:staff:advisor' => CampusSolutions::AdvisingResources,
+      'sis:staff:advisor' => CampusSolutions::AdvisingExpiry,
       'sis:student:affiliation' => CampusSolutions::UserApiExpiry,
       'sis:student:checklist' => CampusSolutions::ChecklistDataExpiry,
       'sis:student:delegate' => CampusSolutions::DelegateStudentsExpiry,

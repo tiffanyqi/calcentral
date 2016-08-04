@@ -1,22 +1,46 @@
 describe MyAdvisingController do
 
-  it 'should be an empty advising feed on non-authenticated user' do
-    get :get_feed
-    assert_response :success
-    json_response = JSON.parse(response.body)
-    json_response.should == {}
+  describe '#get_feed' do
+    context 'no authenticated user' do
+      it 'should return empty' do
+        get :get_feed
+        assert_response :success
+        expect(JSON.parse response.body).to be_empty
+      end
+    end
+
+    context 'authenticated user' do
+      before { session['user_id'] = '61889' }
+      it 'should return a feed full of content' do
+        get :get_feed
+        json_response = JSON.parse(response.body)
+        expect(json_response['statusCode']).to eq 200
+        expect(json_response['feed']['advisorAppointments']['ucAaAdvisingAppts']['advisingAppts']).to be
+      end
+    end
   end
 
-  context 'with an authenticated user' do
-    before(:each) do
-      Settings.advising_proxy.stub(:fake).and_return(true)
+  describe '#get_legacy_feed' do
+    context 'no authenticated user' do
+      it 'should return empty' do
+        get :get_legacy_feed
+        assert_response :success
+        expect(JSON.parse response.body).to be_empty
+      end
     end
-    it 'should be an non-empty advising feed based on fake Oski recorded data' do
-      session['user_id'] = '61889'
-      get :get_feed
-      json_response = JSON.parse(response.body)
-      json_response.size.should == 6
-      json_response["statusCode"].should == 200
+
+    context 'authenticated user' do
+      before do
+        allow(Settings.advising_proxy).to receive(:fake).and_return(true)
+        session['user_id'] = '61889'
+      end
+      it 'should be an non-empty advising feed based on fake Oski recorded data' do
+        get :get_legacy_feed
+        assert_response :success
+        json_response = JSON.parse(response.body)
+        expect(json_response.size).to eq 6
+        expect(json_response['statusCode']).to eq 200
+      end
     end
   end
 end
