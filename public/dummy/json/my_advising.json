@@ -1,0 +1,139 @@
+{
+	"statusCode": 200,
+	"feed": {
+  	"advisorActionItems": {
+      "ucAaActionItems": {
+        "actionItems": [
+          {
+            "actionItemAssignedAdvisor": null,
+            "actionItemAssignedDate": "2016-07-22",
+            "actionItemDescription": "Testing 123",
+            "actionItemDueDate": "2016-07-25",
+            "actionItemStatus": "Incomplete",
+            "actionItemTitle": "Action Item test",
+            "actionItemView": "Complete",
+            "debug": {
+              "actionItemAdvisorAssignedId": "1121122",
+              "actionItemNoteId": "00000",
+              "actionItemNoteSeq": "1",
+              "callerType": "ADVISOR"
+            }
+          },
+          {
+            "actionItemAssignedAdvisor": null,
+            "actionItemAssignedDate": "2016-07-22",
+            "actionItemDescription": "test test test",
+            "actionItemDueDate": "2016-07-25",
+            "actionItemStatus": "Incomplete",
+            "actionItemTitle": "Action Item test 2",
+            "actionItemView": "Complete",
+            "debug": {
+              "actionItemAdvisorAssignedId": "1121122",
+              "actionItemNoteId": "00000",
+              "actionItemNoteSeq": "2",
+              "callerType": "ADVISOR"
+            }
+          },
+          {
+            "actionItemAssignedAdvisor": null,
+            "actionItemAssignedDate": "2016-07-22",
+            "actionItemDescription": "TESTING TESTING",
+            "actionItemDueDate": "2016-07-28",
+            "actionItemStatus": "Incomplete",
+            "actionItemTitle": "TEST",
+            "actionItemView": "Complete",
+            "debug": {
+              "actionItemAdvisorAssignedId": "1121122",
+              "actionItemNoteId": "00001",
+              "actionItemNoteSeq": "1",
+              "callerType": "ADVISOR"
+            }
+          }
+        ]
+      }
+    },
+  	"advisorAppointments": {
+      "ucAaAdvisingAppts": {
+        "advisingAppts": [
+          {
+            "apptAdvisorId": "3030312345",
+            "apptAdvisorName": "Jane Smith",
+            "apptCategory": "Academic Advising",
+            "apptDate": "2016-07-25",
+            "apptDuration": "30",
+            "apptReason": "Add",
+            "apptReasonAddl": null,
+            "apptScheduledTime": "08.00.00.000000",
+            "apptStatus": "CANCEL",
+            "apptType": "Drop-in",
+            "apptTypeDetail": null,
+            "debug": {
+              "apptCategoryCode": "ADV",
+              "apptReasonCode": "A",
+              "sciApptAdvUnit": null,
+              "sciApptEnd": "08.30.00.000000",
+              "sciApptSeq": "4"
+            }
+          },
+          {
+            "apptAdvisorId": "3030312345",
+            "apptAdvisorName": "Jane Smith",
+            "apptCategory": "Academic Advising",
+            "apptDate": "2016-07-29",
+            "apptDuration": "30",
+            "apptReason": "Add",
+            "apptReasonAddl": "hello, some more information.",
+            "apptScheduledTime": "10.00.00.000000",
+            "apptStatus": "CANCEL",
+            "apptType": "Skype",
+            "apptTypeDetail": null,
+            "debug": {
+              "apptCategoryCode": "ADV",
+              "apptReasonCode": "A",
+              "sciApptAdvUnit": null,
+              "sciApptEnd": "10.30.00.000000",
+              "sciApptSeq": "2"
+            }
+          },
+          {
+            "apptAdvisorId": "3030312345",
+            "apptAdvisorName": "Jane Smith",
+            "apptCategory": "Academic Advising",
+            "apptDate": "2016-07-26",
+            "apptDuration": "30",
+            "apptReason": "Add",
+            "apptReasonAddl": null,
+            "apptScheduledTime": "13.00.00.000000",
+            "apptStatus": "CANCEL",
+            "apptType": "In Person",
+            "apptTypeDetail": null,
+            "debug": {
+              "apptCategoryCode": "ADV",
+              "apptReasonCode": "A",
+              "sciApptAdvUnit": null,
+              "sciApptEnd": "13.30.00.000000",
+              "sciApptSeq": "2"
+            }
+          }
+        ]
+      }
+    },
+  	"advisorRelationships": {
+      "ucAaStudentAdvisor": {
+        "studentAdvisor": [
+          {
+            "assignedAdvisor": null,
+            "assignedAdvisorEmail": "janed@example.com",
+            "assignedAdvisorLocation": null,
+            "assignedAdvisorName": "Jane Doe",
+            "assignedAdvisorProgram": "Undergrad Chemistry",
+            "assignedAdvisorType": "College Advisor",
+            "debug": {
+              "assignedAdvisorId": "3000123456"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
