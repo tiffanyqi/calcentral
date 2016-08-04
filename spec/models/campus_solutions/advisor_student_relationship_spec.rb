@@ -24,7 +24,6 @@ describe CampusSolutions::AdvisorStudentRelationship do
     it_should_behave_like 'a proxy that gets data'
     subject { proxy.get }
     it 'should get specific mock data' do
-      puts "subject: #{subject.inspect}"
       expect(subject[:feed][:ucAaStudentAdvisor][:studentAdvisor][0][:assignedAdvisorType]).to eq 'College Advisor'
       expect(subject[:feed][:ucAaStudentAdvisor][:studentAdvisor][0][:assignedAdvisorProgram]).to eq 'Undergrad Chemistry'
       expect(subject[:feed][:ucAaStudentAdvisor][:studentAdvisor][0][:assignedAdvisorName]).to eq 'Jane Doe'
