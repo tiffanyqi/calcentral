@@ -45,11 +45,9 @@
               </div>
               <div data-ng-if="api.user.profile.features.enrollmentVerificationDeeplink">
                 <strong>
-                  <a data-cc-campus-solutions-link-directive="enrollmentCsDeeplink.url"
-                  data-cc-campus-solutions-link-directive-enabled="{{enrollmentCsDeeplink.isCsLink}}"
-                  data-cc-campus-solutions-link-directive-text="enrollmentCsDeeplink.backToText"
-                  data-cc-campus-solutions-link-directive-cache="'academics'"
-                  data-cc-outbound-enabled="false">Request Official Verification</a>
+                  <a data-cc-outbound-enabled="true"
+                    data-ng-href="{{enrollmentCsDeeplink.url}}"
+                    data-ng-attr-title="{{enrollmentCsDeeplink.title}}">Request Official Verification</a>
                 </strong>
               </div>
             </div>
