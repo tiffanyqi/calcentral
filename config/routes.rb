@@ -225,6 +225,9 @@ Calcentral::Application.routes.draw do
   # Redirect to HigherOne
   get '/higher_one/higher_one_url' => 'campus_solutions/higher_one_url#redirect'
 
+  # Redirect to National Student ClearingHouse
+  get '/clearing_house/clearing_house_url' => 'my_clearing_house_url#redirect'
+
   # EDOs from integration hub
   get '/api/edos/academic_status' => 'hub_edo#academic_status', :via => :get, :defaults => { :format => 'json' }
   get '/api/edos/student' => 'hub_edo#student', :via => :get, :defaults => { :format => 'json' }

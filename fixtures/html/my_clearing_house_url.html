@@ -1,0 +1,21 @@
+<HTML>
+  <HEAD>
+    <TITLE>Clearinghouse</TITLE>
+  </HEAD>
+  <BODY>
+    <FORM name="frm_nsc" method="POST"  action="https://secure.studentclearinghouse.org/sssportalui/sssportal" >
+      <INPUT type="hidden" name="token_name" value="SOME VALUE">
+    </FORM>
+    <div ID=redir_msg style='display:block'>
+      You will now access the
+      <A HREF="https://secure.studentclearinghouse.org/sssportalui/sssportal" onclick="javascript:document.frm_nsc.submit(); return false;">
+      National Student Clearinghouse Student Self-Service Site</A>.
+      <BR>
+      <BR>
+      If you are not redirected within a few seconds, click on the above link.
+    </div>
+    <SCRIPT Language="JavaScript">
+      document.frm_nsc.submit();
+    </SCRIPT>
+  </BODY>
+</HTML>
