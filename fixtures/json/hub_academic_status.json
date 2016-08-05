@@ -108,49 +108,22 @@
                   {
                     "academicPlan": {
                       "academicProgram": {
-                        "academicCareer": {
-                            "code": "UGRD",
-                            "description": "Undergraduate"
-                        },
                         "program": {
                           "code": "UCLS",
                           "description": "Undergrad Letters & Science"
                         }
-                      },
-                      "cipCode": "23.0101",
-                      "hegisCode": "",
-                      "ownedBy": {
-                          "administrativeOwners": [
-                              {
-                                  "organization": {
-                                      "code": "ENGLISH",
-                                      "description": "English"
-                                  },
-                                  "percentage": 100
-                              }
-                          ]
                       },
                       "plan": {
                         "code": "25345U",
                         "description": "English BA",
                         "fromDate": "2016-01-12"
                       },
-                      "targetDegree": {
-                          "type": {
-                              "code": "AB",
-                              "description": "Bachelor of Arts"
-                          }
-                      },
                       "type": {
                         "code": "MAJ",
                         "description": "Major - Regular Acad/Prfnl"
                       }
                     },
-                    "primary": true,
-                    "expectedGraduationTerm": {
-                       "id": "2202",
-                       "name": "2020 Spring"
-                    }
+                    "primary": true
                   },
                   {
                     "academicPlan": {

@@ -23,24 +23,13 @@
     "majors": [
       {
         "college": "ENGR",
-        "major": "Civil Engineering BS"
+        "major": "Civil Engineering"
       }
     ],
     "nonApLevel": "Junior",
     "noStudentId": false,
-    "plans": [
-        {
-            "code": "16300U",
-            "expectedGraduationTerm": {
-                "id": "2172",
-                "name": "2017 Spring"
-            },
-            "primary": true
-        }
-    ],
     "termName": "Fall 2013",
-    "termsInAttendance": "4",
-    "lastExpectedGraduationTerm": "2017 Spring"
+    "termsInAttendance": "4"
   },
   "gpaUnits": {
     "cumulativeGpa": 2.4,
