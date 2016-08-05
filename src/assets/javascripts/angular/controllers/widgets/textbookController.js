@@ -44,6 +44,8 @@ angular.module('calcentral.controllers').controller('TextbookController', functi
   var getCourseTextbooks = function(selectedCourse) {
     var semester = $scope.isInstructorOrGsi ? $scope.selectedTeachingSemester : $scope.selectedStudentSemester;
     var separatedPrimaries = academicsService.getClassesSections(semester.classes, false, selectedCourse.course_code);
+    // Include waitlisted enrollments.
+    separatedPrimaries = separatedPrimaries.concat(academicsService.getClassesSections(semester.classes, true, selectedCourse.course_code));
 
     for (var c = 0; c < separatedPrimaries.length; c++) {
       // get textbooks for each primary section

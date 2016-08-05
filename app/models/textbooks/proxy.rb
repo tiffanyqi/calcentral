@@ -160,7 +160,7 @@ module Textbooks
         },
         ssl_version: 'TLSv1_2'
       )
-      logger.debug "Remote server status #{response.code}; url = #{url}"
+      logger.debug "Remote server status #{response.code}, Body = #{response.body}"
       response.parsed_response
     end
 
