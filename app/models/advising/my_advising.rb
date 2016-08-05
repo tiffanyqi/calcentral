@@ -52,15 +52,22 @@ module Advising
     end
 
     def merge_links(advising_feed)
-      advising_feed[:feed][:links] = {
-        manageAppointments: fetch_link('UC_CX_APPOINTMENT_STD_MY_APPTS'),
-        newAppointment: fetch_link('UC_CX_APPOINTMENT_STD_ADD')
-      }
+      manage_appointments_link = fetch_link 'UC_CX_APPOINTMENT_STD_MY_APPTS'
+      new_appointment_link = fetch_link 'UC_CX_APPOINTMENT_STD_ADD'
+      if manage_appointments_link && new_appointment_link
+        advising_feed[:feed][:links] = {
+          manageAppointments: manage_appointments_link,
+          newAppointment: new_appointment_link
+        }
+      else
+        advising_feed[:statusCode] = 500
+        advising_feed[:errored] = true
+      end
     end
 
     def merge_proxy_feed(advising_feed, proxy_class)
       response = proxy_class.new(user_id: @uid).get
-      if !response || !response[:feed] || response[:errored]
+      if !response || response[:errored] || !response[:feed].is_a?(Hash)
         advising_feed[:statusCode] = 500
         advising_feed[:errored] = true
         logger.error "Got errors in merged MyAdvising feed on #{proxy_class} for uid #{@uid} with response #{response}"
@@ -71,8 +78,10 @@ module Advising
 
     def fetch_link(link_key)
       if (link_feed = CampusSolutions::Link.new.get_url link_key)
-        link_feed.try(:[], :feed).try(:[], :link).try(:[], :url)
+        link = link_feed.try(:[], :feed).try(:[], :link).try(:[], :url)
       end
+      logger.error "Could not retrieve CS link #{link_key} for MyAdvising feed, uid = #{@uid}" unless link
+      link
     end
 
     def transform_date(item, key)

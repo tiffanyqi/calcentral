@@ -10,7 +10,13 @@ describe MyAdvisingController do
     end
 
     context 'authenticated user' do
-      before { session['user_id'] = '61889' }
+      before do
+        session['user_id'] = '61889'
+        # TODO CampusSolutions::Link does not yet have a versatile fake mode.
+        allow_any_instance_of(CampusSolutions::Link).to receive(:get_url).and_return({
+          feed: {link: {url: 'http://www.berkeley.edu'}}
+        })
+      end
       it 'should return a feed full of content' do
         get :get_feed
         json_response = JSON.parse(response.body)
