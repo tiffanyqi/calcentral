@@ -1,8 +1,67 @@
 <div class="cc-widget cc-widget-myadvising" data-ng-controller="MyAdvisingController">
   <div class="cc-widget-title">
     <h2 class="cc-left">Advising</h2>
+    <a class="cc-button cc-right cc-widget-title-button"
+       data-ng-href="{{myAdvising.links.newAppointment}}"
+       data-ng-if="myAdvising.links.newAppointment">
+      <i class="fa fa-plus cc-button-plus-icon"></i>
+      <span>New Appointment</span>
+    </a>
   </div>
-  <div class="cc-widget-padding">
-    <p>Hello World</p>
+
+  <div data-cc-spinner-directive="myAdvising.isLoading">
+    <div class="cc-widget-padding">
+
+      <div data-ng-if="myAdvising.errored">
+        There was an error retrieving advising data.
+      </div>
+
+      <div data-ng-if="!myAdvising.errored">
+        <div class="cc-widget-myadvising-section" data-ng-repeat="advisor in myAdvising.advisors">
+          <div>
+            <strong data-ng-bind="advisor.assignedAdvisorType"></strong> (<span data-ng-bind="advisor.assignedAdvisorProgram"></span>)
+          </div>
+          <div>
+            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}" data-ng-bind="advisor.assignedAdvisorName"></a>
+          </div>
+          <div>
+            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}" data-ng-bind="advisor.assignedAdvisorEmail"></a>
+          </div>
+          <div data-ng-bind="advisor.assignedAdvisorLocation"></div>
+        </div>
+
+        <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.actionItems.length">
+          <h3 class="cc-widget-myadvising-header">Action Items</h3>
+          <ul class="cc-widget-list cc-widget-myadvising-list">
+            <li data-ng-repeat="actionItem in myAdvising.actionItems"
+                data-ng-class="{'cc-widget-list-selected': actionItem.show}">
+              <div class="cc-widget-list-hover cc-widget-myadvising-list-item"
+                   data-ng-class="{'cc-widget-list-hover-opened': (actionItem.show)}"
+                   data-cc-accessible-focus-directive
+                   data-ng-click="api.widget.toggleShow($event, myAdvising.actionItems, actionItem, 'Advising Action Items')">
+                <div class="cc-left" data-ng-bind="actionItem.actionItemTitle"></div>
+                <div class="cc-right" data-ng-if="actionItem.actionItemDueDate">
+                  Due <span data-ng-bind="actionItem.actionItemDueDate.dateString"></span>
+                </div>
+                <div class="cc-clearfix " data-ng-if="actionItem.show">
+                  <div class="cc-widget-myadvising-list-subitem" data-ng-if="actionItem.actionItemAssignedDate">
+                    Assigned on <span data-ng-bind="actionItem.actionItemAssignedDate.dateString"></span>
+                    <span data-ng-if="actionItem.actionItemAssignedAdvisor" data-ng-bind-template="by {{actionItem.actionItemAssignedAdvisor}}"></span>
+                  </div>
+                  <div class="cc-widget-myadvising-list-subitem" data-ng-bind-html="actionItem.actionItemDescription"></div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.links.manageAppointments">
+          <h3 class="cc-widget-myadvising-header">Appointments</h3>
+          <div class="cc-widget-myadvising-link">
+            <a data-ng-href="{{myAdvising.links.manageAppointments}}">Access and Manage My Appointments</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
