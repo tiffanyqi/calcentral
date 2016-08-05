@@ -11,8 +11,7 @@ angular.module('calcentral.controllers').controller('EnrollmentVerificationContr
   apiService.util.setTitle(title);
 
   $scope.enrollmentCsDeeplink = {
-    title: 'Request Other Verifications',
-    backToText: 'My Academics'
+    title: 'Request Other Verifications'
   };
   $scope.enrollmentGoogleLink = {
     url: 'http://goo.gl/forms/xcYYehIBFDbDE92y1',
