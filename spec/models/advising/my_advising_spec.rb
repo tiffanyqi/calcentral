@@ -119,5 +119,27 @@ describe Advising::MyAdvising do
       end
       it_should_behave_like 'a good and proper error report'
     end
+
+    context 'missing links' do
+      before do
+        fake_proxies[CampusSolutions::Link].set_response({
+          status: 200,
+          body: <<-XML
+            <UC_LINK_RESOURCES>
+              <Link>
+                <PROPERTIES type="array"/>
+                <URL_ID>NOT_A_RELEVANT_ID</URL_ID>
+                <URL>https://no.help.here</URL>
+              </Link>
+            </UC_LINK_RESOURCES>
+          XML
+        })
+      end
+      it 'reports failure' do
+        expect(Rails.logger).to receive(:error).with(/Could not retrieve CS link/).exactly(2).times
+        expect(subject[:statusCode]).to eq 500
+        expect(subject[:errored]).to eq true
+      end
+    end
   end
 end

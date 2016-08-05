@@ -3,7 +3,7 @@
     <h2 class="cc-left">Advising</h2>
     <a class="cc-button cc-right cc-widget-title-button"
        data-ng-href="{{myAdvising.links.newAppointment}}"
-       data-ng-if="myAdvising.links.newAppointment">
+       data-ng-if="!myAdvising.errored">
       <i class="fa fa-plus cc-button-plus-icon"></i>
       <span>New Appointment</span>
     </a>
