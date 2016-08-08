@@ -8,13 +8,12 @@
             <th scope="col" class="cc-table-right">Applied</th>
           </tr>
         </thead>
-        <tbody data-ng-repeat="hold in holds">
-          <tr
-            class="cc-widget-table-hover"
-            data-ng-class="{'cc-widget-table-hover-opened':(hold.show)}"
-            data-cc-accessible-focus-directive
-            data-ng-click="api.widget.toggleShow($event, holds, hold, 'Active Hold')"
-          >
+        <tbody class="cc-widget-table-hover"
+          data-ng-class="{'cc-widget-table-hover-opened':(hold.show)}"
+          data-cc-accessible-focus-directive
+          data-ng-click="api.widget.toggleShow($event, holds, hold, 'Active Hold')"
+          data-ng-repeat="hold in holds">
+          <tr>
             <td>
               <i class="fa fa-exclamation-circle cc-icon-red"></i>
               <span data-ng-bind="hold.reason.description"></span>
