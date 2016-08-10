@@ -1,9 +1,11 @@
 <div class="cc-widget cc-widget-myadvising" data-ng-controller="MyAdvisingController">
   <div class="cc-widget-title">
     <h2 class="cc-left">Advising</h2>
-    <a class="cc-button cc-right cc-widget-title-button"
-       data-ng-href="{{myAdvising.links.newAppointment}}"
-       data-ng-if="!myAdvising.errored">
+    <a class="cc-button cc-right cc-widget-title-button" data-cc-campus-solutions-link-directive="myAdvising.links.newAppointment.url"
+    data-cc-campus-solutions-link-directive-enabled="{{myAdvising.links.newAppointment.isCsLink}}"
+    data-cc-campus-solutions-link-directive-text="myAdvising.links.newAppointment.backToText"
+    data-cc-campus-solutions-link-directive-cache="'myAdvising'"
+    data-cc-outbound-enabled="false" data-ng-if="myAdvising.links.newAppointment.url">
       <i class="fa fa-plus cc-button-plus-icon"></i>
       <span>New Appointment</span>
     </a>
@@ -58,7 +60,10 @@
         <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.links.manageAppointments">
           <h3 class="cc-widget-myadvising-header">Appointments</h3>
           <div class="cc-widget-myadvising-link">
-            <a data-ng-href="{{myAdvising.links.manageAppointments}}">Access and Manage My Appointments</a>
+            <div
+              data-cc-campus-solutions-link-item-directive
+              data-link="myAdvising.links.manageAppointments" data-text="Access and Manage My Appointments" data-ng-if="myAdvising.links.manageAppointments.url"
+            ></div>
           </div>
         </div>
       </div>
