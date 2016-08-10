@@ -68,6 +68,7 @@ module CampusSolutions
           link[:name] = link.delete(:description)
           link[:title] = link.delete(:comments)
           if !link[:showNewWindow]
+            link[:isCsLink] = true
             link['IS_CS_LINK'] = true
           end
         end

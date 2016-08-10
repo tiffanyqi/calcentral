@@ -19,7 +19,7 @@ describe Advising::MyAdvising do
     end
 
     let(:manage_appts_link) { 'https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_APPT_STUSS.SCI_APPT_MY_APPTS.GBL'}
-    let(:new_appt_link) { 'https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_APPT_STUSS.SCI_APPT_SS_FLU.GBL' }
+    let(:new_appt_link) { 'https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SCI_APPT_STUSS.SCI_APPT_SS_FLU.GBL'}
 
     before do
       fake_proxies[CampusSolutions::Link].set_response({
@@ -93,8 +93,8 @@ describe Advising::MyAdvising do
         })
       end
       it 'should fetch links' do
-        expect(subject[:feed][:links][:manageAppointments]).to eq manage_appts_link
-        expect(subject[:feed][:links][:newAppointment]).to eq new_appt_link
+        expect(subject[:feed][:links][:manageAppointments][:url]).to eq manage_appts_link
+        expect(subject[:feed][:links][:newAppointment][:url]).to eq new_appt_link
       end
     end
 
