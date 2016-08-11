@@ -179,10 +179,10 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
           list = list.concat('Student ID: ' + student.student_id + '\n');
           list = list.concat('Last Name: ' + student.last_name + '\n');
           list = list.concat('First Name: ' + student.first_name + '\n');
-          list = list.concat('Academic Career: ' + student.academic_career + '\n');
           if (includeSectionsList) {
             list = list.concat('Sections: ' + sectionNameList(student.sections) + '\n');
           }
+          list = list.concat('Career: ' + student.academic_career + '\n');
           list = list.concat('\n');
         });
         return list;
@@ -229,7 +229,7 @@ angular.module('calcentral.directives').directive('ccAcademicsClassInfoEnrollmen
         var bodyLines = [
           'BODY\n',
           'Schedule or enrollment manager,\n',
-          'Within the constraints of pre-requisites, reserve capacity, overall class capacity and any other relevant concerns, please fulfill the following request for students enrolled or on the wait list for ' + scope.className + ' for ' + scope.semesterName + '.\n',
+          'Within the constraints of pre-requisites (if normally enforced for this class), reserve capacity, overall class capacity and any other relevant concerns, please fulfill the following request for students enrolled or on the wait list for ' + scope.className + ' for ' + scope.semesterName + '.\n',
           'REQUEST: ' + messages.bodyRequest,
           textStudentList(currentlySelectedStudents, true) + messages.sortingNote + 'The students are also broken out by individual section and Class Number below.',
           'If this request cannot be fulfilled in a reasonable amount of time, please let me know.\n',
