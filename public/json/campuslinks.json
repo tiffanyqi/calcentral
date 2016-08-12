@@ -1643,24 +1643,6 @@
       ]
     },
     {
-      "name": "Enrollment Verification",
-      "description": "Request enrollment verification",
-      "url": "http://registrar.berkeley.edu/academic-records/verification-enrollment-degrees",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": true,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Academic Records Requests",
-          "subcategory": "Main Campus"
-        }
-      ]
-    },
-    {
       "name": "Environmental Health \u0026 Safety",
       "description": "Services to the campus community that promote health, safety, and environmental stewardship",
       "url": "http://www.ehs.berkeley.edu/",
@@ -2187,24 +2169,6 @@
         {
           "topcategory": "Staff Learning",
           "subcategory": "Health \u0026 Safety"
-        }
-      ]
-    },
-    {
-      "name": "Law Enrollment Verification",
-      "description": "Request enrollment verification for law classes",
-      "url": "https://www.law.berkeley.edu/academics/registrar/verification-of-attendance/",
-      "roles": {
-        "student": true,
-        "applicant": true,
-        "staff": true,
-        "faculty": false,
-        "exStudent": true
-      },
-      "categories": [
-        {
-          "topcategory": "Academic Records Requests",
-          "subcategory": "Law Program"
         }
       ]
     },
