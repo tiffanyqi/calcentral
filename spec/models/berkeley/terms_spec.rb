@@ -1,5 +1,6 @@
 describe Berkeley::Terms do
   let(:options) {{fake_now: fake_now}}
+  before { allow(Settings.hub_term_proxy).to receive(:fake).and_return true }
   subject {Berkeley::Terms.fetch(options)}
 
   shared_examples 'a list of campus terms' do
@@ -128,7 +129,7 @@ describe Berkeley::Terms do
 
   describe '#fetch_terms_from_api' do
     before { allow(Settings.features).to receive(:hub_term_api).and_return true }
-    subject { Berkeley::Terms.new(fake: true, fake_now: DateTime.parse('2016-07-12')) }
+    subject { Berkeley::Terms.new(fake_now: DateTime.parse('2016-07-12')) }
     it 'finds all post-legacy data' do
       terms = subject.fetch_terms_from_api
       expect(terms.length).to eq 2
