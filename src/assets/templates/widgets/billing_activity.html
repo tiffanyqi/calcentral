@@ -101,10 +101,9 @@
               </th>
             </tr>
           </thead>
-          <tbody
-            class="cc-widget-table-hover"
+          <tbody class="cc-widget-table-hover"
             data-cc-accessible-focus-directive
-            data-ng-class="{'cc-widget-table-hover-opened cc-widget-list-selected':(item.show)}"
+            data-ng-class="{'cc-widget-table-hover-opened':(item.show)}"
             data-ng-click="api.widget.toggleShow($event, billing.data.activity, item, 'Billing - Transaction')"
             data-ng-repeat="item in (billing.data.activity | filter:dateFilter | filter:search | filter:filter.searchTermId | filter:statusFilter | orderBy:billing.sort.column:billing.sort.descending) | limitTo:activityLimit">
             <tr data-ng-class="{'cc-page-myfinances-red':(item.itemDueFlag === OVER_DUE), 'cc-page-myfinances-green':(item.itemBalance < 0)}">
@@ -124,7 +123,7 @@
                      data-ng-class="{'fa-plus':(item.itemLineAmount > 0),'fa-minus':(item.itemLineAmount < 0)}"></i>
                 </div>
               </td>
-              <td class="cc-page-myfinances-due-date cc-table-center">
+              <td class="cc-page-myfinances-due-date cc-table-center cc-toggle-triangle">
                 <div class="hide-for-small cc-print-show">
                   <span data-ng-bind="item.itemDueDate | date:'MM/dd/yy'" data-ng-if="item.itemDueFlag"></span>
                   <i class="fa cc-page-myfinances-due-date-icons-medium-up" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.itemDueFlag === 'OVER_DUE'),'fa-exclamation':(item.itemDueFlag === 'DUE_NOW'),'fa-arrow-right':(item.itemDueFlag === 'FUTURE_DUE')}"></i>

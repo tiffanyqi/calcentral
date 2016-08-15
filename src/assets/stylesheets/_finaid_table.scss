@@ -5,7 +5,7 @@
   .cc-widget-finaid-sub-total-title {
     padding-left: 20px;
     position: relative;
-    &:before {
+    &::before {
       content: "• ";
       margin-left: -10px;
       position: absolute;
@@ -13,6 +13,39 @@
   }
   .cc-widget-finaid-table-budget-total-title {
     color: $cc-color-lighter-medium-grey;
+  }
+  .cc-widget-table-hover {
+    .cc-toggle-triangle {
+      right: 15px;
+      &::after {
+        right: -8px;
+      }
+    }
+  }
+  .cc-widget-table-hover-opened {
+    .cc-toggle-triangle {
+      &::after {
+        right: -10px;
+      }
+    }
+  }
+  // Override the deeply qualified descendant selectors in foundation.css,
+  // and qualify the .cc-table-right class with right-alignment and padding for
+  // more liquid layout, regardless of the presence or absence of
+  // .cc-toggle-triangle elements.
+  thead th.cc-table-right:not(:first-child):not(:last-child) {
+    padding-right: 5%;
+    text-align: right;
+  }
+  tbody td.cc-table-right:not(:first-child):not(:last-child) {
+    padding-right: 5%;
+    text-align: right;
+  }
+  tbody .cc-table-right:last-child {
+    padding-right: 0;
+  }
+  tbody .cc-widget-finaid-table-budget-total {
+    padding-right: 5px !important;
   }
 }
 .cc-widget-finaid-table-grand-total td {

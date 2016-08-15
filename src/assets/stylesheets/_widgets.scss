@@ -11,11 +11,11 @@
 
   // See https://git.io/vITBH
   // For an explanation of this magic
-  &:before, &:after {
+  &::before, &::after {
     content: " ";
     display: table;
   }
-  &:after {
+  &::after {
     clear: both;
   }
 }
@@ -193,6 +193,58 @@
     padding: 2px 15px;
   }
 }
+
+.cc-widget-table-hover {
+  .cc-toggle-triangle {
+    position: relative;
+    &::after {
+      border-bottom: 4px solid transparent;
+      border-right: 4px solid $cc-color-lighter-medium-grey;
+      border-top: 4px solid transparent;
+      content: "";
+      height: 0;
+      position: absolute;
+      right: 12px;
+      top: 8px;
+      width: 0;
+    }
+  }
+  &:hover, &:focus {
+    .cc-toggle-triangle {
+      &::after {
+        border-bottom: 4px solid transparent;
+        border-right: 4px solid $body-font-color;
+        border-top: 4px solid transparent;
+      }
+    }
+  }
+}
+.cc-widget-table-hover-opened {
+  .cc-toggle-triangle {
+    position: relative;
+    &::after {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid $cc-color-lighter-medium-grey;
+      content: "";
+      height: 0;
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      width: 0;
+    }
+  }
+  &:hover, &:focus {
+    .cc-toggle-triangle {
+      &::after {
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 4px solid $body-font-color;
+      }
+    }
+  }
+}
+
 .cc-widget-text {
   line-height: 1.6;
   padding: 15px;

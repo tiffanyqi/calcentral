@@ -18,6 +18,23 @@
       margin: 5px 0;
     }
   }
+
+  .cc-widget-table-hover {
+    .cc-toggle-triangle {
+      right: 15px;
+      &::after {
+        right: -8px;
+      }
+    }
+  }
+  .cc-widget-table-hover-opened {
+    .cc-toggle-triangle {
+      &::after {
+        right: -10px;
+      }
+    }
+  }
+
   .cc-status-holds-list {
     font-size: 13px;
     padding: 0;
