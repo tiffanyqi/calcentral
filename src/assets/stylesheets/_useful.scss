@@ -140,7 +140,7 @@ $cc-spinner-uneven: 17px;
 .cc-popover {
   background: $cc-color-popover-background;
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 5px 10px $cc-color-black-transparent;
   padding: 0;
   position: absolute;
   z-index: 100;
