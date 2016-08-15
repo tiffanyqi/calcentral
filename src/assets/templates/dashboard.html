@@ -16,7 +16,7 @@
     <div data-ng-include="'widgets/student_resources.html'" data-ng-if="api.user.profile.roles.student || api.user.profile.roles.applicant"></div>
     <div data-ng-include="'widgets/toolbox/user_search.html'" data-ng-if="api.user.profile.features.csAdvisorStudentLookup && api.user.profile.roles.advisor"></div>
     <div data-ng-include="'widgets/advisor/resources.html'" data-ng-if="api.user.profile.roles.advisor"></div>
-    <div data-ng-include="'faculty-resources.html'" data-ng-if="api.user.profile.roles.faculty || api.user.profile.hasInstructorHistory"></div>
+    <div data-ng-include="'faculty_resources.html'" data-ng-if="api.user.profile.roles.faculty || api.user.profile.hasInstructorHistory"></div>
   </div>
 </div>
 <div data-ng-include="'404.html'" data-ng-if="!api.user.profile.hasDashboardTab"></div>
