@@ -5,6 +5,10 @@ exclude:
   - 'node_modules/**'
 
 linters:
+  PseudoElement:
+    enabled: false
+  ColorVariable:
+    enabled: false
   DuplicateProperty:
     enabled: false
   EmptyLineBetweenBlocks:
