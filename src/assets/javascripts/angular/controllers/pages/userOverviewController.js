@@ -6,7 +6,8 @@ var _ = require('lodash');
 /**
  * Preview of user profile prior to viewing-as
  */
-angular.module('calcentral.controllers').controller('UserOverviewController', function(adminService, advisingFactory, academicStatusFactory, residencyMessageFactory, apiService, statusHoldsService, studentAttributesFactory, $route, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('UserOverviewController', function(academicsService, adminService, advisingFactory, academicStatusFactory, residencyMessageFactory, apiService, statusHoldsService, studentAttributesFactory, $route, $routeParams, $scope) {
+  $scope.expectedGradTerm = academicsService.expectedGradTerm;
   $scope.academics = {
     isLoading: true,
     excludeLinksToRegistrar: true

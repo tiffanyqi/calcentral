@@ -11,7 +11,7 @@ angular.module('calcentral.factories').factory('advisingFactory', function(apiSe
   var urlAdvisingStudent = '/api/advising/student/';
   // var urlAdvisingStudent = '/dummy/json/advising_student_academics.json';
   var urlAdvisingAcademics = '/api/advising/academics/';
-  // var urlAdvisingAcademics = '/dummy/json/advising_student_academics.json';
+  // var urlAdvisingAcademics = '/dummy/json/advising_student_academics.json?';
   var urlAdvisingResources = '/api/advising/resources/';
   // var urlAdvisingResources = '/dummy/json/advising_resources.json';
   var urlAdvisingRegistrations = '/api/advising/registrations/';
