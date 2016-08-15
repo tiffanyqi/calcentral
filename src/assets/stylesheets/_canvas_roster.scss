@@ -79,12 +79,12 @@
     overflow: visible;
     padding: 0;
 
-    .cc-page-roster-image-unavailable:before {
+    .cc-page-roster-image-unavailable::before {
       content: url('../images/svg/photo_unavailable_official_72x96.svg');
     }
 
     .cc-page-roster-list {
-      a[href]:after {
+      a[href]::after {
         content: "";
       }
     }

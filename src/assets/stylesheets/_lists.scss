@@ -1,6 +1,6 @@
 .cc-list-bullets {
   margin: 10px 10px 0 15px;
-  li:before {
+  li::before {
     color: $cc-color-list-block;
     content: '\25A0';
     float: left;
@@ -14,7 +14,7 @@
   a {
     display: block;
     margin-left: 16px;
-    &:before {
+    &::before {
       color: $cc-color-list-block;
       content: '\25A0';
       float: left;
@@ -26,13 +26,13 @@
   .cc-list-links-nested-dash {
     display: block;
     margin-left: 32px;
-    &:before {
+    &::before {
       content: '\2013';
     }
   }
   .cc-list-links-text {
     margin-left: 16px;
-    &:before {
+    &::before {
       float: left;
       margin-top: -2px;
       padding-right: 10px;

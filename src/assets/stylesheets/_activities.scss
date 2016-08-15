@@ -47,7 +47,7 @@
   }
 
   .cc-widget-activities-sub-activity-open {
-    &:before {
+    &::before {
       border-left: 4px solid transparent;
       border-right: 4px solid transparent;
       border-top: 4px solid $body-font-color;
@@ -60,7 +60,7 @@
     }
   }
   .cc-widget-activities-sub-activity-closed {
-    &:before {
+    &::before {
       border-bottom: 4px solid transparent;
       border-left: 4px solid $body-font-color;
       border-top: 4px solid transparent;

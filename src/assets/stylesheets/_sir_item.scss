@@ -12,7 +12,7 @@
       position: relative;
       z-index: 2;
     }
-    &:before {
+    &::before {
       background-size: cover;
       content: ' ';
       display: block;
@@ -25,13 +25,13 @@
       z-index: 1;
     }
   }
-  .cc-widget-sir-background-haasgrad:before {
+  .cc-widget-sir-background-haasgrad::before {
     background-image: url('../images/sir/banner_haas_326x96.jpg');
   }
-  .cc-widget-sir-background-lawjd:before {
+  .cc-widget-sir-background-lawjd::before {
     background-image: url('../images/sir/banner_law_326x96.jpg');
   }
-  .cc-widget-sir-background-berkeley:before {
+  .cc-widget-sir-background-berkeley::before {
     background-image: url('../images/sir/banner_berkeley_326x96.jpg');
   }
 

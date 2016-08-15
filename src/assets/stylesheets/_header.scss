@@ -27,7 +27,7 @@ body {
     }
   }
   @media print {
-    a[href]:after {
+    a[href]::after {
       content: "";
     }
   }
@@ -302,7 +302,7 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     right: 5px;
-    &:before {
+    &::before {
       border: 0;
     }
     h4 {
