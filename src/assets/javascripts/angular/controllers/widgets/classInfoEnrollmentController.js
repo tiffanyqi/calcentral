@@ -22,5 +22,17 @@ angular.module('calcentral.controllers').controller('ClassInfoEnrollmentControll
     });
   };
 
+  $scope.tableSort = {
+    'column': ['!is_primary', 'ccn'],
+    'reverse': false
+  };
+
+  $scope.groupedTableHeading = function(groupName, header, showGroupHeader) {
+    var groupHeaderClass = showGroupHeader ? '' : 'cc-visuallyhidden';
+    var groupHeader = '<div class="cc-academics-class-enrollment-grouped-header-label ' + groupHeaderClass + '">' + groupName + '</div>';
+    var columnHeader = '<span class="cc-academics-class-enrollment-grouped-header-sublabel">' + header + '</span>';
+    return [groupHeader, columnHeader].join('');
+  };
+
   getStudents();
 });

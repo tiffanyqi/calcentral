@@ -1,5 +1,6 @@
 module Rosters
   class Campus < Common
+    include ClassLogger
 
     def get_feed_internal
       feed = {
@@ -42,9 +43,48 @@ module Rosters
 
       crosslisted_courses.each do |course|
         course[:sections].each do |section|
+          recurring_schedules = section.try(:[], :schedules).try(:[], :recurring).to_a
+          section_locations, section_dates = [], []
+
+          # calculate enrollment statistics
+          section_enrollment_limit = section[:enroll_limit].to_i
+          section_waitlist_limit = section[:waitlist_limit].to_i
+
+          section_enrolled_count, section_waitlisted_count = 0, 0
+          if (section_enrollments = enrollments[section[:ccn]])
+            section_enrollments_grouped = section_enrollments.group_by { |e| !!e['waitlist_position'] ? :waitlisted : :enrolled }
+            section_waitlisted_count = section_enrollments_grouped[:waitlisted].try(:length).to_i
+            section_enrolled_count = section_enrollments_grouped[:enrolled].try(:length).to_i
+
+            section_enrollments_open = section_enrollment_limit - section_enrolled_count
+            section_waitlisted_open = section_waitlist_limit - section_waitlisted_count
+            if (section_enrollments_open < 0)
+              logger.error "Section Enrollment limit exceeded in Section ID #{section[:ccn]}; Enrollment Count: #{section_enrolled_count}; Limit: #{section_enrollment_limit}"
+              section_enrollments_open = 0
+            end
+            if (section_waitlisted_open < 0)
+              logger.error "Section Waitlist limit exceeded in Section ID #{section[:ccn]}; Waitlist Count: #{section_waitlisted_count}; Limit: #{section_waitlist_limit}"
+              section_waitlisted_open = 0
+            end
+          end
+
+          if (recurring_schedules.size > 0)
+            section_dates = recurring_schedules.map {|schedule| schedule[:schedule]}
+            section_locations = recurring_schedules.map {|schedule| "#{schedule[:roomNumber]} #{schedule[:buildingName]}"}
+          end
           feed[:sections] << {
             ccn: section[:ccn],
-            name: "#{course[:dept]} #{course[:catid]} #{section[:section_label]}"
+            name: "#{course[:dept]} #{course[:catid]} #{section[:section_label]}",
+            section_label: section[:section_label].to_s,
+            locations: section_locations,
+            dates: section_dates,
+            is_primary: section[:is_primary_section],
+            enroll_limit: section_enrollment_limit,
+            enroll_count: section_enrolled_count,
+            enroll_open: section_enrollments_open,
+            waitlist_limit: section_waitlist_limit,
+            waitlist_count: section_waitlisted_count,
+            waitlist_open: section_waitlisted_open
           }
           enrollments[section[:ccn]].try(:each) do |enr|
             if (existing_entry = campus_enrollment_map[enr[:ldap_uid]])
