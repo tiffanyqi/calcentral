@@ -15,7 +15,7 @@
   }
   .cc-enrollment-verification-message {
     padding-bottom: 12px;
-    li:before {
+    li::before {
       color: $cc-color-list-block;
       content: '\25A0';
       float: left;

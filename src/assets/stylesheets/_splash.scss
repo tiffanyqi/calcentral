@@ -76,7 +76,7 @@ $cc-color-splash-blue-dark: #025a86;
       padding-bottom: 100px;
     }
     &::before {
-      background: linear-gradient($cc-color-white, $cc-color-white-transparant);
+      background: linear-gradient($cc-color-white, $cc-color-white-transparent);
       content: " ";
       height: 40px;
       left: 0;
@@ -85,7 +85,7 @@ $cc-color-splash-blue-dark: #025a86;
       width: 100%;
     }
     &::after {
-      background: linear-gradient($cc-color-white-transparant, $cc-color-white);
+      background: linear-gradient($cc-color-white-transparent, $cc-color-white);
       bottom: 0;
       content: " ";
       height: 100px;

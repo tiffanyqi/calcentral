@@ -10,7 +10,7 @@
   position: relative;
   width: 100%;
   z-index: 1;
-  &:before {
+  &::before {
     background: url('../images/svg/select_arrow_20x28.svg') no-repeat right center, linear-gradient($cc-color-white, $cc-color-button-regular);
     content: '';
     display: block;
@@ -37,7 +37,7 @@
     }
   }
 }
-:-moz-any(.cc-select):before {
+:-moz-any(.cc-select)::before {
   background-color: $cc-color-white;
   pointer-events: none;
   z-index: 1;
@@ -61,7 +61,7 @@
 @media print {
   .cc-select {
     border-radius: 0;
-    &:before {
+    &::before {
       background: $cc-color-white;
     }
   }

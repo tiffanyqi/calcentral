@@ -27,12 +27,12 @@
 .cc-clearfix {
   clear: both;
 }
-.cc-clearfix-container:before,
-.cc-clearfix-container:after {
+.cc-clearfix-container::before,
+.cc-clearfix-container::after {
   content: " ";
   display: table;
 }
-.cc-clearfix-container:after {
+.cc-clearfix-container::after {
   clear: both;
 }
 .cc-clickable {
@@ -110,7 +110,7 @@ $cc-spinner-uneven: 17px;
   * {
     display: none !important;
   }
-  &:before {
+  &::before {
     animation: spin-normal 1s infinite steps(8);
     border-radius: 50%;
     box-shadow: 0 (-$cc-spinner-uneven) $cc-color-spinner1, // Top
@@ -140,7 +140,7 @@ $cc-spinner-uneven: 17px;
 .cc-popover {
   background: $cc-color-popover-background;
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 5px 10px $cc-color-black-transparent;
   padding: 0;
   position: absolute;
   z-index: 100;
@@ -157,7 +157,7 @@ $cc-spinner-uneven: 17px;
   }
 }
 .cc-popover-arrow {
-  &:after, &:before {
+  &::after, &::before {
     bottom: 100%;
     content: "";
     position: absolute;
@@ -166,13 +166,13 @@ $cc-spinner-uneven: 17px;
 
   // This allows us to create an arrow for the popover
   // We also add a border by painting another arrow behind the first one
-  &:after {
+  &::after {
     border-bottom: 10px solid $cc-color-popover-background;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     margin-left: -10px;
   }
-  &:before {
+  &::before {
     border-bottom: 11px solid $cc-color-popover-triangle;
     border-left: 11px solid transparent;
     border-right: 11px solid transparent;
@@ -199,7 +199,7 @@ $cc-spinner-uneven: 17px;
   border: 0;
   overflow: hidden;
 
-  &:before {
+  &::before {
     content: "";
     display: block;
     height: 150%;

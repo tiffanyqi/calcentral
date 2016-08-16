@@ -5,7 +5,7 @@
   .cc-widget-finaid-sub-total-title {
     padding-left: 20px;
     position: relative;
-    &:before {
+    &::before {
       content: "• ";
       margin-left: -10px;
       position: absolute;
