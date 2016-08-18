@@ -21,7 +21,13 @@
         </label>
       </div>
       <div>
-        <input type="text" id="cc-page-widget-profile-work-experience-phone-number" data-ng-model="currentObject.data.phone" maxlength="24">
+        <input type="text" id="cc-page-widget-profile-work-experience-phone-number"
+        name="cc_profile_work_experience_phone"
+        data-cc-tel-phone-input-directive data-ng-model="currentObject.data.phone" maxlength="24">
+        <p class="cc-page-widget-profile-section-input-error-message cc-text-red" data-ng-show="cc_page_widget_profile_work_experience.$error.invalidPhoneNumber">
+          <i class="cc-icon-red fa fa-exclamation-circle"></i>
+          The phone number, <span data-ng-bind="cc_page_widget_profile_work_experience.cc_profile_work_experience_phone.$viewValue"></span>, is incomplete or formatted incorrectly.
+        </p>
       </div>
 
       <div class="cc-page-widget-profile-margin-top">
