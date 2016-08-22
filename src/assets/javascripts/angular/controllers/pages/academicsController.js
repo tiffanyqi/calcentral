@@ -7,7 +7,7 @@ var angular = require('angular');
 /**
  * Academics controller
  */
-angular.module('calcentral.controllers').controller('AcademicsController', function(academicsFactory, academicsService, academicStatusFactory, apiService, badgesFactory, registrationsFactory, $q, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('AcademicsController', function(academicsFactory, academicsService, academicStatusFactory, apiService, badgesFactory, registrationsFactory, userService, $q, $routeParams, $scope) {
   var title = 'My Academics';
   apiService.util.setTitle(title);
   $scope.backToText = title;
@@ -206,13 +206,16 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.showLegacyAdvising = !$scope.filteredForDelegate && $scope.api.user.profile.features.legacyAdvising && !$scope.api.user.profile.features.advising && $scope.isLSStudent;
     $scope.showAdvising = !$scope.filteredForDelegate && apiService.user.profile.features.advising && apiService.user.profile.roles.student && !apiService.user.profile.roles.law;
 
-    if (!$scope.filteredForDelegate) {
-      $scope.transcriptLink = 'http://registrar.berkeley.edu/academic-records/transcripts-diplomas';
-      if ($scope.studentInfo.isLawStudent) {
-        $scope.enrollmentVerificationLink = 'https://www.law.berkeley.edu/academics/registrar/verification-of-attendance/';
-      } else {
-        $scope.enrollmentVerificationLink = 'http://registrar.berkeley.edu/academic-records/verification-enrollment-degrees';
-      }
+    if (userService.profile.roles.law) {
+      $scope.requestTranscript = {
+        link: 'http://www.law.berkeley.edu/php-programs/registrar/forms/transcriptrequestform.php',
+        title: 'Request Law Transcript'
+      };
+    } else {
+      $scope.requestTranscript = {
+        link: 'https://telebears.berkeley.edu/tranreq/',
+        title: 'Request Transcript'
+      };
     }
   };
 

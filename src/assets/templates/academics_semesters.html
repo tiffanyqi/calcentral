@@ -1,6 +1,17 @@
 <div class="cc-widget">
   <div class="cc-widget-title">
     <h2 class="cc-left">Semesters</h2>
+    <span class="cc-right cc-widget-title-link">
+      <a data-ng-if="!api.user.profile.delegateActingAsUid && !isAdvisingStudentLookup"
+        data-ng-href="{{requestTranscript.link}}"
+        data-ng-attr-title="{{requestTranscript.title}}">
+        <strong>Request Transcript</strong>
+      </a>
+      <a class="cc-academics-link-disabled"
+        data-ng-if="api.user.profile.delegateActingAsUid">
+        <strong>Request Transcript</strong>
+      </a>
+    </span>
   </div>
 
   <div class="cc-academics-enrollment-verification-link" data-ng-if="api.user.profile.features.enrollmentVerification && (api.user.profile.isDirectlyAuthenticated || api.user.profile.actingAsUid) && !isAdvisingStudentLookup">
