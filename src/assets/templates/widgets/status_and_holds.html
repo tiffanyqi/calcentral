@@ -42,7 +42,8 @@
               </li>
               <li class="cc-widget-list-hover"
                   data-ng-if="((api.user.profile.roles.undergrad && !registration.pastClassesStart) || (api.user.profile.roles.undergrad && (registration.term.id === '2168') && !registration.pastFall2016Extension) ||
-                  ((api.user.profile.roles.graduate || api.user.profile.roles.law || api.user.profile.roles.advisor) && !registration.pastAddDrop)) &&
+                  ((api.user.profile.roles.graduate || api.user.profile.roles.law || api.user.profile.roles.advisor) && !registration.pastAddDrop) ||
+                  (registration.summary !== 'Officially Registered' && registration.positiveIndicators.R99)) &&
                   !registration.isLegacy && !registration.isSummer && registration.summary !== 'Officially Registered'"
                   data-ng-class="{'cc-widget-list-hover-opened':(registration.positiveIndicators.show)}"
                   data-cc-accessible-focus-directive
