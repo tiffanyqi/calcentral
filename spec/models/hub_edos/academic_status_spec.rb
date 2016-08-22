@@ -24,8 +24,14 @@ describe HubEdos::AcademicStatus do
       expect(status['cumulativeUnits'].find{ |units| units['type']['code'] == 'Total' }['unitsPassed']).to eq 73
       expect(status['currentRegistration']['academicCareer']['description']).to eq 'Undergraduate'
       expect(status['studentCareer']['academicCareer']['description']).to eq 'Undergraduate'
+      expect(status['studentPlans'][0]['academicPlan']['academicProgram']['academicCareer']['code']).to eq 'UGRD'
       expect(status['studentPlans'][0]['academicPlan']['academicProgram']['program']['description']).to eq 'Undergrad Letters & Science'
+      expect(status['studentPlans'][0]['academicPlan']['academicProgram']['program']['description']).to eq 'Undergrad Letters & Science'
+      expect(status['studentPlans'][0]['academicPlan']['ownedBy']['administrativeOwners'][0]['organization']['description']).to eq 'English'
       expect(status['studentPlans'][0]['academicPlan']['plan']['description']).to eq 'English BA'
+      expect(status['studentPlans'][0]['primary']).to eq true
+      expect(status['studentPlans'][0]['expectedGraduationTerm']['id']).to eq '2202'
+      expect(status['studentPlans'][0]['expectedGraduationTerm']['name']).to eq '2020 Spring'
       expect(status['termsInAttendance']).to eq 4
     end
   end
