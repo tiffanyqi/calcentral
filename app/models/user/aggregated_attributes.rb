@@ -10,13 +10,13 @@ module User
       @ldap_attributes = CalnetLdap::UserAttributes.new(user_id: @uid).get_feed
       @oracle_attributes = CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       @edo_attributes = HubEdos::UserAttributes.new(user_id: @uid).get if is_cs_profile_feature_enabled
-      campus_solutions_student = @edo_attributes.present? && (@edo_attributes[:is_legacy_user] == false)
-      @sis_profile_visible = is_cs_profile_feature_enabled && (campus_solutions_student || is_profile_visible_for_legacy_users)
+      is_legacy_user = @edo_attributes.blank? || @edo_attributes[:campus_solutions_id].blank? || @edo_attributes[:is_legacy_user]
+      @sis_profile_visible = is_cs_profile_feature_enabled
       @roles = get_campus_roles
       first_name = get_campus_attribute('first_name', :string) || ''
       last_name = get_campus_attribute('last_name', :string) || ''
       {
-        campusSolutionsStudent: campus_solutions_student,
+        isLegacyUser: is_legacy_user,
         sisProfileVisible: @sis_profile_visible,
         roles: @roles,
         defaultName: get_campus_attribute('person_name', :string),

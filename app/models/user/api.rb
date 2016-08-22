@@ -180,7 +180,7 @@ module User
         uid: @uid,
         sid: @user_attributes[:studentId],
         campusSolutionsID: @user_attributes[:campusSolutionsId],
-        isCampusSolutionsStudent: @user_attributes[:campusSolutionsStudent],
+        isLegacyUser: @user_attributes[:isLegacyUser],
         isDelegateUser: is_delegate_user?,
         showSisProfileUI: @user_attributes[:sisProfileVisible],
         isDirectlyAuthenticated: directly_authenticated,
