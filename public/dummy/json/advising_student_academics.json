@@ -3,8 +3,9 @@
     "careers":[
       "Undergraduate"
     ],
-    "level":"Senior",
     "futureTelebearsLevel":"Senior",
+    "lastExpectedGraduationTerm": "2017 Spring",
+    "level":"Senior",
     "majors":[
       {
         "college":"College of Letters & Science",
@@ -12,7 +13,18 @@
       }
     ],
     "nonApLevel":"Junior",
-    "termName":"Spring 2016"
+    "plans": [
+        {
+            "code": "16300U",
+            "expectedGraduationTerm": {
+                "id": "2172",
+                "name": "2017 Spring"
+            },
+            "primary": true
+        }
+    ],
+    "termName":"Spring 2016",
+    "termsInAttendance": "4"
   },
   "transitionTerm":null,
   "gpaUnits":{

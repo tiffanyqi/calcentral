@@ -44,6 +44,19 @@ angular.module('calcentral.services').service('academicsService', function() {
     return count;
   };
 
+  /**
+   * Returns last expected graduation term name when student is not an undergrad
+   * @param  {Object} collegeAndLevel College And Level node of My Academics feed
+   * @return {String}                 Name for graduation term
+   */
+  var expectedGradTerm = function(collegeAndLevel) {
+    var careers = _.get(collegeAndLevel, 'careers');
+    if (isNotGradOrLawStudent(careers) && collegeAndLevel.lastExpectedGraduationTerm) {
+      return collegeAndLevel.lastExpectedGraduationTerm;
+    }
+    return '';
+  };
+
   var filterBySectionSlug = function(course, sectionSlug) {
     if (!course.multiplePrimaries) {
       return null;
@@ -170,6 +183,17 @@ angular.module('calcentral.services').service('academicsService', function() {
     }
   };
 
+  /**
+   * Returns true if student is not a Graduate or Law student
+   */
+  var isNotGradOrLawStudent = function(careers) {
+    if (_.get(careers, 'length')) {
+      var matches = _.intersection(careers, ['Graduate', 'Law']);
+      return matches.length === 0;
+    }
+    return false;
+  };
+
   var normalizeGradingData = function(course) {
     for (var i = 0; i < course.sections.length; i++) {
       var section = course.sections[i];
@@ -258,6 +282,7 @@ angular.module('calcentral.services').service('academicsService', function() {
   return {
     chooseDefaultSemester: chooseDefaultSemester,
     countSectionItem: countSectionItem,
+    expectedGradTerm: expectedGradTerm,
     filterBySectionSlug: filterBySectionSlug,
     findSemester: findSemester,
     getAllClasses: getAllClasses,
