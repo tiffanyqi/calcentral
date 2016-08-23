@@ -76,7 +76,7 @@ module MyAcademics
           college = academic_plan['academicProgram'].try(:[], 'program').try(:[], 'description')
           plan_description = academic_plan['plan'].try(:[], 'description')
           case academic_plan['type'].try(:[], 'code')
-            when 'MAJ'
+            when 'MAJ', 'SS', 'SP', 'HS', 'CRT'
               majors << {
                 college: college,
                 major: plan_description

@@ -155,6 +155,49 @@
                   {
                     "academicPlan": {
                       "academicProgram": {
+                        "academicCareer": {
+                          "code": "UGRD",
+                          "description": "Undergraduate"
+                        },
+                        "program": {
+                          "code": "UCLS",
+                          "description": "Undergrad Letters & Science"
+                        }
+                      },
+                      "cipCode": "26.0406",
+                      "hegisCode": "",
+                      "ownedBy": {
+                        "administrativeOwners": [
+                          {
+                            "organization": {
+                              "code": "MCELLBI",
+                              "description": "Molecular & Cell Biology"
+                            },
+                            "percentage": 100
+                          }
+                        ]
+                      },
+                      "plan": {
+                        "code": "25971U",
+                        "description": "MCB-Cell & Dev Biology BA",
+                        "fromDate": "2013-08-22"
+                      },
+                      "targetDegree": {
+                        "type": {
+                          "code": "AB",
+                          "description": "Bachelor of Arts"
+                        }
+                      },
+                      "type": {
+                        "code": "SP",
+                        "description": "Major - UG Specialization"
+                      }
+                    },
+                    "primary": true
+                  },
+                  {
+                    "academicPlan": {
+                      "academicProgram": {
                         "program": {
                           "code": "UCLS",
                           "description": "Undergrad Letters & Science"

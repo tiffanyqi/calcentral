@@ -88,9 +88,13 @@ describe MyAcademics::CollegeAndLevel do
     end
 
     it 'translates majors' do
-      expect(feed[:collegeAndLevel][:majors].first).to eq({
+      expect(feed[:collegeAndLevel][:majors][0]).to eq({
         college: 'Undergrad Letters & Science',
         major: 'English BA'
+      })
+      expect(feed[:collegeAndLevel][:majors][1]).to eq({
+        college: 'Undergrad Letters & Science',
+        major: 'MCB-Cell & Dev Biology BA'
       })
     end
 
@@ -111,6 +115,11 @@ describe MyAcademics::CollegeAndLevel do
               "id" => "2202",
               "name" => "2020 Spring"
             }
+          },
+          {
+            :code => "25971U",
+            :primary => true,
+            :expectedGraduationTerm => nil
           },
           {
             :code => "25090U",
