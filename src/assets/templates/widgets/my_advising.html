@@ -1,11 +1,14 @@
 <div class="cc-widget cc-widget-myadvising" data-ng-controller="MyAdvisingController">
   <div class="cc-widget-title">
     <h2 class="cc-left">Advising</h2>
-    <a class="cc-button cc-right cc-widget-title-button" data-cc-campus-solutions-link-directive="myAdvising.links.newAppointment.url"
-    data-cc-campus-solutions-link-directive-enabled="{{myAdvising.links.newAppointment.isCsLink}}"
-    data-cc-campus-solutions-link-directive-text="myAdvising.links.newAppointment.backToText"
-    data-cc-campus-solutions-link-directive-cache="'myAdvising'"
-    data-cc-outbound-enabled="false" data-ng-if="myAdvising.links.newAppointment.url && api.user.profile.isDirectlyAuthenticated">
+    <a class="cc-button cc-right cc-widget-title-button"
+      data-cc-campus-solutions-link-directive="myAdvising.links.newAppointment.url"
+      data-cc-campus-solutions-link-directive-enabled="{{myAdvising.links.newAppointment.isCsLink}}"
+      data-cc-campus-solutions-link-directive-text="myAdvising.links.newAppointment.backToText"
+      data-cc-campus-solutions-link-directive-cache="'myAdvising'"
+      data-cc-outbound-enabled="false"
+      data-ng-disabled="!myAdvising.links.newAppointment.url || !api.user.profile.isDirectlyAuthenticated || isAdvisingStudentLookup"
+    >
       <i class="fa fa-plus cc-button-plus-icon"></i>
       <span>New Appointment</span>
     </a>
@@ -24,10 +27,16 @@
             <strong data-ng-bind="advisor.assignedAdvisorType"></strong> (<span data-ng-bind="advisor.assignedAdvisorProgram"></span>)
           </div>
           <div>
-            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}" data-ng-bind="advisor.assignedAdvisorName"></a>
+            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}"
+              data-ng-bind="advisor.assignedAdvisorName"
+              data-ng-disabled="!advisor.assignedAdvisorEmail || !api.user.profile.isDirectlyAuthenticated || !!isAdvisingStudentLookup"
+            ></a>
           </div>
           <div>
-            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}" data-ng-bind="advisor.assignedAdvisorEmail"></a>
+            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}"
+              data-ng-bind="advisor.assignedAdvisorEmail"
+              data-ng-disabled="!advisor.assignedAdvisorEmail || !api.user.profile.isDirectlyAuthenticated || isAdvisingStudentLookup"
+            ></a>
           </div>
           <div data-ng-bind="advisor.assignedAdvisorLocation"></div>
         </div>
@@ -57,12 +66,15 @@
           </ul>
         </div>
 
-        <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.links.manageAppointments && api.user.profile.isDirectlyAuthenticated">
+        <div class="cc-widget-myadvising-section">
           <h3 class="cc-widget-myadvising-header">Appointments</h3>
           <div class="cc-widget-myadvising-link">
             <div
               data-cc-campus-solutions-link-item-directive
-              data-link="myAdvising.links.manageAppointments" data-text="Access and Manage My Appointments" data-ng-if="myAdvising.links.manageAppointments.url"
+              data-link="myAdvising.links.manageAppointments.url"
+              data-text="Access and Manage My Appointments"
+              data-ng-if="myAdvising.links.manageAppointments.url"
+              data-disabled="{{!myAdvising.links.manageAppointments.url || !api.user.profile.isDirectlyAuthenticated || isAdvisingStudentLookup}}"
             ></div>
           </div>
         </div>

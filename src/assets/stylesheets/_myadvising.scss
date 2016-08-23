@@ -4,6 +4,12 @@
   }
   .cc-widget-myadvising-link {
     margin-top: 5px;
+
+    // TODO: Apply standard for all CalCentral disabled links
+    a[disabled="disabled"] {
+      color: $cc-color-lighter-medium-grey;
+      text-decoration: underline;
+    }
   }
   .cc-widget-myadvising-list {
     border-bottom: 1px solid $cc-color-widget-background;
