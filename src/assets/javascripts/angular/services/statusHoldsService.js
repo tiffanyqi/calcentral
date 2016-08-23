@@ -3,7 +3,7 @@
 var angular = require('angular');
 var _ = require('lodash');
 
-angular.module('calcentral.services').service('statusHoldsService', function(userService) {
+angular.module('calcentral.services').service('statusHoldsService', function() {
   /**
    * Parses any terms past the legacy cutoff.  Mirrors current functionality for now, but this will be changed in redesigns slated
    * for GL6.
@@ -28,11 +28,11 @@ angular.module('calcentral.services').service('statusHoldsService', function(use
       term.summary = 'Not Officially Registered';
       term.explanation = term.isSummer ? 'You are not officially registered for this term.' : 'You are not entitled to access campus services until you are officially registered.  In order to be officially registered, you must pay your Tuition and Fees, and have no outstanding holds.';
     }
-    if (termUnitsTotal.unitsEnrolled === 0 && userService.profile.roles.undergrad && term.pastClassesStart) {
+    if (termUnitsTotal.unitsEnrolled === 0 && (term.academicCareer && term.academicCareer.code === 'UGRD')) {
       term.summary = 'Not Enrolled';
       term.explanation = term.isSummer ? 'You are not officially registered for this term.' : 'You are not enrolled in any classes for this term.';
     }
-    if (termUnitsTotal.unitsEnrolled === 0 && (userService.profile.roles.graduate || userService.profile.roles.law) && term.pastAddDrop) {
+    if (termUnitsTotal.unitsEnrolled === 0 && (term.academicCareer && term.academicCareer.code !== 'UGRD')) {
       term.summary = 'Not Enrolled';
       term.explanation = term.isSummer ? 'You are not officially registered for this term.' : 'You are not enrolled in any classes for this term. Fees will not be assessed, and any expected fee remissions or fee payment credits cannot be applied until you are enrolled in classes.  For more information, please contact your departmental graduate advisor.';
     }
