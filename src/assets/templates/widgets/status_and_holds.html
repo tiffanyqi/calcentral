@@ -32,10 +32,10 @@
                     <div data-ng-if="registration.summary !== 'Officially Registered' && !registration.isSummer">
                       <div data-ng-if="$parent.regStatus.messages">
                         <span data-ng-if="registration.summary === 'Not Officially Registered'" data-ng-bind-html="$parent.regStatus.messages.notRegistered.descrlong"></span>
-                        <span data-ng-if="registration.summary === 'Not Enrolled' && api.user.profile.roles.undergrad" data-ng-bind-html="$parent.regStatus.messages.notEnrolledUndergrad.descrlong"></span>
-                        <span data-ng-if="registration.summary === 'Not Enrolled' && (api.user.profile.roles.graduate || api.user.profile.roles.law)" data-ng-bind-html="$parent.regStatus.messages.notEnrolledGrad.descrlong"></span>
+                        <span data-ng-if="registration.summary === 'Not Enrolled' && (registration.academicCareer.code === 'UGRD')" data-ng-bind-html="$parent.regStatus.messages.notEnrolledUndergrad.descrlong"></span>
+                        <span data-ng-if="registration.summary === 'Not Enrolled' && (registration.academicCareer.code !== 'UGRD')" data-ng-bind-html="$parent.regStatus.messages.notEnrolledGrad.descrlong"></span>
                       </div>
-                      <span data-ng-if="!$parent.regStatus.messages || api.user.profile.roles.advisor" data-ng-bind="registration.explanation"></span>
+                      <span data-ng-if="!$parent.regStatus.messages" data-ng-bind="registration.explanation"></span>
                     </div>
                   </div>
                 </div>
