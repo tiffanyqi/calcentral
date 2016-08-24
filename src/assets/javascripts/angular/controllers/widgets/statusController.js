@@ -143,7 +143,7 @@ angular.module('calcentral.controllers').controller('StatusController', function
         $scope.hasAlerts = true;
       }
       if (!registration.positiveIndicators.ROP && !registration.positiveIndicators.R99 && registration.pastFinancialDisbursement) {
-        if (userService.profile.roles.undergrad && (!registration.pastClassesStart || (registration.term.id === '2168' && !registration.pastFallExtension))) {
+        if (userService.profile.roles.undergrad && (!registration.pastClassesStart || (registration.term.id === '2168' && !registration.pastFall2016Extension))) {
           $scope.count++;
           $scope.hasAlerts = true;
         }
