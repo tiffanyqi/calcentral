@@ -39,6 +39,10 @@ class AdvisingStudentController < ApplicationController
     render json: MyRegistrations::MyRegistrations.new(student_uid_param).get_feed_as_json
   end
 
+  def advising
+    render json: Advising::MyAdvising.new(student_uid_param).get_feed_as_json
+  end
+
   def resources
     json = CampusSolutions::AdvisingResources.new(user_id: session['user_id'], student_uid: student_uid_param).get
     links = json[:feed] && json[:feed][:ucAdvisingResources] && json[:feed][:ucAdvisingResources][:ucAdvisingLinks]
