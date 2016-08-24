@@ -123,7 +123,7 @@ module HubEdos
     end
 
     def build_feed(response)
-      parse_response response
+      unwrap_response parse_response(response)
     end
 
     def empty_feed

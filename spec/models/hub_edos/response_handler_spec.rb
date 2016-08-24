@@ -4,10 +4,10 @@ describe HubEdos::ResponseHandler do
     include HubEdos::ResponseHandler
 
     def fetch_first_postal_code(parsed_response)
-      students = get_students(parsed_response)
-      if students.any?
+      unwrapped = unwrap_response(parsed_response)
+      if unwrapped.present?
         {
-          postalCode: students[0]['addresses'][0]['postalCode']
+          postalCode: unwrapped['addresses'][0]['postalCode']
         }
       else
         {}
@@ -23,14 +23,10 @@ describe HubEdos::ResponseHandler do
         'apiResponse' => {
           'response' => {
             'any' => {
-              'students' => [
+              'addresses' => [
                 {
-                  'addresses' => [
-                    {
-                      'postalCode' => '454554',
-                      'countryCode' => 'USA'
-                    }
-                  ]
+                  'postalCode' => '454554',
+                  'countryCode' => 'USA'
                 }
               ]
             }
@@ -73,14 +69,12 @@ describe HubEdos::ResponseHandler do
       end
     end
 
-    context 'students element does not respond_to? :each' do
+    context 'any element does not respond_to? :each' do
       let(:parsed_response) {
         {
           'apiResponse' => {
             'response' => {
-              'any' => {
-                'students' => 'this string is supposed to be an array'
-              }
+              'any' => 'this string is supposed to be a hash'
             }
           }
         }
