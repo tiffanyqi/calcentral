@@ -10,7 +10,7 @@ module HubEdos
     end
 
     def build_feed(response)
-      transformed_response = filter_fields(transform_address_keys(parse_response(response)))
+      transformed_response = filter_fields(transform_address_keys(super(response)))
       {
         'student' => transformed_response
       }
@@ -22,35 +22,38 @@ module HubEdos
       }
     end
 
-    def transform_address_keys(response)
-      get_students(response).each do |student|
-        if student['addresses'].present?
-          student['addresses'].each do |address|
-            address['state'] = address.delete('stateCode')
-            address['postal'] = address.delete('postalCode')
-            address['country'] = address.delete('countryCode')
-          end
+    def transform_address_keys(student)
+      if student['addresses'].present?
+        student['addresses'].each do |address|
+          address['state'] = address.delete('stateCode')
+          address['postal'] = address.delete('postalCode')
+          address['country'] = address.delete('countryCode')
         end
       end
-      response
+      student
     end
 
-    def filter_fields(response)
+    def filter_fields(student)
       # only include the fields that this proxy is responsible for
-      students = get_students(response)
-      first_student = students.any? ? students[0] : {}
-      if include_fields.nil?
-        return first_student
-      end
+      return student if include_fields.nil?
       result = {}
-      first_student.keys.each do |field|
-        result[field] = first_student[field] if include_fields.include? field
+      student.keys.each do |field|
+        result[field] = student[field] if include_fields.include? field
       end
       result
     end
 
     def include_fields
       nil
+    end
+
+    def unwrap_response(response)
+      students = super(response)
+      students.any? ? students[0] : {}
+    end
+
+    def wrapper_keys
+      %w(apiResponse response any students)
     end
 
   end

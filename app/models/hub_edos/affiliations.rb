@@ -14,7 +14,7 @@ module HubEdos
     end
 
     def include_fields
-      %w(affiliations)
+      %w(affiliations identifiers)
     end
 
   end
