@@ -6,7 +6,7 @@ var angular = require('angular');
 /**
  * Status controller
  */
-angular.module('calcentral.controllers').controller('StatusController', function(academicStatusFactory, activityFactory, apiService, statusHoldsService, badgesFactory, financesFactory, registrationsFactory, studentAttributesFactory, userService, $http, $scope, $q) {
+angular.module('calcentral.controllers').controller('StatusController', function(academicStatusFactory, activityFactory, apiService, statusHoldsService, badgesFactory, financesFactory, registrationsFactory, studentAttributesFactory, $http, $scope, $q) {
   $scope.finances = {};
   $scope.regStatus = {
     terms: [],
@@ -143,11 +143,11 @@ angular.module('calcentral.controllers').controller('StatusController', function
         $scope.hasAlerts = true;
       }
       if (!registration.positiveIndicators.ROP && !registration.positiveIndicators.R99 && registration.pastFinancialDisbursement) {
-        if (userService.profile.roles.undergrad && (!registration.pastClassesStart || (registration.term.id === '2168' && !registration.pastFall2016Extension))) {
+        if ((registration.academicCareer.code === 'UGRD') && (!registration.pastClassesStart || (registration.term.id === '2168' && !registration.pastFall2016Extension))) {
           $scope.count++;
           $scope.hasAlerts = true;
         }
-        if ((userService.profile.roles.graduate || userService.profile.roles.law) && !registration.pastAddDrop) {
+        if ((registration.academicCareer.code !== 'UGRD') && !registration.pastAddDrop) {
           $scope.count++;
           $scope.hasAlerts = true;
         }
