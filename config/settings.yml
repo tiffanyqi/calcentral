@@ -317,7 +317,7 @@ cache:
     CalnetCrosswalk::ByUid: <%= 4.hours %>
     CalnetCrosswalk::BySid: <%= 4.hours %>
 
-    HubEdos::MyStudent: <%= 20.minutes %>
+    HubEdos::MyStudent: <%= 10.minutes %>
 
 # Cache warmer settings
 cache_warmer:

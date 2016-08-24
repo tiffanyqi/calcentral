@@ -13,8 +13,8 @@ class AdvisingStudentController < ApplicationController
     student_uid = student_uid_param
     render json: {
       attributes: User::AggregatedAttributes.new(student_uid).get_feed,
-      contacts: HubEdos::Contacts.new(user_id: student_uid, include_fields: %w(names addresses phones emails)).get,
-      residency: HubEdos::Demographics.new(user_id: student_uid, include_fields: %w(residency)).get
+      contacts: HubEdos::MyContacts.new(student_uid, include_fields: %w(names addresses phones emails)).get_feed,
+      residency: HubEdos::MyDemographics.new(student_uid, include_fields: %w(residency)).get_feed
     }
   end
 
