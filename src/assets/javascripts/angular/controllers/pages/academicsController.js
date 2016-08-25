@@ -201,8 +201,7 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.showStatusAndBlocks = !$scope.filteredForDelegate &&
                                  ($scope.hasRegStatus ||
                                  ($scope.regblocks && !$scope.regblocks.noStudentId) ||
-                                 ($scope.numberOfHolds) ||
-                                 ($scope.residency));
+                                 ($scope.numberOfHolds));
     $scope.showLegacyAdvising = !$scope.filteredForDelegate && $scope.api.user.profile.features.legacyAdvising && !$scope.api.user.profile.features.advising && $scope.isLSStudent;
     $scope.showAdvising = !$scope.filteredForDelegate && apiService.user.profile.features.advising && apiService.user.profile.roles.student && !apiService.user.profile.roles.law;
 
