@@ -6,7 +6,7 @@ angular.module('calcentral.directives').directive('ccTelPhoneInputDirective', fu
   /**
    * 8,9,18,19 AUG 2016
    * Regexp-based attempt at parsing tel number input strings
-   * Note: should use <input type="tel" ... /> to display big number buttons in small mobile devices
+   * Note: should use <input type="tel" ...> to display big number buttons in small mobile devices
    * Goals:
    *  + remove leading `+` char from International matches
    *  + re-format US matches as either `1 xxx yyy zzzz` if leading 1 is
