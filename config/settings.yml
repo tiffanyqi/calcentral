@@ -479,6 +479,7 @@ features:
   cs_profile_work_experience: false
   cs_sir: true
   cs_transfer_credit: false
+  gpa_calculator: true
   hub_term_api: true
   enrollment_verification: false
   legacy_advising: false
