@@ -39,7 +39,7 @@ describe MyAcademics::ClassEnrollments do
       statusCode: 200,
       feed: {
         'student' => {
-          'academicStatuses' => [{'studentPlans' => student_plans}],
+          'academicStatuses' => academic_statuses,
           'holds' => []
         }
       }
@@ -52,6 +52,7 @@ describe MyAcademics::ClassEnrollments do
       { termId: '2168', termDescr: '2016 Fall', acadCareer: 'LAW' }
     ]
   end
+  let(:academic_statuses) { [{'studentPlans' => student_plans}] }
   let(:student_plans) { [] }
   let(:compsci_ugrd_plan) do
     student_plan({
@@ -195,23 +196,56 @@ describe MyAcademics::ClassEnrollments do
   end
 
   context 'when providing active student plans' do
-    let(:student_plans) { [business_admin_mba_haas_plan, public_health_grad_plan] }
-    it 'returns plans that include career code and description' do
-      active_plans = subject.get_active_plans
-      expect(active_plans.count).to eq 2
-      active_plans.each do |plan|
-        expect(plan[:career][:code]).to eq 'GRAD'
-        expect(plan[:career][:description]).to eq 'Graduate'
+    let(:grad_student_plans) { [business_admin_mba_haas_plan, public_health_grad_plan] }
+
+    context 'when one academic status with multiple plans' do
+      let(:student_plans) { grad_student_plans }
+      it 'returns plans that include career code and description' do
+        active_plans = subject.get_active_plans
+        expect(active_plans.count).to eq 2
+        active_plans.each do |plan|
+          expect(plan[:career][:code]).to eq 'GRAD'
+          expect(plan[:career][:description]).to eq 'Graduate'
+        end
+      end
+
+      it 'returns plans that include plan code and description' do
+        active_plans = subject.get_active_plans
+        expect(active_plans.count).to eq 2
+        expect(active_plans[0][:plan][:code]).to eq '70141BAPHG'
+        expect(active_plans[0][:plan][:description]).to eq 'Business Admin MBA-MPH CDP'
+        expect(active_plans[1][:plan][:code]).to eq '96789PHBAG'
+        expect(active_plans[1][:plan][:description]).to eq 'Public Health MPH-MBA CDP'
       end
     end
 
-    it 'returns plans that include plan code and description' do
-      active_plans = subject.get_active_plans
-      expect(active_plans.count).to eq 2
-      expect(active_plans[0][:plan][:code]).to eq '70141BAPHG'
-      expect(active_plans[0][:plan][:description]).to eq 'Business Admin MBA-MPH CDP'
-      expect(active_plans[1][:plan][:code]).to eq '96789PHBAG'
-      expect(active_plans[1][:plan][:description]).to eq 'Public Health MPH-MBA CDP'
+    context 'when multiple academics statuses with one or many plans' do
+      let(:law_student_plans) { [jsp_law_plan] }
+      let(:academic_statuses) { [
+        {'studentPlans' => grad_student_plans},
+        {'studentPlans' => law_student_plans},
+      ] }
+      it 'returns plans that include career code and description' do
+        active_plans = subject.get_active_plans
+        expect(active_plans.count).to eq 3
+        expect(active_plans[0][:career][:code]).to eq 'GRAD'
+        expect(active_plans[0][:career][:description]).to eq 'Graduate'
+        expect(active_plans[1][:career][:code]).to eq 'GRAD'
+        expect(active_plans[1][:career][:description]).to eq 'Graduate'
+        expect(active_plans[2][:career][:code]).to eq 'LAW'
+        expect(active_plans[2][:career][:description]).to eq 'Law'
+      end
+
+      it 'returns plans that include plan code and description' do
+        active_plans = subject.get_active_plans
+        expect(active_plans.count).to eq 3
+        expect(active_plans[0][:plan][:code]).to eq '70141BAPHG'
+        expect(active_plans[0][:plan][:description]).to eq 'Business Admin MBA-MPH CDP'
+        expect(active_plans[1][:plan][:code]).to eq '96789PHBAG'
+        expect(active_plans[1][:plan][:description]).to eq 'Public Health MPH-MBA CDP'
+        expect(active_plans[2][:plan][:code]).to eq '84485PHDG'
+        expect(active_plans[2][:plan][:description]).to eq 'JSP PhD'
+      end
     end
   end
 
@@ -293,7 +327,7 @@ describe MyAcademics::ClassEnrollments do
         { termId: '2168', termDescr: '2016 Fall', acadCareer: 'LAW' }
       ]
     end
-    context 'when multiple instruction types matches a career code for an active career-term' do
+    context 'when multiple instruction types match a career code for an active career-term' do
       let(:student_plans) { [compsci_ugrd_plan, cogsci_ugrd_plan, jsp_law_plan] }
       let(:cs_enrollment_career_terms) { [{ termId: '2168', termDescr: '2016 Fall', acadCareer: 'UGRD' }] }
       it 'excludes instruction type with non-matching career code' do

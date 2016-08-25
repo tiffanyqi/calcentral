@@ -96,9 +96,11 @@ module MyAcademics
     def get_active_plans
       active_plans = []
       response = get_academic_status
-      if (status = AcademicsModule.parse_hub_academic_status(response))
-        Array.wrap(status.try(:[], 'studentPlans')).each do |plan|
-          active_plans << flatten_plan(plan)
+      if (statuses = AcademicsModule.parse_hub_academic_statuses(response))
+        statuses.each do |status|
+          Array.wrap(status.try(:[], 'studentPlans')).each do |plan|
+            active_plans << flatten_plan(plan)
+          end
         end
       end
       active_plans.compact
