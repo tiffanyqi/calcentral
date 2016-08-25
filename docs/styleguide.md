@@ -33,12 +33,12 @@
     ```html
     <ng:view>
     <span ng-bind="name"></span>
-    <input mmddyyvalidator />
+    <input mmddyyvalidator>
     ```
 
     :+1:
     ```html
     <div data-ng-view></div>
     <span data-ng-bind="name"></span>
-    <input data-mmddyyvalidator />
+    <input data-mmddyyvalidator>
     ```
