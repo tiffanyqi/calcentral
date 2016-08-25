@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th scope="col">Reason</th>
-            <th scope="col" class="cc-table-right">Applied</th>
+            <th scope="col" class="cc-table-right cc-table-right-spacing">Applied</th>
           </tr>
         </thead>
         <tbody class="cc-widget-table-hover"
@@ -18,8 +18,10 @@
               <i class="fa fa-exclamation-circle cc-icon-red"></i>
               <span data-ng-bind="hold.reason.description"></span>
             </td>
-            <td data-ng-if="hold.fromDate" data-ng-bind="hold.fromDate | date:'MM/dd/yy'" class="cc-table-right"></td>
-            <td data-ng-if="!hold.fromDate && hold.fromTerm.name" data-ng-bind="hold.fromTerm.name" class="cc-table-right"></td>
+            <td class="cc-table-right cc-toggle-triangle" data-ng-bind="hold.fromDate | date:'MM/dd/yy'" data-ng-if="hold.fromDate"></td>
+            <td class="cc-table-right cc-toggle-triangle" data-ng-if="!hold.fromDate && hold.fromTerm.name">
+              <div data-ng-bind="hold.fromTerm.name"></div>
+            </td>
           </tr>
           <tr data-ng-if="hold.show">
             <td colspan="2">
