@@ -28,8 +28,15 @@ module MyAcademics
       }
     end
 
+    # TODO: Refactor dependencies to rely on #parse_hub_academic_statuses
+    # Students with multiple careers have an academic status for each career
     def parse_hub_academic_status(response)
       status = response[:feed] && response[:feed]['student'] && (response[:feed]['student']['academicStatuses'].try :first)
+      status if status.present?
+    end
+
+    def parse_hub_academic_statuses(response)
+      status = response[:feed] && response[:feed]['student'] && response[:feed]['student']['academicStatuses']
       status if status.present?
     end
 
