@@ -16,9 +16,9 @@
         <strong><span data-ng-bind="registration.name"></span>: </strong> <span data-ng-bind="registration.summary"></span><br>
       </div>
       <div class="cc-launcher-status-description"
-        data-ng-if="(api.user.profile.roles.undergrad && !registration.pastClassesStart) ||
-          (api.user.profile.roles.undergrad && (registration.term.id === '2168') && !registration.pastFall2016Extension) ||
-          ((api.user.profile.roles.graduate || api.user.profile.roles.law || api.user.profile.roles.advisor) && !registration.pastAddDrop) ||
+        data-ng-if="((registration.academicCareer.code === 'UGRD') && !registration.pastClassesStart) ||
+          ((registration.academicCareer.code === 'UGRD') && (registration.term.id === '2168') && !registration.pastFall2016Extension) ||
+          ((registration.academicCareer.code !== 'UGRD') && !registration.pastAddDrop) ||
           (registration.positiveIndicators.R99)">
         <div data-ng-if="registration.positiveIndicators.R99">
           <i class="fa fa-check-circle cc-icon-green"></i>

@@ -58,9 +58,8 @@ module MyRegistrations
         pastClassesStart: current_date >= term[:classesStart],
         # All term registration statuses are hidden the day after the term ends.
         pastEndOfInstruction: current_date > term[:end],
-        # Financial Aid disbursement is used in CNP notification.  This will be 8 days before start of instruction in Fall 2016,
-        # but this should be changed to 9 days before start of instruction post-Fall 2016.
-        pastFinancialDisbursement: current_date >= (term[:classesStart] - 8),
+        # Financial Aid disbursement is used in CNP notification.  This is defined as 9 days before the start of instruction.
+        pastFinancialDisbursement: current_date >= (term[:classesStart] - 9),
         # For Fall 2016,  CNP action has been extended to 6 days past the start of classes.  So, we want to expire the messsage
         # at 12am, the day after.
         pastFall2016Extension: current_date >= (term[:classesStart] + 7)
