@@ -194,42 +194,14 @@
   }
 }
 
-.cc-widget-table-hover {
+.cc-widget-table-hover-base{
   .cc-toggle-triangle {
     position: relative;
     &::after {
       border-bottom: 4px solid transparent;
-      border-right: 4px solid $cc-color-lighter-medium-grey;
-      border-top: 4px solid transparent;
       content: "";
       height: 0;
       position: absolute;
-      right: 12px;
-      top: 8px;
-      width: 0;
-    }
-  }
-  &:hover, &:focus {
-    .cc-toggle-triangle {
-      &::after {
-        border-bottom: 4px solid transparent;
-        border-right: 4px solid $body-font-color;
-        border-top: 4px solid transparent;
-      }
-    }
-  }
-}
-.cc-widget-table-hover-opened {
-  .cc-toggle-triangle {
-    position: relative;
-    &::after {
-      border-left: 4px solid transparent;
-      border-right: 4px solid transparent;
-      border-top: 4px solid $cc-color-lighter-medium-grey;
-      content: "";
-      height: 0;
-      position: absolute;
-      right: 10px;
       top: 8px;
       width: 0;
     }
@@ -238,6 +210,41 @@
     .cc-toggle-triangle {
       &::after {
         border-left: 4px solid transparent;
+      }
+    }
+  }
+}
+
+.cc-widget-table-hover {
+  @extend .cc-widget-table-hover-base;
+  .cc-toggle-triangle {
+    &::after {
+      border-right: 4px solid $cc-color-lighter-medium-grey;
+      border-top: 4px solid transparent;
+      right: 12px;
+    }
+  }
+  &:hover, &:focus {
+    .cc-toggle-triangle {
+      &::after {
+        border-right: 4px solid $body-font-color;
+        border-top: 4px solid transparent;
+      }
+    }
+  }
+}
+.cc-widget-table-hover-opened {
+  @extend .cc-widget-table-hover-base;
+  .cc-toggle-triangle {
+    &::after {
+      border-right: 4px solid transparent;
+      border-top: 4px solid $cc-color-lighter-medium-grey;
+      right: 10px;
+    }
+  }
+  &:hover, &:focus {
+    .cc-toggle-triangle {
+      &::after {
         border-right: 4px solid transparent;
         border-top: 4px solid $body-font-color;
       }
