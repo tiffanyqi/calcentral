@@ -50,7 +50,7 @@
           </label>
         </div>
         <div data-ng-if="field.field !== 'state' || !states.length">
-          <input type="text" data-ng-attr-id="cc_page_widget_emergency_contact_{{field.field}}" data-ng-model="currentObject.data[field.field]" data-ng-attr-maxlength="{{field.length}}" />
+          <input type="text" data-ng-attr-id="cc_page_widget_emergency_contact_{{field.field}}" data-ng-model="currentObject.data[field.field]" data-ng-attr-maxlength="{{field.length}}">
         </div>
         <div data-ng-if="field.field === 'state' && states.length">
           <div class="cc-select">
@@ -63,7 +63,7 @@
     </div>
 
     <div class="cc-widget-vertical-padding">
-      <input id="cc_page_widget_profile_emergency_contact_primary" type="checkbox" data-ng-disabled="{{currentObject.data.primaryContact === 'Y'}}" data-ng-model="currentObject.data.primaryContact" data-ng-true-value="'Y'" data-ng-false-value="'N'" />
+      <input id="cc_page_widget_profile_emergency_contact_primary" type="checkbox" data-ng-disabled="{{currentObject.data.primaryContact === 'Y'}}" data-ng-model="currentObject.data.primaryContact" data-ng-true-value="'Y'" data-ng-false-value="'N'">
       <label for="cc_page_widget_profile_emergency_contact_primary" data-ng-class="{'cc-text-light':currentObject.data.primaryContact === 'Y'}">Primary Contact</label>
     </div>
 
