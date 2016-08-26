@@ -17,7 +17,7 @@ angular.module('calcentral.factories').factory('holdsFactory', function(apiServi
     return apiService.http.request(options, url);
   };
 
-  return { 
+  return {
     getHolds: getHolds
   };
 });
