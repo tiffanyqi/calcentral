@@ -135,7 +135,7 @@ angular.module('calcentral.controllers').controller('StatusController', function
 
   var parseRegistrationCounts = function() {
     _.forEach($scope.regStatus.registrations, function(registration) {
-      if (registration.isSummer || !registration.positiveIndicators.S09) {
+      if (registration.isSummer || !registration.positiveIndicators.S09 || registration.academicCareer.code === 'UCBX') {
         return;
       }
       if (registration.summary !== 'Officially Registered') {

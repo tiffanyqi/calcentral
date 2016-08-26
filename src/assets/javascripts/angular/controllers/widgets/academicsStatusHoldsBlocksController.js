@@ -19,18 +19,21 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
     isLoading: true
   };
 
-  $scope.$watchGroup(['regStatus.registrations[0].summary', 'api.user.profile.features.csHolds', 'api.user.profile.features.legacyRegblocks'], function(newValues) {
+  $scope.$watchGroup(['(regStatus.registrations[0].summary && regStatus.registrations[0].academicCareer.code !== "UCBX")',
+                      '(regStatus.registrations[1].summary && regStatus.registrations[1].academicCareer.code !== "UCBX")',
+                      'api.user.profile.features.csHolds',
+                      'api.user.profile.features.legacyRegblocks'], function(newValues) {
     var enabledSections = [];
 
-    if (newValues[0] !== null && newValues[0] !== undefined) {
+    if (newValues[0] || newValues[1]) {
       enabledSections.push('Status');
     }
 
-    if (newValues[1]) {
+    if (newValues[2]) {
       enabledSections.push('Holds');
     }
 
-    if (newValues[2]) {
+    if (newValues[3]) {
       enabledSections.push('Blocks');
     }
 
