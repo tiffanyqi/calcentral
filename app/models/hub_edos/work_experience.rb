@@ -1,5 +1,7 @@
 module HubEdos
   class WorkExperience < Student
+    include HubEdos::CachedProxy
+    include Cache::UserCacheExpiry
 
     def url
       "#{@settings.base_url}/#{@campus_solutions_id}/work-experiences"
@@ -22,10 +24,6 @@ module HubEdos
       else
         {}
       end
-    end
-
-    def request_options
-      super.merge({on_error: {rescue_status: 404}})
     end
 
   end

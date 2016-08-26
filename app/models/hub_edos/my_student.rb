@@ -17,9 +17,9 @@ module HubEdos
       }
       return merged unless is_cs_profile_feature_enabled
 
-      proxy_options = @options
-      [HubEdos::MyContacts, HubEdos::MyDemographics, HubEdos::MyAffiliations].each do |proxy|
-        hub_response = proxy.new(@uid, proxy_options).get_feed
+      proxy_options = @options.merge user_id: @uid
+      [HubEdos::Contacts, HubEdos::Demographics, HubEdos::Affiliations].each do |proxy|
+        hub_response = proxy.new(proxy_options).get
         if hub_response[:errored]
           merged[:statusCode] = 500
           merged[:errored] = true

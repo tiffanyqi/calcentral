@@ -1,9 +1,7 @@
 module HubEdos
   class Affiliations < Student
-
-    def initialize(options = {})
-      super(options)
-    end
+    include HubEdos::CachedProxy
+    include Cache::UserCacheExpiry
 
     def url
       "#{@settings.base_url}/#{@campus_solutions_id}/affiliation"

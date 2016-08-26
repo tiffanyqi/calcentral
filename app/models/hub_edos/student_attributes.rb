@@ -1,6 +1,6 @@
 module HubEdos
   class StudentAttributes < Student
-
+    include HubEdos::CachedProxy
     include Cache::UserCacheExpiry
 
     def initialize(options = {})
@@ -17,14 +17,6 @@ module HubEdos
 
     def include_fields
       %w(studentAttributes)
-    end
-
-    def get
-      return {} unless is_feature_enabled
-      response = self.class.smart_fetch_from_cache(id: instance_key) do
-        get_internal
-      end
-      decorate_internal_response response
     end
 
   end

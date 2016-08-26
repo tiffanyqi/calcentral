@@ -2,7 +2,7 @@ class HubEdoController < ApplicationController
   before_filter :api_authenticate_401
 
   def academic_status
-    json_passthrough HubEdos::MyAcademicStatus
+    json_proxy_passthrough HubEdos::AcademicStatus
   end
 
   def student
@@ -19,8 +19,7 @@ class HubEdoController < ApplicationController
   end
 
   def student_attributes
-    model = HubEdos::MyStudentAttributes.from_session session
-    render json: model.get_feed_internal
+    json_proxy_passthrough HubEdos::StudentAttributes
   end
 
   def work_experience
@@ -28,12 +27,17 @@ class HubEdoController < ApplicationController
     return {
       'filteredForDelegate' => true
     } if current_user.authenticated_as_delegate?
-    json_passthrough HubEdos::MyWorkExperience
+    json_proxy_passthrough HubEdos::WorkExperience
   end
 
   def json_passthrough(classname, options={})
     model = classname.from_session session, options
     render json: model.get_feed_as_json
+  end
+
+  def json_proxy_passthrough(classname, options={})
+    options = options.merge(user_id: session['user_id'])
+    render json: classname.new(options).get
   end
 
 end
