@@ -5,8 +5,7 @@ module HubEdos
       response = self.class.smart_fetch_from_cache(opts.merge(id: instance_key)) do
         get_internal
       end
-      self.class.decorate_internal_response response
+      process_response_after_caching response
     end
   end
 end
-

@@ -11,7 +11,7 @@ module HubEdos
       'hub_academic_status.json'
     end
 
-    def include_fields
+    def whitelist_fields
       %w(academicStatuses awardHonors degrees holds)
     end
 

@@ -1,12 +1,6 @@
 module HubEdos
   class Demographics < Student
 
-    def initialize(options = {})
-      super(options)
-      @include_fields = options[:include_fields] || %w(ethnicities languages usaCountry foreignCountries birth gender residency)
-      @instance_key = Cache::KeyGenerator.per_view_as_type @uid, options
-    end
-
     def url
       "#{@settings.base_url}/#{@campus_solutions_id}/demographic"
     end
@@ -15,12 +9,8 @@ module HubEdos
       'hub_demographics.json'
     end
 
-    def include_fields
-      @include_fields
-    end
-
-    def instance_key
-      @instance_key
+    def whitelist_fields
+      %w(ethnicities languages usaCountry foreignCountries birth gender residency)
     end
 
     def build_feed(response)

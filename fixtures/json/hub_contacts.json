@@ -5,6 +5,56 @@
       "any": {
         "students": [
           {
+            "identifiers": [
+              {
+                "disclose": false,
+                "id": "11667051",
+                "type": "student-id"
+              },
+              {
+                "disclose": false,
+                "id": "61889",
+                "type": "campus-uid"
+              },
+              {
+                "disclose": false,
+                "id": "000-00-0000",
+                "type": "Social Security Number"
+              },
+              {
+                "disclose": false,
+                "fromDate": "1902-02-01",
+                "id": "11667051",
+                "type": "DB2"
+              }
+            ],
+            "affiliations": [
+              {
+                "detail": "",
+                "fromDate": "2015-10-02",
+                "status": {
+                  "code": "INA",
+                  "description": "Inactive"
+                },
+                "toDate": "2015-10-28",
+                "type": {
+                  "code": "APPLICANT",
+                  "description": "Applicant"
+                }
+              },
+              {
+                "detail": "Active",
+                "fromDate": "2015-10-22",
+                "status": {
+                  "code": "ACT",
+                  "description": "Active"
+                },
+                "type": {
+                  "code": "ADMT_UX",
+                  "description": "Admitted Students CalCentral Access"
+                }
+              }
+            ],
             "addresses": [
               {
                 "address1": "1234 56TH ST",
@@ -127,29 +177,6 @@
               }
             ],
             "emergencyContacts": [],
-            "identifiers": [
-              {
-                "disclose": false,
-                "id": "11667051",
-                "type": "student-id"
-              },
-              {
-                "disclose": false,
-                "id": "61889",
-                "type": "campus-uid"
-              },
-              {
-                "disclose": false,
-                "id": "000-00-0000",
-                "type": "Social Security Number"
-              },
-              {
-                "disclose": false,
-                "fromDate": "1902-02-01",
-                "id": "11667051",
-                "type": "DB2"
-              }
-            ],
             "names": [
               {
                 "type": {

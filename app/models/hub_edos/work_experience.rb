@@ -11,7 +11,7 @@ module HubEdos
       'hub_work_experience.json'
     end
 
-    def include_fields
+    def whitelist_fields
       %w(workExperiences)
     end
 

@@ -11,7 +11,7 @@ module HubEdos
       'hub_affiliations.json'
     end
 
-    def include_fields
+    def whitelist_fields
       %w(affiliations identifiers)
     end
 

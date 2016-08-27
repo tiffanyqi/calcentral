@@ -41,13 +41,13 @@ module HubEdos
           get_internal
         end
         internal_response = wrapped_response ? wrapped_response[:response] : {}
-        self.class.decorate_internal_response internal_response
+        process_response_after_caching internal_response
       else
         {}
       end
     end
 
-    def self.decorate_internal_response(internal_response)
+    def process_response_after_caching(internal_response)
       if internal_response[:noStudentId] || internal_response[:studentNotFound] || internal_response[:statusCode] < 400
         internal_response
       else

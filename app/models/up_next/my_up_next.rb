@@ -4,7 +4,7 @@ module UpNext
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
-    include Cache::FilteredViewAsFeed
+    include Cache::FilterJsonOutput
 
     attr_reader :begin_today, :next_day
 

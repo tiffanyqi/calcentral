@@ -15,7 +15,7 @@ module HubEdos
       'hub_student_attributes.json'
     end
 
-    def include_fields
+    def whitelist_fields
       %w(studentAttributes)
     end
 

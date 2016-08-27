@@ -4,7 +4,7 @@
 # This will lose the benefits of JSON-layer caching, but should preserve other behavior.
 
 module Cache
-  module FilteredViewAsFeed
+  module FilterJsonOutput
     # The API merged model should override this method to censor the feed.
     def filter_for_view_as(feed)
       feed
