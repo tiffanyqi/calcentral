@@ -308,6 +308,7 @@ cache:
     CampusSolutions::MyDeposit: <%= 2.minutes %>
     CampusSolutions::MyHigherOneUrl: <%= 1.seconds %>
     CampusSolutions::NameType: <%= 29.days %>
+    CampusSolutions::ResidencyMessage: <%= 24.hours %>
     CampusSolutions::SirConfig: <%= 24.hours %>
     CampusSolutions::State: <%= 29.days %>
     CampusSolutions::SlrDeeplink: <%= 24.hours %>
@@ -317,7 +318,8 @@ cache:
     CalnetCrosswalk::ByUid: <%= 4.hours %>
     CalnetCrosswalk::BySid: <%= 4.hours %>
 
-    HubEdos::MyStudent: <%= 10.minutes %>
+    # Merge of independently cached feeds.
+    HubEdos::MyStudent: <%= 5.minutes %>
 
 # Cache warmer settings
 cache_warmer:

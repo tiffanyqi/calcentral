@@ -1,0 +1,48 @@
+{
+  "residency": {
+    "comments": "",
+    "countryCode": "USA",
+    "county": "",
+    "financialAid": {
+      "code": "RES",
+      "description": "Resident"
+    },
+    "financialAidException": {
+      "code": "RA",
+      "description": "AB540"
+    },
+    "fromDate": "2016-01-12",
+    "fromTerm": {
+      "id": "2162",
+      "name": "2016 Spring",
+      "label": "Spring 2016"
+    },
+    "message": {
+      "code": "2005",
+      "description": "Although you are classified a non-resident, you are receiving a waiver for non-resident supplemental tuition and paying the equivalent of a resident for tuition purposes. No further action is required to continue receiving this waiver unless notified by the Residence Affairs Unit. For more information please contact our office: orres@berkeley.edu.",
+      "label": "Submitted &amp; Completed &amp; Non-Resident &amp; Excs",
+      "setNumber": "28001"
+    },
+    "official": {
+      "code": "NON",
+      "description": "Non-Resident"
+    },
+    "postalCode": "",
+    "source": {
+      "code": "Official"
+    },
+    "stateCode": "",
+    "statementOfLegalResidenceStatus": {
+      "code": "",
+      "description": ""
+    },
+    "tuition": {
+      "code": "RES",
+      "description": "Resident"
+    },
+    "tuitionException": {
+      "code": "RA",
+      "description": "AB540"
+    }
+  }
+}
