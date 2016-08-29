@@ -1,7 +1,7 @@
 module CampusSolutions
   class MyEmail < UserSpecificModel
 
-    include PersonDataUpdatingModel
+    include UserApiUpdatingModel
 
     def update(params = {})
       passthrough(CampusSolutions::Email, params)
