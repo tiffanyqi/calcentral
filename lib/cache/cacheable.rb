@@ -26,7 +26,7 @@ module Cache
     end
 
     # reads from cache if possible, otherwise executes the passed block and caches the result.
-    # if the passed block throws an exception, it will be logged, and the result won't be cached.
+    # if the passed block throws an exception, it will be logged, and the result will be cached for a much shorter time.
     # WARNING: Do not use "return foo" inside the passed block or you will short-circuit the flow
     # and nothing will be cached.
     def smart_fetch_from_cache(opts={}, &block)

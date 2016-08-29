@@ -41,13 +41,13 @@ module HubEdos
           get_internal
         end
         internal_response = wrapped_response ? wrapped_response[:response] : {}
-        decorate_internal_response internal_response
+        process_response_after_caching internal_response
       else
         {}
       end
     end
 
-    def decorate_internal_response(internal_response)
+    def process_response_after_caching(internal_response)
       if internal_response[:noStudentId] || internal_response[:studentNotFound] || internal_response[:statusCode] < 400
         internal_response
       else
@@ -57,7 +57,7 @@ module HubEdos
       end
     end
 
-    def get_internal
+    def get_internal(opts = {})
       @campus_solutions_id ||= lookup_campus_solutions_id
       if @campus_solutions_id.nil?
         logger.warn "Lookup of campus_solutions_id for uid #{@uid} failed, cannot call Campus Solutions API"
@@ -67,11 +67,7 @@ module HubEdos
         }
       else
         logger.info "Fake = #{@fake}; Making request to #{url} on behalf of user #{@uid}; cache expiration #{self.class.expires_in}"
-        opts = request_options.merge({
-          on_error: {
-            rescue_status: 404
-          }
-        })
+        opts = opts.merge(request_options)
         response = get_response(url, opts)
         logger.debug "Remote server status #{response.code}, Body = #{response.body.force_encoding('UTF-8')}"
         if response.code == 404
@@ -102,6 +98,9 @@ module HubEdos
       opts = {
         headers: {
           'Accept' => 'application/json'
+        },
+        on_error: {
+          rescue_status: 404
         }
       }
       if @settings.app_id.present? && @settings.app_key.present?

@@ -21,7 +21,6 @@ describe 'My Academics Status and Holds', :testui => true do
 
       status_api_page = ApiMyStatusPage.new driver
       student_api_page = ApiEdosStudentPage.new driver
-      residency_api_page = ApiCSResidencyMessagePage.new driver
       registrations_api_page = ApiMyRegistrationsPage.new driver
       academics_api_page = ApiMyAcademicsPageSemesters.new driver
       holds_api_page = ApiCSHoldsPage.new driver
@@ -195,24 +194,6 @@ describe 'My Academics Status and Holds', :testui => true do
                 it ("shows a gold residency status icon for UID #{uid}") { expect(has_gold_res_status_icon).to be true }
               else
                 it ("shows a red residency status icon for UID #{uid}") { expect(has_red_res_status_icon).to be true }
-              end
-
-              # Configurable residency messages in CS
-              unless student_api_page.residency_message_code.blank?
-
-                residency_api_page.get_json(driver, student_api_page.residency_message_code)
-                api_residency_msg = residency_api_page.message_text
-
-                my_academics_page.load_page
-                my_academics_page.show_res_status_detail 0
-
-                if api_residency_msg.blank?
-                  has_no_res_message = my_academics_page.wait_until { my_academics_page.res_msg_element(0).text.empty? }
-                  it ("shows no residency message for UID #{uid}") { expect(has_no_res_message).to be_truthy }
-                else
-                  has_res_message = my_academics_page.wait_until { my_academics_page.res_msg_element(0).text == api_residency_msg }
-                  it ("shows the right residency message for UID #{uid}") { expect(has_res_message).to be_truthy }
-                end
               end
 
             else

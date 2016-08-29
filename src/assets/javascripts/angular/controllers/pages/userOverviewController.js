@@ -6,7 +6,7 @@ var _ = require('lodash');
 /**
  * Preview of user profile prior to viewing-as
  */
-angular.module('calcentral.controllers').controller('UserOverviewController', function(academicsService, adminService, advisingFactory, academicStatusFactory, residencyMessageFactory, apiService, enrollmentVerificationFactory, statusHoldsService, studentAttributesFactory, $route, $routeParams, $scope) {
+angular.module('calcentral.controllers').controller('UserOverviewController', function(academicsService, adminService, advisingFactory, academicStatusFactory, apiService, enrollmentVerificationFactory, statusHoldsService, studentAttributesFactory, $route, $routeParams, $scope) {
   $scope.expectedGradTerm = academicsService.expectedGradTerm;
   $scope.academics = {
     isLoading: true,
@@ -75,7 +75,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       uid: targetUserUid
     }).success(function(data) {
       angular.extend($scope.targetUser, _.get(data, 'attributes'));
-      angular.extend($scope.residency, _.get(data, 'residency.feed.student.residency'));
+      angular.extend($scope.residency, _.get(data, 'residency.residency'));
       $scope.targetUser.ldapUid = targetUserUid;
       $scope.targetUser.addresses = apiService.profile.fixFormattedAddresses(_.get(data, 'contacts.feed.student.addresses'));
       $scope.targetUser.phones = _.get(data, 'contacts.feed.student.phones');
@@ -83,7 +83,6 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       // 'student.fullName' is expected by shared code (e.g., photo unavailable widget)
       $scope.targetUser.fullName = $scope.targetUser.defaultName;
       apiService.util.setTitle($scope.targetUser.defaultName);
-      parseCalResidency();
 
       // Get links to advising resources
       advisingFactory.getAdvisingResources({
@@ -178,28 +177,6 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     }).finally(function() {
       $scope.regStatus.isLoading = false;
     });
-  };
-
-  var parseCalResidency = function() {
-    var messageCode = _.get($scope, 'residency.message.code');
-    if (messageCode) {
-      var getResidencyMessage = function(options) {
-        return residencyMessageFactory.getMessage(options);
-      };
-
-      getResidencyMessage({
-        messageNbr: messageCode
-      })
-      .then(function(data) {
-        var messageCatDefn = _.get(data, 'data.feed.root.getMessageCatDefn');
-        if (messageCatDefn) {
-          angular.merge($scope.residency.message, {
-            description: messageCatDefn.descrlong,
-            label: messageCatDefn.messageText
-          });
-        }
-      });
-    }
   };
 
   var getRegMessages = function() {

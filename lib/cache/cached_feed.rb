@@ -11,11 +11,11 @@ module Cache
     end
 
     def get_feed(force_cache_write=false)
-      key = instance_key
-      self.class.fetch_from_cache(key, force_cache_write) do
+      response = self.class.fetch_from_cache(instance_key, force_cache_write) do
         init
         get_feed_internal
       end
+      process_response_after_caching response
     end
 
     def get_feed_as_json(force_cache_write=false)
@@ -28,6 +28,12 @@ module Cache
 
     def extended_instance_keys
       [instance_key]
+    end
+
+    # Override for single-instantiation processing of cached data, such as filtering or obfuscating to match
+    # current user authorization.
+    def process_response_after_caching(response)
+      response
     end
 
   end

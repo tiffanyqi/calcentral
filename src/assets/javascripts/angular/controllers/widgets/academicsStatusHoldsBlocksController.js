@@ -6,7 +6,7 @@ var _ = require('lodash');
 /**
  * Academics status, holds & blocks controller
  */
-angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksController', function(apiService, enrollmentVerificationFactory, profileFactory, slrDeeplinkFactory, studentAttributesFactory, residencyMessageFactory, registrationsFactory, statusHoldsService, $scope) {
+angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksController', function(apiService, enrollmentVerificationFactory, academicsFactory, slrDeeplinkFactory, studentAttributesFactory, registrationsFactory, statusHoldsService, $scope) {
   // Data for studentInfo and csHolds are pulled by the AcademicsController that
   // governs the academics template. The statusHoldsBlocks segment watches those
   // for changes in order to display the corresponding UI elements.
@@ -141,45 +141,15 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
     }
   });
 
-  var getPerson = profileFactory.getPerson;
-
-  var parseCalResidency = function(residency) {
+  var getCalResidency = academicsFactory.getResidency;
+  var parseCalResidency = function(data) {
+    var residency = _.get(data, 'data.residency');
     angular.merge($scope.residency, residency);
-
-    var messageCode = _.get(residency, 'message.code');
-    if (messageCode) {
-      var getResidencyMessage = function(options) {
-        return residencyMessageFactory.getMessage(options);
-      };
-
-      getResidencyMessage({
-        messageNbr: messageCode
-      })
-      .then(function(data) {
-        var messageCatDefn = _.get(data, 'data.feed.root.getMessageCatDefn');
-        if (messageCatDefn) {
-          angular.merge($scope.residency.message, {
-            description: messageCatDefn.descrlong,
-            label: messageCatDefn.messageText
-          });
-        }
-      });
-    }
-  };
-
-  var parsePerson = function(data) {
-    var residency = _.get(data, 'data.feed.student.residency');
-
-    if (!residency) {
-      return;
-    }
-
-    parseCalResidency(residency);
   };
 
   var loadStatusInformation = function() {
-    getPerson()
-    .then(parsePerson)
+    getCalResidency()
+    .then(parseCalResidency)
     .then(getSlrDeeplink)
     .then(getRegistrations)
     .then(getMessages)

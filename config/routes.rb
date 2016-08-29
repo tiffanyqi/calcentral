@@ -27,6 +27,7 @@ Calcentral::Application.routes.draw do
   get '/api/my/badges' => 'my_badges#get_feed', :as => :my_badges, :defaults => { :format => 'json' }
   get '/api/my/academics' => 'my_academics#get_feed', :as => :my_academics, :defaults => { :format => 'json' }
   get '/api/my/class_enrollments' => 'my_class_enrollments#get_feed', :via => :get, :defaults => { :format => 'json' }
+  get '/api/my/residency' => 'my_academics#residency', :via => :get, :defaults => { :format => 'json' }
   get '/api/my/eft_enrollment' => 'my_eft_enrollment#get_feed', :as => :my_eft_enrollment, :defaults => { :format => 'json' }
   get '/api/my/financials' => 'my_financials#get_feed', :as => :my_financials, :defaults => {:format => 'json'}
   get '/api/my/finaid' => 'my_finaid#get_feed', :as => :my_finaid, :defaults => {:format => 'json'}
@@ -196,7 +197,6 @@ Calcentral::Application.routes.draw do
   get '/api/campus_solutions/slr_deeplink' => 'campus_solutions/slr_deeplink#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/fpp_enrollment' => 'campus_solutions/fpp_enrollment#get', :via => :get, :defaults => { :format => 'json' }
   get '/api/campus_solutions/emergency_contacts' => 'campus_solutions/emergency_contacts#get', :via => :get, :defaults => { :format => 'json' }
-  get '/api/campus_solutions/residency_message' => 'campus_solutions/residency_message#get', :defaults => { :format => 'json' }
   get '/api/campus_solutions/link' => 'campus_solutions/link#get', :defaults => { :format => 'json' }
   get '/api/campus_solutions/student_resources' => 'campus_solutions/student_resources#get', :defaults => { :format => 'json' }
   post '/api/campus_solutions/address' => 'campus_solutions/address#post', :via => :post, :defaults => { :format => 'json' }

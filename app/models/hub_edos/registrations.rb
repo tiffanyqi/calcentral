@@ -3,10 +3,6 @@ module HubEdos
   # which is why this class doesn't inherit from HubEdos::Student.
   class Registrations < Proxy
 
-    def initialize(options = {})
-      super(options)
-    end
-
     def url
       "#{@settings.base_url}/#{@campus_solutions_id}/registrations"
     end

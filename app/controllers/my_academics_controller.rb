@@ -11,4 +11,10 @@ class MyAcademicsController < ApplicationController
     end
   end
 
+  def residency
+    # Delegates get an empty feed.
+    return {} if current_user.authenticated_as_delegate?
+    render json: MyAcademics::Residency.from_session(session).get_feed_as_json
+  end
+
 end

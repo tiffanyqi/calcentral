@@ -4,7 +4,7 @@ module MyAcademics
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
     include Cache::JsonAddedCacher
-    include Cache::FilteredViewAsFeed
+    include Cache::FilterJsonOutput
     include MergedModel
 
     def self.providers
