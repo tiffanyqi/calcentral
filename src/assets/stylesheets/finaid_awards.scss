@@ -37,4 +37,13 @@
     margin-left: 5px;
     padding-left: 5px;
   }
+  // Override .cc-table-right-spacing !important rules.
+  .cc-table-right-spacing:last-child {
+    padding-right: 0 !important;
+  }
+  // Override .cc-table-right-spacing !important rules and the deeply qualified
+  // descendant selectors in foundation.css.
+  tbody td.cc-widget-finaid-table-budget-total {
+    padding-right: 5% !important;
+  }
 }

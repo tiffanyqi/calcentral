@@ -132,7 +132,7 @@
             <td class="cc-table-center" data-ng-if="myfinances.summary.hasDPPTransactions">
               <i class="fa" data-ng-class="{'fa-check':(item.isDPP)}" data-ng-if="item.isDPP">
             </td>
-            <td class="cc-table-center">
+            <td class="cc-table-center cc-toggle-triangle">
               <i class="fa" data-ng-class="{'fa-exclamation-circle cc-icon-red':(item.isDueNow === '1_past_due'),'fa-exclamation':(item.isDueNow === '2_current_due'),'fa-arrow-right':(item.isDueNow === '3_future_due')}" data-ng-if="item.isDueNow !== '4_closed'">
             </td>
           </tr>
