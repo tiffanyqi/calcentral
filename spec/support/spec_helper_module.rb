@@ -31,6 +31,10 @@ module SpecHelperModule
     rand(99999).to_s
   end
 
+  def random_cs_id
+    rand(9999999999).to_s
+  end
+
   def random_name
     "#{random_string(6).capitalize} #{random_string(10).capitalize}"
   end

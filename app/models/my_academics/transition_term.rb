@@ -26,7 +26,7 @@ module MyAcademics
     # It is displayed in My Academics / Status, Holds, and Blocks and in the Status popover.
     def regstatus_feed
       # TODO LEGACY ONLY! Must be replaced before Settings.terms.legacy_cutoff.
-      if legacy_user?
+      if legacy_student?
         response = Regstatus::Proxy.new(user_id: @uid).get
         if response && response[:feed] && (reg_status = response[:feed]['regStatus'])
           {

@@ -23,7 +23,7 @@ module Bearfacts
     end
 
     def get
-      return {} unless legacy_user?
+      return {} unless legacy_student?
       raw_response = self.class.smart_fetch_from_cache({id: instance_key, user_message_on_exception: 'Remote server unreachable'}) do
         request_internal(request_path, request_params)
       end

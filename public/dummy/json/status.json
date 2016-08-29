@@ -40,7 +40,7 @@
   "uid": "61889",
   "sid": null,
   "campusSolutionsID": null,
-  "isLegacyUser": true,
+  "isLegacyStudent": true,
   "isDelegateUser": false,
   "showSisProfileUI": true,
   "isDirectlyAuthenticated": true,

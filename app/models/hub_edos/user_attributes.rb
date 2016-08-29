@@ -14,10 +14,38 @@ module HubEdos
       Settings.hub_edos_proxy.fake.present?
     end
 
+    def get_ids(result)
+      result[:ldap_uid] = @uid
+
+      # Users who are delegates-only, with no other role on campus, will be identified only through
+      # Crosswalk or SAML assertions.
+      result[:delegate_user_id] = lookup_delegate_user_id
+
+      # Pre-CS student IDs should have been migrated, but note them if Crosswalk or SAML assertions
+      # provided one.
+      result[:legacy_student_id] = lookup_legacy_student_id_from_crosswalk
+
+      # Hub and CampusSolutions APIs will be unreachable unless a CS ID is provided from Crosswalk or SAML assertions.
+      @campus_solutions_id = lookup_campus_solutions_id
+      result[:campus_solutions_id] = @campus_solutions_id
+
+      result[:is_legacy_student] = legacy_student?(@campus_solutions_id) || result[:legacy_student_id]
+    end
+
     def get_edo
-      edo_feed = MyStudent.new(@uid).get_feed
-      if (feed = edo_feed[:feed])
-        HashConverter.symbolize feed[:student] # TODO will have to dynamically switch student/person EDO somehow
+      # A valid Hub Contacts payload will incorporate the payload of the Affiliations API.
+      contacts = get_edo_feed(Contacts)
+      if contacts.blank?
+        get_edo_feed(Affiliations)
+      else
+        contacts
+      end
+    end
+
+    def get_edo_feed(api_class)
+      response = api_class.new(user_id: @uid).get
+      if (feed = HashConverter.symbolize response[:feed])
+        feed[:student]
       else
         nil
       end
@@ -26,9 +54,10 @@ module HubEdos
     def get
       wrapped_result = handling_exceptions(@uid) do
         result = {}
-        if (edo = get_edo)
+        get_ids result
+        if @campus_solutions_id.present? && (edo = get_edo)
+          identifiers_check edo
           extract_roles(edo, result)
-          extract_ids(edo, result)
           extract_passthrough_elements(edo, result)
           extract_names(edo, result)
           extract_emails(edo, result)
@@ -55,31 +84,22 @@ module HubEdos
       false
     end
 
-    def extract_ids(edo, result)
-      # Users who are delegates-only, with no other role on campus, will be identified only through
-      # Crosswalk or SAML assertions.
-      result[:delegate_user_id] = lookup_delegate_user_id
-
-      # Pre-CS student IDs should have been migrated, but note them if Crosswalk or SAML assertions
-      # provided one.
-      result[:legacy_student_id] = lookup_legacy_student_id_from_crosswalk
-
-      result[:ldap_uid] = @uid
-
+    def identifiers_check(edo)
       # CS Identifiers simply treat 'student-id' as a synonym for the Campus Solutions ID / EmplID, regardless
       # of whether the user has ever been a student. (In contrast, CalNet LDAP's 'berkeleyedustuid' attribute
       # only appears for current or former students.)
       identifiers = edo[:identifiers]
-      if identifiers.present? && (cs_id_hash = identifiers.select {|id| id[:type] == 'student-id'}.first)
-        @campus_solutions_id ||= cs_id_hash[:id]
-        result[:campus_solutions_id] = @campus_solutions_id
-        result[:student_id] = @campus_solutions_id if result[:roles].slice(:student, :exStudent, :applicant).has_value?(true)
+      if identifiers.blank?
+        logger.error "No 'identifiers' found in CS attributes #{edo} for UID #{@uid}, CS ID #{@campus_solutions_id}"
       else
-        logger.error "No 'student-id' found in CS Identifiers #{identifiers} for UID #{@uid}" if identifiers.present?
-        result[:student_id] = result[:legacy_student_id]
+        edo_id = identifiers.select {|id| id[:type] == 'student-id'}.first
+        if edo_id.blank?
+          logger.error "No 'student-id' found in CS Identifiers #{identifiers} for UID #{@uid}, CS ID #{@campus_solutions_id}"
+          return false
+        elsif edo_id[:id] != @campus_solutions_id
+          logger.error "Got student-id #{edo_id[:id]} from CS Identifiers but CS ID #{@campus_solutions_id} from Crosswalk for UID #{@uid}"
+        end
       end
-
-      result[:is_legacy_user] = legacy_user?
     end
 
     def extract_passthrough_elements(edo, result)
@@ -117,7 +137,15 @@ module HubEdos
     end
 
     def extract_roles(edo, result)
-      result[:roles] = roles_from_cs_affiliations(edo[:affiliations])
+      # CS Affiliations are expected to exist for any working CS ID.
+      if (affiliations = edo[:affiliations])
+        result[:roles] = roles_from_cs_affiliations(affiliations)
+        if result[:roles].slice(:student, :exStudent, :applicant).has_value?(true)
+          result[:student_id] = @campus_solutions_id
+        end
+      else
+        logger.error "No 'affiliations' found in CS attributes #{edo} for UID #{@uid}, CS ID #{@campus_solutions_id}"
+      end
     end
 
     def extract_emails(edo, result)

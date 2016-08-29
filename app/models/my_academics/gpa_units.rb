@@ -7,7 +7,7 @@ module MyAcademics
     def merge(data)
       gpa = hub_gpa_units
       prefer_legacy_data = Settings.features.cs_academic_profile_prefers_legacy
-      if (current_term.legacy? || prefer_legacy_data) && legacy_user?
+      if (current_term.legacy? || prefer_legacy_data) && legacy_student?
         legacy_gpa = oracle_gpa_units
         if gpa[:empty] || (prefer_legacy_data && !legacy_gpa[:empty])
           gpa = legacy_gpa
