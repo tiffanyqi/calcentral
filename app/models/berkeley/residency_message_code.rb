@@ -8,7 +8,7 @@ module Berkeley
       residency_status.strip! if residency_status
       tuition_exception.strip! if tuition_exception
       message_code = case residency_status
-        when ''  # Not submitted
+        when nil, ''  # Not submitted
           '2000' unless ['A', 'S', 'R'].include? slr_status   # Only for Pending residency
         when 'PEND' # Pending
           case slr_status
@@ -21,7 +21,7 @@ module Berkeley
           end
         when 'RES'  # Resident
           case tuition_exception
-            when '' # Submitted, completed, nothing more to say
+            when nil, '' # Submitted, completed, nothing more to say
               '2003'
             when 'R8', 'RP', 'RB' # Credentialed Public School Emp, Dependent Deceased Law Enf/FF, Grad Bureau Indian Aff Sch
               '2006'
@@ -32,7 +32,7 @@ module Berkeley
           end
         when 'NON'  # Non-resident
           case tuition_exception
-            when '' # Submitted, completed, nothing more to say
+            when nil, '' # Submitted, completed, nothing more to say
               '2004'
             when 'RA', 'RV' # AB 540, Veteran/Dependent of Veteran
               '2005'
