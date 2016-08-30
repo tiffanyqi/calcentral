@@ -170,7 +170,6 @@ module User
         canViewGrades: can_view_academics || !!roles[:advisor],
         hasFinancialsTab: has_financials_tab?(roles),
         hasToolboxTab: has_toolbox_tab?(current_user_policy, roles),
-        hasPhoto: !!User::Photo.fetch(@uid, @options),
         inEducationAbroadProgram: @user_attributes[:educationAbroad],
         googleEmail: google_mail,
         officialBmailAddress: @user_attributes[:officialBmailAddress],

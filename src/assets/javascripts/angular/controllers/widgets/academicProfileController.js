@@ -6,6 +6,6 @@ var angular = require('angular');
  * Academic Profile controller
  */
 angular.module('calcentral.controllers').controller('AcademicProfileController', function(academicsService, $scope) {
-  $scope.profilePictureLoading = true;
+  $scope.profilePicture = {};
   $scope.expectedGradTerm = academicsService.expectedGradTerm;
 });

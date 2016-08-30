@@ -214,6 +214,9 @@ angular.module('calcentral.controllers').controller('StatusController', function
       // We use this to show the spinner
       $scope.statusLoading = 'Process';
 
+      // Will contain loadError flag if image cannot be fetched.
+      $scope.photo = {};
+
       // Get all the necessary data from the different factories
       var getBadges = badgesFactory.getBadges().success(loadStudentInfo);
       var getHolds = academicStatusFactory.getAcademicStatus().then(loadHolds);
