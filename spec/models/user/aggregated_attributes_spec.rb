@@ -1,6 +1,6 @@
 describe User::AggregatedAttributes do
   let(:uid) { random_id }
-  let(:campus_solutions_id) { random_id }
+  let(:campus_solutions_id) { random_cs_id }
   let(:legacy_student_id) { random_id }
   let(:preferred_name) { 'Grigori Rasputin' }
   let(:bmail_from_edo) { 'rasputin@berkeley.edu' }
@@ -9,7 +9,7 @@ describe User::AggregatedAttributes do
       person_name: preferred_name,
       student_id: campus_solutions_id,
       campus_solutions_id: campus_solutions_id,
-      is_legacy_user: false,
+      is_legacy_student: false,
       official_bmail_address: bmail_from_edo,
       roles: {
         student: true,
@@ -38,7 +38,7 @@ describe User::AggregatedAttributes do
   describe 'all systems available' do
     context 'Hub feed' do
       it 'should return edo user attributes' do
-        expect(subject[:isLegacyUser]).to be false
+        expect(subject[:isLegacyStudent]).to be false
         expect(subject[:sisProfileVisible]).to be true
         expect(subject[:officialBmailAddress]).to eq bmail_from_edo
         expect(subject[:campusSolutionsId]).to eq campus_solutions_id

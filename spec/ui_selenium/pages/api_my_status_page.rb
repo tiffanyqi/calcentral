@@ -71,7 +71,7 @@ class ApiMyStatusPage
   end
 
   def is_legacy_user?
-    @parsed['isLegacyUser']
+    @parsed['isLegacyStudent']
   end
 
   def has_student_history?

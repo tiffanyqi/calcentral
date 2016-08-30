@@ -10,13 +10,14 @@ module User
       @ldap_attributes = CalnetLdap::UserAttributes.new(user_id: @uid).get_feed
       @oracle_attributes = CampusOracle::UserAttributes.new(user_id: @uid).get_feed
       @edo_attributes = HubEdos::UserAttributes.new(user_id: @uid).get if is_cs_profile_feature_enabled
-      is_legacy_user = @edo_attributes.blank? || @edo_attributes[:campus_solutions_id].blank? || @edo_attributes[:is_legacy_user]
+      campus_solutions_id = @edo_attributes[:campus_solutions_id] if @edo_attributes.present?
+      is_legacy_student = campus_solutions_id.blank? || @edo_attributes[:is_legacy_student]
       @sis_profile_visible = is_cs_profile_feature_enabled
       @roles = get_campus_roles
       first_name = get_campus_attribute('first_name', :string) || ''
       last_name = get_campus_attribute('last_name', :string) || ''
       {
-        isLegacyUser: is_legacy_user,
+        isLegacyStudent: is_legacy_student,
         sisProfileVisible: @sis_profile_visible,
         roles: @roles,
         defaultName: get_campus_attribute('person_name', :string),
@@ -25,7 +26,7 @@ module User
         givenFirstName: (@edo_attributes && @edo_attributes[:given_name]) || first_name || '',
         familyName: (@edo_attributes && @edo_attributes[:family_name]) || last_name || '',
         studentId: get_campus_attribute('student_id', :numeric_string),
-        campusSolutionsId: get_campus_attribute('campus_solutions_id', :string),
+        campusSolutionsId: campus_solutions_id,
         primaryEmailAddress: get_campus_attribute('email_address', :string),
         officialBmailAddress: get_campus_attribute('official_bmail_address', :string),
         educationAbroad: !!@oracle_attributes[:education_abroad]

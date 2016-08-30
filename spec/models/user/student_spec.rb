@@ -28,8 +28,8 @@ describe User::Student do
     end
   end
 
-  context 'legacy user check' do
-    subject { StudentTestClass.new(double(fake: true), user_id: uid).legacy_user? }
+  context 'legacy student check' do
+    subject { StudentTestClass.new(double(fake: true), user_id: uid).legacy_student? }
     let(:legacy_id) { '12345678' }
     let(:cs_id) { '9876543210' }
     before do
@@ -37,26 +37,26 @@ describe User::Student do
     end
     context 'ten-digit CS ID' do
       let(:campus_solutions_id) { cs_id }
-      it { should eq false }
+      it { should be_falsey }
     end
     context 'eight-digit legacy ID' do
       let(:campus_solutions_id) { legacy_id }
-      it { should eq true }
+      it { should be_truthy }
     end
     context 'Campus Solutions ID unavailable' do
       let(:campus_solutions_id) { nil }
       context 'eight-digit LDAP SID' do
         let(:ldap_student_id) { legacy_id }
-        it { should eq true }
+        it { should be_truthy }
       end
       context 'ten-digit LDAP SID' do
         let(:ldap_student_id) { cs_id }
-        it { should eq false }
+        it { should be_falsey }
       end
       context 'SID unavailable' do
         let(:ldap_student_id) { nil }
         let(:oracle_student_id) { nil }
-        it { should eq nil }
+        it { should be_falsey }
       end
     end
   end

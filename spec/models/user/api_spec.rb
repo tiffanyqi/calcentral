@@ -15,7 +15,7 @@ describe User::Api do
       person_name: preferred_name,
       student_id: '1234567890',
       campus_solutions_id: '1234567890',
-      is_legacy_user: false,
+      is_legacy_student: false,
       official_bmail_address: 'foo@foo.com',
       roles: edo_roles
     }
@@ -60,7 +60,7 @@ describe User::Api do
       api = User::Api.new(uid).get_feed
       expect(api[:preferredName]).to eq preferred_name
       expect(api[:isCalendarOptedIn]).to_not be_nil
-      expect(api[:isLegacyUser]).to be false
+      expect(api[:isLegacyStudent]).to be false
       expect(api[:isDelegateUser]).to be false
       expect(api[:showSisProfileUI]).to be true
       expect(api[:hasAcademicsTab]).to be true
@@ -207,7 +207,7 @@ describe User::Api do
       {
         person_name: preferred_name,
         campus_solutions_id: '12345678', # 8-digit ID means legacy
-        is_legacy_user: true,
+        is_legacy_student: true,
         roles: {
           student: true,
           exStudent: false,
@@ -217,7 +217,7 @@ describe User::Api do
       }
     end
     it 'should show SIS profile for legacy students' do
-      expect(api[:isLegacyUser]).to be true
+      expect(api[:isLegacyStudent]).to be true
       expect(api[:showSisProfileUI]).to be true
     end
   end
@@ -433,7 +433,7 @@ describe User::Api do
         givenFullName: 'Eugene V Debs',
         uid: uid,
         sid: '18551926',
-        isLegacyUser: true,
+        isLegacyStudent: true,
         roles: {
           student: true,
           registered: true,
@@ -456,7 +456,7 @@ describe User::Api do
         givenFullName: 'Offissa Pupp',
         uid: uid,
         sid: '17154428',
-        isLegacyUser: true,
+        isLegacyStudent: true,
         roles: {
           student: false,
           registered: false,

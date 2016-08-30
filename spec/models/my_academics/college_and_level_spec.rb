@@ -29,6 +29,7 @@ describe MyAcademics::CollegeAndLevel do
 
     context 'when hub response is empty' do
       before { hub_status_proxy.set_response(status: 200, body: '{}') }
+      let(:campus_solutions_id) { legacy_campus_solutions_id }
       context 'when current term is summer' do
         before { allow(subject).to receive(:current_term).and_return(double(is_summer: true)) }
         it 'does not query for bearfacts data' do
@@ -45,10 +46,6 @@ describe MyAcademics::CollegeAndLevel do
       end
       context 'when current term is not summer' do
         before { allow(subject).to receive(:current_term).and_return(fake_spring_term) }
-        it 'queries for bearfacts data' do
-          expect(Bearfacts::Profile).to receive(:new).and_return bearfacts_proxy
-          expect(feed[:collegeAndLevel][:statusCode]).to eq 200
-        end
         context 'when bearfacts data is present' do
           before { allow(Bearfacts::Profile).to receive(:new).and_return bearfacts_proxy }
           let(:campus_solutions_id) { legacy_campus_solutions_id }

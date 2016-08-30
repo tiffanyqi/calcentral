@@ -7,6 +7,9 @@ module HubEdos
     # Needed to expire cache entries specific to Viewing-As users alongside original user's cache.
     include Cache::RelatedCacheKeyTracker
     include CampusSolutions::ProfileFeatureFlagged
+    # This feed is currently used only by front-end code and is cached in multiple view-as flavors.
+    # That combination means a little CPU time can be gained by caching only the JSON output.
+    include Cache::JsonifiedFeed
 
     def get_feed_internal
       merged = {
@@ -19,6 +22,7 @@ module HubEdos
 
       proxy_options = @options.merge user_id: @uid
       [HubEdos::Contacts, HubEdos::Demographics, HubEdos::Affiliations].each do |proxy|
+        break if (proxy == HubEdos::Affiliations) && merged[:feed][:student]['affiliations'].present?
         hub_response = proxy.new(proxy_options).get
         if hub_response[:errored]
           merged[:statusCode] = 500

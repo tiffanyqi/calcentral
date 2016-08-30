@@ -7,7 +7,7 @@ module MyAcademics
 
     def merge(data = {})
       # TODO Replace or remove by Fall 2016.
-      return unless legacy_user? && current_term.legacy?
+      return unless legacy_student? && current_term.legacy?
       proxy = Bearfacts::Exams.new({:user_id => @uid})
       feed = proxy.get[:feed]
       return unless feed.present? && matches_current_year_term?(feed)

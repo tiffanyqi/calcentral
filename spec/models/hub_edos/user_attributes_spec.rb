@@ -5,12 +5,6 @@ describe HubEdos::UserAttributes do
   let(:fake_contact_proxy) { HubEdos::Contacts.new(fake: true, user_id: user_id) }
   before { allow(HubEdos::Contacts).to receive(:new).and_return fake_contact_proxy }
 
-  let(:fake_demographics_proxy) { HubEdos::Demographics.new(fake: true, user_id: user_id) }
-  before { allow(HubEdos::Demographics).to receive(:new).and_return fake_demographics_proxy }
-
-  let(:fake_affiliations_proxy) { HubEdos::Affiliations.new(fake: true, user_id: user_id) }
-  before { allow(HubEdos::Affiliations).to receive(:new).and_return fake_affiliations_proxy }
-
   let(:fake_crosswalk_proxy) { CalnetCrosswalk::ByUid.new(fake:true, user_id: user_id) }
   before { allow(CalnetCrosswalk::ByUid).to receive(:new).and_return fake_crosswalk_proxy }
 
@@ -18,6 +12,7 @@ describe HubEdos::UserAttributes do
 
   it 'should provide the converted person data structure' do
     expect(subject[:ldap_uid]).to eq '61889'
+    expect(subject[:campus_solutions_id]).to eq '11667051'
     expect(subject[:student_id]).to eq '11667051'
     expect(subject[:given_name]).to eq 'Oski'
     expect(subject[:family_name]).to eq 'Bear'
@@ -31,22 +26,12 @@ describe HubEdos::UserAttributes do
     expect(subject[:roles]).to eq({applicant: true})
   end
 
-  context 'non-legacy user' do
-    let(:campus_solutions_id) { random_id }
+  describe 'student_id depends on role' do
     before do
-      allow(fake_crosswalk_proxy).to receive(:get).and_return({
-        feed: {'Person' => {
-          'identifiers' => [
-            {'identifierTypeName' => 'CAMPUS_SOLUTIONS_ID', 'identifierValue' => campus_solutions_id, 'isActive' => true}
-          ]}, 'uid' => user_id }
-      })
-      allow_any_instance_of(HubEdos::MyStudent).to receive(:get_feed).and_return(
-       {feed: {student: {
-         identifiers: [
-           { type: 'student-id', id: campus_solutions_id },
-           { type: 'campus-uid', id: user_id }
-         ],
-         affiliations: affiliations
+      allow_any_instance_of(HubEdos::Contacts).to receive(:get).and_return(
+       {feed: {'student' => {
+         'identifiers' => {'id' => '11667051', 'type' => 'student-id'},
+         'affiliations' => affiliations
        }}}
       )
     end
@@ -58,7 +43,6 @@ describe HubEdos::UserAttributes do
       end
       it 'does not set student_id' do
         expect(subject[:student_id]).to be_nil
-        expect(subject[:campus_solutions_id]).to eq campus_solutions_id
       end
     end
     context 'student' do
@@ -69,15 +53,33 @@ describe HubEdos::UserAttributes do
         ]
       end
       it 'does set student_id' do
-        expect(subject[:student_id]).to eq campus_solutions_id
-        expect(subject[:campus_solutions_id]).to eq campus_solutions_id
+        expect(subject[:student_id]).to eq subject[:campus_solutions_id]
       end
+    end
+  end
+
+  context 'Contacts feed contains all necessary data' do
+    it 'does not bother calling the Affiliations API' do
+      expect(HubEdos::Affiliations).to receive(:new).never
+      expect(subject[:roles]).to eq({applicant: true})
+    end
+  end
+  context 'Contacts feed is unexpectedly reticent' do
+    let(:fake_affiliations_proxy) { HubEdos::Affiliations.new(fake: true, user_id: user_id) }
+    before do
+      allow_any_instance_of(HubEdos::Contacts).to receive(:get).and_return(
+        {feed: {'student' => {}}}
+      )
+    end
+    it 'reluctantly falls back on the Affiliations API' do
+      expect(HubEdos::Affiliations).to receive(:new).and_return fake_affiliations_proxy
+      expect(subject[:roles]).to eq({applicant: true})
     end
   end
 
   context 'unexpected errors from Hub calls' do
     before do
-      allow_any_instance_of(HubEdos::Affiliations).to receive(:get).and_return({'non' => 'sense'})
+      allow_any_instance_of(HubEdos::Contacts).to receive(:get_internal).and_return({'non' => 'sense'})
     end
     it 'returns from errors' do
       expect(subject).to eq({
