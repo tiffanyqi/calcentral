@@ -3,11 +3,25 @@
     margin-left: 95px;
   }
   .cc-widget-exam-schedule-item:not(:last-child) {
-    margin-bottom: 10px;
+    padding: 10px 0;
   }
   .cc-widget-exam-schedule-time {
     margin-right: 15px;
     text-align: right;
     width: 80px;
+  }
+  .cc-widget-exam-schedule-time-conflicts-left {
+    margin-left: -5px;
+  }
+  .cc-widget-exam-schedule-text {
+    padding: 5px;
+    padding-left: 20px;
+  }
+  .cc-widget-exam-schedule-conflicts {
+    border-left: 5px solid $cc-color-widget-list-blue-dark;
+  }
+  .cc-widget-exam-schedule-conflicts-text {
+    padding-bottom: 5px;
+    padding-left: 15px;
   }
 }

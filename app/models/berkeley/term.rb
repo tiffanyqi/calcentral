@@ -15,12 +15,17 @@ module Berkeley
     attr_reader :start
     # The Fall/Spring semesters end two weeks after the end of formal classes.
     attr_reader :end
+    attr_reader :final_exam_batch
     # The first day of instruction.  This date is used for Cancellation for Non-Payment logic to trigger the change from a
     # CNP notification to a CNP warning, as well as the drop date for undergraduates.
     attr_reader :classes_start
     attr_reader :classes_end
     # The end of instruction is one week after classes end. The week between is RRR week. The week after is for final exams.
     attr_reader :instruction_end
+    # Final exams start
+    attr_reader :final_exam_week_start
+    # An assumed time when the final exam batch has run to assign official final exams to schedule
+    attr_reader :final_exam_cs_data_available
     # The end of the drop/add period, used for Cancellation for Non-Payment as the drop date for Grad and Law students.
     attr_reader :end_drop_add
     # BearFacts and related systems set "CT"/"Current Term" to Fall (and "FT"/"Future Term" to
@@ -73,6 +78,8 @@ module Berkeley
         @classes_start = session['beginDate'].to_date.in_time_zone.to_datetime
         @instruction_end = session['endDate'].to_date.in_time_zone.to_datetime.end_of_day
         @classes_end = @instruction_end.advance(days: -7)
+        @final_exam_week_start = @instruction_end.advance(days: 3)
+        @final_exam_cs_data_available = @end.advance(days: -56)
         session['timePeriods'].each do |timePeriod|
           if timePeriod['period']['code'] == end_drop_add_code
             @end_drop_add = timePeriod['endDate']
@@ -106,6 +113,8 @@ module Berkeley
         @start = @classes_start.advance(days: -7)
         @end = @instruction_end.advance(days: 7)
         @classes_end = @instruction_end.advance(days: -7)
+        @final_exam_week_start = @instruction_end.advance(days: 3)
+        @final_exam_cs_data_available = @end.advance(days: -49)
         @is_summer = false
       end
       self
@@ -135,7 +144,7 @@ module Berkeley
     def to_h
       methods = [:campus_solutions_id, :name, :year, :code, :slug, :to_english,
         :start, :end, :classes_start, :classes_end, :instruction_end, :grades_entered,
-        :is_summer, :legacy?]
+        :is_summer, :legacy?, :final_exam_week_start]
       Hash[methods.collect {|m| [m, send(m)]}]
     end
 
