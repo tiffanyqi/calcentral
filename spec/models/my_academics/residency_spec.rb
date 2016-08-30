@@ -22,6 +22,44 @@ describe MyAcademics::Residency do
       expect(residency[:message][:label]).to eq 'Submitted & Completed & Non-Resident & Excs'
       expect(residency[:message][:description]).to be_present
     end
+    context 'Resident without statementOfLegalResidenceStatus' do
+      let(:message_nbr) {'2003'}
+      before do
+        allow(fake_demographics_proxy).to receive(:get).and_return(
+          {:feed=> {'student' => {'residency'=>
+            {'source'=>{'code'=>'Official'},
+              'fromTerm'=>{'id'=>'2158', 'name'=>'2015 Fall'},
+              'fromDate'=>'2015-08-19',
+              'official'=>{'code'=>'RES', 'description'=>'Resident'},
+              'financialAid'=>{'code'=>'RES', 'description'=>'Resident'},
+              'tuition'=>{'code'=>'RES', 'description'=>'Resident'},
+              'county'=>'',
+              'stateCode'=>'',
+              'countryCode'=>'USA',
+              'postalCode'=>'',
+              'comments'=>''}
+          }}}
+        )
+        allow(fake_residency_message_proxy).to receive(:get).and_return(
+          {:statusCode=>200, :feed=> {:root=>
+            {:getMessageCatDefn=>
+              {:messageSetNbr=>'28001',
+                :messageNbr=>'2003',
+                :messageText=>'no text',
+                :msgSeverity=>'M',
+                :descrlong=>nil}}
+          }}
+        )
+      end
+      it 'quietly confirms residency' do
+        residency = feed[:residency]
+        expect(residency[:official][:code]).to eq 'RES'
+        expect(residency[:fromTerm][:label]).to eq 'Fall 2015'
+        expect(residency[:message][:code]).to eq '2003'
+        expect(residency[:message][:label]).to eq 'no text'
+        expect(residency[:message][:description]).to be_blank
+      end
+    end
   end
 
 end
