@@ -19,7 +19,7 @@
             <span data-ng-if="studentResources.emergencyLoanFormView.url"> (<a data-ng-href="{{studentResources.emergencyLoanFormView.url}}" data-ng-attr-title="{{studentResources.emergencyLoanFormView.title}}">view submitted applications</a>)</span>
           </div>
         </li>
-        <li data-ng-if="studentResources.withdrawFromSemesterAdd.url">
+        <li data-ng-if="studentResources.withdrawFromSemesterAdd.url && !isLawStudent">
           <a data-ng-href="{{studentResources.withdrawFromSemesterAdd.url}}" data-ng-attr-title="{{studentResources.withdrawFromSemesterAdd.title}}">Withdraw from a Semester</a>
         </li>
         <li data-ng-if="studentResources.veteransBenefitsAdd.url">
