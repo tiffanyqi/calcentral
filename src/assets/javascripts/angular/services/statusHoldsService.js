@@ -17,7 +17,7 @@ angular.module('calcentral.services').service('statusHoldsService', function() {
     var termUnits = _.get(term, 'termUnits');
     var termUnitsTotal = _.find(termUnits, {
       type: {
-        code: 'Total'
+        description: 'Total'
       }
     });
     if (term.registered === true) {
