@@ -115,7 +115,7 @@ describe 'My Finances landing page', :testui => true do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances.fed_student_loans_link_element, 'StudentLoans.gov')).to be true
       end
       it 'includes a link to Student Advocates Office' do
-        expect(WebDriverUtils.verify_external_link(@driver, @my_finances.student_advocates_link_element, 'Student Advocate\'s Office – Problems with the University? We can Help!')).to be true
+        expect(@my_finances.student_advocates_link?).to be true
       end
       it 'includes a link to Berkeley International Office' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances.berk_intl_office_link_element, 'BIO Home | Berkeley International Office')).to be true
