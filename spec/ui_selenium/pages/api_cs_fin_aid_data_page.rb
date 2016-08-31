@@ -115,7 +115,7 @@ class ApiCSFinAidDataPage
   def budget_items(budget_data, items_title)
     items = []
     data_set = budget_data.find { |data| item_title(data) == items_title }
-    data_set['items'].each { |item| items << item if item_total(item) } unless data_set.nil?
+    data_set['items'].each { |item| items << item if item_title(item) } if data_set
     items
   end
 
@@ -133,7 +133,7 @@ class ApiCSFinAidDataPage
 
   def budget_item_totals(budget_data, items_title)
     totals = []
-    budget_items(budget_data, items_title).each { |item| totals << item_total(item) }
+    budget_items(budget_data, items_title).each { |item| totals << (item_total(item).nil? ? 0.to_f : item_total(item)) }
     totals
   end
 
@@ -145,7 +145,7 @@ class ApiCSFinAidDataPage
 
   def budget_sub_item_totals(item)
     amounts = []
-    sub_items(item).each { |sub_item| amounts << item_total(sub_item) }
+    sub_items(item).each { |sub_item| amounts << item_total(sub_item) if item_total(sub_item) }
     amounts
   end
 

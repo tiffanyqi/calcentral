@@ -247,7 +247,10 @@ class CanvasPage
     navigate_to "#{WebDriverUtils.canvas_base_url}/courses/#{course_id}/discussion_topics/new"
     WebDriverUtils.wait_for_element_and_type(discussion_title_element, discussion_name)
     check_threaded_discussion_cbx
-    WebDriverUtils.wait_for_element_and_click save_and_publish_button_element
+    # JS is needed to click the save and publish button due to https://github.com/seleniumhq/selenium/issues/1156
+    save_and_publish_button_element.when_visible WebDriverUtils.page_load_timeout
+    save_and_publish_button_element.focus
+    execute_script('arguments[0].click();', save_and_publish_button_element)
     published_button_element.when_visible WebDriverUtils.page_load_timeout
     logger.info "Discussion URL is #{current_url}"
     current_url

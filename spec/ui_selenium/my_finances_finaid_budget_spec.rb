@@ -1,6 +1,6 @@
 describe 'My Finances Financial Aid Estimated Cost of Attendance card', :testui => true do
 
-  if ENV["UI_TEST"] && Settings.ui_selenium.layer == 'local'
+  if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 
@@ -44,172 +44,176 @@ describe 'My Finances Financial Aid Estimated Cost of Attendance card', :testui 
                   year_id = @api_aid_years.fin_aid_year_id year
 
                   @api_fin_aid_data.get_json(@driver, year_id)
-                  @fin_aid_page.load_fin_aid_budget year_id
 
-                  # ANNUAL VIEW
+                  # Don't bother executing tests if the package is not yet visible
+                  unless @api_aid_years.t_and_c_approval(year).nil? || !@api_aid_years.t_and_c_approval(year)
+                    @fin_aid_page.load_fin_aid_budget year_id
 
-                  annual_data = @api_fin_aid_data.budget_annual_data
-                  std_budget_items = @api_fin_aid_data.budget_items(annual_data, 'Standard Budget Items')
-                  addl_budget_items = @api_fin_aid_data.budget_items(annual_data, 'Additional Budget Items')
+                    # ANNUAL VIEW
 
-                  # Standard Budget Items
+                    annual_data = @api_fin_aid_data.budget_annual_data
+                    std_budget_items = @api_fin_aid_data.budget_items(annual_data, 'Standard Budget Items')
+                    addl_budget_items = @api_fin_aid_data.budget_items(annual_data, 'Additional Budget Items')
 
-                  if std_budget_items.any?
-                    testable_users << uid
+                    # Standard Budget Items
 
-                    std_budget_table = @fin_aid_page.standard_budget_table_element
+                    if std_budget_items.any?
+                      testable_users << uid
 
-                    ui_std_items = @fin_aid_page.budget_items std_budget_table
-                    ui_std_amts = @fin_aid_page.budget_item_annual_totals std_budget_table
+                      std_budget_table = @fin_aid_page.standard_budget_table_element
 
-                    api_std_items = @api_fin_aid_data.budget_item_titles(annual_data, 'Standard Budget Items')
-                    api_std_amts = @api_fin_aid_data.budget_item_totals(annual_data, 'Standard Budget Items')
+                      ui_std_items = @fin_aid_page.budget_items std_budget_table
+                      ui_std_amts = @fin_aid_page.budget_item_annual_totals std_budget_table
 
-                    it ("shows the standard budget items for UID #{uid}") { expect(ui_std_items).to eql(api_std_items) }
-                    it ("shows the standard budget item amounts for UID #{uid}") { expect(ui_std_amts).to eql(api_std_amts) }
+                      api_std_items = @api_fin_aid_data.budget_item_titles(annual_data, 'Standard Budget Items')
+                      api_std_amts = @api_fin_aid_data.budget_item_totals(annual_data, 'Standard Budget Items')
 
-                    # Standard Budget Sub-items
+                      it ("shows the standard budget items for UID #{uid}") { expect(ui_std_items).to eql(api_std_items) }
+                      it ("shows the standard budget item amounts for UID #{uid}") { expect(ui_std_amts).to eql(api_std_amts) }
 
-                    std_budget_item_toggles = @fin_aid_page.standard_budget_row_toggle_elements
-                    std_budget_items.each do |item|
+                      # Standard Budget Sub-items
 
-                      @fin_aid_page.expand_budget_item(std_budget_item_toggles, std_budget_items.index(item))
+                      std_budget_item_toggles = @fin_aid_page.standard_budget_row_toggle_elements
+                      std_budget_items.each do |item|
 
-                      ui_std_subitems = @fin_aid_page.budget_subitems
-                      ui_std_subitem_amts = @fin_aid_page.budget_subitem_annual_amounts
+                        @fin_aid_page.expand_budget_item(std_budget_item_toggles, std_budget_items.index(item))
 
-                      api_std_subitems = @api_fin_aid_data.budget_sub_item_titles item
-                      api_std_subitem_amts = @api_fin_aid_data.budget_sub_item_totals item
+                        ui_std_subitems = @fin_aid_page.budget_subitems
+                        ui_std_subitem_amts = @fin_aid_page.budget_subitem_annual_amounts
 
-                      it ("shows the standard budget sub-items for UID #{uid}") { expect(ui_std_subitems).to eql(api_std_subitems) }
-                      it ("shows the standard budget sub-item amounts for UID #{uid}") { expect(ui_std_subitem_amts).to eql(api_std_subitem_amts) }
+                        api_std_subitems = @api_fin_aid_data.budget_sub_item_titles item
+                        api_std_subitem_amts = @api_fin_aid_data.budget_sub_item_totals item
 
-                    end
-                  end
+                        it ("shows the standard budget sub-items for UID #{uid}") { expect(ui_std_subitems).to eql(api_std_subitems) }
+                        it ("shows the standard budget sub-item amounts for UID #{uid}") { expect(ui_std_subitem_amts).to eql(api_std_subitem_amts) }
 
-                  # Additional Budget Items
-
-                  if addl_budget_items.any?
-
-                    addl_budget_table = @fin_aid_page.additional_budget_table_element
-
-                    ui_addl_items = @fin_aid_page.budget_items addl_budget_table
-                    ui_addl_amts = @fin_aid_page.budget_item_annual_totals addl_budget_table
-
-                    api_addl_items = @api_fin_aid_data.budget_item_titles(annual_data, 'Additional Budget Items')
-                    api_addl_amts = @api_fin_aid_data.budget_item_totals(annual_data, 'Additional Budget Items')
-
-                    it ("shows the additional budget items for UID #{uid}") { expect(ui_addl_items).to eql(api_addl_items) }
-                    it ("shows the additional budget item amounts for UID #{uid}") { expect(ui_addl_amts).to eql(api_addl_amts) }
-
-                    # Additional Budget Sub-items
-
-                    addl_budget_item_toggles = @fin_aid_page.additional_budget_row_toggle_elements
-                    addl_budget_items.each do |item|
-
-                      @fin_aid_page.expand_budget_item(addl_budget_item_toggles, addl_budget_items.index(item))
-
-                      ui_addl_subitems = @fin_aid_page.budget_subitems
-                      ui_addl_subitem_amts = @fin_aid_page.budget_subitem_annual_amounts
-
-                      api_addl_subitems = @api_fin_aid_data.budget_sub_item_titles item
-                      api_addl_subitem_amts = @api_fin_aid_data.budget_sub_item_totals item
-
-                      it ("shows the additional budget sub-items for UID #{uid}") { expect(ui_addl_subitems).to eql(api_addl_subitems) }
-                      it ("shows the additional budget sub-item amounts for UID #{uid}") { expect(ui_addl_subitem_amts).to eql(api_addl_subitem_amts) }
-
-                    end
-                  end
-
-                  # TERM VIEW
-
-                  term_data = @api_fin_aid_data.budget_term_data
-                  std_budget_term_items = @api_fin_aid_data.budget_items(term_data, 'Standard Budget Items')
-                  addl_budget_term_items = @api_fin_aid_data.budget_items(term_data, 'Additional Budget Items')
-
-                  @fin_aid_page.toggle_budget_view
-
-                  # Standard Budget Items
-
-                  if std_budget_term_items.any?
-
-                    std_budget_table = @fin_aid_page.standard_budget_table_element
-
-                    ui_std_term_items = @fin_aid_page.budget_items std_budget_table
-                    ui_std_term_amts = @fin_aid_page.budget_item_term_amounts std_budget_table
-                    ui_std_term_ttls = @fin_aid_page.budget_item_term_totals std_budget_table
-
-                    api_std_term_items = @api_fin_aid_data.budget_item_titles(term_data, 'Standard Budget Items')
-                    api_std_term_amts = @api_fin_aid_data.budget_item_amounts(term_data, 'Standard Budget Items')
-                    api_std_term_ttls = @api_fin_aid_data.budget_item_totals(term_data, 'Standard Budget Items')
-
-                    it ("shows the standard budget items by term for UID #{uid}") { expect(ui_std_term_items).to eql(api_std_term_items) }
-                    it ("shows the standard budget item amounts by term for UID #{uid}") { expect(ui_std_term_amts).to eql(api_std_term_amts) }
-                    it ("shows the standard budget item totals by term for UID #{uid}") { expect(ui_std_term_ttls).to eql(api_std_term_ttls) }
-
-                    # Standard Budget Sub-items
-
-                    std_budget_item_toggles = @fin_aid_page.standard_budget_row_toggle_elements
-                    std_budget_term_items.each do |item|
-
-                      @fin_aid_page.expand_budget_item(std_budget_item_toggles, std_budget_term_items.index(item))
-
-                      ui_std_term_subitems = @fin_aid_page.budget_subitems
-                      ui_std_term_subitem_amts = @fin_aid_page.budget_subitem_term_amounts
-                      ui_std_term_subitem_ttls = @fin_aid_page.budget_subitem_term_totals
-
-                      api_std_term_subitems = @api_fin_aid_data.budget_sub_item_titles item
-                      api_std_term_subitem_amts = @api_fin_aid_data.budget_sub_item_amounts item
-                      api_std_term_subitem_ttls = @api_fin_aid_data.budget_sub_item_totals item
-
-                      it ("shows the standard budget sub-items by term for UID #{uid}") { expect(ui_std_term_subitems).to eql(api_std_term_subitems) }
-                      it ("shows the standard budget sub-item amounts by term for UID #{uid}") { expect(ui_std_term_subitem_amts).to eql(api_std_term_subitem_amts) }
-                      it ("shows the standard budget sub-item totals by term for UID #{uid}") { expect(ui_std_term_subitem_ttls).to eql(api_std_term_subitem_ttls) }
-
-                    end
-                  end
-
-                  # Additional Budget Items
-
-                  if addl_budget_term_items.any?
-
-                    addl_budget_table = @fin_aid_page.additional_budget_table_element
-
-                    ui_addl_term_items = @fin_aid_page.budget_items addl_budget_table
-                    ui_addl_term_amts = @fin_aid_page.budget_item_term_amounts addl_budget_table
-                    ui_addl_term_ttls = @fin_aid_page.budget_item_term_totals addl_budget_table
-
-                    api_addl_term_items = @api_fin_aid_data.budget_item_titles(term_data, 'Additional Budget Items')
-                    api_addl_term_amts = @api_fin_aid_data.budget_item_amounts(term_data, 'Additional Budget Items')
-                    api_addl_term_ttls = @api_fin_aid_data.budget_item_totals(term_data, 'Additional Budget Items')
-
-                    it ("shows the additional budget items by term for UID #{uid}") { expect(ui_addl_term_items).to eql(api_addl_term_items) }
-                    it ("shows the additional budget item amounts by term for UID #{uid}") { expect(ui_addl_term_amts).to eql(api_addl_term_amts) }
-                    it ("shows the additional budget item totals by term for UID #{uid}") { expect(ui_addl_term_ttls).to eql(api_addl_term_ttls) }
-
-                    # Additional Budget Sub-items
-
-                    addl_budget_item_toggles = @fin_aid_page.additional_budget_row_toggle_elements
-                    addl_budget_term_items.each do |item|
-
-                      @fin_aid_page.expand_budget_item(addl_budget_item_toggles, addl_budget_term_items.index(item))
-
-                      ui_addl_term_subitems = @fin_aid_page.budget_subitems
-                      ui_addl_term_subitem_amts = @fin_aid_page.budget_subitem_term_amounts
-                      ui_addl_term_subitem_ttls = @fin_aid_page.budget_subitem_term_totals
-
-                      api_addl_term_subitems = @api_fin_aid_data.budget_sub_item_titles item
-                      api_addl_term_subitem_amts = @api_fin_aid_data.budget_sub_item_amounts item
-                      api_addl_term_subitem_ttls = @api_fin_aid_data.budget_sub_item_totals item
-
-                      it ("shows the additional budget sub-items by term for UID #{uid}") { expect(ui_addl_term_subitems).to eql(api_addl_term_subitems) }
-                      it ("shows the additional budget sub-item amounts by term for UID #{uid}") { expect(ui_addl_term_subitem_amts).to eql(api_addl_term_subitem_amts) }
-                      it ("shows the additional budget sub-item totals by term for UID #{uid}") { expect(ui_addl_term_subitem_ttls).to eql(api_addl_term_subitem_ttls) }
-
+                      end
                     end
 
-                  else
-                    # TODO: when test data available, verify 'you have no budget' scenario
+                    # Additional Budget Items
+
+                    if addl_budget_items.any?
+
+                      addl_budget_table = @fin_aid_page.additional_budget_table_element
+
+                      ui_addl_items = @fin_aid_page.budget_items addl_budget_table
+                      ui_addl_amts = @fin_aid_page.budget_item_annual_totals addl_budget_table
+
+                      api_addl_items = @api_fin_aid_data.budget_item_titles(annual_data, 'Additional Budget Items')
+                      api_addl_amts = @api_fin_aid_data.budget_item_totals(annual_data, 'Additional Budget Items')
+
+                      it ("shows the additional budget items for UID #{uid}") { expect(ui_addl_items).to eql(api_addl_items) }
+                      it ("shows the additional budget item amounts for UID #{uid}") { expect(ui_addl_amts).to eql(api_addl_amts) }
+
+                      # Additional Budget Sub-items
+
+                      addl_budget_item_toggles = @fin_aid_page.additional_budget_row_toggle_elements
+                      addl_budget_items.each do |item|
+
+                        @fin_aid_page.expand_budget_item(addl_budget_item_toggles, addl_budget_items.index(item))
+
+                        ui_addl_subitems = @fin_aid_page.budget_subitems
+                        ui_addl_subitem_amts = @fin_aid_page.budget_subitem_annual_amounts
+
+                        api_addl_subitems = @api_fin_aid_data.budget_sub_item_titles item
+                        api_addl_subitem_amts = @api_fin_aid_data.budget_sub_item_totals item
+
+                        it ("shows the additional budget sub-items for UID #{uid}") { expect(ui_addl_subitems).to eql(api_addl_subitems) }
+                        it ("shows the additional budget sub-item amounts for UID #{uid}") { expect(ui_addl_subitem_amts).to eql(api_addl_subitem_amts) }
+
+                      end
+                    end
+
+                    # TERM VIEW
+
+                    term_data = @api_fin_aid_data.budget_term_data
+                    std_budget_term_items = @api_fin_aid_data.budget_items(term_data, 'Standard Budget Items')
+                    addl_budget_term_items = @api_fin_aid_data.budget_items(term_data, 'Additional Budget Items')
+
+                    @fin_aid_page.toggle_budget_view
+
+                    # Standard Budget Items
+
+                    if std_budget_term_items.any?
+
+                      std_budget_table = @fin_aid_page.standard_budget_table_element
+
+                      ui_std_term_items = @fin_aid_page.budget_items std_budget_table
+                      ui_std_term_amts = @fin_aid_page.budget_item_term_amounts std_budget_table
+                      ui_std_term_ttls = @fin_aid_page.budget_item_term_totals std_budget_table
+
+                      api_std_term_items = @api_fin_aid_data.budget_item_titles(term_data, 'Standard Budget Items')
+                      api_std_term_amts = @api_fin_aid_data.budget_item_amounts(term_data, 'Standard Budget Items')
+                      api_std_term_ttls = @api_fin_aid_data.budget_item_totals(term_data, 'Standard Budget Items')
+
+                      it ("shows the standard budget items by term for UID #{uid}") { expect(ui_std_term_items).to eql(api_std_term_items) }
+                      it ("shows the standard budget item amounts by term for UID #{uid}") { expect(ui_std_term_amts).to eql(api_std_term_amts) }
+                      it ("shows the standard budget item totals by term for UID #{uid}") { expect(ui_std_term_ttls).to eql(api_std_term_ttls) }
+
+                      # Standard Budget Sub-items
+
+                      std_budget_item_toggles = @fin_aid_page.standard_budget_row_toggle_elements
+                      std_budget_term_items.each do |item|
+
+                        @fin_aid_page.expand_budget_item(std_budget_item_toggles, std_budget_term_items.index(item))
+
+                        ui_std_term_subitems = @fin_aid_page.budget_subitems
+                        ui_std_term_subitem_amts = @fin_aid_page.budget_subitem_term_amounts
+                        ui_std_term_subitem_ttls = @fin_aid_page.budget_subitem_term_totals
+
+                        api_std_term_subitems = @api_fin_aid_data.budget_sub_item_titles item
+                        api_std_term_subitem_amts = @api_fin_aid_data.budget_sub_item_amounts item
+                        api_std_term_subitem_ttls = @api_fin_aid_data.budget_sub_item_totals item
+
+                        it ("shows the standard budget sub-items by term for UID #{uid}") { expect(ui_std_term_subitems).to eql(api_std_term_subitems) }
+                        it ("shows the standard budget sub-item amounts by term for UID #{uid}") { expect(ui_std_term_subitem_amts).to eql(api_std_term_subitem_amts) }
+                        it ("shows the standard budget sub-item totals by term for UID #{uid}") { expect(ui_std_term_subitem_ttls).to eql(api_std_term_subitem_ttls) }
+
+                      end
+                    end
+
+                    # Additional Budget Items
+
+                    if addl_budget_term_items.any?
+
+                      addl_budget_table = @fin_aid_page.additional_budget_table_element
+
+                      ui_addl_term_items = @fin_aid_page.budget_items addl_budget_table
+                      ui_addl_term_amts = @fin_aid_page.budget_item_term_amounts addl_budget_table
+                      ui_addl_term_ttls = @fin_aid_page.budget_item_term_totals addl_budget_table
+
+                      api_addl_term_items = @api_fin_aid_data.budget_item_titles(term_data, 'Additional Budget Items')
+                      api_addl_term_amts = @api_fin_aid_data.budget_item_amounts(term_data, 'Additional Budget Items')
+                      api_addl_term_ttls = @api_fin_aid_data.budget_item_totals(term_data, 'Additional Budget Items')
+
+                      it ("shows the additional budget items by term for UID #{uid}") { expect(ui_addl_term_items).to eql(api_addl_term_items) }
+                      it ("shows the additional budget item amounts by term for UID #{uid}") { expect(ui_addl_term_amts).to eql(api_addl_term_amts) }
+                      it ("shows the additional budget item totals by term for UID #{uid}") { expect(ui_addl_term_ttls).to eql(api_addl_term_ttls) }
+
+                      # Additional Budget Sub-items
+
+                      addl_budget_item_toggles = @fin_aid_page.additional_budget_row_toggle_elements
+                      addl_budget_term_items.each do |item|
+
+                        @fin_aid_page.expand_budget_item(addl_budget_item_toggles, addl_budget_term_items.index(item))
+
+                        ui_addl_term_subitems = @fin_aid_page.budget_subitems
+                        ui_addl_term_subitem_amts = @fin_aid_page.budget_subitem_term_amounts
+                        ui_addl_term_subitem_ttls = @fin_aid_page.budget_subitem_term_totals
+
+                        api_addl_term_subitems = @api_fin_aid_data.budget_sub_item_titles item
+                        api_addl_term_subitem_amts = @api_fin_aid_data.budget_sub_item_amounts item
+                        api_addl_term_subitem_ttls = @api_fin_aid_data.budget_sub_item_totals item
+
+                        it ("shows the additional budget sub-items by term for UID #{uid}") { expect(ui_addl_term_subitems).to eql(api_addl_term_subitems) }
+                        it ("shows the additional budget sub-item amounts by term for UID #{uid}") { expect(ui_addl_term_subitem_amts).to eql(api_addl_term_subitem_amts) }
+                        it ("shows the additional budget sub-item totals by term for UID #{uid}") { expect(ui_addl_term_subitem_ttls).to eql(api_addl_term_subitem_ttls) }
+
+                      end
+
+                    else
+                      # TODO: when test data available, verify 'you have no budget' scenario
+                    end
                   end
                 end
               end

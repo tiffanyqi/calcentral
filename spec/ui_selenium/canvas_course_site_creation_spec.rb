@@ -35,7 +35,7 @@ describe 'bCourses course site creation', :testui => true do
           logger.info "Creating a course site for #{course_code} in #{course_term} using the '#{course['workflow']}' workflow"
 
           @site_creation_page.choose_course_site(@driver, course, instructor, @canvas_page, @create_course_site_page)
-          @create_course_site_page.search_for_course(course, instructor)
+          @create_course_site_page.search_for_course(@driver, course, instructor)
 
           unless links_tested
 
@@ -52,7 +52,7 @@ describe 'bCourses course site creation', :testui => true do
             it ('shows a link to the bCourses service page') { expect(bcourses_link).to be true }
 
             @canvas_page.switch_to_frame @driver
-            @create_course_site_page.need_help
+            @create_course_site_page.click_need_help @driver
 
             help_text = @create_course_site_page.help_element.text
             it ('shows suggestions for creating sites for courses with multiple sections') { expect(help_text).to include('If you have a course with multiple sections, you will need to decide') }

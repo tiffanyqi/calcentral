@@ -131,14 +131,17 @@ module CalCentralPages
       end
 
       def budget_item_term_amounts(table_element)
-        amounts = []
-        budget_rows(table_element).each do |row|
-          row_amounts = []
-          row.each { |cell| row_amounts << WebDriverUtils.currency_to_f(cell.text) if cell.text.include?('$') }
+        budget_rows(table_element).map do |row|
+          row_amounts = row.map do |cell|
+            # Treat currency amounts as numbers, but null values should be 'N/A'
+            cell.text.include?('$') ? WebDriverUtils.currency_to_f(cell.text) : cell.text
+          end
+          # Remove the item label in the first column
+          row_amounts = row_amounts.drop(1)
+          # Remove the total value in the last column
           row_amounts.pop
-          amounts << row_amounts
+          row_amounts
         end
-        amounts
       end
 
       def budget_item_term_totals(table_element)

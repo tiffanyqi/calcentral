@@ -109,7 +109,7 @@ describe 'My Dashboard', :testui => true, :order => :defined do
             expect(@my_classes_card.other_course_site_descrips).to include(site_descrip)
           end
           it 'show a link to the course site in My Classes' do
-            expect(WebDriverUtils.verify_external_link(@driver, @my_classes_card.other_site_link(site_descrip), site_descrip)).to be true
+            expect(@my_classes_card.other_site_link(site_descrip)).to be_truthy
           end
 
           # Notifications - announcement, discussion
@@ -198,7 +198,7 @@ describe 'My Dashboard', :testui => true, :order => :defined do
             expect(@my_classes_card.other_course_site_descrips).to include(site_descrip)
           end
           it 'show a link to the course site in My Classes' do
-            expect(WebDriverUtils.verify_external_link(@driver, @my_classes_card.other_site_link(site_descrip), site_descrip)).to be true
+            expect(@my_classes_card.other_site_link(site_descrip)).to be_truthy
           end
 
           # Notifications - assignments, announcement, discussion

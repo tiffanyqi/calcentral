@@ -26,32 +26,23 @@ describe 'My Dashboard bConnected live updates', :testui => true do
       @google = GooglePage.new(@driver)
       @google.connect_calcentral_to_google(UserUtils.qa_gmail_username, UserUtils.qa_gmail_password)
 
-      # On To Do card, get initial count of unscheduled tasks
-      @tasks_card = CalCentralPages::MyDashboardPage::MyDashboardTasksCard.new(@driver)
-      WebDriverUtils.wait_for_page_and_click @tasks_card.unsched_tasks_tab_element
-      @tasks_card.unsched_task_count_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
-      @initial_task_count = @tasks_card.unsched_task_count.to_i
-      logger.info("Unscheduled task count is #{@initial_task_count.to_s}")
-
       # On email badge, get initial count of unread emails
       @dashboard = CalCentralPages::MyDashboardPage.new(@driver)
       @dashboard.email_count_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
       @initial_mail_count = @dashboard.email_count.to_i
       logger.info("Unread email count is #{@initial_mail_count.to_s}")
 
-      # Send email to self and create new unscheduled task.
+      # Send email to self
       @email_subject = "Test email #{id}"
       @email_summary = "This is the subject of test email #{id}"
-      @task_title = "Test task #{id}"
       @google.send_email(UserUtils.qa_gmail_username, @email_subject, @email_summary)
-      @google.create_unsched_task(@driver, @task_title)
 
       # On the Dashboard, wait for the live update to occur
       @dashboard.load_page
       @dashboard.click_live_update_button(WebDriverUtils.mail_live_update_timeout)
     end
 
-    context 'for Google mail and tasks' do
+    context 'for Google mail' do
 
       # If initial unread email count is zero, then it probably didn't load correctly.  In such case, ignore this example.
       it 'shows an updated count of email messages' do
@@ -70,17 +61,6 @@ describe 'My Dashboard bConnected live updates', :testui => true do
         expect(@dashboard.email_one_summary).to eql(@email_summary)
       end
 
-      it 'shows an updated count of tasks' do
-        @tasks_card.wait_for_unsched_tasks
-        @tasks_card.unsched_task_count_element.when_visible(timeout=WebDriverUtils.page_load_timeout)
-        expect(@tasks_card.unsched_task_count).to eql((@initial_task_count + 1).to_s)
-      end
-
-      it 'shows the content of a new task' do
-        @tasks_card.wait_for_unsched_tasks
-        expect(@tasks_card.unsched_task_title_elements[0].text).to eql(@task_title)
-        expect(@tasks_card.unsched_task_date_elements[0].text).to eql(today.strftime("%m/%d"))
-      end
     end
   end
 end

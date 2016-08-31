@@ -138,7 +138,7 @@ describe 'My Academics teaching semesters UI', :testui => true do
 
                         semester_page.click_class_link_by_text course_code
                         class_page = CalCentralPages::MyAcademicsClassPage.new(driver)
-                        class_page.class_info_heading_element.when_visible(WebDriverUtils.page_load_timeout)
+                        class_page.role_element.when_visible(WebDriverUtils.page_load_timeout)
 
                         api_course_title = academics_api_page.course_title(course)
                         api_sections = academics_api_page.sections_by_listing(course)
@@ -149,7 +149,7 @@ describe 'My Academics teaching semesters UI', :testui => true do
 
                         class_page_course_title = class_page.course_title
                         class_page_cross_listings = class_page.all_cross_listings
-                        class_page_section_labels = class_page.all_section_schedule_labels
+                        class_page_section_labels = class_page.all_recurring_schedule_labels
                         class_page_section_schedules = class_page.all_teaching_section_schedules
                         class_page_section_instructors = class_page.all_section_instructors(driver, api_section_instructor_labels)
 
@@ -182,8 +182,9 @@ describe 'My Academics teaching semesters UI', :testui => true do
                         api_sections.each do |section|
                           test_output_row = [uid, semester_name, api_course_title, course_code, listing_codes * "\r",
                                              academics_api_page.section_label(section), academics_api_page.primary_section?(section),
-                                             academics_api_page.section_buildings(section) * "\r", academics_api_page.section_rooms(section) * "\r",
-                                             academics_api_page.section_times(section) * "\r", academics_api_page.section_instructor_names(section) * "\r"]
+                                             academics_api_page.concatenated_schedules(academics_api_page.section_schedules_recurring section) * ' ',
+                                             academics_api_page.concatenated_schedules(academics_api_page.section_schedules_one_time section) * ' ',
+                                             academics_api_page.section_instructor_names(section) * "\r"]
                           UserUtils.add_csv_row(test_output, test_output_row)
                         end
 

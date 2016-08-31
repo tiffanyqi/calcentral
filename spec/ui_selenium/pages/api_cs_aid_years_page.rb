@@ -18,11 +18,11 @@ class ApiCSAidYearsPage
   end
 
   def fin_aid_summary
-    feed['finaidSummary']
+    feed && feed['finaidSummary']
   end
 
   def fin_aid_years
-    fin_aid_summary['finaidYears']
+    fin_aid_summary && fin_aid_summary['finaidYears']
   end
 
   def fin_aid_year_id(year)

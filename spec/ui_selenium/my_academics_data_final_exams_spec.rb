@@ -1,6 +1,6 @@
 describe 'My Academics Final Exams card', :testui => true do
 
-  if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
+  if ENV["UI_TEST"] && Settings.ui_selenium.layer == 'local'
 
     include ClassLogger
 
