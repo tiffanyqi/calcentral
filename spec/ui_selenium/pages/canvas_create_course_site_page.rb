@@ -11,7 +11,7 @@ module CalCentralPages
     button(:maintenance_button, :class => 'bc-template-canvas-maintenance-notice-button')
     div(:maintenance_notice, :class => 'bc-template-canvas-maintenance-notice-details')
     link(:bcourses_service, :xpath => '//a[contains(text(),"bCourses service page")]')
-    button(:need_help, :xpath => '//button[contains(text(),"Need help deciding which official sections to select?")]')
+    button(:need_help, :xpath => '//button[contains(.,"Need help deciding which official sections to select")]')
     div(:help, :id => 'section-selection-help')
 
     button(:switch_mode, :class => 'bc-page-create-course-site-admin-mode-switch')
@@ -38,11 +38,12 @@ module CalCentralPages
       page_heading_element.when_visible WebDriverUtils.page_load_timeout
     end
 
-    def choose_term(course)
-      WebDriverUtils.wait_for_page_and_click button_element(:xpath => "//label[text()='#{course['term']}']/preceding-sibling::input")
+    def choose_term(driver, course)
+      button_element(:xpath => "//label[contains(.,'#{course['term']}')]/preceding-sibling::input").when_visible WebDriverUtils.page_event_timeout
+      driver.find_element(xpath: "//label[contains(.,'#{course['term']}')]/preceding-sibling::input").click
     end
 
-    def search_for_course(course, instructor)
+    def search_for_course(driver, course, instructor)
       logger.debug "Searching for #{course['courseCode']} in #{course['term']}"
       create_site_workflow = course['workflow']
       if create_site_workflow == 'uid'
@@ -51,18 +52,22 @@ module CalCentralPages
         switch_mode unless switch_to_ccn?
         WebDriverUtils.wait_for_element_and_type(instructor_uid_element, uid)
         WebDriverUtils.wait_for_element_and_click as_instructor_button_element
-        choose_term course
+        choose_term(driver, course)
       elsif create_site_workflow == 'ccn'
         logger.debug 'Searching by CCN list'
         switch_mode unless switch_to_instructor?
-        choose_term course
+        choose_term(driver, course)
         ccn_list = course['sections'].map { |section| section['ccn'] }
         WebDriverUtils.wait_for_element_and_type(ccn_list_element, ccn_list.join(', '))
-        WebDriverUtils.wait_for_element_and_click review_ccns_button_element
+        click_element_js review_ccns_button_element
       else
         logger.debug 'Searching as the instructor'
-        choose_term course
+        choose_term(driver, course)
       end
+    end
+
+    def click_need_help(driver)
+      driver.find_element(xpath: '//button[contains(.,"Need help deciding which official sections to select")]').click
     end
 
     def course_toggle(course)

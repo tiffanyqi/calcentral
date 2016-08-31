@@ -1,6 +1,6 @@
 describe 'My Finances details page', :testui => true do
 
-  if ENV["UI_TEST"]
+  if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 

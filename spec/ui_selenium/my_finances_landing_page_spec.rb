@@ -33,7 +33,7 @@ describe 'My Finances landing page', :testui => true do
       end
       it 'includes a link to make a payment for non-zero CARS balances' do
         unless @my_finances.account_balance == '  $ 0.00'
-          expect(WebDriverUtils.verify_external_link(@driver, @my_finances.make_payment_link_element, 'CARS Payment Options')).to be true
+          expect(WebDriverUtils.verify_external_link(@driver, @my_finances.make_payment_link_element, 'Payment Options')).to be true
         end
       end
       it 'includes a link to make a payment for non-zero CS balances' do
@@ -58,7 +58,7 @@ describe 'My Finances landing page', :testui => true do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances.eft_manage_acct_link_element, '')).to be true
       end
       it 'includes a link to Payment Options' do
-        expect(WebDriverUtils.verify_external_link(@driver, @my_finances.payment_options_link_element, 'CARS Payment Options')).to be true
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances.payment_options_link_element, 'Payment Options')).to be true
       end
       it 'includes a link to Tuition and Fees' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances.tuition_and_fees_link_element, 'Fee Schedule | Office of the Registrar')).to be true
@@ -115,7 +115,7 @@ describe 'My Finances landing page', :testui => true do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances.fed_student_loans_link_element, 'StudentLoans.gov')).to be true
       end
       it 'includes a link to Student Advocates Office' do
-        expect(WebDriverUtils.verify_external_link(@driver, @my_finances.student_advocates_link_element, 'Student Advocate\'s Office | Problems with the University? We can Help!')).to be true
+        expect(WebDriverUtils.verify_external_link(@driver, @my_finances.student_advocates_link_element, 'Student Advocate\'s Office – Problems with the University? We can Help!')).to be true
       end
       it 'includes a link to Berkeley International Office' do
         expect(WebDriverUtils.verify_external_link(@driver, @my_finances.berk_intl_office_link_element, 'BIO Home | Berkeley International Office')).to be true

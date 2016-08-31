@@ -45,6 +45,11 @@ class ApiCSBillingPage
     feed && feed['activity']
   end
 
+  # Filter out activity items where line amount and balance are both zero
+  def activity_filtered
+    activity && activity.delete_if { |item| line_amount(item).zero? && balance(item).zero? }
+  end
+
   def line_amount(item)
     item['itemLineAmount']
   end
@@ -117,10 +122,6 @@ class ApiCSBillingPage
 
   def transactions_with_balance
     activity.select { |item| !balance(item).zero? }
-  end
-
-  def balance_transactions
-    transactions_unpaid & transactions_with_balance
   end
 
   def open_charges

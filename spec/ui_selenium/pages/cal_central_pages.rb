@@ -66,7 +66,7 @@ module CalCentralPages
   button(:logout_link, :xpath => '//button[contains(text(),"Log out")]')
 
   # Footer
-  div(:toggle_footer_link, :class => 'cc-footer-berkeley')
+  div(:toggle_footer_link, :xpath => '//div[@class="cc-footer-berkeley"]/div')
   text_field(:basic_auth_uid_input, :name => 'email')
   text_field(:basic_auth_password_input, :name => 'password')
   button(:basic_auth_login_button, :xpath => '//button[contains(text(),"Login")]')

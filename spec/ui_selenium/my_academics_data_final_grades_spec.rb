@@ -1,6 +1,6 @@
 describe 'My Academics transcripts', :testui => true do
 
-  if ENV["UI_TEST"] && Settings.ui_selenium.layer == 'local'
+  if ENV["UI_TEST"] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 
@@ -48,7 +48,15 @@ describe 'My Academics transcripts', :testui => true do
 
                   it ("show a GPA Calculator card on the #{semester_name} page for UID #{uid}") { expect(shows_gpa_calc_card).to be true }
 
-                  academics_api_page.gpa == '4.0' ? api_gpa = '4' : api_gpa = academics_api_page.gpa
+                  case academics_api_page.gpa
+                    when '0'
+                      api_gpa = 'N/A'
+                    when '4.0'
+                      api_gpa = '4'
+                    else
+                      api_gpa = academics_api_page.gpa
+                  end
+
                   ui_gpa = gpa_calculator.current_gpa
                   it ("show the current cumulative GPA for UID #{uid} on the GPA Calculator card for #{semester_name}") { expect(ui_gpa).to eql(api_gpa) }
 

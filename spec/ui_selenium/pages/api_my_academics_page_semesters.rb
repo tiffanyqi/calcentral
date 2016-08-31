@@ -288,7 +288,7 @@ class ApiMyAcademicsPageSemesters < ApiMyAcademicsPage
   # Section labels are omitted from class page section schedules if the section has no schedule
   def section_schedule_labels(sections)
     labels = []
-    sections.each { |section| labels << section_label(section) unless section_schedules(section).empty? }
+    sections.each { |section| labels << section_label(section) unless section_schedules_recurring(section).empty? }
     labels
   end
 

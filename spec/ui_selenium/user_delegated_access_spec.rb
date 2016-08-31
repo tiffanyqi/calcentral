@@ -1,6 +1,6 @@
 describe 'Delegated access', :testui => true do
 
-  if ENV['UI_TEST'] && Settings.ui_selenium.layer == 'local'
+  if ENV['UI_TEST'] && Settings.ui_selenium.layer != 'production'
 
     include ClassLogger
 
@@ -382,7 +382,12 @@ describe 'Delegated access', :testui => true do
 
                     # Financial Aid (CS)
                     @finances_page.finaid_content_element.when_visible timeout
-                    if @cs_fin_aid_years_api.fin_aid_years.any?
+                    if @cs_fin_aid_years_api.fin_aid_years.blank?
+
+                      shows_no_aid_msg = @finances_page.no_finaid_message?
+                      it ("shows delegate UID #{uid} a 'no FinAid' message for UID #{student_uid}") { expect(shows_no_aid_msg).to be true }
+
+                    else
 
                       api_aid_years = @cs_fin_aid_years_api.fin_aid_years
                       (api_aid_years.length == 1) ?
@@ -404,11 +409,6 @@ describe 'Delegated access', :testui => true do
 
                         end
                       end
-                    else
-
-                      shows_no_aid_msg = @finances_page.no_finaid_message?
-                      it ("shows delegate UID #{uid} a 'no FinAid' message for UID #{student_uid}") { expect(shows_no_aid_msg).to be true }
-
                     end
 
                     # Billing - Detail

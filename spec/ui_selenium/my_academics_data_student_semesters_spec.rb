@@ -29,8 +29,6 @@ describe 'My Academics student semesters UI', :testui => true do
             if status_api_page.has_student_history? && status_api_page.has_academics_tab?
               academics_api_page = ApiMyAcademicsPageSemesters.new(driver)
               academics_api_page.get_json(driver)
-              badges_api_page = ApiMyBadgesPage.new driver
-              badges_api_page.get_json driver
               all_semesters = academics_api_page.all_student_semesters
 
               my_academics = CalCentralPages::MyAcademicsSemestersCard.new(driver)

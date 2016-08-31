@@ -85,7 +85,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
                 acct_bal = 'Positive'
                 @my_finances_billing.transaction_table_element.when_visible
                 my_fin_balance_transactions = @my_finances_billing.visible_transactions_sum_str
-                it("shows the open charges for UID #{uid}") { expect(my_fin_balance_transactions).to eql(fin_api.transactions_sum(fin_api.open_charges)) }
+                it("shows the open charges for UID #{uid}") { expect(my_fin_balance_transactions).to eql(fin_api.transactions_sum(fin_api.transactions_with_balance)) }
 
               elsif fin_api.account_balance == 0
                 acct_bal = 'Zero'
@@ -143,18 +143,16 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
                 @my_finances_billing.show_all
 
                 transactions_count_in_ui = @my_finances_billing.visible_transaction_count
-                it("shows all the transactions for UID #{uid}") { expect(transactions_count_in_ui).to eql(fin_api.activity.length) }
+                it("shows all the transactions for UID #{uid}") { expect(transactions_count_in_ui).to eql(fin_api.activity_filtered.length) }
 
                 @my_finances_billing.search('Balance', nil, '', '', '')
                 @my_finances_billing.show_all
                 ui_open_trans = @my_finances_billing.visible_transaction_count
 
-                it "shows 'Unpaid' and non-zero balance transactions on the Balance filter for UID #{uid}" do
-                  expect(ui_open_trans).to eql(fin_api.balance_transactions.length)
-                end
+                it("shows 'Unpaid' and non-zero balance transactions on the Balance filter for UID #{uid}") { expect(ui_open_trans).to eql(fin_api.transactions_with_balance.length) }
 
                 # Charges
-                charges = fin_api.transactions_by_type(fin_api.activity, 'Charge')
+                charges = fin_api.transactions_by_type(fin_api.activity_filtered, 'Charge')
                 charge_count = charges.length
                 logger.info "There are #{charge_count} charges"
                 if charges.any?
@@ -252,7 +250,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
                 end
 
                 # Payments
-                payments = fin_api.transactions_by_type(fin_api.activity, 'Payment')
+                payments = fin_api.transactions_by_type(fin_api.activity_filtered, 'Payment')
                 payment_count = payments.length
                 logger.info "There are #{payment_count} payments"
                 if payments.any?
@@ -301,7 +299,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
               end
 
               # Financial Aid
-              awards = fin_api.transactions_by_type(fin_api.activity, 'Financial Aid')
+              awards = fin_api.transactions_by_type(fin_api.activity_filtered, 'Financial Aid')
               awards_count = awards.length
               logger.info "There are #{awards_count} awards"
               if awards.any?

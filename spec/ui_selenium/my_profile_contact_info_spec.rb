@@ -51,7 +51,6 @@ describe 'My Profile Contact Info', :testui => true, :order => :defined do
 
         it 'requires that a phone number be entered' do
           @contact_info_card.click_add_phone
-          @contact_info_card.save_phone_button_element.when_visible WebDriverUtils.page_event_timeout
           expect(@contact_info_card.save_phone_button_element.attribute('disabled')).to eql('true')
           @contact_info_card.click_cancel_phone
         end
@@ -68,7 +67,11 @@ describe 'My Profile Contact Info', :testui => true, :order => :defined do
           @contact_info_card.verify_phone @mobile_phone
         end
         it 'allows a maximum number of characters to be entered in each field' do
-          @contact_info_card.add_new_phone @local_phone
+          @contact_info_card.click_add_phone
+          @contact_info_card.enter_phone(@local_phone['type'], @local_phone['phoneNumberInput'], @local_phone['phoneExt'], false)
+          expect(@contact_info_card.save_phone_button_element.attribute('disabled')).to eql('true')
+          @contact_info_card.enter_phone(@local_phone['type'], @local_phone['phoneNumberInput'].slice(0..23), @local_phone['phoneExt'].slice(0..5), false)
+          @contact_info_card.click_save_phone
           @contact_info_card.verify_phone @local_phone
         end
       end
@@ -120,7 +123,11 @@ describe 'My Profile Contact Info', :testui => true, :order => :defined do
           expect(@contact_info_card.phone_validation_error).to eql('Invalid Phone Extension Number: ?')
         end
         it 'allows a maximum number of characters to be entered in each field' do
-          @contact_info_card.edit_phone(@local_index, @local_phone)
+          @contact_info_card.click_edit_phone @local_index
+          @contact_info_card.enter_phone(@local_phone['type'], @local_phone['phoneNumberInput'], @local_phone['phoneExt'], false)
+          expect(@contact_info_card.save_phone_button_element.attribute('disabled')).to eql('true')
+          @contact_info_card.enter_phone(@local_phone['type'], @local_phone['phoneNumberInput'].slice(0..23), @local_phone['phoneExt'].slice(0..5), false)
+          @contact_info_card.click_save_phone
           @contact_info_card.verify_phone @local_phone
         end
       end
@@ -133,13 +140,17 @@ describe 'My Profile Contact Info', :testui => true, :order => :defined do
         end
 
         it 'prevents a user deleting a preferred phone if there are more than two phones' do
-          @contact_info_card.click_edit_phone @mobile_index
-          @contact_info_card.click_delete_phone
-          @contact_info_card.phone_validation_error_element.when_visible WebDriverUtils.page_load_timeout
-          expect(@contact_info_card.phone_validation_error).to eql('One Phone number must be checked as Preferred')
+          if @contact_info_card.phone_type_elements.length > 2
+            @contact_info_card.click_edit_phone @mobile_index
+            @contact_info_card.click_delete_phone
+            @contact_info_card.phone_validation_error_element.when_visible WebDriverUtils.page_load_timeout
+            expect(@contact_info_card.phone_validation_error).to eql('One Phone number must be checked as Preferred')
+          end
         end
         it 'allows a user to delete any non-preferred phone' do
-          @contact_info_card.delete_phone @local_index
+          if @contact_info_card.phone_type_elements.length > 2
+            @contact_info_card.delete_phone @local_index
+          end
         end
       end
     end

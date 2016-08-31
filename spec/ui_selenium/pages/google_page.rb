@@ -95,18 +95,25 @@ class GooglePage
     WebDriverUtils.wait_for_element_and_click sign_out_link_element
   end
 
+  def click_element(element)
+    # Use JS to click element due to https://github.com/seleniumhq/selenium/issues/1156
+    element.when_visible WebDriverUtils.page_event_timeout
+    execute_script('arguments[0].click();', element)
+  end
+
   def send_email(recipient, subject, body)
     logger.info "Sending an email with the subject #{subject}"
     load_gmail
     WebDriverUtils.wait_for_page_and_click compose_email_button_element
-    WebDriverUtils.wait_for_element_and_click new_message_heading_element
-    new_message_heading
-    self.recipient if self.recipient_element.visible?
+    # Click message heading twice to ensure focus is set - due to https://github.com/seleniumhq/selenium/issues/1156
+    click_element new_message_heading_element
+    click_element new_message_heading_element
+    click_element recipient_element if self.recipient_element.visible?
     WebDriverUtils.wait_for_element_and_type(to_element, recipient)
     self.subject_element.value = subject
     self.body_element.value = body
     sleep 3
-    send_email_button
+    click_element send_email_button_element
     mail_sent_link_element.when_present WebDriverUtils.page_event_timeout
   end
 

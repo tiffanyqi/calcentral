@@ -15,7 +15,7 @@ module CalCentralPages
     h3(:enrollments_heading, :xpath => '//h2[contains(text(),"My Classes")]/../following-sibling::div//h3[text()="Enrollments"]')
     div(:enrolled_classes_div, :xpath => '//div[@data-ng-class="\'cc-widget-classes-student\'"]')
     elements(:enrolled_class_link, :link, :xpath => '//div[@data-ng-class="\'cc-widget-classes-student\'"]//div[@data-ng-repeat="listing in class.listings"]/a')
-    elements(:wait_list_position, :span, :xpath => '//div[@data-ng-class="\'cc-widget-classes-student\'"]//span[@data-ng-show="class.waitlistPosition"]')
+    elements(:wait_list_position, :span, :xpath => '//div[@data-ng-class="\'cc-widget-classes-student\'"]//span[@data-ng-show="class.waitlisted"]')
     elements(:enrolled_class_name, :div, :xpath => '//div[@data-ng-class="\'cc-widget-classes-student\'"]//div[@data-ng-bind="class.name"]')
     elements(:enrolled_course_site_link, :link, :xpath => '//div[@data-ng-class="\'cc-widget-classes-student\'"]//a[@data-ng-bind="subclass.name"]')
     elements(:enrolled_course_site_desc, :div, :xpath => '//div[@data-ng-class="\'cc-widget-classes-student\'"]//div[@data-ng-bind="subclass.shortDescription"]')

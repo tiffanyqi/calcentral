@@ -9,36 +9,37 @@ class ApiCSHoldsPage
     @parsed = JSON.parse driver.find_element(:xpath => '//pre').text
   end
 
-  def holds
-    service_indicators = @parsed['feed'] && @parsed['feed']['serviceIndicators']
-    # For now, specifically exclude one type of (positive) SI
-    service_indicators.delete_if { |si| si['serviceIndicatorDescr'] == 'Tuition Calculated' } unless service_indicators.nil?
-    service_indicators
+  def service_indicators
+    @parsed['feed'] && @parsed['feed']['serviceIndicators']
   end
 
-  def hold_reasons
-    holds.map { |hold| hold['reasonDescr'].gsub(/\s+/, ' ') }
+  def has_t_calc?
+    service_indicator_reasons(service_indicators).include? 'Tuition Calculated for term'
   end
 
-  def hold_dates
-    holds.map do |hold|
+  def service_indicator_reasons(indicators)
+    indicators && (indicators.map { |indicator| indicator['reasonDescr'].gsub(/\s+/, ' ') }).to_a
+  end
+
+  def service_indicator_dates(indicators)
+    indicators.map do |indicator|
       # Shows the start term if there is no start date
-      hold['startDate'].blank? ?
-          hold_term(hold) :
-          Time.strptime(hold['startDate']['epoch'].to_s, '%s').strftime('%m/%d/%y')
+      indicator['startDate'].blank? ?
+          service_indicator_term(indicator) :
+          Time.strptime(indicator['startDate']['epoch'].to_s, '%s').strftime('%m/%d/%y')
     end
   end
 
-  def hold_term(hold)
-    hold['startTermDescr']
+  def service_indicator_term(indicator)
+    indicator['startTermDescr']
   end
 
-  def hold_contacts(hold)
-    hold['contactName']
+  def service_indicator_contacts(indicator)
+    indicator['contactName']
   end
 
-  def hold_instructions(hold)
-    hold['instructions']
+  def service_indicator_instructions(indicator)
+    indicator['instructions']
   end
 
 end

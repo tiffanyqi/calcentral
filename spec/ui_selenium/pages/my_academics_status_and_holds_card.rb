@@ -7,7 +7,7 @@ module CalCentralPages
     include ClassLogger
 
     div(:status_holds_section, :class => 'cc-status-holds-section')
-    elements(:reg_status, :div, :xpath => '//div[contains(@data-ng-repeat, "registration in regStatus")]')
+    elements(:reg_status, :unordered_list, :xpath => '//ul[@data-ng-if="api.user.profile.features.regstatus"]')
 
     # Registration
 
