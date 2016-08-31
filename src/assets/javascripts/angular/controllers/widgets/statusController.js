@@ -25,9 +25,6 @@ angular.module('calcentral.controllers').controller('StatusController', function
 
     $scope.studentInfo = data.studentInfo;
 
-    if (_.get(data, 'studentInfo.regStatus.code')) {
-      $scope.hasRegistrationData = true;
-    }
     if (_.get(data, 'studentInfo.regStatus.needsAction') && apiService.user.profile.features.regstatus) {
       $scope.count++;
       $scope.hasAlerts = true;
@@ -120,6 +117,9 @@ angular.module('calcentral.controllers').controller('StatusController', function
       }
     });
 
+    if (_.first($scope.regStatus.registrations)) {
+      $scope.hasRegistrationData = true;
+    }
     return;
   };
 

@@ -1,0 +1,104 @@
+{
+  "statusCode": 200,
+  "feed": {
+    "summary": {
+      "currentTermId": "2168",
+      "currentTerm": "Fall 2016",
+      "amountDueNow": 0.0,
+      "pastDueAmount": 0.0,
+      "chargesNotYetDue": 0.0,
+      "accountBalance": 0.0
+    },
+    "cobolStatus": null,
+    "activity": [{
+      "itemLineAmount": 70.0,
+      "itemBalance": 0.0,
+      "itemEffectiveDate": "2016-07-23",
+      "itemDescription": "Class Pass Fee - Transit",
+      "itemDueDate": "2016-08-19",
+      "itemReferenceDescription": null,
+      "itemStatus": "Paid",
+      "itemType": "Charge",
+      "itemTermDescription": "Fall 2016",
+      "itemTermId": "2168",
+      "itemDueFlag": null
+    }, {
+      "itemLineAmount": 537.0,
+      "itemBalance": 0.0,
+      "itemEffectiveDate": "2016-07-23",
+      "itemDescription": "Student Services Fee",
+      "itemDueDate": "2016-08-19",
+      "itemReferenceDescription": null,
+      "itemStatus": "Paid",
+      "itemType": "Charge",
+      "itemTermDescription": "Fall 2016",
+      "itemTermId": "2168",
+      "itemDueFlag": null
+    }, {
+      "itemLineAmount": 537.25,
+      "itemBalance": 0.0,
+      "itemEffectiveDate": "2016-07-23",
+      "itemDescription": "Berkeley Campus Fee",
+      "itemDueDate": "2016-08-19",
+      "itemReferenceDescription": null,
+      "itemStatus": "Paid",
+      "itemType": "Charge",
+      "itemTermDescription": "Fall 2016",
+      "itemTermId": "2168",
+      "itemDueFlag": null
+    }, {
+      "itemLineAmount": 1306.0,
+      "itemBalance": 0.0,
+      "itemEffectiveDate": "2016-07-23",
+      "itemDescription": "Health Insurance - UG",
+      "itemDueDate": "2016-08-19",
+      "itemReferenceDescription": null,
+      "itemStatus": "Paid",
+      "itemType": "Charge",
+      "itemTermDescription": "Fall 2016",
+      "itemTermId": "2168",
+      "itemDueFlag": null
+    }, {
+      "itemLineAmount": -1306.0,
+      "itemBalance": 0.0,
+      "itemEffectiveDate": "2016-07-23",
+      "itemDescription": "Health Insurance Waiver - UG",
+      "itemDueDate": null,
+      "itemReferenceDescription": null,
+      "itemStatus": "Paid",
+      "itemType": "W",
+      "itemTermDescription": "Fall 2016",
+      "itemTermId": "2168",
+      "itemDueFlag": null
+    }, {
+      "itemLineAmount": 5610.0,
+      "itemBalance": 0.0,
+      "itemEffectiveDate": "2016-07-23",
+      "itemDescription": "Undergraduate Resident Tuition",
+      "itemDueDate": "2016-08-19",
+      "itemReferenceDescription": null,
+      "itemStatus": "Paid",
+      "itemType": "Charge",
+      "itemTermDescription": "Fall 2016",
+      "itemTermId": "2168",
+      "itemDueFlag": null
+    }, {
+      "itemLineAmount": -6754.25,
+      "itemBalance": 0.0,
+      "itemEffectiveDate": "2016-08-05",
+      "itemDescription": "Check Payment",
+      "itemDueDate": null,
+      "itemReferenceDescription": "1637101",
+      "itemStatus": "Paid",
+      "itemType": "Payment",
+      "itemTermDescription": "Fall 2016",
+      "itemTermId": "2168",
+      "itemDueFlag": null
+    }],
+    "debug": {
+      "foundEmplid": "24444371",
+      "foundReqTerms": "0",
+      "cobolError": "False"
+    }
+  }
+}

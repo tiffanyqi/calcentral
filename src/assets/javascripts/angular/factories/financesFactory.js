@@ -7,8 +7,10 @@ var angular = require('angular');
  */
 angular.module('calcentral.factories').factory('financesFactory', function(apiService) {
   // CARS billing data
+  // var urlCars = '/dummy/json/financials.json';
   var urlCars = '/api/my/financials';
   // CS billing data
+  // var urlCsBilling = '/dummy/json/billing.json';
   var urlCsBilling = '/api/campus_solutions/billing';
 
   var getFinances = function(options) {
