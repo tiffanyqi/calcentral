@@ -27,30 +27,34 @@ module MyAcademics
 
     def bearfacts_college_and_level
       response = Bearfacts::Profile.new(user_id: @uid).get
-      feed = response.delete :feed
+      # response is a pointer to an obj in memory and should not be modified, other functions may need to use it later
+      result = response.clone
+      feed = result.delete :feed
       # The Bear Facts API can return empty profiles if the user is no longer (or not yet) considered an active student.
       # Partial profiles can be returned for incoming students around the start of the term.
       if (feed.nil? || feed['studentProfile']['studentGeneralProfile'].blank? || feed['studentProfile']['ugGradFlag'].blank?)
-        response[:empty] = true
+        result[:empty] = true
       else
-        response.merge! parse_bearfacts_feed(feed)
+        result.merge! parse_bearfacts_feed(feed)
       end
-      response
+      result
     end
 
     def hub_college_and_level
       response = HubEdos::AcademicStatus.new(user_id: @uid).get
-      if (status = parse_hub_academic_status response)
-        response[:careers] = parse_hub_careers status
-        response[:level] = parse_hub_level status
-        response[:termName] = parse_hub_term_name status
-        response[:termsInAttendance] = status['termsInAttendance'].to_s
-        response.merge! parse_hub_plans status
+      # response is a pointer to an obj in memory and should not be modified, other functions may need to use it later
+      result = response.clone
+      if (status = parse_hub_academic_status result)
+        result[:careers] = parse_hub_careers status
+        result[:level] = parse_hub_level status
+        result[:termName] = parse_hub_term_name status
+        result[:termsInAttendance] = status['termsInAttendance'].to_s
+        result.merge! parse_hub_plans status
       else
-        response[:empty] = true
+        result[:empty] = true
       end
-      response.delete(:feed)
-      response
+      result.delete(:feed)
+      result
     end
 
     def parse_hub_careers(status)

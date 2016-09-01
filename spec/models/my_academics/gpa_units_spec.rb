@@ -50,6 +50,10 @@ describe 'MyAcademics::GpaUnits' do
       expect(feed[:gpaUnits][:totalUnits]).to eq 73
     end
 
+    it 'translates total units attempted' do
+      expect(feed[:gpaUnits][:totalUnitsAttempted]).to eq 8
+    end
+
     context 'empty status feed' do
       before { status_proxy.set_response(status: 200, body: '{}') }
       it 'reports empty' do

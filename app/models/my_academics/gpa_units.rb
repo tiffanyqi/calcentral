@@ -18,15 +18,18 @@ module MyAcademics
 
     def hub_gpa_units
       response = HubEdos::AcademicStatus.new(user_id: @uid).get
+      result = {}
+      #copy needed feilds from response obj
+      result[:errored] = response[:errored]
       if (status = parse_hub_academic_status response)
         # GPA is passed as a string to force a decimal point for whole values.
-        response[:cumulativeGpa] = (cumulativeGpa = parse_hub_cumulative_gpa status) && cumulativeGpa.to_s
-        response[:totalUnits] = (totalUnits = parse_hub_total_units status) && totalUnits.to_f
+        result[:cumulativeGpa] = (cumulativeGpa = parse_hub_cumulative_gpa status) && cumulativeGpa.to_s
+        result[:totalUnits] = (totalUnits = parse_hub_total_units status) && totalUnits.to_f
+        result[:totalUnitsAttempted] = (totalUnitsAttempted = parse_hub_total_units_attempted status) && totalUnitsAttempted.to_f
       else
-        response[:empty] = true
+        result[:empty] = true
       end
-      response.delete(:feed)
-      response
+      result
     end
 
     def parse_hub_cumulative_gpa(status)
@@ -36,6 +39,12 @@ module MyAcademics
     def parse_hub_total_units(status)
       if (units = status['cumulativeUnits']) && (total_units = units.find { |u| u['type'] && u['type']['code'] == 'Total'})
         total_units['unitsPassed']
+      end
+    end
+
+    def parse_hub_total_units_attempted(status)
+      if (units = status['cumulativeUnits']) && (total_units = units.find { |u| u['type'] && u['type']['code'] == 'For GPA'})
+        total_units['unitsTaken']
       end
     end
 
