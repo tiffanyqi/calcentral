@@ -28,10 +28,7 @@
             <strong data-ng-bind="advisor.assignedAdvisorType"></strong> (<span data-ng-bind="advisor.assignedAdvisorProgram"></span>)
           </div>
           <div>
-            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}"
-              data-ng-bind="advisor.assignedAdvisorName"
-              data-ng-disabled="!advisor.assignedAdvisorEmail || !api.user.profile.isDirectlyAuthenticated || !!isAdvisingStudentLookup"
-            ></a>
+            <span data-ng-bind="advisor.assignedAdvisorName"></span>
           </div>
           <div>
             <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}"
