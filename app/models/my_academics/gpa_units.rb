@@ -18,9 +18,10 @@ module MyAcademics
 
     def hub_gpa_units
       response = HubEdos::AcademicStatus.new(user_id: @uid).get
-      # response is a pointer to an obj in memory and should not be modified, other functions may need to use it later
-      result = response.clone
-      if (status = parse_hub_academic_status result)
+      result = {}
+      #copy needed feilds from response obj
+      result[:errored] = response[:errored]
+      if (status = parse_hub_academic_status response)
         # GPA is passed as a string to force a decimal point for whole values.
         result[:cumulativeGpa] = (cumulativeGpa = parse_hub_cumulative_gpa status) && cumulativeGpa.to_s
         result[:totalUnits] = (totalUnits = parse_hub_total_units status) && totalUnits.to_f
@@ -28,7 +29,6 @@ module MyAcademics
       else
         result[:empty] = true
       end
-      result.delete(:feed)
       result
     end
 
