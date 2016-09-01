@@ -88,9 +88,10 @@ module CalnetLdap
       ActiveSupport::Notifications.instrument('proxy', {class: self.class, search: args}) do
         response = @ldap.search args
         if response.nil?
-          logger.error "LDAP error returned: #{@ldap.get_operation_result}"
+          logger.error "LDAP search with args #{args} returned: #{@ldap.get_operation_result}"
           []
         else
+          logger.debug "LDAP search with args #{args} returned: #{response}"
           response
         end
       end
