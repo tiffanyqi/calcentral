@@ -15,6 +15,7 @@ angular.module('calcentral.controllers').controller('bConnectedController', func
   };
 
   var refreshServices = function(profile) {
+    refreshIsCalendarOptedIn(profile);
     $scope.connectedServices = services.filter(function(element) {
       return profile['has' + element + 'AccessToken'];
     });
@@ -25,7 +26,6 @@ angular.module('calcentral.controllers').controller('bConnectedController', func
 
   $scope.$on('calcentral.api.user.profile', function(event, profile) {
     if (profile) {
-      refreshIsCalendarOptedIn(profile);
       refreshServices(profile);
     }
   });
