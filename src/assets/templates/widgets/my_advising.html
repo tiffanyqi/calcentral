@@ -2,6 +2,7 @@
   <div class="cc-widget-title">
     <h2 class="cc-left">Advising</h2>
     <a class="cc-button cc-right cc-widget-title-button"
+      data-ng-if="api.user.profile.features.csAdvisingLinks"
       data-cc-campus-solutions-link-directive="myAdvising.links.newAppointment.url"
       data-cc-campus-solutions-link-directive-enabled="{{myAdvising.links.newAppointment.isCsLink}}"
       data-cc-campus-solutions-link-directive-text="myAdvising.links.newAppointment.backToText"
@@ -22,15 +23,12 @@
       </div>
 
       <div data-ng-if="!myAdvising.errored">
-        <div class="cc-widget-myadvising-section" data-ng-repeat="advisor in myAdvising.advisors">
+        <div class="cc-widget-myadvising-section" data-ng-repeat="advisor in myAdvising.advisors" data-ng-if="myAdvising.advisors.length > 0">
           <div>
             <strong data-ng-bind="advisor.assignedAdvisorType"></strong> (<span data-ng-bind="advisor.assignedAdvisorProgram"></span>)
           </div>
           <div>
-            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}"
-              data-ng-bind="advisor.assignedAdvisorName"
-              data-ng-disabled="!advisor.assignedAdvisorEmail || !api.user.profile.isDirectlyAuthenticated || !!isAdvisingStudentLookup"
-            ></a>
+            <span data-ng-bind="advisor.assignedAdvisorName"></span>
           </div>
           <div>
             <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}"
@@ -39,6 +37,9 @@
             ></a>
           </div>
           <div data-ng-bind="advisor.assignedAdvisorLocation"></div>
+        </div>
+        <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.advisors.length === 0">
+          No advisors are currently assigned to you
         </div>
 
         <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.actionItems.length">
@@ -66,7 +67,7 @@
           </ul>
         </div>
 
-        <div class="cc-widget-myadvising-section">
+        <div class="cc-widget-myadvising-section" data-ng-if="api.user.profile.features.csAdvisingLinks">
           <h3 class="cc-widget-myadvising-header">Appointments</h3>
           <div class="cc-widget-myadvising-link">
             <div
