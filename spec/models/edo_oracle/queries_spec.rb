@@ -203,7 +203,7 @@ describe EdoOracle::Queries, :ignore => true do
   end
 
   describe '.get_rosters', :testext => true do
-    let(:expected_keys) { %w(section_id ldap_uid student_id enroll_status waitlist_position units grading_basis major academic_career terms_in_attendance_group) }
+    let(:expected_keys) { %w(section_id ldap_uid student_id enroll_status waitlist_position units grading_basis major academic_career terms_in_attendance_group statusinplan_status_code) }
     it 'returns enrollments for section' do
       results = EdoOracle::Queries.get_rosters(section_ids, fall_term_id)
       results.each do |enrollment|

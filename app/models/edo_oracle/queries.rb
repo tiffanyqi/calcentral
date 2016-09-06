@@ -295,6 +295,7 @@ module EdoOracle
           enroll."ACAD_CAREER" AS academic_career,
           TRIM(enroll."GRADING_BASIS_CODE") AS grading_basis,
           plan."ACADPLAN_DESCR" AS major,
+          plan."STATUSINPLAN_STATUS_CODE",
           stdgroup."STDNT_GROUP" AS terms_in_attendance_group
         FROM SISEDO.ENROLLMENTV00_VW enroll
         LEFT OUTER JOIN
