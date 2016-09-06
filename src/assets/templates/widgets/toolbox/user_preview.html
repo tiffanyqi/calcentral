@@ -26,6 +26,17 @@
         </table>
       </div>
 
+      <div class="cc-table cc-table-top-border cc-clearfix">
+        <table class="cc-widget-profile-table">
+          <tbody>
+          <tr>
+            <th>SID</th>
+            <td><strong data-ng-bind="targetUser.studentId"></strong></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div data-ng-include="'widgets/academics/college_and_level.html'"></div>
 
       <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="targetUser.addresses || targetUser.phones || targetUser.emails">
