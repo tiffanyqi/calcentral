@@ -199,6 +199,68 @@
       data-ng-controller="ClassInfoEnrollmentController"
       data-cc-spinner-directive
       data-cc-spinner-directive-message="Downloading sections. This may take a minute for larger classes.">
+
+    <div class="cc-widget" data-ng-if="api.user.profile.features.classInfoEnrollmentSectionOverview">
+      <div class="cc-widget-title">
+        <h2 class="cc-left">Section Overview</h2>
+      </div>
+      <div class="cc-widget-padding">
+        <strong>Note: </strong> Use headers to sort columns
+
+        <div class="cc-table cc-academics-class-enrollment-table">
+          <table>
+            <thead class="cc-academics-class-enrollment-table-head">
+              <th data-cc-sortable-column-directive="is_primary" data-column-heading="P/S"></th>
+              <th data-cc-sortable-column-directive="section_label" data-column-heading="Section"></th>
+              <th data-cc-sortable-column-directive="ccn" data-column-heading="Class Number"></th>
+              <th class="show-for-large-up">Day and Time</th>
+              <th class="show-for-large-up">Location</th>
+              <th data-cc-sortable-column-directive="enroll_count"
+                data-column-heading="{{groupedTableHeading('Enrollment', 'On List', true)}}"
+                class="cc-academics-class-enrollment-header-separator"></th>
+              <th data-cc-sortable-column-directive="enroll_open"
+                data-column-heading="{{groupedTableHeading('Enrollment', 'Open', false)}}"></th>
+              <th data-cc-sortable-column-directive="enroll_limit"
+                data-column-heading="{{groupedTableHeading('Enrollment', 'Capacity', false)}}" class="show-for-medium-up"></th>
+              <th data-cc-sortable-column-directive="waitlist_count"
+                data-column-heading="{{groupedTableHeading('Wait List', 'On List', true)}}"
+                class="cc-academics-class-enrollment-header-separator"></th>
+              <th data-cc-sortable-column-directive="waitlist_open"
+                data-column-heading="{{groupedTableHeading('Wait List', 'Open', false)}}"></th>
+              <th data-cc-sortable-column-directive="waitlist_limit"
+                data-column-heading="{{groupedTableHeading('Wait List', 'Capacity', false)}}" class="show-for-medium-up"></th>
+            </thead>
+            <tbody data-ng-repeat="section in sortedSections = (sections | orderBy:tableSort.column:tableSort.reverse)"
+                   data-ng-class-even="'cc-academics-even'"
+                   data-ng-if="sections.length">
+              <tr class="cc-academics-class-enrollment-table-row">
+                <td>
+                  <strong data-ng-bind="(section.is_primary) ? 'P':'S'"></strong>
+                </td>
+                <td>
+                  <strong data-ng-bind="section.section_label"></strong>
+                </td>
+                <td data-ng-bind="section.ccn"></td>
+                <td class="show-for-large-up">
+                  <div data-ng-repeat="date in section.dates" data-ng-bind="date"></div>
+                </td>
+                <td class="show-for-large-up">
+                  <div data-ng-repeat="location in section.locations" data-ng-bind="location"></div>
+                </td>
+                <td data-ng-bind="section.enroll_count"></td>
+                <td data-ng-bind="section.enroll_open"></td>
+                <td data-ng-bind="section.enroll_limit" class="show-for-medium-up"></td>
+                <td data-ng-bind="section.waitlist_count"></td>
+                <td data-ng-bind="section.waitlist_open"></td>
+                <td data-ng-bind="section.waitlist_limit" class="show-for-medium-up"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
     <div class="column cc-academics-row-margin"
          data-cc-academics-class-info-enrollment-directive
          data-class-name="selectedCourse.course_code"

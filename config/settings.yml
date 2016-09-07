@@ -462,6 +462,7 @@ features:
   background_jobs_check: true
   cal1card: false
   class_info_enrollment_tab: false
+  class_info_enrollment_section_overview: false
   course_manage_official_sections: false
   cs_academic_planner: false
   cs_academic_profile_prefers_legacy: true

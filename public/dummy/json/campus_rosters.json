@@ -6,19 +6,291 @@
   "sections": [
     {
       "ccn": "14299",
-      "name": "ECON 100B LEC 001"
+      "dates": [
+        "TuTh 3:30P-4:59P"
+      ],
+      "enroll_count": 508,
+      "enroll_limit": 447,
+      "enroll_open": 0,
+      "is_primary": true,
+      "locations": [
+        "155 Dwinelle"
+      ],
+      "name": "ECON 100B LEC 001",
+      "section_label": "LEC 001",
+      "waitlist_count": 0,
+      "waitlist_limit": 97,
+      "waitlist_open": 97
     },
     {
       "ccn": "14300",
-      "name": "ECON 100B DIS 101"
+      "dates": [
+        "MW 10:00A-10:59A"
+      ],
+      "enroll_count": 34,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "3105 Etcheverry"
+      ],
+      "name": "ECON 100B DIS 101",
+      "section_label": "DIS 101",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
     },
     {
       "ccn": "14301",
-      "name": "ECON 100B DIS 102"
+      "dates": [
+        "TuTh 8:00A-8:59A"
+      ],
+      "enroll_count": 34,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "3113 Etcheverry"
+      ],
+      "name": "ECON 100B DIS 102",
+      "section_label": "DIS 102",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
     },
     {
       "ccn": "14302",
-      "name": "ECON 100B DIS 103"
+      "dates": [
+        "MW 8:00A-8:59A"
+      ],
+      "enroll_count": 32,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "242 Dwinelle"
+      ],
+      "name": "ECON 100B DIS 103",
+      "section_label": "DIS 103",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14303",
+      "dates": [
+        "MW 8:00A-8:59A"
+      ],
+      "enroll_count": 34,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "215 Dwinelle"
+      ],
+      "name": "ECON 100B DIS 104",
+      "section_label": "DIS 104",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14304",
+      "dates": [
+        "MW 6:00P-6:59P"
+      ],
+      "enroll_count": 31,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "242 Hearst Gym"
+      ],
+      "name": "ECON 100B DIS 105",
+      "section_label": "DIS 105",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14315",
+      "dates": [
+        "MW 5:00P-5:59P"
+      ],
+      "enroll_count": 36,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "242 Hearst Gym"
+      ],
+      "name": "ECON 100B DIS 106",
+      "section_label": "DIS 106",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14316",
+      "dates": [
+        "TuTh 12:00P-12:59P"
+      ],
+      "enroll_count": 33,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "118 Barrows"
+      ],
+      "name": "ECON 100B DIS 107",
+      "section_label": "DIS 107",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14317",
+      "dates": [
+        "TuTh 2:00P-2:59P"
+      ],
+      "enroll_count": 34,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "2066 Valley Life Sciences"
+      ],
+      "name": "ECON 100B DIS 108",
+      "section_label": "DIS 108",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14318",
+      "dates": [
+        "TuTh 8:00A-8:59A"
+      ],
+      "enroll_count": 31,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "103 Genetics & Plant Bio"
+      ],
+      "name": "ECON 100B DIS 109",
+      "section_label": "DIS 109",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14319",
+      "dates": [
+        "MW 6:00P-6:59P"
+      ],
+      "enroll_count": 36,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "130 Dwinelle"
+      ],
+      "name": "ECON 100B DIS 110",
+      "section_label": "DIS 110",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14334",
+      "dates": [
+        "TuTh 2:00P-2:59P"
+      ],
+      "enroll_count": 37,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "2070 Valley Life Sciences"
+      ],
+      "name": "ECON 100B DIS 111",
+      "section_label": "DIS 111",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14335",
+      "dates": [
+        "TuTh 9:00A-9:59A"
+      ],
+      "enroll_count": 36,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "118 Barrows"
+      ],
+      "name": "ECON 100B DIS 112",
+      "section_label": "DIS 112",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14336",
+      "dates": [
+        "MW 7:00P-7:59P"
+      ],
+      "enroll_count": 30,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "87 Dwinelle"
+      ],
+      "name": "ECON 100B DIS 113",
+      "section_label": "DIS 113",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14337",
+      "dates": [
+        "MW 5:00P-5:59P"
+      ],
+      "enroll_count": 33,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "240 Mulford"
+      ],
+      "name": "ECON 100B DIS 114",
+      "section_label": "DIS 114",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
+    },
+    {
+      "ccn": "14338",
+      "dates": [
+        "MW 11:00A-11:59A"
+      ],
+      "enroll_count": 37,
+      "enroll_limit": 0,
+      "enroll_open": 0,
+      "is_primary": false,
+      "locations": [
+        "243 Dwinelle"
+      ],
+      "name": "ECON 100B DIS 115",
+      "section_label": "DIS 115",
+      "waitlist_count": 0,
+      "waitlist_limit": 0,
+      "waitlist_open": 0
     }
   ],
   "students": [
@@ -44,11 +316,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14300",
-          "name": "ECON 100B DIS 101"
+          "dates": [
+            "MW 10:00A-10:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3105 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 101",
+          "section_label": "DIS 101",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "4444444",
@@ -74,11 +374,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14300",
-          "name": "ECON 100B DIS 101"
+          "dates": [
+            "MW 10:00A-10:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3105 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 101",
+          "section_label": "DIS 101",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "5555555",
@@ -106,11 +434,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14301",
-          "name": "ECON 100B DIS 102"
+          "dates": [
+            "TuTh 8:00A-8:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3113 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 102",
+          "section_label": "DIS 102",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "6666666",
@@ -136,7 +492,21 @@
       "sections": [
         {
           "ccn": "14301",
-          "name": "ECON 100B DIS 102"
+          "dates": [
+            "TuTh 8:00A-8:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3113 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 102",
+          "section_label": "DIS 102",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "7777777",
@@ -164,7 +534,21 @@
       "sections": [
         {
           "ccn": "14301",
-          "name": "ECON 100B DIS 102"
+          "dates": [
+            "TuTh 8:00A-8:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3113 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 102",
+          "section_label": "DIS 102",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "8888888",
@@ -193,11 +577,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14301",
-          "name": "ECON 100B DIS 102"
+          "dates": [
+            "TuTh 8:00A-8:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3113 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 102",
+          "section_label": "DIS 102",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "7777777",
@@ -227,11 +639,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14300",
-          "name": "ECON 100B DIS 101"
+          "dates": [
+            "MW 10:00A-10:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3105 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 101",
+          "section_label": "DIS 101",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "9999999",
@@ -260,11 +700,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14300",
-          "name": "ECON 100B DIS 101"
+          "dates": [
+            "MW 10:00A-10:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3105 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 101",
+          "section_label": "DIS 101",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "1212121",
@@ -291,11 +759,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14301",
-          "name": "ECON 100B DIS 102"
+          "dates": [
+            "TuTh 8:00A-8:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3113 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 102",
+          "section_label": "DIS 102",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "1313131",
@@ -322,11 +818,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14300",
-          "name": "ECON 100B DIS 101"
+          "dates": [
+            "MW 10:00A-10:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3105 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 101",
+          "section_label": "DIS 101",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "1414141",
@@ -353,11 +877,39 @@
       "sections": [
         {
           "ccn": "14299",
-          "name": "ECON 100B LEC 001"
+          "dates": [
+            "TuTh 3:30P-4:59P"
+          ],
+          "enroll_count": 508,
+          "enroll_limit": 447,
+          "enroll_open": 0,
+          "is_primary": true,
+          "locations": [
+            "155 Dwinelle"
+          ],
+          "name": "ECON 100B LEC 001",
+          "section_label": "LEC 001",
+          "waitlist_count": 0,
+          "waitlist_limit": 97,
+          "waitlist_open": 97
         },
         {
           "ccn": "14301",
-          "name": "ECON 100B DIS 102"
+          "dates": [
+            "TuTh 8:00A-8:59A"
+          ],
+          "enroll_count": 34,
+          "enroll_limit": 0,
+          "enroll_open": 0,
+          "is_primary": false,
+          "locations": [
+            "3113 Etcheverry"
+          ],
+          "name": "ECON 100B DIS 102",
+          "section_label": "DIS 102",
+          "waitlist_count": 0,
+          "waitlist_limit": 0,
+          "waitlist_open": 0
         }
       ],
       "student_id": "1515151",

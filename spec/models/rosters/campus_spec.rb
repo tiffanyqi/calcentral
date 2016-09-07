@@ -27,29 +27,84 @@ describe Rosters::Campus do
         role: 'Instructor',
         sections: [{
           ccn: ccn1,
-          section_label: 'LEC 001'
+          section_label: 'LEC 001',
+          is_primary_section: true,
+          enroll_limit: 650,
+          waitlist_limit: 110,
+          schedules: {
+            recurring: [
+              {
+                buildingName: 'Soda',
+                roomNumber: '100',
+                schedule: 'TuTh 3:00P-3:59P'
+              },
+              {
+                buildingName: 'Soda',
+                roomNumber: '102',
+                schedule: 'Fr 11:00A-11:59A'
+              }
+            ]
+          }
         },
         {
           ccn: ccn2,
-          section_label: 'LAB 001'
+          section_label: 'LAB 001',
+          is_primary_section: false,
+          enroll_limit: 2,
+          waitlist_limit: 1,
+          schedules: {
+            recurring: [
+              {
+                buildingName: 'Hertz',
+                roomNumber: '320',
+                schedule: 'MoFr 1:00P-1:59P'
+              }
+            ]
+          }
         }]
       }]
     }
   end
 
   shared_examples 'a good and proper roster' do
-    it 'should return a list of officially enrolled students for a course ccn' do
-      model = Rosters::Campus.new(user_id, course_id: campus_course_id)
-      feed = model.get_feed
+    let(:model) { Rosters::Campus.new(user_id, course_id: campus_course_id) }
+    let(:feed) { model.get_feed }
+
+    it 'should include course data' do
       expect(feed[:campus_course][:id]).to eq campus_course_id
       expect(feed[:campus_course][:name]).to eq fake_campus["#{term_slug}"][0][:name]
+    end
+
+    it 'should include section statistics' do
       expect(feed[:sections].length).to eq 2
       expect(feed[:sections][0][:ccn]).to eq ccn1
       expect(feed[:sections][0][:name]).to eq "INFO #{catid} LEC 001"
+      expect(feed[:sections][0][:section_label]).to eq "LEC 001"
+      expect(feed[:sections][0][:dates]).to eq ['TuTh 3:00P-3:59P', 'Fr 11:00A-11:59A']
+      expect(feed[:sections][0][:locations]).to eq ['100 Soda', '102 Soda']
+      expect(feed[:sections][0][:is_primary]).to eq true
+      expect(feed[:sections][0][:enroll_limit]).to eq 650
+      expect(feed[:sections][0][:enroll_open]).to eq 648
+      expect(feed[:sections][0][:enroll_count]).to eq 2
+      expect(feed[:sections][0][:waitlist_limit]).to eq 110
+      expect(feed[:sections][0][:waitlist_open]).to eq 110
+      expect(feed[:sections][0][:waitlist_count]).to eq 0
       expect(feed[:sections][1][:ccn]).to eq ccn2
       expect(feed[:sections][1][:name]).to eq "INFO #{catid} LAB 001"
-      expect(feed[:students].length).to eq 2
+      expect(feed[:sections][1][:section_label]).to eq "LAB 001"
+      expect(feed[:sections][1][:dates]).to eq ['MoFr 1:00P-1:59P']
+      expect(feed[:sections][1][:locations]).to eq ['320 Hertz']
+      expect(feed[:sections][1][:is_primary]).to eq false
+      expect(feed[:sections][1][:enroll_limit]).to eq 2
+      expect(feed[:sections][1][:enroll_open]).to eq 0
+      expect(feed[:sections][1][:enroll_count]).to eq 2
+      expect(feed[:sections][1][:waitlist_limit]).to eq 1
+      expect(feed[:sections][1][:waitlist_open]).to eq 1
+      expect(feed[:sections][1][:waitlist_count]).to eq 0
+    end
 
+    it 'should return a list of officially enrolled students for a course ccn' do
+      expect(feed[:students].length).to eq 2
       student = feed[:students][0]
       expect(student[:id]).to eq enrolled_student_login_id
       expect(student[:student_id]).to eq enrolled_student_student_id
@@ -65,12 +120,10 @@ describe Rosters::Campus do
     end
 
     it 'should show official photo links for students who are not waitlisted in all sections' do
-      model = Rosters::Campus.new(user_id, course_id: campus_course_id)
-      feed = model.get_feed
       expect(feed[:sections].length).to eq 2
       expect(feed[:students].length).to eq 2
       expect(feed[:students].index {|student| student[:id] == waitlisted_student_login_id &&
-          student[:photo].nil?
+        student[:photo].nil?
       }).to_not be_nil
     end
   end
@@ -162,6 +215,7 @@ describe Rosters::Campus do
           .with([enrolled_student_login_id, waitlisted_student_login_id])
           .exactly(2).times.and_return(attributes, attributes)
       end
+      let(:feed) { feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed }
       let(:enrollments) do
         [
           {
@@ -239,8 +293,18 @@ describe Rosters::Campus do
         ]
       end
       it_should_behave_like 'a good and proper roster'
+      context 'when the number of enrollments exceeds the limit' do
+        before do
+          fake_campus[term_slug][0][:sections][0][:enroll_limit] = 1
+        end
+        it 'should report zero available enrollment spots' do
+          expect(feed[:sections][0][:enroll_limit]).to eq 1
+          expect(feed[:sections][0][:enroll_count]).to eq 2
+          expect(feed[:sections][0][:enroll_open]).to eq 0
+        end
+      end
+
       it 'should translate additional enrollment data from section with grade component' do
-        feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed
         expect(feed[:students][0][:grade_option]).to eq 'Letter'
         expect(feed[:students][0][:units]).to eq '4.0'
         expect(feed[:students][0][:waitlist_position]).to be_nil
@@ -251,7 +315,6 @@ describe Rosters::Campus do
         expect(feed[:students][1][:academic_career]).to eq 'UGRD'
       end
       it 'should include majors and terms in attendance count' do
-        feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed
         expect(feed[:students][0][:majors][0]).to eq 'Cognitive Science BA'
         expect(feed[:students][0][:majors][1]).to eq 'Computer Science BA'
         expect(feed[:students][0][:terms_in_attendance]).to eq '2'

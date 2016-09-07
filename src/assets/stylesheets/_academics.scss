@@ -80,6 +80,15 @@
   .cc-class-enrollment-action-instructions-paragraph {
     margin-bottom: 5px;
   }
+  .cc-academics-class-enrollment-grouped-header-label {
+    font-weight: bold;
+  }
+  .cc-academics-class-enrollment-grouped-header-sublabel {
+    font-weight: normal;
+  }
+  .cc-academics-class-enrollment-header-separator {
+    border-left: 1px solid $cc-color-lightest-grey;
+  }
   .cc-academics-class-enrollment-mobile-button-spacer {
     margin-bottom: 5px;
   }
@@ -102,6 +111,7 @@
     th {
       color: $cc-color-white;
       padding: 5px;
+      vertical-align: bottom;
     }
   }
   .cc-academics-class-enrollment-table-notice {
