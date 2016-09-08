@@ -71,7 +71,7 @@ describe Oec::ValidationTask do
     context 'unexpected GSI evaluation type' do
       let(:key) { '2015-B-99999_GSI' }
       let(:invalid_row) { '2015-B-99999_GSI,2015-B-99999_GSI,GWS 150 LEC 001 VINDICATION OF RIGHTS,,,GWS,150,LEC,001,P,155555,UID:155555,Zachary,Zzzz,zzzz@berkeley.edu,23,Y,GWS,F,,01-26-2015,05-11-2015' }
-      let(:expected_message) { 'Unexpected EVALUATION_TYPE F' }
+      let(:expected_message) { 'Unexpected for _GSI course: EVALUATION_TYPE F' }
       include_examples 'validation error logging'
     end
 
@@ -117,11 +117,44 @@ describe Oec::ValidationTask do
       include_examples 'validation error logging'
     end
 
-    context 'unexpected evaluation type' do
-      let(:invalid_row) { '2015-B-99999,2015-B-99999,GWS 150 LEC 001 VINDICATION OF RIGHTS,,,GWS,150,LEC,001,P,155555,UID:155555,Zachary,Zzzz,zzzz@berkeley.edu,23,Y,GWS,GAUNTLET,,01-26-2015,05-11-2015' }
+    context 'evaluation type validation' do
+      let(:invalid_row) { "2015-B-99999,2015-B-99999,GWS 150 LEC 001 VINDICATION OF RIGHTS,,,GWS,150,LEC,001,P,155555,UID:155555,Zachary,Zzzz,zzzz@berkeley.edu,23,Y,#{dept_form},#{evaluation_type},,01-26-2015,05-11-2015" }
       let(:key) { '2015-B-99999' }
-      let(:expected_message) { 'Unexpected EVALUATION_TYPE GAUNTLET' }
-      include_examples 'validation error logging'
+
+      context 'LAW evaluation type for non-LAW course' do
+        let(:dept_form) { 'GWS' }
+        let(:evaluation_type) { '1A' }
+        let(:expected_message) { 'Unexpected EVALUATION_TYPE 1A' }
+        include_examples 'validation error logging'
+      end
+
+      context 'SPANISH evaluation type for non-SPANISH course' do
+        let(:dept_form) { 'GWS' }
+        let(:evaluation_type) { 'LANG' }
+        let(:expected_message) { 'Unexpected EVALUATION_TYPE LANG' }
+        include_examples 'validation error logging'
+      end
+
+      context 'generic evaluation type for SPANISH course' do
+        let(:dept_form) { 'SPANISH' }
+        let(:evaluation_type) { 'F' }
+        let(:expected_message) { 'Unexpected for SPANISH department form: EVALUATION_TYPE F' }
+        include_examples 'validation error logging'
+      end
+
+      context 'generic evaluation type for LAW course' do
+        let(:dept_form) { 'LAW' }
+        let(:evaluation_type) { 'F' }
+        let(:expected_message) { 'Unexpected for LAW department form: EVALUATION_TYPE F' }
+        include_examples 'validation error logging'
+      end
+
+      context 'wholly unexpected evaluation type' do
+        let(:dept_form) { 'GWS' }
+        let(:evaluation_type) { 'GAUNTLET' }
+        let(:expected_message) { 'Unexpected EVALUATION_TYPE GAUNTLET' }
+        include_examples 'validation error logging'
+      end
     end
 
     context 'unexpected MODULAR_COURSE value' do
