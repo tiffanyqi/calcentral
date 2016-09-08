@@ -4,6 +4,20 @@ module MyAcademics
     include ClassLogger
     include User::Student
 
+    # Student Plan Roles represent the type of student based on their student plans
+    STUDENT_PLAN_ROLES = {
+      plan: [
+        {student_plan_role_code: 'fpf', match: '25000FPFU'},
+        {student_plan_role_code: 'haas_mba', match: '70141MBAG'},
+        {student_plan_role_code: 'haas_ewmba', match: '701E1MBAG'},
+        {student_plan_role_code: 'haas_execmba', match: '70364MBAG'},
+      ],
+      career: [
+        {student_plan_role_code: 'law', match: 'LAW'},
+        {student_plan_role_code: 'concurrent', match: 'UCBX'},
+      ]
+    }
+
     def merge(data)
       college_and_level = hub_college_and_level
       if college_and_level[:empty] && !current_term.is_summer
@@ -41,74 +55,85 @@ module MyAcademics
     end
 
     def hub_college_and_level
-      response = HubEdos::AcademicStatus.new(user_id: @uid).get
-      # response is a pointer to an obj in memory and should not be modified, other functions may need to use it later
-      result = response.clone
-      if (status = parse_hub_academic_status result)
-        result[:careers] = parse_hub_careers status
-        result[:level] = parse_hub_level status
-        result[:termName] = parse_hub_term_name(status['currentRegistration'].try(:[], 'term')).try(:[], 'name')
-        result[:termsInAttendance] = status['termsInAttendance'].to_s
-        result.merge! parse_hub_plans status
+      # academic_status is a pointer to an obj in memory and should not be modified, other functions may need to use it later
+      academic_status = get_academic_status.clone
+      if (holds = parse_hub_holds academic_status)
+        academic_status[:holds] = holds
+      end
+      if (statuses = parse_hub_academic_statuses academic_status)
+        status = statuses.first
+        academic_status[:careers] = parse_hub_careers statuses
+        academic_status[:level] = parse_hub_level statuses
+        academic_status[:termName] = parse_hub_term_name(status['currentRegistration'].try(:[], 'term')).try(:[], 'name')
+        academic_status[:termsInAttendance] = status['termsInAttendance'].to_s
+        academic_status.merge! parse_hub_plans statuses
       else
-        result[:empty] = true
+        academic_status[:empty] = true
       end
-      result.delete(:feed)
-      result
+      academic_status.delete(:feed)
+      academic_status
     end
 
-    def parse_hub_careers(status)
+    def parse_hub_holds(response)
+      holds = {hasHolds: false}
+      holds_feed = response[:feed] && response[:feed]['student'] && response[:feed]['student']['holds']
+      if holds_feed.present?
+        holds[:hasHolds] = true if holds_feed.to_a.length > 0
+      end
+      holds
+    end
+
+    def parse_hub_careers(statuses)
       [].tap do |careers|
-        if (career = status['studentCareer'].try(:[], 'academicCareer').try(:[], 'description'))
-          careers << career
-        end
-      end
-    end
-
-    def parse_hub_level(status)
-      status['currentRegistration'].try(:[], 'academicLevel').try(:[], 'level').try(:[], 'description')
-    end
-
-    def parse_hub_plans(status)
-      majors = []
-      minors = []
-      plans = []
-      grad_terms = []
-      status['studentPlans'].each do |student_plan|
-        plan_primary = !!student_plan['primary']
-        if (academic_plan = student_plan['academicPlan'])
-          college = academic_plan['academicProgram'].try(:[], 'program').try(:[], 'description')
-          plan_description = academic_plan['plan'].try(:[], 'description')
-          case academic_plan['type'].try(:[], 'code')
-            when 'MAJ', 'SS', 'SP', 'HS', 'CRT'
-              majors << {
-                college: college,
-                major: plan_description
-              }
-            when 'MIN'
-              minors << {
-                college: college,
-                minor: plan_description
-              }
-          end
-
-          if (plan_code = academic_plan['plan'].try(:[], 'code'))
-            plans << {
-              code: plan_code,
-              primary: plan_primary,
-              expectedGraduationTerm: parse_hub_term_name(student_plan['expectedGraduationTerm']),
-            }
-            grad_terms << student_plan['expectedGraduationTerm']
+        statuses.each do |status|
+          if (career = status['studentCareer'].try(:[], 'academicCareer').try(:[], 'description'))
+            careers << career
           end
         end
-      end
-      last_grad_term = grad_terms.sort_by { |term| term.try(:[], 'id').to_i }.last
-      {
-        majors: majors,
-        minors: minors,
-        plans: plans,
-        lastExpectedGraduationTerm: parse_hub_term_name(last_grad_term).try(:[], 'name'),
+      end.uniq.compact
+    end
+
+    def parse_hub_level(statuses)
+      level = statuses.collect do |status|
+        status['currentRegistration'].try(:[], 'academicLevel').try(:[], 'level').try(:[], 'description')
+      end.uniq.compact.to_sentence
+      level.blank? ? nil : level
+    end
+
+    def parse_hub_plans(statuses)
+      plan_set = {
+        majors: [],
+        minors: [],
+        plans: [],
+        lastExpectedGraduationTerm: { code: nil, description: nil, name: nil }
       }
+
+      statuses.each do |status|
+        Array.wrap(status.try(:[], 'studentPlans')).each do |plan|
+          flattened_plan = flatten_plan(plan)
+
+          plan_set[:plans] << flattened_plan
+
+          # Catch Majors / Minors
+          college_plan = {college: flattened_plan[:college]}
+          case flattened_plan[:type].try(:[], :category)
+            when 'Major'
+              plan_set[:majors] << college_plan.merge({
+                major: flattened_plan[:plan].try(:[], :description)
+              })
+            when 'Minor'
+              plan_set[:minors] << college_plan.merge({
+                minor: flattened_plan[:plan].try(:[], :description)
+              })
+          end
+
+          # Catch Last Expected Graduation Date
+          if (plan_set[:lastExpectedGraduationTerm].try(:[], :code).to_i < flattened_plan[:expectedGraduationTerm].try(:[], :code).to_i)
+            plan_set[:lastExpectedGraduationTerm] = flattened_plan[:expectedGraduationTerm]
+          end
+        end
+      end
+      plan_set
     end
 
     def parse_hub_term_name(term)
@@ -198,6 +223,79 @@ module MyAcademics
       }
       feed[:nonApLevel] = nonAPLevel if nonAPLevel.present? && nonAPLevel != level
       feed
+    end
+
+    def get_academic_status
+      @academic_status ||= HubEdos::AcademicStatus.new({user_id: @uid}).get
+    end
+
+    def flatten_plan(hub_plan)
+      flat_plan = {
+        career: {},
+        program: {},
+        plan: {},
+      }
+      if (academic_plan = hub_plan['academicPlan'])
+        # Get CPP
+        academic_program = academic_plan.try(:[], 'academicProgram')
+        career = academic_program.try(:[], 'academicCareer')
+        program = academic_program.try(:[], 'program')
+        plan = academic_plan.try(:[], 'plan')
+
+        # Extract CPP
+        flat_plan[:career].merge!({
+          code: career.try(:[], 'code'),
+          description: career.try(:[], 'description')
+        })
+        flat_plan[:program].merge!({
+          code: program.try(:[], 'code'),
+          description: program.try(:[], 'description')
+        })
+        flat_plan[:plan].merge!({
+          code: plan.try(:[], 'code'),
+          description: plan.try(:[], 'description')
+        })
+
+        if (hub_plan['expectedGraduationTerm'])
+          expected_grad_term_name = hub_plan['expectedGraduationTerm'].try(:[], 'name')
+          flat_plan[:expectedGraduationTerm] = {
+            code: hub_plan['expectedGraduationTerm'].try(:[], 'id'),
+            description: expected_grad_term_name,
+            name: Berkeley::TermCodes.normalized_english(expected_grad_term_name)
+          }
+        end
+        flat_plan[:role] = get_student_plan_role_code(flat_plan)
+        flat_plan[:primary] = !!hub_plan['primary']
+        flat_plan[:type] = categorize_plan_type(academic_plan['type'])
+
+        # TODO: Need to re-evaluate the proper field for college name. See adminOwners
+        flat_plan[:college] = academic_plan['academicProgram'].try(:[], 'program').try(:[], 'description')
+      end
+      flat_plan
+    end
+
+    # Designates CalCentral specific plan role (e.g. 'default', 'law', 'fpf', etc.)
+    def get_student_plan_role_code(plan)
+      role_codes = []
+      STUDENT_PLAN_ROLES.each do |cpp_category, matchers|
+        category_role_codes = matchers.select {|matcher| plan[cpp_category][:code] == matcher[:match]}
+        role_codes.concat(category_role_codes)
+      end
+      role_codes.empty? ? 'default' : role_codes.first[:student_plan_role_code]
+    end
+
+    def categorize_plan_type(type)
+      case type.try(:[], 'code')
+        when 'MAJ', 'SS', 'SP', 'HS', 'CRT'
+          category = 'Major'
+        when 'MIN'
+          category = 'Minor'
+      end
+      {
+        code: type['code'],
+        description: type['description'],
+        category: category
+      }
     end
 
     def profile_in_past?(profile)

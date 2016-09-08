@@ -1,5 +1,5 @@
-module MyRegistrations
-  class MyRegistrations < UserSpecificModel
+module MyAcademics
+  class Registrations < UserSpecificModel
 
     include Berkeley::UserRoles
     include Cache::CachedFeed

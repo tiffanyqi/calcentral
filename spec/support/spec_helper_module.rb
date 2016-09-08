@@ -19,6 +19,59 @@ module SpecHelperModule
     proxy
   end
 
+  def hub_edo_academic_status_student_plan(cpp_hash)
+    value_defaults = {
+      is_primary: true,
+      type_code: 'MAJ',
+      type_description: 'Major - Regular Acad/Prfnl'
+    }
+    cpp_hash.reverse_merge!(value_defaults)
+    adminOwners = cpp_hash[:admin_owners].to_a.collect do |owner|
+      {
+        "organization"=>{
+          "code"=>owner[:org_code],
+          "description"=>owner[:org_description]
+        },
+        "percentage"=>owner[:percentage]
+      }
+    end
+    plan = {
+      "academicPlan" => {
+        "academicProgram" => {
+          "program" => {
+            "code" => cpp_hash[:program_code],
+            "description" => cpp_hash[:program_description]
+          },
+          "academicCareer" => {
+            "code" => cpp_hash[:career_code],
+            "description" => cpp_hash[:career_description]
+          }
+        },
+        "plan" => {
+          "code" => cpp_hash[:plan_code],
+          "description" => cpp_hash[:plan_description]
+        },
+        "type" => {
+          "code" => cpp_hash[:type_code],
+          "description" => cpp_hash[:type_description]
+        },
+        "ownedBy" => {
+          "administrativeOwners" => adminOwners
+        },
+      },
+      "primary" => cpp_hash[:is_primary]
+    }
+    if (cpp_hash[:expected_grad_term_id] && cpp_hash[:expected_grad_term_name])
+      plan.merge!({
+        "expectedGraduationTerm" => {
+          "id" => cpp_hash[:expected_grad_term_id],
+          "name" => cpp_hash[:expected_grad_term_name]
+        }
+      })
+    end
+    plan
+  end
+
   def random_ccn
     sprintf('%05d', rand(99999))
   end

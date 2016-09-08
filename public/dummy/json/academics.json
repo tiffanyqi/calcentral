@@ -40,7 +40,11 @@
     ],
     "termName": "Fall 2013",
     "termsInAttendance": "4",
-    "lastExpectedGraduationTerm": "2017 Spring"
+    "lastExpectedGraduationTerm": {
+      "code": "2172",
+      "description": "2017 Spring",
+      "name": "Spring 2017"
+    }
   },
   "gpaUnits": {
     "cumulativeGpa": 2.4,

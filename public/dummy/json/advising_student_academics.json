@@ -4,7 +4,11 @@
       "Undergraduate"
     ],
     "futureTelebearsLevel":"Senior",
-    "lastExpectedGraduationTerm": "2017 Spring",
+    "lastExpectedGraduationTerm": {
+      "code": "2172",
+      "description": "2017 Spring",
+      "name": "Spring 2017"
+    },
     "level":"Senior",
     "majors":[
       {

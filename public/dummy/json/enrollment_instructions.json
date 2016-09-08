@@ -25,7 +25,7 @@
   "enrollmentTermInstructionTypes": [
     {
       "careerCode": "UGRD",
-      "instructionTypeCode": "default",
+      "role": "default",
       "academicPlans": [
         {
           "career": {
@@ -45,7 +45,7 @@
     },
     {
       "careerCode": "UCBX",
-      "instructionTypeCode": "concurrent",
+      "role": "concurrent",
       "academicPlans": [
         {
           "career": {
