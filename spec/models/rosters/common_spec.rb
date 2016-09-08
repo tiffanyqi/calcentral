@@ -207,7 +207,8 @@ describe Rosters::Common do
             'grading_basis' => 'GRD',
             'major' => 'Cognitive Science BA',
             'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R2TA'
+            'terms_in_attendance_group' => 'R2TA',
+            'statusinplan_status_code' => 'AC'
           },
           {
             'section_id' => section_id_one,
@@ -219,7 +220,21 @@ describe Rosters::Common do
             'grading_basis' => 'GRD',
             'major' => 'Computer Science BA',
             'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R2TA'
+            'terms_in_attendance_group' => 'R2TA',
+            'statusinplan_status_code' => 'AC'
+          },
+          {
+            'section_id' => section_id_one,
+            'ldap_uid' => '333333',
+            'student_id' => '22200666',
+            'enroll_status' => 'E',
+            'waitlist_position' => nil,
+            'units' => 4,
+            'grading_basis' => 'GRD',
+            'major' => 'Summer Domestic Visitor UG',
+            'academic_career' => 'UGRD',
+            'terms_in_attendance_group' => 'R2TA',
+            'statusinplan_status_code' => 'DC'
           },
           {
             'section_id' => section_id_one,
@@ -231,7 +246,21 @@ describe Rosters::Common do
             'grading_basis' => 'PNP',
             'major' => 'Computer Science BA',
             'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R8TA'
+            'terms_in_attendance_group' => 'R8TA',
+            'statusinplan_status_code' => 'AC'
+          },
+          {
+            'section_id' => section_id_one,
+            'ldap_uid' => '444444',
+            'student_id' => '22200555',
+            'enroll_status' => 'E',
+            'waitlist_position' => nil,
+            'units' => 4,
+            'grading_basis' => 'PNP',
+            'major' => 'UCBX Fall Pgm for Freshmen',
+            'academic_career' => 'UGRD',
+            'terms_in_attendance_group' => 'R8TA',
+            'statusinplan_status_code' => 'DC'
           },
           {
             'section_id' => section_id_one,
@@ -243,7 +272,8 @@ describe Rosters::Common do
             'grading_basis' => 'GRD',
             'major' => 'Law JD',
             'academic_career' => 'LAW',
-            'terms_in_attendance_group' => nil
+            'terms_in_attendance_group' => nil,
+            'statusinplan_status_code' => 'AC'
           },
           {
             'section_id' => section_id_two,
@@ -255,7 +285,8 @@ describe Rosters::Common do
             'grading_basis' => 'GRD',
             'major' => 'Chemistry PhD',
             'academic_career' => 'GRAD',
-            'terms_in_attendance_group' => nil
+            'terms_in_attendance_group' => nil,
+            'statusinplan_status_code' => 'AC'
           },
           {
             'section_id' => section_id_two,
@@ -266,7 +297,8 @@ describe Rosters::Common do
             'grading_basis' => 'GRD',
             'major' => 'UCBX Concurrent Enrollment',
             'academic_career' => 'UCBX',
-            'terms_in_attendance_group' => nil
+            'terms_in_attendance_group' => nil,
+            'statusinplan_status_code' => 'AC'
           },
           {
             'section_id' => section_id_two,
@@ -277,7 +309,8 @@ describe Rosters::Common do
             'grading_basis' => 'GRD',
             'major' => 'Pizza Science BA',
             'academic_career' => 'ABCD',
-            'terms_in_attendance_group' => nil
+            'terms_in_attendance_group' => nil,
+            'statusinplan_status_code' => 'AC'
           }
         ]
       }
