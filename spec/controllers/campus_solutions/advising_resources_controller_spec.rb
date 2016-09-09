@@ -25,8 +25,8 @@ describe CampusSolutions::AdvisingResourcesController do
         it 'contains advising links' do
           get feed
           json = JSON.parse response.body
-          expect(resources = json['feed']['ucAdvisingResources']).to_not be_nil
-          expect(link = resources['ucAdvisingLinks'][key]).to_not be_nil
+          expect(links = json['feed']['links']).to_not be_nil
+          expect(link = links[key]).to_not be_nil
           expect(link['isCsLink']).to be true
           expect(link['name']).to eq expected_name
         end
@@ -40,7 +40,7 @@ describe CampusSolutions::AdvisingResourcesController do
       end
 
       context 'links from YAML settings' do
-        let(:key) { 'multiYearAcademicPlannerGeneric' }
+        let(:key) { 'multiYearAcademicPlannerStudentSpecific' }
         let(:expected_name) { 'Multi-Year Planner' }
 
         it_behaves_like 'a feed with advising resources'
