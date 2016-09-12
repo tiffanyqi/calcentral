@@ -486,6 +486,7 @@ features:
   gpa_calculator: true
   hub_term_api: true
   enrollment_verification: false
+  enrollment_verification_deeplink: false
   legacy_advising: false
   legacy_regblocks: true
   manage_site_mailing_lists: false
