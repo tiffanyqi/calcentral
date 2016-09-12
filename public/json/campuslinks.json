@@ -353,7 +353,7 @@
     {
       "name": "BearWALK Night safety services",
       "description": "Free safety night walks to and from a desired location with a Community Service Officer",
-      "url": "http://police.berkeley.edu/programsandservices/campus_safety/index.html",
+      "url": "http://ucpd.berkeley.edu/campus-safety/night-safety-tips",
       "roles": {
         "student": true,
         "applicant": true,
@@ -2831,7 +2831,7 @@
     {
       "name": "Safety",
       "description": "Safety information and programs",
-      "url": "http://police.berkeley.edu/index.html",
+      "url": "http://ucpd.berkeley.edu/campus-safety/major-campus-emergency",
       "roles": {
         "student": true,
         "applicant": true,
