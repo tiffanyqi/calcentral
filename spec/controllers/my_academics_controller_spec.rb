@@ -30,7 +30,6 @@ describe MyAcademicsController do
     context 'normal user session' do
       it 'should get a feed full of content' do
         expect(subject['feedName']).to eq 'MyAcademics::Merged'
-        expect(subject['examSchedule']).to have(3).items
         expect(subject['gpaUnits']).to include 'cumulativeGpa'
         expect(subject['otherSiteMemberships']).to be_present
         expect(subject['regblocks']).to be_present
@@ -46,7 +45,6 @@ describe MyAcademicsController do
       it 'filters bCourses sites' do
         expect(subject['otherSiteMemberships']).to be_blank
         expect(subject['feedName']).to eq 'MyAcademics::Merged'
-        expect(subject['examSchedule']).to have(3).items
         expect(subject['gpaUnits']).to include 'cumulativeGpa'
         expect(subject['regblocks']).to be_present
         expect(subject['requirements']).to be_present
@@ -88,7 +86,6 @@ describe MyAcademicsController do
       context 'permission for My Academics' do
         shared_examples 'shared academics feed' do
           it 'views most data' do
-            expect(subject['examSchedule']).to have(3).items
             expect(subject).not_to include 'otherSiteMemberships'
             expect(subject).not_to include 'regblocks'
             expect(subject).not_to include 'requirements'

@@ -484,6 +484,7 @@ features:
   cs_sir: true
   cs_transfer_credit: false
   gpa_calculator: true
+  final_exam_schedule: true
   hub_term_api: true
   enrollment_verification: false
   enrollment_verification_deeplink: false

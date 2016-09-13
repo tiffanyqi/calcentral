@@ -33,7 +33,6 @@ describe MyAcademics::FilteredForDelegate do
       expect(feed['collegeAndLevel']).to be_present
       expect(feed['transitionTerm']).to be_present
       expect(feed['semesters']).to be_present
-      expect(feed['examSchedule']).to be_present
     end
   end
 
