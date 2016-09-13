@@ -84,7 +84,7 @@
       "slug": "fall-2016",
       "termCode": "D",
       "termYear": "2016",
-      "timeBucket": "future",
+      "timeBucket": "current",
       "campusSolutionsTerm": true,
       "gradingInProgress": null,
       "classes": [
@@ -342,7 +342,7 @@
       "slug": "summer-2016",
       "termCode": "C",
       "termYear": "2016",
-      "timeBucket": "current",
+      "timeBucket": "past",
       "campusSolutionsTerm": false,
       "gradingInProgress": null,
       "classes": [
@@ -811,8 +811,62 @@
       "name": "Fall 2016",
       "term": "D",
       "term_year": "2016",
-      "current": true,
+      "curr": true,
       "time_bucket": "current",
+      "exams": {
+        "5": [
+          {
+            "name": "INTEGBI 35AC",
+            "number": 35,
+            "time": "TuTh 2:00P-3:29P",
+            "waitlisted": null,
+            "exam_location": "",
+            "exam_time": "8-11A",
+            "exam_slot": 5,
+            "exam_date": "Tue 12/13"
+          },
+          {
+            "name": "POLI SCI 112B",
+            "number": 112,
+            "time": "TuTh 5:00P-6:29P",
+            "waitlisted": true,
+            "exam_location": "",
+            "exam_time": "11:30-2:30P",
+            "exam_slot": 14,
+            "exam_date": "Thu 12/15"
+          }
+        ],
+        "13": [
+          {
+            "name": "MATH 53",
+            "number": 53,
+            "time": "MWF 4:00P-4:59P",
+            "waitlisted": null,
+            "exam_location": "",
+            "exam_time": "8-11A",
+            "exam_slot": 13,
+            "exam_date": "Thu 12/15"
+          },
+          {
+            "name": "MATH 54",
+            "number": 54,
+            "time": "MWF 4:00P-4:59P",
+            "waitlisted": null,
+            "exam_location": "",
+            "exam_time": "8-11A",
+            "exam_slot": 13,
+            "exam_date": "Thu 12/15"
+          }
+        ]
+      }
+    },
+    {
+      "cs_data_available": false,
+      "name": "Spring 2017",
+      "term": "B",
+      "term_year": "2017",
+      "curr": false,
+      "time_bucket": "future",
       "exams": {
         "5": [
           {
