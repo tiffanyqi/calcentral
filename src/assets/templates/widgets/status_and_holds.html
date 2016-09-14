@@ -40,10 +40,7 @@
                 </div>
               </li>
               <li class="cc-widget-list-hover"
-                  data-ng-if="(((registration.academicCareer.code === 'UGRD') && !registration.pastClassesStart) || ((registration.academicCareer.code === 'UGRD') && (registration.term.id === '2168') && !registration.pastFall2016Extension) ||
-                  ((registration.academicCareer.code !== 'UGRD') && !registration.pastAddDrop) ||
-                  (registration.summary !== 'Officially Registered' && registration.positiveIndicators.R99)) &&
-                  !registration.isLegacy && !registration.isSummer && registration.summary !== 'Officially Registered'"
+                  data-ng-if="showCNP(registration)"
                   data-ng-class="{'cc-widget-list-hover-opened':(registration.positiveIndicators.show)}"
                   data-cc-accessible-focus-directive
                   data-ng-click="api.widget.toggleShow($event, null, registration.positiveIndicators, 'My Academics - Status and Holds')">

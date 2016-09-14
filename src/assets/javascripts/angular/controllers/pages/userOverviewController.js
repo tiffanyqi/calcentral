@@ -190,6 +190,10 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       });
   };
 
+  $scope.showCNP = function(registration) {
+    return statusHoldsService.showCNP(registration);
+  };
+
   $scope.targetUser.actAs = function() {
     adminService.actAs($scope.targetUser);
   };
