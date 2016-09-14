@@ -59,9 +59,6 @@ module Advising
           manageAppointments: manage_appointments_link,
           newAppointment: new_appointment_link
         }
-      else
-        advising_feed[:statusCode] = 500
-        advising_feed[:errored] = true
       end
     end
 

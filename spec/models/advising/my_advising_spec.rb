@@ -137,8 +137,7 @@ describe Advising::MyAdvising do
       end
       it 'reports failure' do
         expect(Rails.logger).to receive(:error).with(/Could not retrieve CS link/).exactly(2).times
-        expect(subject[:statusCode]).to eq 500
-        expect(subject[:errored]).to eq true
+        expect(subject[:feed][:links]).not_to be
       end
     end
   end
