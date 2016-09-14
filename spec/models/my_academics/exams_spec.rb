@@ -245,7 +245,7 @@ describe MyAcademics::Exams do
   let(:fall_2016_semester_after_parsed) do
     {
       :cs_data_available => false,:name => 'Fall 2016',:term => 'D',
-      :term_year => '2016',:curr => false,:timeBucket => 'future',:slug=>'fall-2016',
+      :term_year => '2016',:timeBucket => 'future',:slug=>'fall-2016',
       :courses => [
         ug_class_time,
         ug_course_exception,
@@ -259,7 +259,7 @@ describe MyAcademics::Exams do
   let(:spring_2016_semester_after_parsed) do
     {
       :cs_data_available => true,:name => 'Spring 2016',:term => 'B',
-      :term_year => '2016',:curr => true,:timeBucket => 'current',:slug=>'spring-2016',
+      :term_year => '2016',:timeBucket => 'current',:slug=>'spring-2016',
       :courses => [
         cs_class,
         # the following exams aren't directly a result of parse_academic_data
@@ -396,7 +396,7 @@ describe MyAcademics::Exams do
     context 'with classes and no exams as cs data is populated' do
       let(:feed_after_parse_academic_data) do
         [{
-          :cs_data_available => true,:name => 'Fall 2016',:term => 'D',:term_year => '2016',:curr => false,:timeBucket => 'future',
+          :cs_data_available => true,:name => 'Fall 2016',:term => 'D',:term_year => '2016',:timeBucket => 'future',
           :courses => [ug_class_time,ug_course_exception,waitlisted_class]
         }]
       end

@@ -28,7 +28,6 @@ module MyAcademics
           term: semester[:termCode],
           term_year: semester[:termYear],
           courses: courses,
-          curr: (semester[:timeBucket] == 'current'),
           timeBucket: semester[:timeBucket],
           slug: semester[:slug]
         }
@@ -69,7 +68,7 @@ module MyAcademics
         sort_exams(semester)
       end
       # sort by semester, current first
-      academics_data.sort_by{|semester| semester[:curr] ? 0 : 1 }
+      academics_data.sort_by{|semester| semester[:timeBucket] == 'current' ? 0 : 1 }
     end
 
     # Groups exams by exam_slot for conflicts, then sorts by exam_slot for each semester

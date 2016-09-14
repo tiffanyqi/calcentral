@@ -811,7 +811,6 @@
       "name": "Fall 2016",
       "term": "D",
       "term_year": "2016",
-      "curr": true,
       "time_bucket": "current",
       "exams": {
         "5": [
