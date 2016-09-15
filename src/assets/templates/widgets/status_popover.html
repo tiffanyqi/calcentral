@@ -28,7 +28,7 @@
           <i class="fa fa-exclamation-triangle cc-icon-gold"></i>
           <span>Temporary Protection from Cancel for Non-Payment</span>
         </div>
-        <div data-ng-if="!registration.positiveIndicators.ROP && !registration.positiveIndicators.R99">
+        <div data-ng-if="registration.summary === 'Not Officially Registered' && !registration.positiveIndicators.ROP && !registration.positiveIndicators.R99">
           <i class="fa"
              data-ng-class="{true:'fa-exclamation-circle cc-icon-red',false:'fa-exclamation-triangle cc-icon-gold'}[registration.pastFinancialDisbursement]">
           </i>

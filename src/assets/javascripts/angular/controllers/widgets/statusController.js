@@ -138,18 +138,22 @@ angular.module('calcentral.controllers').controller('StatusController', function
       if (registration.isSummer || !registration.positiveIndicators.S09 || registration.academicCareer.code === 'UCBX') {
         return;
       }
+      // Count for registration status
       if (registration.summary !== 'Officially Registered') {
         $scope.count++;
         $scope.hasAlerts = true;
       }
-      if (!registration.positiveIndicators.ROP && !registration.positiveIndicators.R99 && registration.pastFinancialDisbursement) {
-        if ((registration.academicCareer.code === 'UGRD') && (!registration.pastClassesStart || (registration.term.id === '2168' && !registration.pastFall2016Extension))) {
-          $scope.count++;
-          $scope.hasAlerts = true;
-        }
-        if ((registration.academicCareer.code !== 'UGRD') && !registration.pastAddDrop) {
-          $scope.count++;
-          $scope.hasAlerts = true;
+      // Count for CNP status.  Per design, we do not want an alert for CNP if a student is "Not Enrolled" or "Officially Registered".
+      if (registration.summary === 'Not Officially Registered') {
+        if (!registration.positiveIndicators.ROP && !registration.positiveIndicators.R99 && registration.pastFinancialDisbursement) {
+          if ((registration.academicCareer.code === 'UGRD') && (!registration.pastClassesStart || (registration.term.id === '2168' && !registration.pastFall2016Extension))) {
+            $scope.count++;
+            $scope.hasAlerts = true;
+          }
+          if ((registration.academicCareer.code !== 'UGRD') && !registration.pastAddDrop) {
+            $scope.count++;
+            $scope.hasAlerts = true;
+          }
         }
       }
     });

@@ -147,6 +147,10 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
     angular.merge($scope.residency, residency);
   };
 
+  $scope.showCNP = function(registration) {
+    return statusHoldsService.showCNP(registration);
+  };
+
   var loadStatusInformation = function() {
     getCalResidency()
     .then(parseCalResidency)

@@ -108,10 +108,34 @@ angular.module('calcentral.services').service('statusHoldsService', function() {
     return returnedMessages;
   };
 
+  var showCNP = function(registration) {
+    // Only consider showing CNP status for non-legacy, non-summer terms in which a student is not already Officially Registered
+    if (!registration.isLegacy && !registration.isSummer && registration.summary !== 'Officially Registered') {
+      // If a student is Not Enrolled and does not have CNP protection through R99 or ROP, do not show CNP warning as there are no classes to be dropped from.
+      // We need to run this block first, as it is possible for these conditions to be met and still return 'true' in the next block.
+      if (registration.summary === 'Not Enrolled' && (!registration.positiveIndicators.R99 && !registration.positiveIndicators.ROP)) {
+        return false;
+      }
+      // If a student is not Officially Registered but is protected from CNP via R99, show protected status regardless of where we are in the term timeline.
+      // Otherwise, show CNP status until CNP action is taken (start of classes for undergrads, 5 weeks into the term for grad/law)
+      if ((registration.summary !== 'Officially Registered' && registration.positiveIndicators.R99) ||
+          (registration.academicCareer.code === 'UGRD' && !registration.pastClassesStart) ||
+          (registration.academicCareer.code !== 'UGRD' && !registration.pastAddDrop)) {
+        return true;
+      // If none of these conditions are met, do not show CNP status
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
   return {
     getRegStatusMessages: getRegStatusMessages,
     matchTermIndicators: matchTermIndicators,
     parseCsTerm: parseCsTerm,
-    parseLegacyTerm: parseLegacyTerm
+    parseLegacyTerm: parseLegacyTerm,
+    showCNP: showCNP
   };
 });
