@@ -1,11 +1,4 @@
 <ul class="cc-popover-items" data-ng-click="api.popover.clickThrough('Status')">
-  <li class="cc-popover-item" data-ng-show="statusLoading">
-    <div
-      class="cc-launcher-status-loading"
-      data-cc-loading-directive="statusLoading"
-      data-cc-loading-process="Loading...">
-    </div>
-  </li>
   <li class="cc-popover-item"
     data-ng-repeat="registration in regStatus.registrations | orderBy:'-id'"
     data-ng-if="api.user.profile.roles.student && api.user.profile.features.regstatus && !registration.isSummer &&
