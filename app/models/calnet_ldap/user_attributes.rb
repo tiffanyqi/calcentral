@@ -23,8 +23,18 @@ module CalnetLdap
     end
 
     def self.get_bulk_attributes(uids)
-      if (results = CalnetLdap::Client.new.search_by_uids uids)
-        results.map { |result| parse result }
+      CalnetLdap::Client.new.search_by_uids(uids).map do |result|
+        feed = parse result
+        write_cache(feed, feed[:ldap_uid])
+        feed
+      end
+    end
+
+    def self.get_attributes_by_name(name, include_guest_users=false)
+      CalnetLdap::Client.new.search_by_name(name, include_guest_users).map do |result|
+        feed = parse result
+        write_cache(feed, feed[:ldap_uid])
+        feed
       end
     end
 
