@@ -15,12 +15,12 @@ describe StoredUsersController do
     {
       :saved => [
         {
-          :ldap_uid => '1'
+          :ldapUid => '1'
         }
       ],
       :recent => [
         {
-          :ldap_uid => '2'
+          :ldapUid => '2'
         }
       ]
     }

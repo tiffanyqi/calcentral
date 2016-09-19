@@ -1,27 +1,18 @@
 module User
   class SearchUsersByUid
     extend Cache::Cacheable
+    include User::Parser
 
     def initialize(options={})
-      @id = options[:id]
-      @ids = options[:ids]
+      @options = options
     end
 
     def search_users_by_uid
-      search_batch([@id])
-    end
-
-    def search_users_by_uid_batch
-      search_batch(@ids)
-    end
-
-    private
-
-    def search_batch(uids)
-      cache_key = uids.sort.join('-')
-      self.class.fetch_from_cache "#{cache_key}" do
-        CampusOracle::Queries.get_basic_people_attributes(uids)
+      # TODO Try reading User::Api cache first.
+      user = self.class.fetch_from_cache @options[:id] do
+        User::AggregatedAttributes.new(@options[:id]).get_feed
       end
+      user if !user[:unknown] && has_role(user, @options[:roles])
     end
 
   end

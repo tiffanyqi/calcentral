@@ -35,11 +35,8 @@ module User
       tokens.select { |token| !token.end_with? '.' }
     end
 
-    def filter_by_roles(users, roles)
-      return users if roles.nil?
-      users.select do |user|
-        (user_roles = user[:roles]) && !!roles.find { |role| user_roles[role] }
-      end
+    def has_role(user, roles)
+      roles.blank? || roles.find { |role| user[:roles][role] }
     end
 
   end

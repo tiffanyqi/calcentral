@@ -7,9 +7,7 @@ class StoredUsersController < ApplicationController
 
   def get
     authorize_query_stored_users current_user
-    saved_and_recent = User::StoredUsers.get current_user.real_user_id
-    camelize saved_and_recent[:saved]
-    camelize saved_and_recent[:recent]
+    saved_and_recent = User::StoredUsers.get current_user.user_id
     render json: { users: saved_and_recent }.to_json
   end
 

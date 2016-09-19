@@ -127,7 +127,11 @@ angular.module('calcentral.controllers').controller('UserSearchController', func
 
     adminFactory.searchUsers(searchTab.nameOrId).success(function(data) {
       if (!data.users || data.users.length === 0) {
-        searchTab.message = 'Your search on \"' + searchTab.nameOrId + '\" did not match any users.';
+        var noun = 'users';
+        if (apiService.user.profile.roles.advisor) {
+          noun = 'students';
+        }
+        searchTab.message = 'Your search on \"' + searchTab.nameOrId + '\" did not match any ' + noun + '.';
       }
       searchTab.users = decorate(data.users);
       updateSearchedUserSavedStates();

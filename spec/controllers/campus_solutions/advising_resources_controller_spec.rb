@@ -6,7 +6,7 @@ describe CampusSolutions::AdvisingResourcesController do
   context 'authenticated user' do
     before do
       session['user_id'] = user_id
-      allow(HubEdos::UserAttributes).to receive(:new).with(user_id: user_id).and_return double(get: {roles: user_roles})
+      allow(HubEdos::UserAttributes).to receive(:new).with(user_id: user_id).and_return double(get: {campus_solutions_id: random_cs_id, roles: user_roles})
     end
 
     context 'no advisor privileges' do

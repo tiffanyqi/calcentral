@@ -132,8 +132,7 @@ Calcentral::Application.routes.draw do
   end
 
   # Search for users
-  get '/api/search_users/:id' => 'search_users#search_users', :via => :get, :defaults => { :format => 'json' }
-  get '/api/search_users/uid/:id' => 'search_users#search_users_by_uid', :via => :get, :defaults => { :format => 'json' }
+  get '/api/search_users/:id' => 'search_users#by_id', :via => :get, :defaults => { :format => 'json' }
   get '/api/search_users/id_or_name/:input' => 'search_users#by_id_or_name', :defaults => { :format => 'json' }
 
   # View-as endpoints

@@ -1,4 +1,4 @@
-<div data-ng-if="api.user.profile.features.csAdvisorStudentLookup && api.user.profile.isDirectlyAuthenticated && (api.user.profile.isViewer || api.user.profile.isSuperuser || api.user.profile.roles.advisor)">
+<div data-ng-if="api.user.profile.features.csAdvisorStudentLookup && (api.user.profile.isViewer || api.user.profile.isSuperuser || api.user.profile.roles.advisor)">
   <div class="row collapse">
     <div class="column">
       <h1 class="cc-heading-page-title"><a href="/">My Dashboard</a> &raquo; Student Overview</h1>
@@ -18,4 +18,4 @@
     </div>
   </div>
 </div>
-<div data-ng-include="'404.html'" data-ng-if="!api.user.profile.features.csAdvisorStudentLookup || !api.user.profile.isDirectlyAuthenticated || (!api.user.profile.isViewer && !api.user.profile.isSuperuser && !api.user.profile.roles.advisor)"></div>
+<div data-ng-include="'404.html'" data-ng-if="!api.user.profile.features.csAdvisorStudentLookup || (!api.user.profile.isViewer && !api.user.profile.isSuperuser && !api.user.profile.roles.advisor)"></div>

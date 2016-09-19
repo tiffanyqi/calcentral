@@ -10,7 +10,6 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
   var advisorActAsUrl = '/advisor_act_as';
   var delegateActAsUrl = '/delegate_act_as';
   var userByAnyIdUrl = '/api/search_users/';
-  var userByUidUrl = '/api/search_users/uid/';
   var searchUsersURL = '/api/search_users/id_or_name/';
   var stopActAsUrl = '/stop_act_as';
   var stopAdvisorActAsUrl = '/stop_advisor_act_as';
@@ -48,10 +47,6 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
 
   var userLookup = function(options) {
     return apiService.http.request(options, userByAnyIdUrl + options.id);
-  };
-
-  var userLookupByUid = function(options) {
-    return apiService.http.request(options, userByUidUrl + options.id);
   };
 
   var searchUsers = function(input) {
@@ -96,7 +91,6 @@ angular.module('calcentral.factories').factory('adminFactory', function(apiServi
     storeUser: storeUser,
     storeUserAsRecent: storeUserAsRecent,
     userLookup: userLookup,
-    searchUsers: searchUsers,
-    userLookupByUid: userLookupByUid
+    searchUsers: searchUsers
   };
 });

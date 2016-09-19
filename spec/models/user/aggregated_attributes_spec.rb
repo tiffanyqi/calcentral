@@ -6,6 +6,7 @@ describe User::AggregatedAttributes do
   let(:bmail_from_edo) { 'rasputin@berkeley.edu' }
   let(:edo_attributes) do
     {
+      ldap_uid: uid,
       person_name: preferred_name,
       student_id: campus_solutions_id,
       campus_solutions_id: campus_solutions_id,
@@ -43,7 +44,9 @@ describe User::AggregatedAttributes do
         expect(subject[:officialBmailAddress]).to eq bmail_from_edo
         expect(subject[:campusSolutionsId]).to eq campus_solutions_id
         expect(subject[:studentId]).to eq campus_solutions_id
+        expect(subject[:ldapUid]).to eq uid
         expect(subject[:roles][:recentStudent]).to be true
+        expect(subject[:unknown]).to be_falsey
       end
     end
   end
@@ -52,6 +55,7 @@ describe User::AggregatedAttributes do
     let(:bmail_from_ldap) { 'raspy@berkeley.edu' }
     let(:ldap_attributes) do
       {
+        ldap_uid: uid,
         official_bmail_address: bmail_from_ldap,
         roles: {
           student: is_active_student,
@@ -67,6 +71,7 @@ describe User::AggregatedAttributes do
       it 'should prefer EDO' do
         expect(subject[:officialBmailAddress]).to eq bmail_from_edo
         expect(subject[:roles][:recentStudent]).to be false
+        expect(subject[:unknown]).to be_falsey
       end
     end
     context 'former student' do
@@ -74,11 +79,14 @@ describe User::AggregatedAttributes do
       it 'should fall back to LDAP' do
         expect(subject[:officialBmailAddress]).to eq bmail_from_ldap
         expect(subject[:roles][:recentStudent]).to be true
+        expect(subject[:ldapUid]).to eq uid
+        expect(subject[:unknown]).to be_falsey
       end
     end
     context 'applicant' do
       let(:edo_attributes) do
         {
+          ldap_uid: uid,
           person_name: preferred_name,
           student_id: campus_solutions_id,
           campus_solutions_id: campus_solutions_id,
@@ -96,11 +104,13 @@ describe User::AggregatedAttributes do
       it 'should prefer EDO' do
         expect(subject[:officialBmailAddress]).to eq bmail_from_edo
         expect(subject[:roles][:recentStudent]).to be true
+        expect(subject[:unknown]).to be_falsey
       end
     end
     context 'graduate' do
       let(:edo_attributes) do
         {
+          ldap_uid: uid,
           person_name: preferred_name,
           student_id: campus_solutions_id,
           campus_solutions_id: campus_solutions_id,
@@ -117,6 +127,21 @@ describe User::AggregatedAttributes do
       let(:is_active_student) { true }
       it 'picks up EDO role' do
         expect(subject[:roles][:graduate]).to be true
+        expect(subject[:unknown]).to be_falsey
+      end
+    end
+    context 'unknown UID' do
+      let(:edo_attributes) do
+        {
+          ldap_uid: uid
+        }
+      end
+      let(:ldap_attributes) do
+        {}
+      end
+      it 'succeeds but delivers the bad news' do
+        expect(subject[:ldapUid]).to eq uid
+        expect(subject[:unknown]).to be_truthy
       end
     end
     context 'broken Hub API' do
@@ -130,6 +155,7 @@ describe User::AggregatedAttributes do
       it 'relies on LDAP and Oracle' do
         expect(subject[:officialBmailAddress]).to eq bmail_from_ldap
         expect(subject[:roles][:recentStudent]).to be false
+        expect(subject[:ldapUid]).to eq uid
       end
     end
   end
