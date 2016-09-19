@@ -5,7 +5,7 @@ describe CampusSolutions::AdvisingResources do
     it_should_behave_like 'a simple proxy that returns errors'
     it_behaves_like 'a proxy that got data successfully'
     it 'returns data with the expected structure' do
-      expect(subject[:feed][:ucAdvisingResources]).to be
+      expect(subject[:feed][:links]).to be
     end
   end
 
@@ -20,7 +20,7 @@ describe CampusSolutions::AdvisingResources do
     context 'no student uid requested' do
       it_should_behave_like 'a proxy that gets data'
       it 'includes specific mock data' do
-        expect(proxy.get[:feed][:ucAdvisingResources][:ucAdvisingLinks][:ucAdviseeStudentCenter][:url]).to eq(
+        expect(proxy.get[:feed][:links][:ucAdviseeStudentCenter][:url]).to eq(
           'https://bcs-web-dev-03.is.berkeley.edu:8443/psc/bcsdev/EMPLOYEE/HRMS/c/SSR_ADVISEE_OVRD.SSS_STUDENT_CENTER.GBL?')
       end
       it 'should query for advisor EMPLID only' do

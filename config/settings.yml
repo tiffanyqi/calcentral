@@ -441,12 +441,9 @@ calnet_crosswalk_proxy:
 
 campus_solutions_links:
   advising:
-    multi_year_academic_planner_generic: ''
     multi_year_academic_planner: ''
     schedule_planner: ''
     web_now_documents: ''
-    eforms_center: ''
-    eforms_work_list: ''
   academics:
     enrollment_verification_google: ''
     enrollment_Verification: ''
