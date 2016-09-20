@@ -404,13 +404,12 @@ To view other rake task for the project: `rake -T`
 
 A few rake tasks to help monitor statistics and more:
 
-* `rake memcached:clear_stats` - Reset memcached stats from all cluster nodes.
-* `rake memcached:empty` - Invalidate all memcached keys from all cluster nodes.
-* `rake memcached:get_stats` - Fetch memcached stats from all cluster nodes.
+* `rake memcached:clear` - Invalidate all memcached keys and reset memcached stats from all cluster nodes.
+* `rake memcached:get_stats` - Fetch memcached stats from all cluster nodes. Per-slab stats may point out specific types of data which are being overcached or undercached, or indicate a need to reconfigure memcached.
+* `rake memcached:dump_slab slab=NUMBER` - Shows which cached items are currently stored in the "slab" with the given ID. The list won't include the keys of expired or evicted items.
 
-
-* Generally, if you `rake memcached:empty` (__WARNING:__ do not run on the production cluster unless you know what you're doing), you should follow with an `rake memcached:clear_stats`.
-* All three task take the optional param of `hosts`. So, if say you weren't running these tasks on the cluster layers themselves, or only wanted to tinker with a certain subset of clusters: `rake memcached:get_stats hosts="localhost:11212,localhost:11213,localhost:11214"`
+* __WARNING:__ do not run `rake memcached:clear` on the production cluster unless you know what you're doing!
+* All `memcached` tasks take the optional param of `hosts`. So, if say you weren't running these tasks on the cluster layers themselves, or only wanted to tinker with a certain subset of clusters: `rake memcached:get_stats hosts="localhost:11212,localhost:11213,localhost:11214"`
 
 ## Using the feature toggle:
 
