@@ -2,9 +2,13 @@ describe AdvisorAuthorization do
 
   let(:filter) { Class.new { extend AdvisorAuthorization } }
   let(:user_id) { random_id }
+  let(:current_user) { double real_user_id: random_id, policy: policy }
   let(:is_advisor) { false }
+  let(:mock_attributes) do
+    { roles: { advisor: is_advisor }}
+  end
   before {
-    allow(User::AggregatedAttributes).to receive(:new).with(user_id).and_return double get_feed: { roles: { advisor: is_advisor } }
+    allow(User::AggregatedAttributes).to receive(:new).with(user_id).and_return double(get_feed: {roles: { advisor: is_advisor}})
   }
 
   describe '#authorize_advisor_view_as' do
@@ -19,7 +23,7 @@ describe AdvisorAuthorization do
             recentStudent: is_recent_student
           }
       }
-      allow(User::AggregatedAttributes).to receive(:new).with(student_uid).and_return double get_feed: feed
+      allow(User::AggregatedAttributes).to receive(:new).with(student_uid).and_return double(get_feed: feed)
     }
     subject { filter.authorize_advisor_view_as user_id, student_uid }
 

@@ -43,7 +43,7 @@ describe User::StoredUsers do
   let(:fake_ldap_user) do
     [
       {
-        'ldap_uid' => stored_uid
+        :ldap_uid => stored_uid
       }
     ]
   end
@@ -65,13 +65,12 @@ describe User::StoredUsers do
       recent_uids_stub.should_receive(:order).with(:created_at).and_return(recent_uids_stub)
       recent_uids_stub.should_receive(:reverse_order).and_return(fake_stored_uid_entries[:recent])
 
-      User::SearchUsersByUid.should_receive(:new).with({ ids: [stored_uid, stored_uid] }).and_return(stub_model)
-      stub_model.should_receive(:search_users_by_uid_batch).and_return(fake_ldap_user)
+      User::BasicAttributes.should_receive(:attributes_for_uids).with([stored_uid, stored_uid]).and_return(fake_ldap_user)
 
       users = User::StoredUsers.get(owner_uid)
 
-      expect(users[:saved][0][:ldap_uid]).to eq stored_uid
-      expect(users[:recent][0][:ldap_uid]).to eq stored_uid
+      expect(users[:saved][0][:ldapUid]).to eq stored_uid
+      expect(users[:recent][0][:ldapUid]).to eq stored_uid
     end
 
     it 'should report whether recent uids are saved' do
@@ -80,16 +79,16 @@ describe User::StoredUsers do
       User::Data.create(uid: owner_uid)
       User::Data.create(uid: saved_uid)
       User::Data.create(uid: unsaved_uid)
-      allow_any_instance_of(User::SearchUsersByUid).to receive(:search_users_by_uid_batch).
-          and_return [{'ldap_uid' => owner_uid}, {'ldap_uid' => saved_uid}, {'ldap_uid' => unsaved_uid}]
+      allow_any_instance_of(User::BasicAttributes).to receive(:attributes_for_uids).
+          and_return [{:ldap_uid => owner_uid}, {:ldap_uid => saved_uid}, {:ldap_uid => unsaved_uid}]
 
       User::StoredUsers.store_saved_uid(owner_uid, saved_uid)
       User::StoredUsers.store_recent_uid(owner_uid, saved_uid)
       User::StoredUsers.store_recent_uid(owner_uid, unsaved_uid)
 
       users = User::StoredUsers.get(owner_uid)
-      expect(users[:recent]).to include({ldap_uid: saved_uid, saved: true})
-      expect(users[:recent]).to include({ldap_uid: unsaved_uid, saved: false})
+      expect(users[:recent].find {|u| u[:ldapUid] == saved_uid}).to include(saved: true)
+      expect(users[:recent].find {|u| u[:ldapUid] == unsaved_uid}).to include(saved: false)
     end
 
   end

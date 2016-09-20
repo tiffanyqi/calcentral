@@ -18,7 +18,7 @@
             <td>
               <div>
                 <strong data-ng-bind="targetUser.defaultName"></strong>
-                <span class="cc-inline-block">(<button class="cc-button-link" data-ng-click="targetUser.actAs()">view as</button>)</span>
+                <span class="cc-inline-block">(<button class="cc-button-link" data-ng-click="targetUser.actAs()" data-ng-disabled="!api.user.profile.isDirectlyAuthenticated">view as</button>)</span>
               </div>
             </td>
           </tr>

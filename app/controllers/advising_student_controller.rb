@@ -3,7 +3,7 @@ class AdvisingStudentController < ApplicationController
   include AdvisorAuthorization
 
   before_action :api_authenticate
-  before_action :authorize_student_lookup
+  before_action :authorize_for_student
 
   rescue_from StandardError, with: :handle_api_exception
   rescue_from Errors::ClientError, with: :handle_client_error
@@ -84,9 +84,9 @@ class AdvisingStudentController < ApplicationController
     feed
   end
 
-  def authorize_student_lookup
+  def authorize_for_student
     raise NotAuthorizedError.new('The student lookup feature is disabled') unless is_feature_enabled
-    authorize_advisor_view_as current_user.real_user_id, student_uid_param
+    authorize_advisor_student_overview current_user.user_id, student_uid_param
   end
 
   def student_uid_param
