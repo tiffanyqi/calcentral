@@ -14,12 +14,17 @@ angular.module('calcentral.services').service('statusHoldsService', function() {
       explanation: null,
       positiveIndicators: {}
     });
+
     var termUnits = _.get(term, 'termUnits');
-    var termUnitsTotal = _.find(termUnits, {
+    var totalUnits = _.find(termUnits, {
       type: {
         description: 'Total'
       }
     });
+    var termUnitsTotal = totalUnits ? totalUnits : {
+      unitsEnrolled: 0
+    };
+
     if (term.registered === true) {
       term.summary = 'Officially Registered';
       term.explanation = term.isSummer ? 'You are officially registered for this term.' : 'You are officially registered and are entitled to access campus services.';
