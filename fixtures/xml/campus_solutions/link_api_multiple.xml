@@ -638,4 +638,50 @@
     <URL>https://bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/EMPLOYEE/HRMS/c/MAINTAIN_SERVICE_IND_STDNT.ACTIVE_SRVC_INDICA.GBL</URL>
     <COMMENTS></COMMENTS>
   </Link>
+  <Link>
+    <URL_ID>UC_CX_GT_AAQEAPPLIC_VIEW</URL_ID>
+    <Description>View Submitted Advancmnt Forms</Description>
+    <HOVER_OVER_TEXT/>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>FORM</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>URI_TYPE</NAME>
+        <value>PL</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>
+      https://bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?&amp;G3FORM_FAMILY=STUDENT&amp;G3FORM_TYPE=AAQEAPPLIC&amp;G3FORM_CONDITION=Default&amp;G3FORM_TASK=VWS
+    </URL>
+    <COMMENTS></COMMENTS>
+  </Link>
+  <Link>
+    <URL_ID>UC_CX_GT_AAQEAPPLIC_ADD</URL_ID>
+    <Description>Submit an Advancement Form</Description>
+    <HOVER_OVER_TEXT/>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>FORM</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>URI_TYPE</NAME>
+        <value>PL</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>
+    https://bcs-web-dev-03.is.berkeley.edu:8443/psp/bcsdev/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?&amp;G3FORM_FAMILY=STUDENT&amp;G3FORM_TYPE=AAQEAPPLIC&amp;G3FORM_CONDITION=Default&amp;G3FORM_TASK=ADD&amp;cmd=login&amp;errorCode=105&amp;languageCd=ENG
+    </URL>
+    <COMMENTS></COMMENTS>
+  </Link>
 </UC_LINK_RESOURCES>
