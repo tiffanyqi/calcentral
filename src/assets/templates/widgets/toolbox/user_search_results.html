@@ -1,5 +1,5 @@
 <div class="cc-user-search-results">
-  <div data-ng-if="userSearch.tabs.search.error && !userSearch.tabs.search.queryRunning">
+  <div data-ng-if="userSearch.selectedTab.label == 'Search' && userSearch.tabs.search.error && !userSearch.tabs.search.queryRunning">
     <h3 data-ng-bind="userSearch.tabs.search.error.summary"></h3>
     <div data-ng-bind="userSearch.tabs.search.error.description"></div>
   </div>
