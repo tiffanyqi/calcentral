@@ -29,7 +29,7 @@ describe User::Student do
   end
 
   context 'legacy student check' do
-    subject { StudentTestClass.new(double(fake: true), user_id: uid).legacy_student? }
+    subject { StudentTestClass.new(double(fake: true), user_id: uid).has_legacy_data? }
     let(:legacy_id) { '12345678' }
     let(:cs_id) { '9876543210' }
     before do

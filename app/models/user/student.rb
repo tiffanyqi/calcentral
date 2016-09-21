@@ -20,7 +20,7 @@ module User
       CalnetCrosswalk::ByUid.new(user_id: @uid).lookup_delegate_user_id
     end
 
-    def legacy_student?(id = nil)
+    def has_legacy_data?(id = nil)
       if (test_id = id || campus_solutions_id || lookup_student_id)
         test_id.to_s.length < 10
       else

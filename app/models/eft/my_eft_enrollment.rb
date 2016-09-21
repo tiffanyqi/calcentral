@@ -27,7 +27,7 @@ module Eft
     end
 
     def get_feed_internal
-      return {} unless Settings.features.cs_billing
+      return {} if @campus_solutions_id.nil? || !Settings.features.cs_billing
       get_parsed_response
     end
 
