@@ -16,7 +16,6 @@ angular.module('calcentral.services').service('updatedFeedsService', function($h
     'MyActivities::Merged',
     'MyBadges::Merged',
     'MyClasses::Merged',
-    'MyGroups::Merged',
     'MyTasks::Merged',
     'UpNext::MyUpNext'
   ];
