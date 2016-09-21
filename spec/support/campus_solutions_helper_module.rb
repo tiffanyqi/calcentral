@@ -112,4 +112,9 @@ module CampusSolutionsHelperModule
     let(:flag) { :cs_profile_emergency_contacts }
     it_behaves_like 'a proxy that observes a feature flag'
   end
+
+  shared_examples 'a proxy that properly observes the student success feature flag' do
+    let(:flag) { :advising_student_success }
+    it_behaves_like 'a proxy that observes a feature flag'
+  end
 end

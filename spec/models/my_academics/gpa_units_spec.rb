@@ -90,7 +90,8 @@ describe 'MyAcademics::GpaUnits' do
         expect(feed[:gpaUnits]).to eq ({
           cumulativeGpa: '2.595',
           totalUnits: 18,
-          totalUnitsAttempted: 20
+          totalUnitsAttempted: 20,
+          isLegacy: true
         })
       end
     end

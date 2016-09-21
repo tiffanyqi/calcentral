@@ -19,13 +19,29 @@ module MyAcademics
     def hub_gpa_units
       response = HubEdos::AcademicStatus.new(user_id: @uid).get
       result = {}
+      unit_total = 0
+      unit_sum = 0
       #copy needed feilds from response obj
       result[:errored] = response[:errored]
       if (status = parse_hub_academic_status response)
         # GPA is passed as a string to force a decimal point for whole values.
         result[:cumulativeGpa] = (cumulativeGpa = parse_hub_cumulative_gpa status) && cumulativeGpa.to_s
-        result[:totalUnits] = (totalUnits = parse_hub_total_units status) && totalUnits.to_f
-        result[:totalUnitsAttempted] = (totalUnitsAttempted = parse_hub_total_units_attempted status) && totalUnitsAttempted.to_f
+        if (totalUnits = parse_hub_total_units status) && totalUnits.present?
+          result = result.merge(totalUnits)
+          unit_total = result[:totalUnits]
+          unit_sum += (result[:transferUnitsAccepted] + result[:testingUnits])
+        end
+        if (totalUnitsForGpa = parse_hub_total_units_for_gpa status) && totalUnitsForGpa.present?
+          result = result.merge(totalUnitsForGpa)
+          unit_sum += result[:totalUnitsForGpa]
+        end
+        if (totalUnitsNotForGpa = parse_hub_total_units_not_for_gpa status) && totalUnitsNotForGpa.present?
+          result[:totalUnitsNotForGpa] = totalUnitsNotForGpa
+          unit_sum += result[:totalUnitsNotForGpa]
+        end
+        if (unit_total != unit_sum)
+          logger.warn("Hub unit conflict for UID #{@uid}: Total units (#{unit_total}) does not match summed units (#{unit_sum}).")
+        end
       else
         result[:empty] = true
       end
@@ -36,15 +52,29 @@ module MyAcademics
       status['cumulativeGPA'].try(:[], 'average')
     end
 
+    # Ignores unimportant unit types given back by the hub, including 'unitsOther' (holds total units that exceed limits for other categories, e.g. transfer units)
     def parse_hub_total_units(status)
       if (units = status['cumulativeUnits']) && (total_units = units.find { |u| u['type'] && u['type']['code'] == 'Total'})
-        total_units['unitsPassed']
+        {
+          totalUnits: total_units['unitsPassed'].to_f,
+          transferUnitsAccepted: total_units['unitsTransferAccepted'].to_f,
+          testingUnits: total_units['unitsTest'].to_f
+        }
       end
     end
 
-    def parse_hub_total_units_attempted(status)
+    def parse_hub_total_units_for_gpa(status)
       if (units = status['cumulativeUnits']) && (total_units = units.find { |u| u['type'] && u['type']['code'] == 'For GPA'})
-        total_units['unitsTaken']
+        {
+          totalUnitsAttempted: total_units['unitsTaken'].to_f,
+          totalUnitsForGpa: total_units['unitsPassed'].to_f
+        }
+      end
+    end
+
+    def parse_hub_total_units_not_for_gpa(status)
+      if (units = status['cumulativeUnits']) && (total_units = units.find { |u| u['type'] && u['type']['code'] == 'Not For GPA'})
+        total_units['unitsPassed'].to_f
       end
     end
 
@@ -53,7 +83,8 @@ module MyAcademics
       {
         cumulativeGpa: student_info['cum_gpa'].nil? ? nil: student_info['cum_gpa'].to_s,
         totalUnits: student_info['tot_units'].nil? ? nil : student_info['tot_units'].to_f,
-        totalUnitsAttempted: student_info['lgr_tot_attempt_unit'].nil? ? nil : student_info['lgr_tot_attempt_unit'].to_f
+        totalUnitsAttempted: student_info['lgr_tot_attempt_unit'].nil? ? nil : student_info['lgr_tot_attempt_unit'].to_f,
+        isLegacy: true
       }
     end
 

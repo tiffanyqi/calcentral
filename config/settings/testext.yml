@@ -62,6 +62,7 @@ calnet_crosswalk_proxy:
 
 features:
   advising: true
+  advising_student_success: true
   audio: true
   bearfacts: true
   cal1card: true

@@ -218,6 +218,10 @@ verify_cs 'always_enabled' true \
   "/UC_AA_ADV_STDNT_REL.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
   "/UC_AA_ADV_ACTION_ITEM.v1/?EMPLID=${CAMPUS_SOLUTIONS_ID}&CALLER_TYPE=ADVISOR"
 
+verify_cs 'advising_student_success' "${yml_features_advising_student_success}" \
+  "/UC_AA_STDNT_GPA_TERMS.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
+  "/UC_SF_STDNT_OS_BAL.v1/get?EMPLID=${CAMPUS_SOLUTIONS_ID}" \
+
 verify_cs 'cs_profile' "${yml_features_cs_profile}" \
   "/UC_CC_ADDR_LBL.v1/get?COUNTRY=ESP" \
   "/UC_CC_ADDR_TYPE.v1/getAddressTypes/" \
