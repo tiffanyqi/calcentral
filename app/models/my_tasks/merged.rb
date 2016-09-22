@@ -2,8 +2,6 @@ module MyTasks
   class Merged < UserSpecificModel
     include MyTasks::ParamValidator
     include Cache::LiveUpdatesEnabled
-    include Cache::FreshenOnWarm
-    include Cache::JsonAddedCacher
     include Cache::FilterJsonOutput
     include MergedModel
 
@@ -65,7 +63,6 @@ module MyTasks
       response = source.update_task(params, task_list_id)
       if response != {}
         expire_cache
-        source.class.expire @uid
       end
       response
     end
@@ -76,7 +73,6 @@ module MyTasks
       response = source.insert_task(params, task_list_id)
       if response != {}
         expire_cache
-        source.class.expire @uid
       end
       response
     end
@@ -87,7 +83,6 @@ module MyTasks
       response = source.clear_completed_tasks(task_list_id)
       if response[:tasksCleared] != false
         expire_cache
-        source.class.expire @uid
       end
       response
     end
@@ -98,7 +93,6 @@ module MyTasks
       response = source.delete_task(params, task_list_id)
       if response != {}
         expire_cache
-        source.class.expire @uid
       end
       response
     end

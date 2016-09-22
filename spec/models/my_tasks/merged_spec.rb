@@ -162,7 +162,7 @@ describe 'MyTasks::Merged' do
     response[:notes].should == 'some bogus notes'
   end
 
-  it 'should invalidate merged cache and google tasks cache on an update_task for google' do
+  it 'should invalidate merged cache on an update_task for google' do
     GoogleApps::Proxy.stub(:access_granted?).and_return(true)
     GoogleApps::UpdateTask.stub(:new).and_return(@fake_google_update_task_proxy)
     my_tasks = MyTasks::Merged.new @user_id
@@ -170,8 +170,6 @@ describe 'MyTasks::Merged' do
     my_tasks.get_feed
     task_list_id, task_id = get_task_list_id_and_task_id
     Rails.cache.should_receive(:delete).with(MyTasks::Merged.cache_key(@user_id))
-    Rails.cache.should_receive(:delete).with(MyTasks::Merged.cache_key("json-#{@user_id}"))
-    Rails.cache.should_receive(:delete).with(MyTasks::GoogleTasks.cache_key(@user_id))
     response = my_tasks.update_task({"type" => "sometype", "emitter" => GoogleApps::Proxy::APP_ID, "status" => "completed", "id" => task_id}, task_list_id)
   end
 

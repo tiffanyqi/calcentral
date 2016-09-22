@@ -11,19 +11,17 @@ module MyTasks
     end
 
     def fetch_tasks
-      self.class.fetch_from_cache(@uid) {
-        logger.info "Sorting Google tasks into buckets with starting_date #{@starting_date}"
-        tasks = []
+      logger.info "Sorting Google tasks into buckets with starting_date #{@starting_date}"
+      tasks = []
 
-        google_proxy = GoogleApps::TasksList.new(user_id: @uid)
-        google_proxy.tasks_list.each do |response_page|
-          next unless response_page && response_page.response.status == 200
-          response_page.data['items'].each do |entry|
-            tasks << format_google_task_response(entry) unless entry['title'].blank?
-          end
+      google_proxy = GoogleApps::TasksList.new(user_id: @uid)
+      google_proxy.tasks_list.each do |response_page|
+        next unless response_page && response_page.response.status == 200
+        response_page.data['items'].each do |entry|
+          tasks << format_google_task_response(entry) unless entry['title'].blank?
         end
-        tasks.sort_by { |task| task['dueDate'].nil? ? 0 : task['dueDate']['epoch'] }
-      }
+      end
+      tasks.sort_by { |task| task['dueDate'].nil? ? 0 : task['dueDate']['epoch'] }
     end
 
     def return_response(response)
