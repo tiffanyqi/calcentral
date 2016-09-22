@@ -15,7 +15,6 @@ module MyAcademics
         TransitionTerm,
         GpaUnits,
         Requirements,
-        Regblocks,
         Semesters,
         Teaching,
         Exams,

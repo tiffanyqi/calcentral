@@ -5,7 +5,6 @@ describe MyAcademics::Merged do
       MyAcademics::TransitionTerm,
       MyAcademics::GpaUnits,
       MyAcademics::Requirements,
-      MyAcademics::Regblocks,
       MyAcademics::Semesters,
       MyAcademics::Teaching,
       MyAcademics::Exams,

@@ -147,7 +147,6 @@ Calcentral::Application.routes.draw do
 
   # Advisor endpoints
   get '/api/advising/academics/:student_uid' => 'advising_student#academics', :defaults => { :format => 'json' }
-  get '/api/advising/blocks/:student_uid' => 'advising_student#blocks', :defaults => { :format => 'json' }
   get '/api/advising/class_enrollments/:student_uid' => 'advising_student#enrollment_instructions', :defaults => { :format => 'json'}
   get '/api/advising/academic_status/:student_uid' => 'advising_student#academic_status', :defaults => { :format => 'json' }
   get '/api/advising/registrations/:student_uid' => 'advising_student#registrations', :defaults => { :format => 'json' }

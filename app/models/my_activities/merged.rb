@@ -10,7 +10,6 @@ module MyActivities
     def self.providers
       [
         MyActivities::NotificationActivities,
-        MyActivities::RegBlocks,
         MyActivities::Webcasts,
         MyActivities::CampusSolutionsMessages,
         MyActivities::CanvasActivities

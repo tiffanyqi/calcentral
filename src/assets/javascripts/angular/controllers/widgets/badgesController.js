@@ -124,7 +124,6 @@ angular.module('calcentral.controllers').controller('BadgesController', function
     badgesFactory.getBadges(options).success(function(data) {
       apiService.updatedFeeds.feedLoaded(data);
       decorateBadges(processCalendarEvents(data.badges || {}));
-      $scope.studentInfo = data.studentInfo;
     });
   };
 

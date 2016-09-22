@@ -7,7 +7,7 @@ var _ = require('lodash');
  * Academics status, holds & blocks controller
  */
 angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksController', function(apiService, enrollmentVerificationFactory, academicsFactory, slrDeeplinkFactory, studentAttributesFactory, registrationsFactory, statusHoldsService, $scope) {
-  // Data for studentInfo and csHolds are pulled by the AcademicsController that
+  // Data for csHolds is pulled by the AcademicsController that
   // governs the academics template. The statusHoldsBlocks segment watches those
   // for changes in order to display the corresponding UI elements.
   $scope.statusHoldsBlocks = {};
@@ -21,8 +21,7 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
 
   $scope.$watchGroup(['(regStatus.registrations[0].summary && regStatus.registrations[0].academicCareer.code !== "UCBX")',
                       '(regStatus.registrations[1].summary && regStatus.registrations[1].academicCareer.code !== "UCBX")',
-                      'api.user.profile.features.csHolds',
-                      'api.user.profile.features.legacyRegblocks'], function(newValues) {
+                      'api.user.profile.features.csHolds'], function(newValues) {
     var enabledSections = [];
 
     if (newValues[0] || newValues[1]) {
@@ -31,10 +30,6 @@ angular.module('calcentral.controllers').controller('AcademicsStatusHoldsBlocksC
 
     if (newValues[2]) {
       enabledSections.push('Holds');
-    }
-
-    if (newValues[3]) {
-      enabledSections.push('Blocks');
     }
 
     $scope.statusHoldsBlocks.enabledSections = enabledSections;

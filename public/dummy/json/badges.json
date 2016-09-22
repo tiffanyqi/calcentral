@@ -530,19 +530,6 @@
       ]
     }
   },
-  "studentInfo": {
-    "regStatus": {
-      "code": "C",
-      "summary": "Registered",
-      "explanation": "You are officially registered for this term and are entitled to access campus services.",
-      "needsAction": false
-    },
-    "regBlock": {
-      "errored": false,
-      "needsAction": true,
-      "activeBlocks": 2
-    }
-  },
   "lastModified": {
     "hash": "af8f7132a5d2efdf8bd3d88c2d1fa5d37086c389",
     "timestamp": {

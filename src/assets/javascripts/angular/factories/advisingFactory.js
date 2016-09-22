@@ -15,7 +15,6 @@ angular.module('calcentral.factories').factory('advisingFactory', function(apiSe
   var urlAdvisingResources = '/api/advising/resources/';
   // var urlAdvisingResources = '/dummy/json/advising_resources.json';
   var urlAdvisingRegistrations = '/api/advising/registrations/';
-  var urlAdvisingBlocks = '/api/advising/blocks/';
 
   var getResources = function(options) {
     return apiService.http.request(options, urlResources);
@@ -27,10 +26,6 @@ angular.module('calcentral.factories').factory('advisingFactory', function(apiSe
 
   var getStudent = function(options) {
     return apiService.http.request(options, urlAdvisingStudent + options.uid);
-  };
-
-  var getStudentBlocks = function(options) {
-    return apiService.http.request(options, urlAdvisingBlocks + options.uid);
   };
 
   var getStudentAcademics = function(options) {
@@ -45,7 +40,6 @@ angular.module('calcentral.factories').factory('advisingFactory', function(apiSe
     getAdvisingResources: getAdvisingResources,
     getResources: getResources,
     getStudent: getStudent,
-    getStudentBlocks: getStudentBlocks,
     getStudentAcademics: getStudentAcademics,
     getStudentRegistrations: getStudentRegistrations
   };

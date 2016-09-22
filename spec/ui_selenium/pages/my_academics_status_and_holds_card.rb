@@ -99,10 +99,5 @@ module CalCentralPages
       active_holds_table_element[row_index].click
     end
 
-    # Blocks (currently removed via feature flag)
-
-    h3(:active_blocks_heading, :xpath => '//h3[text()="Active Blocks"]')
-    button(:show_block_history_button, :xpath => '//button[contains(.,"Show Block History")]')
-
   end
 end

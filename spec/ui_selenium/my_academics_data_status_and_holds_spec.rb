@@ -260,15 +260,6 @@ describe 'My Academics Status and Holds', :testui => true do
 
             end
 
-            # BLOCKS
-
-            has_blocks_heading = my_academics_page.active_blocks_heading?
-            has_show_block_history_button = my_academics_page.show_block_history_button?
-
-            it ("has no blocks section for UID #{uid}") { expect(has_blocks_heading).to be false }
-            it ("shows no show-block-history button for UID #{uid}") { expect(has_show_block_history_button).to be false }
-            it ("shows no popover block alert for UID #{uid}") { expect(has_block_alert).to be false }
-
             # PROFILE POPOVER ALERT LINKS
 
             if has_reg_alert

@@ -19,9 +19,6 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     isLoading: true
   };
   $scope.isAdvisingStudentLookup = $route.current.isAdvisingStudentLookup;
-  $scope.regBlocks = {
-    isLoading: true
-  };
   $scope.regStatus = {
     terms: [],
     registrations: [],
@@ -36,7 +33,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
   };
   $scope.statusHoldsBlocks = {};
 
-  $scope.$watchGroup(['regStatus.registrations[0].summary', 'api.user.profile.features.csHolds', 'api.user.profile.features.legacyRegblocks'], function(newValues) {
+  $scope.$watchGroup(['regStatus.registrations[0].summary', 'api.user.profile.features.csHolds'], function(newValues) {
     var enabledSections = [];
 
     if (newValues[0] !== null && newValues[0] !== undefined) {
@@ -45,10 +42,6 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
 
     if (newValues[1]) {
       enabledSections.push('Holds');
-    }
-
-    if (newValues[2]) {
-      enabledSections.push('Blocks');
     }
 
     $scope.statusHoldsBlocks.enabledSections = enabledSections;
@@ -110,16 +103,6 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       $scope.academics.error = errorReport(status, data.error);
     }).finally(function() {
       $scope.academics.isLoading = false;
-    });
-  };
-
-  var loadBlocks = function() {
-    advisingFactory.getStudentBlocks({
-      uid: $routeParams.uid
-    }).success(function(data) {
-      angular.extend($scope.regBlocks, data);
-    }).finally(function() {
-      $scope.regBlocks.isLoading = false;
     });
   };
 
@@ -205,7 +188,6 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       .then(loadProfile)
       .then(loadAcademics)
       .then(loadHolds)
-      .then(loadBlocks)
       .then(loadRegistrations)
       .then(getRegMessages);
     }

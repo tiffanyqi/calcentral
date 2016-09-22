@@ -70,7 +70,7 @@
             <ul class="cc-list-bullets">
               <li>Class enrollments, including waitlist information.</li>
               <li>Your academic status, including standing, GPA, units, major, college, and more.</li>
-              <li>Your registration status, including any blocks limiting your access to campus services.</li>
+              <li>Your registration status, including any holds limiting your access to campus services.</li>
               <li>Course information, including class and exam schedules, class locations, textbooks, and recordings.</li>
             </ul>
           </div>
@@ -113,7 +113,7 @@
         </table>
       </div>
 
-      <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="gpaUnits.cumulativeGpa > 0 && !studentInfo.isLawStudent">
+      <div class="cc-table cc-table-top-border cc-clearfix" data-ng-if="gpaUnits.cumulativeGpa > 0 && !api.user.profile.roles.law">
         <table>
           <tbody>
             <tr>

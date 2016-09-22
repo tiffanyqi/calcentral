@@ -4,13 +4,6 @@ describe MyAcademicsController do
     let(:make_request) { get :get_feed }
   end
 
-  it 'should get a non-empty feed for an authenticated (but fake) user' do
-    session['user_id'] = '0'
-    get :get_feed
-    json_response = JSON.parse(response.body)
-    expect(json_response['regblocks']['noStudentId']).to eq true
-  end
-
   context 'fake campus data', if: CampusOracle::Connection.test_data? do
     let(:uid) { '61889' }
     before do
@@ -32,7 +25,6 @@ describe MyAcademicsController do
         expect(subject['feedName']).to eq 'MyAcademics::Merged'
         expect(subject['gpaUnits']).to include 'cumulativeGpa'
         expect(subject['otherSiteMemberships']).to be_present
-        expect(subject['regblocks']).to be_present
         expect(subject['requirements']).to be_present
         expect(subject['semesters']).to have(24).items
         expect(subject['semesters'][0]['slug']).to be_present
@@ -46,7 +38,6 @@ describe MyAcademicsController do
         expect(subject['otherSiteMemberships']).to be_blank
         expect(subject['feedName']).to eq 'MyAcademics::Merged'
         expect(subject['gpaUnits']).to include 'cumulativeGpa'
-        expect(subject['regblocks']).to be_present
         expect(subject['requirements']).to be_present
         expect(subject['semesters']).to have(24).items
         expect(subject['semesters'][0]['slug']).to be_present
@@ -87,7 +78,6 @@ describe MyAcademicsController do
         shared_examples 'shared academics feed' do
           it 'views most data' do
             expect(subject).not_to include 'otherSiteMemberships'
-            expect(subject).not_to include 'regblocks'
             expect(subject).not_to include 'requirements'
             expect(subject['semesters']).to have(24).items
             expect(subject['semesters'][0]).not_to include 'slug'

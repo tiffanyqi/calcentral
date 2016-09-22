@@ -18,26 +18,6 @@ angular.module('calcentral.controllers').controller('StatusController', function
   // Keep track on whether the status has been loaded or not
   var hasLoaded = false;
 
-  var loadStudentInfo = function(data) {
-    if (!data.studentInfo || !apiService.user.profile.roles.student) {
-      return;
-    }
-
-    $scope.studentInfo = data.studentInfo;
-
-    if (_.get(data, 'studentInfo.regStatus.needsAction') && apiService.user.profile.features.regstatus) {
-      $scope.count++;
-      $scope.hasAlerts = true;
-    }
-    if (data.studentInfo.regBlock.activeBlocks && apiService.user.profile.features.legacyRegblocks) {
-      $scope.count += data.studentInfo.regBlock.activeBlocks;
-      $scope.hasAlerts = true;
-    } else if (data.studentInfo.regBlock.errored) {
-      $scope.count++;
-      $scope.hasWarnings = true;
-    }
-  };
-
   var loadCarsFinances = function(data) {
     if (data.summary) {
       $scope.finances.carsFinances = data.summary;
@@ -222,11 +202,10 @@ angular.module('calcentral.controllers').controller('StatusController', function
       $scope.photo = {};
 
       // Get all the necessary data from the different factories
-      var getBadges = badgesFactory.getBadges().success(loadStudentInfo);
       var getHolds = academicStatusFactory.getAcademicStatus().then(loadHolds);
       var getRegistrations = registrationsFactory.getRegistrations().then(parseRegistrations);
       var getStudentAttributes = studentAttributesFactory.getStudentAttributes().then(parseStudentAttributes);
-      var statusGets = [getBadges, getHolds, getRegistrations, getStudentAttributes];
+      var statusGets = [getHolds, getRegistrations, getStudentAttributes];
 
       // Only fetch financial data for delegates who have been given explicit permssion.
       var includeFinancial = (!apiService.user.profile.delegateActingAsUid || apiService.user.profile.delegateViewAsPrivileges.financial);

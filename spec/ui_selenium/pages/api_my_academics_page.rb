@@ -123,53 +123,6 @@ class ApiMyAcademicsPage
     end
   end
 
-  # BLOCKS
-
-  def blocks
-    @parsed['regblocks']
-  end
-
-  def active_blocks
-    blocks['activeBlocks'] unless blocks.nil?
-  end
-
-  def inactive_blocks
-    blocks['inactiveBlocks'] unless blocks.nil?
-  end
-
-  def block_message(item)
-    item['message']
-  end
-
-  def active_block_types
-    active_blocks.map { |block| block['type'] }
-  end
-
-  def active_block_reasons
-    active_blocks.map { |block| block['reason'] }
-  end
-
-  def active_block_offices
-    active_blocks.map { |block| block['office'] }
-  end
-
-  def active_block_dates
-    active_blocks.map { |block| Time.strptime(block['blockedDate']['dateString'], '%m/%d/%Y').strftime('%m/%d/%y') }
-  end
-
-  def inactive_block_types
-    inactive_blocks.map { |block| block['type'] }
-  end
-
-  def inactive_block_dates
-    inactive_blocks.map { |block| Time.strptime(block['blockedDate']['dateString'], '%m/%d/%Y').strftime('%m/%d/%y') }
-  end
-
-  def inactive_block_cleared_dates
-    dates = inactive_blocks.map { |block| Time.strptime(block['clearedDate']['dateString'], '%m/%d/%Y').strftime('%m/%d/%y') }
-    dates.sort!
-  end
-
   # FINAL EXAMS
 
   def exam_schedules

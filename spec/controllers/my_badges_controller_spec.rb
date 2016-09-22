@@ -30,10 +30,6 @@ describe MyBadgesController do
     existing_badges.each do |badge|
       json_response['badges'][badge]['count'].should_not be_nil
     end
-
-    json_response['studentInfo'].present?.should be_truthy
-    json_response['studentInfo'].is_a?(Hash).should be_truthy
-    json_response['studentInfo'].keys.count.should == 3
   end
 
   context 'viewing-as' do
@@ -42,7 +38,6 @@ describe MyBadgesController do
     before do
       session['user_id'] = user_id
       expect(Settings.google_proxy).to receive(:fake).at_least(:once).and_return(true)
-      expect(Settings.bearfacts_proxy).to receive(:fake).at_least(:once).and_return(true)
     end
     it 'should not give a real user a cached censored feed' do
       session[SessionKey.original_user_id] = original_user_id
@@ -61,14 +56,12 @@ describe MyBadgesController do
     it 'should not return Google data from a cached real-user feed' do
       get :get_feed
       feed = JSON.parse(response.body)
-      expect(feed['studentInfo']['regBlock']).to be_present
       ['bcal', 'bdrive', 'bmail'].each do |service|
         expect(feed['badges'][service]['count']).to be > 0
       end
       session[SessionKey.original_user_id] = original_user_id
       get :get_feed
       feed = JSON.parse(response.body)
-      expect(feed['studentInfo']['regBlock']).to be_present
       ['bcal', 'bdrive', 'bmail'].each do |service|
         expect(feed['badges'][service]['count']).to eq 0
       end
