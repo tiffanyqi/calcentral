@@ -242,7 +242,7 @@ cache:
     BackgroundJobsCheck: <%= 29.days %>
     MyAcademics::Merged: NEXT_08_00
     MyActivities::Merged: <%= 8.hours %>
-    MyBadges::Merged: NEXT_00_00
+    MyBadges::Merged: <%= 2.hours %>
     MyCampusLinksController: NEXT_08_00
     MyClasses::Merged: NEXT_08_00
     MyTasks::Merged: <%= 10.minutes %>
@@ -279,9 +279,7 @@ cache:
     Canvas::Todo: <%= 20.minutes %>
     Canvas::UpcomingEvents: <%= 20.minutes %>
 
-    MyBadges::GoogleCalendar: <%= 4.minutes %>
     MyBadges::GoogleDrive: <%= 10.minutes %>
-    MyBadges::GoogleMail: <%= 4.minutes %>
 
     MyTasks::GoogleTasks: <%= 4.minutes %>
 
