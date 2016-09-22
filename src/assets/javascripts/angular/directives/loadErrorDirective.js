@@ -10,7 +10,13 @@ angular.module('calcentral.directives').directive('ccLoadErrorDirective', functi
     link: function(scope, elm, attrs) {
       elm.bind('error', function() {
         scope.$apply(function() {
-          scope[attrs.ccLoadErrorDirective].loadError = true;
+          // Defensive programming, in case of failed calls to photo APIs which
+          // cause the photo field not to be initialized on the scope of its
+          // respective controller.
+          var context = scope[attrs.ccLoadErrorDirective];
+          if (context) {
+            context.loadError = true;
+          }
         });
       });
     }
