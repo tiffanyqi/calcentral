@@ -73,10 +73,8 @@ module Advising
       end
     end
 
-    def fetch_link(link_key)
-      if (link_feed = CampusSolutions::Link.new.get_url link_key)
-        link = link_feed.try(:[], :feed).try(:[], :link)
-      end
+    def fetch_link(link_key, placeholders = {})
+      link = CampusSolutions::Link.new.get_url(link_key, placeholders).try(:[], :link)
       logger.error "Could not retrieve CS link #{link_key} for MyAdvising feed, uid = #{@uid}" unless link
       link
     end

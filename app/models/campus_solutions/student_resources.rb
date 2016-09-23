@@ -21,9 +21,9 @@ module CampusSolutions
       }
 
       link_ids.each do |key, url_id|
-        link = CampusSolutions::Link.new.get_url(url_id, { :EMPLID => empl_id })
-        if link[:feed][:link]
-          resource_links[key.to_s.camelize(:lower).to_sym] = link[:feed][:link]
+        link = CampusSolutions::Link.new.get_url(url_id, { :EMPLID => empl_id }).try(:[], :link)
+        if link
+          resource_links[key.to_s.camelize(:lower).to_sym] = link
         end
       end
 

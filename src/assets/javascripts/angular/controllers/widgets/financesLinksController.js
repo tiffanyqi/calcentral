@@ -105,7 +105,7 @@ angular.module('calcentral.controllers').controller('FinancesLinksController', f
     csLinkFactory.getLink({
       urlId: 'UC_CX_EMERGENCY_LOAN_FORM'
     }).then(function(data) {
-      var link = _.get(data, 'data.feed.link');
+      var link = _.get(data, 'data.link');
       $scope.emergencyLoanLink = link;
     });
   };
