@@ -3,7 +3,6 @@ require 'mail'
 module MyBadges
   class GoogleCalendar
     include MyBadges::BadgesModule, DatedFeed, ClassLogger
-    include Cache::UserCacheExpiry
 
     def initialize(uid)
       @uid = uid
@@ -13,9 +12,7 @@ module MyBadges
     def fetch_counts(params = {})
       @google_mail ||= User::Oauth2Data.get_google_email(@uid)
       @rewrite_url ||= !(Mail::Address.new(@google_mail).domain =~ /berkeley.edu/).nil?
-      self.class.fetch_from_cache(@uid) do
-        internal_fetch_counts params
-      end
+      internal_fetch_counts params
     end
 
     private

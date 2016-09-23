@@ -122,15 +122,5 @@
       <div data-ng-include="'widgets/holds.html'"></div>
     </div>
 
-    <div data-ng-if="statusHoldsBlocks.enabledSections.indexOf('Blocks') !== -1">
-      <h3 class="cc-status-holds-holds-header">Active Blocks</h3>
-      <div data-ng-if="!regblocks.errored">
-        <div data-ng-include="'academics_regblocks.html'"></div>
-      </div>
-      <div data-ng-if="regblocks.errored">
-        <i class="fa fa-exclamation-triangle cc-icon-red cc-errored"></i> Block message is currently unavailable.
-      </div>
-    </div>
-
   </div>
 </div>

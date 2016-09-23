@@ -149,10 +149,6 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     }
   };
 
-  var loadBadges = function(data) {
-    $scope.studentInfo = data.studentInfo;
-  };
-
   var loadNumberOfHolds = function(data) {
     $scope.numberOfHolds = _.get(data, 'feed.student.holds.length');
   };
@@ -200,7 +196,6 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
     $scope.academics.universityRequirements = $scope.requirements;
     $scope.showStatusAndBlocks = !$scope.filteredForDelegate &&
                                  ($scope.hasRegStatus ||
-                                 ($scope.regblocks && !$scope.regblocks.noStudentId) ||
                                  ($scope.numberOfHolds));
     $scope.showLegacyAdvising = !$scope.filteredForDelegate && $scope.api.user.profile.features.legacyAdvising && $scope.isLSStudent;
     $scope.showAdvising = !$scope.filteredForDelegate && apiService.user.profile.features.advising && apiService.user.profile.roles.student && !apiService.user.profile.roles.law;
@@ -224,8 +219,7 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
       $scope.canViewAcademics = $scope.api.user.profile.hasAcademicsTab;
       var getAcademics = academicsFactory.getAcademics().success(parseAcademics);
       var getRegistrations = registrationsFactory.getRegistrations().success(loadRegistrations);
-      var getBadges = badgesFactory.getBadges().success(loadBadges);
-      var requests = [getAcademics, getBadges, getRegistrations];
+      var requests = [getAcademics, getRegistrations];
       if ($scope.api.user.profile.features.csHolds &&
         ($scope.api.user.profile.roles.student || $scope.api.user.profile.roles.applicant)) {
         var getNumberOfHolds = academicStatusFactory.getAcademicStatus().success(loadNumberOfHolds);

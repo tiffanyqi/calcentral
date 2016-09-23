@@ -2,7 +2,6 @@ module MyBadges
   class Merged < UserSpecificModel
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
-    include Cache::JsonAddedCacher
     include Cache::FilterJsonOutput
     include MergedModel
 
@@ -25,8 +24,7 @@ module MyBadges
 
     def get_feed_internal
       feed = {
-        badges: {},
-        studentInfo: StudentInfo.new(@uid).get
+        badges: {}
       }
       merge_google_badges feed
       feed

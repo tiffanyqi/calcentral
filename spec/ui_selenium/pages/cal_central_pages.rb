@@ -41,11 +41,6 @@ module CalCentralPages
   link(:reg_status_alert_link, :xpath => '//li[contains(@data-ng-if,"regStatus")]/a')
   image(:reg_status_alert_icon, :xpath => '//li[contains(@data-ng-if,"regStatus")]//i[@class="cc-left fa fa-exclamation-circle cc-icon-red"]')
 
-  div(:block_status_alert, :xpath => '//li[@data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)"]//div')
-  span(:block_status_alert_number, :xpath => '//li[@data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)"]//span[@data-ng-bind="studentInfo.regBlock.activeBlocks"]')
-  link(:block_status_alert_link, :xpath => '//li[@data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)"]//a')
-  image(:block_status_alert_icon, :xpath => '//li[@data-ng-if="api.user.profile.roles.student && (studentInfo.regBlock.needsAction || studentInfo.regBlock.errored)"]//i[@class="cc-left fa fa-exclamation-circle cc-icon-red"]')
-
   div(:hold_status_alert, :xpath => '//li[contains(@data-ng-if, "csHolds")]//div')
   span(:hold_status_alert_number, :xpath => '//li[contains(@data-ng-if, "csHolds")]//span')
   link(:hold_status_alert_link, :xpath => '//li[contains(@data-ng-if, "csHolds")]/a')

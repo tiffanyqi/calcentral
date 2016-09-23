@@ -50,10 +50,6 @@
       "status":"met"
     }
   ],
-  "regblocks":{
-    "activeBlocks":[ ],
-    "inactiveBlocks":[ ]
-  },
   "errors":[
     "MyAcademics::Semesters",
     "MyAcademics::Teaching"

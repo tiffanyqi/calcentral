@@ -31,11 +31,6 @@ class AdvisingStudentController < ApplicationController
     render json: MyAcademics::ClassEnrollments.new(student_uid_param).get_feed_as_json
   end
 
-  #TODO: Remove by Fall 2016
-  def blocks
-    render json: Bearfacts::Regblocks.new({user_id: student_uid_param}).get
-  end
-
   def registrations
     render json: MyRegistrations::MyRegistrations.new(student_uid_param).get_feed_as_json
   end

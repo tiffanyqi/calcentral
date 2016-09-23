@@ -106,7 +106,6 @@ features:
   cs_transfer_credit: true
   financials: true
   legacy_advising: true
-  legacy_regblocks: true
   textbooks: true
   videos: true
   webcast_sign_up_on_calcentral: true

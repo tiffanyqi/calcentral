@@ -9,7 +9,7 @@ angular.module('calcentral.services').service('updatedFeedsService', function($h
   };
   var feedsLoadedData = {};
   // Polling time in seconds
-  var pollIntervals = [2, 3, 10, 45, 60];
+  var pollIntervals = [5, 10, 45, 60];
 
   // In the first iteration, we only update the services on the dashboard page.
   var toUpdateServices = [
