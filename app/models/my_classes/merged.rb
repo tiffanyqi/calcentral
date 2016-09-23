@@ -2,7 +2,6 @@ module MyClasses
   class Merged < UserSpecificModel
     include Cache::LiveUpdatesEnabled
     include Cache::FreshenOnWarm
-    include Cache::JsonAddedCacher
     include Cache::FilterJsonOutput
     include MergedModel
 
