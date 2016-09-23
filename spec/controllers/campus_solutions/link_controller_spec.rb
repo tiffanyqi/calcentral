@@ -7,10 +7,10 @@ describe CampusSolutions::LinkController do
     context 'authenticated user' do
       let(:user_id) { '12345' }
       let(:feed_key) { 'link' }
-      let(:url_id) { "UC_CX_TEST_LINK" }
+      let(:url_id) { "UC_CX_APPOINTMENT_ADV_SETUP" }
 
-      let(:placeholder_text) { "Some placeholder text" }
-      let(:placeholders) { {:PLACEHOLDER => placeholder_text, :ANOTHER_PLACEHOLDER => "not used"} }
+      let(:placeholder_empl_id) { "Some placeholder text" }
+      let(:placeholders) { {:EMPLID => placeholder_empl_id, :IGNORED_PLACEHOLDER => "not used"} }
 
       before { session['user_id'] = user_id }
 
@@ -19,7 +19,7 @@ describe CampusSolutions::LinkController do
         expect(response.status).to eq 200
 
         json_response = JSON.parse(response.body)
-        expect(json_response["feed"]["link"]).to_not be
+        expect(json_response["link"]).to_not be
       end
 
       it 'returns link feed with matching urlId' do
@@ -27,9 +27,9 @@ describe CampusSolutions::LinkController do
         expect(response.status).to eq 200
 
         json_response = JSON.parse(response.body)
-        expect(json_response["feed"]["link"]["urlId"]).to eq url_id
+        expect(json_response["link"]["urlId"]).to eq url_id
         # Verify placeholder text is not replaced when placeholders params are omitted.
-        expect(json_response["feed"]["link"]["url"]).to include("PLACEHOLDER={PLACEHOLDER}")
+        expect(json_response["link"]["url"]).to include("EMPLID={EMPLID}")
       end
 
       it 'returns link feed with matching urlId and replaced "placeholder[name]" values' do
@@ -37,10 +37,10 @@ describe CampusSolutions::LinkController do
         expect(response.status).to eq 200
 
         json_response = JSON.parse(response.body)
-        expect(json_response["feed"]["link"]["urlId"]).to eq url_id
-        expect(json_response["feed"]["link"]["properties"]).not_to be
+        expect(json_response["link"]["urlId"]).to eq url_id
+        expect(json_response["link"]["properties"]).not_to be
         # Verify placeholder is replaced by placeholders param entry.
-        expect(json_response["feed"]["link"]["url"]).to include("PLACEHOLDER=#{placeholder_text}")
+        expect(json_response["link"]["url"]).to include("EMPLID=#{placeholder_empl_id}")
       end
 
     end

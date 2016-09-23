@@ -58,9 +58,7 @@ module CampusSolutions
     end
 
     def fetch_link(link_key, placeholders = {})
-      if (link_feed = CampusSolutions::Link.new.get_url(link_key, placeholders))
-        link = link_feed.try(:[], :feed).try(:[], :link)
-      end
+      link = CampusSolutions::Link.new.get_url(link_key, placeholders).try(:[], :link)
       logger.error "Could not retrieve CS link #{link_key} for AdvisingResources feed, uid = #{@uid}" unless link
       link
     end

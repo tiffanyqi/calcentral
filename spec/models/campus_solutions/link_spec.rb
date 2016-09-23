@@ -1,8 +1,7 @@
 describe CampusSolutions::Link do
-  let(:placeholder_text) { "REPLACED_PLACEHOLDER" }
+  let(:placeholder_empl_id) { "1234567" }
   let(:proxy) { CampusSolutions::Link.new(fake: fake_proxy) }
-  let(:url_id) { "UC_CX_TEST_LINK" }
-  let(:url_id_for_properties) { "UC_CX_GT_FAEMRLAON_ADD" }
+  let(:url_id) { "UC_CX_APPOINTMENT_ADV_SETUP" }
 
   shared_examples 'a proxy that gets data' do
     subject { proxy.get }
@@ -13,13 +12,13 @@ describe CampusSolutions::Link do
 
   context 'mock proxy' do
     let(:fake_proxy) { true }
-    let(:placeholders) { {:PLACEHOLDER => placeholder_text, :ANOTHER_PLACEHOLDER => "not used"} }
+    let(:placeholders) { {:EMPLID => placeholder_empl_id, :IGNORED_PLACEHOLDER => "not used"} }
 
     let(:link_set_response) { proxy.get }
     let(:link_get_url_response) { proxy.get_url(url_id) }
     let(:link_get_url_with_bad_placeholder_response) { proxy.get_url(url_id, {:BAD_PLACEHOLDER => nil}) }
     let(:link_get_url_and_replace_placeholders_response) { proxy.get_url(url_id, placeholders) }
-    let(:link_get_url_for_properties_response) { proxy.get_url(url_id_for_properties) }
+    let(:link_get_url_for_properties_response) { proxy.get_url(url_id) }
 
     before do
       allow_any_instance_of(CampusSolutions::Link).to receive(:xml_filename).and_return filename
@@ -61,9 +60,9 @@ describe CampusSolutions::Link do
 
       it_should_behave_like 'a proxy that gets data'
       it 'returns data with the expected structure' do
-        expect(link_get_url_response[:feed][:link][:urlId]).to eq url_id
+        expect(link_get_url_response[:link][:urlId]).to eq url_id
         # Verify that {placeholder} text is present
-        expect(link_get_url_response[:feed][:link][:url]).to include("PLACEHOLDER={PLACEHOLDER}")
+        expect(link_get_url_response[:link][:url]).to include("EMPLID={EMPLID}")
       end
     end
 
@@ -72,7 +71,7 @@ describe CampusSolutions::Link do
 
       it_should_behave_like 'a proxy that gets data'
       it 'returns data with the expected structure' do
-        expect(link_get_url_with_bad_placeholder_response[:feed][:link]).not_to be
+        expect(link_get_url_with_bad_placeholder_response[:link]).not_to be
       end
     end
 
@@ -82,7 +81,7 @@ describe CampusSolutions::Link do
       it_should_behave_like 'a proxy that gets data'
       it 'returns data with the expected structure' do
         # Verify that {placeholder} text is replaced
-        expect(link_get_url_and_replace_placeholders_response[:feed][:link][:url]).to include("PLACEHOLDER=#{placeholder_text}")
+        expect(link_get_url_and_replace_placeholders_response[:link][:url]).to include("EMPLID=#{placeholder_empl_id}")
       end
     end
 
@@ -91,10 +90,10 @@ describe CampusSolutions::Link do
 
       it_should_behave_like 'a proxy that gets data'
       it 'returns data with the expected structure' do
-        expect(link_get_url_response[:feed][:link][:properties]).not_to be
-        expect(link_get_url_for_properties_response[:feed][:link][:ucFrom]).to be
-        expect(link_get_url_for_properties_response[:feed][:link][:ucFromLink]).to be
-        expect(link_get_url_for_properties_response[:feed][:link][:ucFromText]).to be
+        expect(link_get_url_response[:link][:properties]).not_to be
+        expect(link_get_url_for_properties_response[:link][:ucFrom]).to be
+        expect(link_get_url_for_properties_response[:link][:ucFromLink]).to be
+        expect(link_get_url_for_properties_response[:link][:ucFromText]).to be
       end
     end
   end

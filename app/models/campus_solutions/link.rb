@@ -40,7 +40,7 @@ module CampusSolutions
         entry = link_resources[:feed][:ucLinkResources][:links][link_id]
 
         if entry
-          link = entry.slice(:url, :urlId, :description, :comments)
+          link = entry.slice(:url, :urlId, :description, :hoverOverText)
 
           placeholders.try(:each) do |k, v|
             if v.blank?
@@ -71,7 +71,7 @@ module CampusSolutions
 
             # convert campus solutions property names to calcentral
             link[:name] = link.delete(:description)
-            link[:title] = link.delete(:comments)
+            link[:title] = link.delete(:hoverOverText) || ''
             if !link[:showNewWindow]
               link[:isCsLink] = true
               link['IS_CS_LINK'] = true
@@ -82,9 +82,7 @@ module CampusSolutions
 
       {
         status: link_resources[:status],
-        feed: {
-          link: link
-        }
+        link: link
       }
     end
 
