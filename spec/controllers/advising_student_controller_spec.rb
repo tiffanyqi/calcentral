@@ -16,8 +16,9 @@ describe AdvisingStudentController do
       }
     }
   }
-  let(:academics) { File.read Rails.root.join('fixtures', 'json', 'my_academics_merged.json') }
-  let(:academics_as_json) { JSON.parse academics }
+  let(:academics_feed) do
+    {collegeAndLevel: true}
+  end
 
   before do
     session['user_id'] = session_user_id
@@ -35,8 +36,8 @@ describe AdvisingStudentController do
   describe '#academics' do
     let(:session_user_id) { random_id }
     before do
-      feed = HashConverter.symbolize academics_as_json
-      allow(MyAcademics::Merged).to receive(:new).with(student_uid, anything).and_return double get_feed: feed
+      allow(MyAcademics::FilteredForAdvisor).to receive(:new).with(student_uid, anything).and_return double get_feed_as_json: academics_feed.to_json
+      expect(MyAcademics::Merged).to receive(:new).never
     end
     subject { get :academics, student_uid: student_uid }
 
@@ -66,24 +67,8 @@ describe AdvisingStudentController do
         let(:student) { true }
         it 'should provide a filtered academics feed' do
           expect(response.status).to eq 200
-          json = JSON.parse(body = subject.body)
-          json['semesters'].each do |semester|
-            expect(semester['name']).to eq 'Fall 2016'
-            expect(semester).to_not have_key('slug')
-            expect(classes = semester['classes']).to have(3).items
-            course_codes = []
-            classes.each do |c|
-              course_codes << c['course_code']
-              expect(c).to_not have_key('url')
-              expect(sections = c['sections']).to have_at_least(1).item
-              sections.each do |section|
-                expect(section).to have_key('ccn')
-                expect(section).to have_key('section_number')
-                expect(section).to_not have_key('url')
-              end
-            end
-            expect(['IAS 45', 'PB HLTH 181', 'UGBA 101A']).to eq course_codes
-          end
+          feed = JSON.parse(body = subject.body)
+          expect(feed['collegeAndLevel']).to eq true
         end
       end
       context 'ex-student' do
@@ -96,8 +81,8 @@ describe AdvisingStudentController do
         let(:applicant) { true }
         it 'should succeed' do
           expect(subject.status).to eq 200
-          sections = JSON.parse(subject.body)['semesters'][0]['classes'][0]['sections']
-          expect(sections).to have(2).items
+          feed = JSON.parse(body = subject.body)
+          expect(feed['collegeAndLevel']).to eq true
         end
       end
     end

@@ -1,23 +1,18 @@
 module MyAcademics
-  class Merged < UserSpecificModel
+  class FilteredForAdvisor < UserSpecificModel
     include Cache::CachedFeed
-    include Cache::UserCacheExpiry
     include Cache::JsonifiedFeed
     include MergedModel
 
+    # Advisors do not see Teaching or Course Website (aka CanvasSites) data.
     def self.providers
-      # Provider ordering is significant! Semesters/Teaching must be merged before course sites.
-      # CollegeAndLevel must be merged before TransitionTerm.
-      # All current providers draw from separately cached sources.
       [
         CollegeAndLevel,
         TransitionTerm,
         GpaUnits,
         Requirements,
         Semesters,
-        Teaching,
-        Exams,
-        CanvasSites
+        Exams
       ]
     end
 

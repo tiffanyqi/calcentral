@@ -624,7 +624,9 @@ describe CanvasCsv::ProvideCourseSite do
         ]
       }
       allow(subject).to receive(:current_terms).and_return(current_terms)
-      allow_any_instance_of(MyAcademics::Merged).to receive(:get_feed).and_return(fake_feed)
+      allow_any_instance_of(MyAcademics::Teaching).to receive(:merge) do |data|
+        data.merge! fake_feed
+      end
       result = subject.candidate_courses_list
       expect(result).to be_a Array
       expect(result.count).to eq 2

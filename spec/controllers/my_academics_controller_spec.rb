@@ -22,7 +22,6 @@ describe MyAcademicsController do
     end
     context 'normal user session' do
       it 'should get a feed full of content' do
-        expect(subject['feedName']).to eq 'MyAcademics::Merged'
         expect(subject['gpaUnits']).to include 'cumulativeGpa'
         expect(subject['otherSiteMemberships']).to be_present
         expect(subject['requirements']).to be_present
@@ -36,7 +35,6 @@ describe MyAcademicsController do
       include_context 'advisor view-as'
       it 'filters bCourses sites' do
         expect(subject['otherSiteMemberships']).to be_blank
-        expect(subject['feedName']).to eq 'MyAcademics::Merged'
         expect(subject['gpaUnits']).to include 'cumulativeGpa'
         expect(subject['requirements']).to be_present
         expect(subject['semesters']).to have(24).items

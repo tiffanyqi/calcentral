@@ -253,11 +253,10 @@ module CanvasCsv
         # Get all sections for which this user is an instructor, sorted in a useful fashion.
         # Since this mostly matches what's shown by MyAcademics::Teaching for a given semester,
         # we can simply re-use the academics feed (so long as course site provisioning is restricted to
-        # semesters supported by My Academics). Ideally, MyAcademics::Teaching would be efficiently cached
-        # by user_id + term_yr + term_cd. But since we currently only cache at the level of the full
-        # merged model, we're probably better off selecting the desired teaching-semester from that bigger feed.
+        # semesters supported by My Academics).
         semesters = []
-        academics_feed = MyAcademics::Merged.new(@uid).get_feed
+        academics_feed = {}
+        MyAcademics::Teaching.new(@uid).merge academics_feed
         if (teaching_semesters = academics_feed[:teachingSemesters])
           current_terms.each do |term|
             if (teaching_semester = teaching_semesters.find {|semester| semester[:slug] == term[:slug]})
