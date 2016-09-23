@@ -3,7 +3,6 @@ module CampusSolutions
 
     include Cache::CachedFeed
     include Cache::UserCacheExpiry
-    include Cache::JsonAddedCacher
     include CampusSolutions::SirFeatureFlagged
 
     def get_feed_internal
