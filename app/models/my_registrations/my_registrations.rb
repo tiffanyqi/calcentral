@@ -3,7 +3,7 @@ module MyRegistrations
 
     include Berkeley::UserRoles
     include Cache::CachedFeed
-    include Cache::JsonAddedCacher
+    include Cache::JsonifiedFeed
     include Cache::UserCacheExpiry
 
     def get_feed_internal
