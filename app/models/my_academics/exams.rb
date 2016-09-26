@@ -39,13 +39,19 @@ module MyAcademics
     def parse_courses(semester, courses, cs_data_available)
       semester[:classes].each do |course|
         course[:sections].select{|x| course[:role] == 'Student' && x[:is_primary_section]}.each do |section|
-          # TODO: properly uses CS data when it becomes available
           course = {
             name: course[:course_code],
             number: course[:course_code].gsub(/[^0-9]/, '').to_i,
             time: section[:schedules][:recurring].to_a.first.try(:[], :schedule),
             waitlisted: section[:waitlisted]
           }
+          if cs_data_available && section[:final_exams].any?
+            exam = section[:final_exams].first
+            course[:exam_location] = exam[:location] || 'Location TBD'
+            course[:exam_date] = parse_cs_exam_date(exam)
+            course[:exam_time] = parse_cs_exam_time(exam)
+            course[:exam_slot] = parse_cs_exam_slot(exam)
+          end
           courses << course
         end
       end
@@ -76,7 +82,7 @@ module MyAcademics
     def sort_exams(semester)
       if semester[:cs_data_available]
         # remove all exam slots that aren't datetime from cs
-        semester[:exams] = semester[:courses].reject{|course| course[:exam_slot].nil? || !course[:exam_slot].is_a?(DateTime)}.group_by{|course| course[:exam_slot]}
+        semester[:exams] = semester[:courses].reject{|course| course[:exam_slot].nil? || !course[:exam_slot].is_a?(Time)}.group_by{|course| course[:exam_slot]}
       else # interim, use numbered exam slots as assigned, remove everything else
         semester[:exams] = semester[:courses].reject{|course| course[:exam_slot].nil? || !course[:exam_slot].is_a?(Integer)}.group_by{|course| course[:exam_slot]}
       end
@@ -88,10 +94,38 @@ module MyAcademics
 
     # Determine whether CS data is available depending on where we are in the semester
     def determine_cs_data_available(semester)
-      # TODO Follow-up with real CS data based on exams from Class Section API
-      # term = select_term(semester)
-      # return term.final_exam_cs_data_available < Time.now
-      return false
+      term = Berkeley::Terms.fetch.campus[semester[:slug]]
+      # Still calculated by whether or not we are 8 weeks before the end of the term or not. (Adjust later)
+      current_date = Settings.terms.fake_now || Time.now
+      return term.final_exam_cs_data_available < current_date
+    end
+
+    # Takes the exam date and makes it presentable, Mon 12/12
+    def parse_cs_exam_date(exam)
+      date = exam[:exam_date]
+      if date
+        return date.strftime('%a %m/%-d')
+      end
+    end
+
+    # Takes the exam time and makes it presentable, 07:00PM-10:00PM
+    def parse_cs_exam_time(exam)
+      start = exam[:exam_start_time]
+      ending = exam[:exam_end_time]
+      if start && ending
+        return start.strftime('%I:%M%p') + '-' + ending.strftime('%I:%M%p')
+      end
+    end
+
+    # Takes exam information and makes it usable
+    def parse_cs_exam_slot(exam)
+      time = exam[:exam_start_time]
+      date = exam[:exam_date]
+      if time && date
+        return Time.parse(date.strftime('%y-%m-%d') + ' ' + time.strftime('%H:%M'))
+      elsif date
+        return Time.parse(date.strftime('%y-%m-%d'))
+      end
     end
 
     # Determines what the exam key would be when parsing final exam conversion

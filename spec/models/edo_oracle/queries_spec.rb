@@ -1,4 +1,5 @@
 describe EdoOracle::Queries, :ignore => true do
+  # These tests go against the DB, which could change at any time, and thus is not included in Travis.
   # Stubbing terms not available in TestExt env
   let(:summer_2016_db_term) do
     {
@@ -147,6 +148,19 @@ describe EdoOracle::Queries, :ignore => true do
         expect(result['section_id']).to eq '26340'
         expect(result['term_id']).to eq '2168'
         expect(result['print_in_schedule_of_classes']).to eq 'Y'
+        expect(result).to have_keys(expected_keys)
+      end
+    end
+  end
+
+  describe '.get_section_final_exam', :testext => true do
+    it 'returns exams for section id specified' do
+      results = EdoOracle::Queries.get_section_final_exam(fall_term_id, section_ids[0])
+      expect(results.count).to eq 1
+      expected_keys = %w(term_id session_id exam_date exam_start_time exam_end_time location)
+      results.each do |result|
+        expect(result['term_id']).to eq '2168'
+        expect(result['exam_date']).to eq Time.parse('2016-12-12 00:00:00 UTC')
         expect(result).to have_keys(expected_keys)
       end
     end
