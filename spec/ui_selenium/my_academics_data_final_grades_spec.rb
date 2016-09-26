@@ -112,9 +112,8 @@ describe 'My Academics transcripts', :testui => true do
                     ui_course_grade = final_grades_card.all_grades[i]
                     it ("show the course grades for #{semester_name} #{api_course_code} for UID #{uid}") { expect(ui_course_grade).to eql(api_course_grade) }
 
-                    CSV.open(test_output, 'a+') do |row|
-                      row << [uid, semester_name, api_course_code, api_course_units, api_course_grade]
-                    end
+                    test_output_row = [uid, semester_name, api_course_code, api_course_units, api_course_grade]
+                    UserUtils.add_csv_row(test_output, test_output_row)
 
                     i += 1
 

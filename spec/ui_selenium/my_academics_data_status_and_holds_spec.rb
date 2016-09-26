@@ -68,7 +68,6 @@ describe 'My Academics Status and Holds', :testui => true do
 
           # Holds API
           holds_api_page.get_json driver
-          has_t_calc = holds_api_page.has_t_calc?
 
           # Academic Status API
           academic_status_api_page.get_json driver
@@ -89,11 +88,11 @@ describe 'My Academics Status and Holds', :testui => true do
           has_reg_alert = my_academics_page.reg_status_alert?
           has_hold_alert = my_academics_page.hold_status_alert?
           popover_hold_count = my_academics_page.hold_status_alert_number if has_hold_alert
-          has_block_alert = my_academics_page.block_status_alert?
 
           # Students and new admits could have status info
           if (student_api_page.affiliation_types & %w(ADMT_UX STUDENT UNDERGRAD GRADUATE)).any? && has_registrations
 
+            has_t_calc = holds_api_page.has_t_calc?
             (has_hold || has_t_calc || has_cs_bal_due || has_cars_bal_due) ?
                 (it ("is available via a person icon in the header for UID #{uid}") { expect(has_status_heading).to be true }) :
                 (it ("is not available via a person icon in the header for UID #{uid}") { expect(has_status_heading).to be false })

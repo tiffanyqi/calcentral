@@ -81,7 +81,7 @@ class WebDriverUtils
   end
 
   def self.mail_live_update_timeout
-    Settings.cache.expiration.marshal_dump["MyBadges::GoogleMail".to_sym] + Settings.ui_selenium.live_update_timeout_delta
+    Settings.cache.expiration.marshal_dump["LiveUpdatesWarmer".to_sym] + Settings.ui_selenium.live_update_timeout_delta
   end
 
   def self.tasks_live_update_timeout

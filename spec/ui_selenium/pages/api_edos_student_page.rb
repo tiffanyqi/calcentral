@@ -31,7 +31,11 @@ class ApiEdosStudentPage
   end
 
   def residency_from_term
-    residency && residency['fromTerm'] && residency['fromTerm']['label']
+    term = residency && residency['fromTerm'] && residency['fromTerm']['name']
+    unless term.nil?
+      t = term.split.reverse
+      "#{t[0]} #{t[1]}"
+    end
   end
 
   def residency_message_code

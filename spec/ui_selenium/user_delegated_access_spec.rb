@@ -116,7 +116,7 @@ describe 'Delegated access', :testui => true do
               calparents_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.cal_parents_element, 'Cal Parents')
               it ("shows delegate UID #{uid} a link to 'CalParents'") { expect(calparents_link).to be true }
 
-              important_dates_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.important_dates_element, 'Cal Parents Calendar')
+              important_dates_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.important_dates_element, 'UC Berkeley Events Calendar | Cal Parents')
               it ("shows delegate UID #{uid} a link to 'Important Dates for Parents'") { expect(important_dates_link).to be true }
 
               visiting_campus_link = WebDriverUtils.verify_external_link(@driver, @toolbox_page.visiting_campus_element, 'Visitor Services')
