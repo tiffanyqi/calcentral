@@ -78,21 +78,25 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
 
               # Balance
 
-              my_fin_acct_bal = @my_finances_billing.account_balance_cs
-              it("shows the right account balance for UID #{uid}") { expect(my_fin_acct_bal).to eql(fin_api.amt_to_s fin_api.account_balance) }
-
-              if fin_api.account_balance > 0
-                acct_bal = 'Positive'
-                @my_finances_billing.transaction_table_element.when_visible
-                my_fin_balance_transactions = @my_finances_billing.visible_transactions_sum_str
-                it("shows the open charges for UID #{uid}") { expect(my_fin_balance_transactions).to eql(fin_api.transactions_sum(fin_api.transactions_with_balance)) }
-
-              elsif fin_api.account_balance == 0
+              if fin_api.account_balance == 0
                 acct_bal = 'Zero'
-              elsif fin_api.account_balance < 0
-                acct_bal = 'Negative'
+                shows_acct_bal = @my_finances_billing.account_bal_cs?
+                it("shows no account balance for UID #{uid}") { expect(shows_acct_bal).to be false }
               else
-                it("shows a non-numeric account balance for UID #{uid}") { fail }
+                my_fin_acct_bal = @my_finances_billing.account_balance_cs
+                it("shows the right account balance for UID #{uid}") { expect(my_fin_acct_bal).to eql(fin_api.amt_to_s fin_api.account_balance) }
+
+                if fin_api.account_balance > 0
+                  acct_bal = 'Positive'
+                  @my_finances_billing.transaction_table_element.when_visible
+                  my_fin_balance_transactions = @my_finances_billing.visible_transactions_sum_str
+                  it("shows the open charges for UID #{uid}") { expect(my_fin_balance_transactions).to eql(fin_api.transactions_sum(fin_api.transactions_with_balance)) }
+
+                elsif fin_api.account_balance < 0
+                  acct_bal = 'Negative'
+                else
+                  it("shows a non-numeric account balance for UID #{uid}") { fail }
+                end
               end
 
               # Amount due now
@@ -131,9 +135,7 @@ describe 'My Finances Campus Solutions student financials', :testui => true do
               # Make payment link
 
               my_fin_pmt_link = @my_finances_billing.make_payment_link_cs?
-              fin_api.account_balance.zero? ?
-                  it("shows no make payment link for UID #{uid}") { expect(my_fin_pmt_link).to be false } :
-                  it("shows a make payment link for UID #{uid}") { expect(my_fin_pmt_link).to be true }
+              it("shows a make payment link for UID #{uid}") { expect(my_fin_pmt_link).to be true }
 
               # TRANSACTION DETAIL CARD
 

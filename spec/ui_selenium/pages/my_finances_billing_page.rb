@@ -30,9 +30,9 @@ module CalCentralPages
       span(:item_type, :xpath => '//span[@data-ng-bind="item.itemType"]')
       span(:item_due_date, :xpath => '//span[contains(@data-ng-bind,"item.itemDueDate")]')
 
-      image(:item_due_future_icon, :xpath => '//td[@class="cc-page-myfinances-due-date cc-table-center"]//i[contains(@class,"fa-arrow-right")]')
-      image(:item_due_now_icon, :xpath => '//td[@class="cc-page-myfinances-due-date cc-table-center"]//i[contains(@class,"fa-exclamation")]')
-      image(:item_due_past_icon, :xpath => '//td[@class="cc-page-myfinances-due-date cc-table-center"]//i[contains(@class,"fa-exclamation-circle")]')
+      image(:item_due_future_icon, :xpath => '//td[contains(@class,"cc-page-myfinances-due-date")]//i[contains(@class,"fa-arrow-right")]')
+      image(:item_due_now_icon, :xpath => '//td[contains(@class,"cc-page-myfinances-due-date")]//i[contains(@class,"fa-exclamation")]')
+      image(:item_due_past_icon, :xpath => '//td[contains(@class,"cc-page-myfinances-due-date")]//i[contains(@class,"fa-exclamation-circle")]')
 
       span(:item_detail_status, :xpath => '//span[contains(@data-ng-bind,"item.itemStatus")]')
       span(:item_detail_orig_amt, :xpath => '//span[@data-cc-amount-directive="item.itemLineAmountString"]')

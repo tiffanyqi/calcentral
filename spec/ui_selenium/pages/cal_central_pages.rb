@@ -120,10 +120,6 @@ module CalCentralPages
     WebDriverUtils.wait_for_page_and_click reg_status_alert_element
   end
 
-  def click_block_status_alert
-    WebDriverUtils.wait_for_element_and_click block_status_alert_element
-  end
-
   def click_hold_status_alert
     WebDriverUtils.wait_for_element_and_click hold_status_alert_element
   end

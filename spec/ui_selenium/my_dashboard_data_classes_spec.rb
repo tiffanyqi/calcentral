@@ -336,7 +336,7 @@ describe 'My Dashboard My Classes card', :testui => true do
             faculty_resources.load_page
 
             sched_classes_link = faculty_resources.schedule_of_classes?
-            class_catalog_link = faculty_resources.class_catalog?
+            course_catalog_link = faculty_resources.course_catalog?
             assist_tech_link = faculty_resources.assistive_tech?
             bcourses_link = faculty_resources.bcourses?
             clickers_link = faculty_resources.clickers?
@@ -348,7 +348,7 @@ describe 'My Dashboard My Classes card', :testui => true do
             if status_api.is_faculty? || status_api.has_instructor_history?
 
               it ("offers a link to Schedule of Classes for UID #{uid}") { expect(sched_classes_link).to be true }
-              it ("offers a link to Class Catalog for UID #{uid}") { expect(class_catalog_link).to be true }
+              it ("offers a link to Course Catalog for UID #{uid}") { expect(course_catalog_link).to be true }
               it ("offers a link to Assistive Technology for UID #{uid}") { expect(assist_tech_link).to be true }
               it ("offers a link to bCourses for UID #{uid}") { expect(bcourses_link).to be true }
               it ("offers a link to Clickers for UID #{uid}") { expect(clickers_link).to be true }
@@ -362,8 +362,8 @@ describe 'My Dashboard My Classes card', :testui => true do
                 sched_classes_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.schedule_of_classes_element, 'Home Page - Online Schedule Of Classes')
                 it ("offers a valid link to Schedule of Classes for UID #{uid}") { expect(sched_classes_link_works).to be true }
 
-                class_catalog_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.class_catalog_element, '2016-2017 Berkeley Academic Guide < University of California, Berkeley')
-                it ("offers a valid link to Class Catalog for UID #{uid}") { expect(class_catalog_link_works).to be true }
+                course_catalog_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.course_catalog_element, '2016-2017 Berkeley Academic Guide < University of California, Berkeley')
+                it ("offers a valid link to Course Catalog for UID #{uid}") { expect(course_catalog_link_works).to be true }
 
                 assist_tech_link_works = WebDriverUtils.verify_external_link(driver, faculty_resources.assistive_tech_element, 'Assistive Technology | Educational Technology Services')
                 it ("offers a valid link to Assistive Technology for UID #{uid}") { expect(assist_tech_link_works).to be true }
@@ -392,7 +392,7 @@ describe 'My Dashboard My Classes card', :testui => true do
             else
 
               it ("offers no link to Schedule of Classes for UID #{uid}") { expect(sched_classes_link).to be false }
-              it ("offers no link to Class Catalog for UID #{uid}") { expect(class_catalog_link).to be false }
+              it ("offers no link to Course Catalog for UID #{uid}") { expect(course_catalog_link).to be false }
               it ("offers no link to Assistive Technology for UID #{uid}") { expect(assist_tech_link).to be false }
               it ("offers no link to bCourses for UID #{uid}") { expect(bcourses_link).to be false }
               it ("offers no link to Clickers for UID #{uid}") { expect(clickers_link).to be false }

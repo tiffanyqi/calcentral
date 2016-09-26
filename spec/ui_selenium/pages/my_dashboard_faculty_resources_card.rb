@@ -3,7 +3,7 @@ module CalCentralPages
   class MyDashboardFacultyResourcesCard < MyDashboardPage
 
     link(:schedule_of_classes, :xpath => '//a[contains(text(),"Schedule of Classes")]')
-    link(:class_catalog, :xpath => '//a[contains(text(),"Class Catalog")]')
+    link(:course_catalog, :xpath => '//a[contains(.,"Course Catalog")]')
     link(:assistive_tech, :xpath => '//a[contains(text(),"Assistive Technology")]')
     link(:bcourses, :xpath => '//a[contains(text(),"bCourses")]')
     link(:clickers, :xpath => '//a[contains(text(),"Clickers")]')
