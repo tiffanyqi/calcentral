@@ -1,7 +1,6 @@
 module EdoOracle
   class Oec < Connection
     include ActiveRecordHelper
-    extend ::Oec::Queries
 
     def self.get_courses(term_id, filter_clause)
       safe_query <<-SQL
