@@ -1,17 +1,7 @@
 module EdoOracle
   module Adapters
-    class Oec < EdoOracle::Oec
+    class Oec
       extend EdoOracle::Adapters::Common
-
-      def self.get_courses(term_code, filter)
-        rows = super(term_id(term_code), filter)
-        adapt_courses(rows, term_code)
-      end
-
-      def self.get_enrollments(term_code, select_clause, filter)
-        rows = super(term_id(term_code), select_clause, filter)
-        adapt_enrollments(rows, term_code)
-      end
 
       def self.adapt_courses(rows, term_code)
         default_dates = get_default_dates term_code
