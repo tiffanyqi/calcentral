@@ -11,6 +11,8 @@ describe Rosters::Campus do
   let(:enrolled_student_student_id) {rand(99999).to_s}
   let(:waitlisted_student_login_id) {rand(99999).to_s}
   let(:waitlisted_student_student_id) {rand(99999).to_s}
+  let(:another_enrolled_login_id) { random_id }
+  let(:another_enrolled_student_id) { random_cs_id }
   let(:catid) {"#{rand(999)}"}
   let(:campus_course_id) {"info-#{catid}-#{term_slug}"}
   let(:fake_campus) do
@@ -87,8 +89,8 @@ describe Rosters::Campus do
       expect(feed[:sections][0][:enroll_open]).to eq 648
       expect(feed[:sections][0][:enroll_count]).to eq 2
       expect(feed[:sections][0][:waitlist_limit]).to eq 110
-      expect(feed[:sections][0][:waitlist_open]).to eq 110
-      expect(feed[:sections][0][:waitlist_count]).to eq 0
+      expect(feed[:sections][0][:waitlist_open]).to eq 109
+      expect(feed[:sections][0][:waitlist_count]).to eq 1
       expect(feed[:sections][1][:ccn]).to eq ccn2
       expect(feed[:sections][1][:name]).to eq "INFO #{catid} LAB 001"
       expect(feed[:sections][1][:section_label]).to eq "LAB 001"
@@ -99,12 +101,12 @@ describe Rosters::Campus do
       expect(feed[:sections][1][:enroll_open]).to eq 0
       expect(feed[:sections][1][:enroll_count]).to eq 2
       expect(feed[:sections][1][:waitlist_limit]).to eq 1
-      expect(feed[:sections][1][:waitlist_open]).to eq 1
-      expect(feed[:sections][1][:waitlist_count]).to eq 0
+      expect(feed[:sections][1][:waitlist_open]).to eq 0
+      expect(feed[:sections][1][:waitlist_count]).to eq 1
     end
 
     it 'should return a list of officially enrolled students for a course ccn' do
-      expect(feed[:students].length).to eq 2
+      expect(feed[:students].length).to eq 3
       student = feed[:students][0]
       expect(student[:id]).to eq enrolled_student_login_id
       expect(student[:student_id]).to eq enrolled_student_student_id
@@ -121,7 +123,7 @@ describe Rosters::Campus do
 
     it 'should show official photo links for students who are not waitlisted in all sections' do
       expect(feed[:sections].length).to eq 2
-      expect(feed[:students].length).to eq 2
+      expect(feed[:students].length).to eq 3
       expect(feed[:students].index {|student| student[:id] == waitlisted_student_login_id &&
         student[:photo].nil?
       }).to_not be_nil
@@ -163,6 +165,15 @@ describe Rosters::Campus do
             'student_email_address' => "#{waitlisted_student_login_id}@example.com",
           },
           {
+            'course_cntl_num' => ccn1,
+            'ldap_uid' => another_enrolled_login_id,
+            'enroll_status' => 'E',
+            'student_id' => another_enrolled_student_id,
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'student_email_address' => "#{another_enrolled_login_id}@example.com",
+          },
+          {
             'course_cntl_num' => ccn2,
             'ldap_uid' => enrolled_student_login_id,
             'enroll_status' => 'E',
@@ -179,6 +190,15 @@ describe Rosters::Campus do
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
             'student_email_address' => "#{waitlisted_student_login_id}@example.com",
+          },
+          {
+            'course_cntl_num' => ccn2,
+            'ldap_uid' => another_enrolled_login_id,
+            'enroll_status' => 'E',
+            'student_id' => another_enrolled_student_id,
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'student_email_address' => "#{another_enrolled_login_id}@example.com",
           }
         ]
       end
@@ -204,15 +224,22 @@ describe Rosters::Campus do
             },
             {
               ldap_uid: waitlisted_student_login_id,
-              student_id: enrolled_student_student_id,
+              student_id: waitlisted_student_student_id,
               first_name: 'First Name',
               last_name: 'Last Name',
               email_address: "#{waitlisted_student_login_id}@example.com"
+            },
+            {
+              ldap_uid: another_enrolled_login_id,
+              student_id: another_enrolled_student_id,
+              first_name: 'Another Name',
+              last_name: 'One Last Name',
+              email_address: "#{another_enrolled_login_id}@example.com"
             }
           ]
         end
         expect(User::BasicAttributes).to receive(:attributes_for_uids)
-          .with([enrolled_student_login_id, waitlisted_student_login_id])
+          .with([enrolled_student_login_id, waitlisted_student_login_id, another_enrolled_login_id])
           .exactly(2).times.and_return(attributes, attributes)
       end
       let(:feed) { feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed }
@@ -255,15 +282,15 @@ describe Rosters::Campus do
             'terms_in_attendance_group' => 'R6TA'
           },
           {
-            'section_id' => ccn2,
-            'ldap_uid' => enrolled_student_login_id,
+            'section_id' => ccn1,
+            'ldap_uid' => another_enrolled_login_id,
             'enroll_status' => 'E',
-            'student_id' => enrolled_student_student_id,
+            'student_id' => another_enrolled_student_id,
             'grading_basis' => 'GRD',
             'units' => 4.0,
             'waitlist_position' => nil,
-            'major' => 'Cognitive Science BA',
-            'academic_career' => 'UGRD',
+            'major' => 'Philosophy BA',
+            'academic_career' => 'PHIL',
             'terms_in_attendance_group' => 'R2TA'
           },
           {
@@ -289,6 +316,30 @@ describe Rosters::Campus do
             'major' => 'Break Science BA',
             'academic_career' => 'UGRD',
             'terms_in_attendance_group' => 'R6TA'
+          },
+          {
+            'section_id' => ccn2,
+            'ldap_uid' => enrolled_student_login_id,
+            'enroll_status' => 'E',
+            'student_id' => enrolled_student_student_id,
+            'grading_basis' => 'GRD',
+            'units' => 4.0,
+            'waitlist_position' => nil,
+            'major' => 'Computer Science BA',
+            'academic_career' => 'UGRD',
+            'terms_in_attendance_group' => 'R2TA'
+          },
+          {
+            'section_id' => ccn2,
+            'ldap_uid' => another_enrolled_login_id,
+            'enroll_status' => 'E',
+            'student_id' => another_enrolled_student_id,
+            'grading_basis' => 'GRD',
+            'units' => 4.0,
+            'waitlist_position' => nil,
+            'major' => 'Philosophy BA',
+            'academic_career' => 'PHIL',
+            'terms_in_attendance_group' => 'R2TA'
           }
         ]
       end
@@ -301,6 +352,7 @@ describe Rosters::Campus do
           expect(feed[:sections][0][:enroll_limit]).to eq 1
           expect(feed[:sections][0][:enroll_count]).to eq 2
           expect(feed[:sections][0][:enroll_open]).to eq 0
+          expect(feed[:sections][0][:waitlist_count]).to eq 1
         end
       end
 

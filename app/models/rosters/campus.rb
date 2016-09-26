@@ -52,7 +52,7 @@ module Rosters
 
           section_enrolled_count, section_waitlisted_count = 0, 0
           if (section_enrollments = enrollments[section[:ccn]])
-            section_enrollments_grouped = section_enrollments.group_by { |e| !!e['waitlist_position'] ? :waitlisted : :enrolled }
+            section_enrollments_grouped = section_enrollments.group_by { |e| e[:enroll_status] != 'E' ? :waitlisted : :enrolled }
             section_waitlisted_count = section_enrollments_grouped[:waitlisted].try(:length).to_i
             section_enrolled_count = section_enrollments_grouped[:enrolled].try(:length).to_i
 
