@@ -165,6 +165,33 @@ module EdoOracle
       SQL
     end
 
+    # No Campus Oracle equivalent.
+    def self.get_section_final_exam(term_id, section_id)
+      safe_query <<-SQL
+        SELECT DISTINCT
+          exam."term-id" AS term_id,
+          exam."session-id" AS session_id,
+          exam."date" AS exam_date,
+          exam."startTime" AS exam_start_time,
+          exam."endTime" AS exam_end_time,
+          exam."location-descr" AS location
+        FROM
+          SISEDO.EXAMV00_VW exam
+        JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+          exam."cs-course-id" = sec."cs-course-id" AND
+          exam."term-id" = sec."term-id" AND
+          exam."session-id" = sec."session-id" AND
+          exam."offeringNumber" = sec."offeringNumber" AND
+          exam."sectionNumber" = sec."sectionNumber"
+        )
+        WHERE
+          sec."term-id" = '#{term_id}' AND
+          sec."id" = '#{section_id}' AND
+          exam."type-code" = 'FIN'
+        ORDER BY exam_date
+      SQL
+    end
+
     # EDO equivalent of CampusOracle::Queries.get_sections_from_ccns
     # Changes:
     #   - 'course_cntl_num' is replaced with 'section_id'

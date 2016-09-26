@@ -10,12 +10,11 @@ describe MyAcademics::Exams do
   # a class with recurring times
   let(:ug_class_recurring) do
     {
-      :role => 'Student',
-      :course_code => 'BIO ENG 131',
-      :courseCatalog => '131',
+      :role => 'Student',:course_code => 'BIO ENG 131',:courseCatalog => '131',
       :sections => [
         {
           :is_primary_section => true,
+          :final_exams => [],
           :schedules => {
             :recurring => [
               {:buildingName=>'LeConte',:roomNumber=>'251',:schedule=>'MWF 2:00P-2:59P'}
@@ -24,6 +23,7 @@ describe MyAcademics::Exams do
         },
         {
           :is_primary_section => false,
+          :final_exams => [],
           :schedules => {
             :recurring=>[
               {:buildingName=>'Etcheverry',:roomNumber=>'1111',:schedule=>'W 4:00P-5:29P'}
@@ -37,12 +37,11 @@ describe MyAcademics::Exams do
   # chem 3b course exception
   let(:chem_3b_ug_class) do
     {
-      :role=>'Student',
-      :course_code=>'CHEM 3B',
-      :courseCatalog=>'3B',
+      :role=>'Student',:course_code=>'CHEM 3B',:courseCatalog=>'3B',
       :sections=> [
         {
           :is_primary_section=>true,
+          :final_exams => [],
           :schedules=> {
             :recurring=>[
               {:buildingName=>'Pimentel',:roomNumber=>'1',:schedule=>'MWF 2:00P-2:59P'}
@@ -56,12 +55,11 @@ describe MyAcademics::Exams do
   # a class with a waitlist and recurring
   let(:waitlist_recurring_ug_class) do
     {
-      :role=>'Student',
-      :course_code=>'COMPSCI 61B',
-      :courseCatalog=>'61B',
+      :role=>'Student',:course_code=>'COMPSCI 61B',:courseCatalog=>'61B',
       :sections=> [
         {
           :is_primary_section=>true,
+          :final_exams => [],
           :schedules=>
             {
               :recurring=>[
@@ -77,12 +75,11 @@ describe MyAcademics::Exams do
   # an ug class with nothing
   let(:no_recurring_ug_class) do
     {
-      :role=>'Student',
-      :course_code=>'EWMBA 107',
-      :courseCatalog=>'107',
+      :role=>'Student',:course_code=>'EWMBA 107',:courseCatalog=>'107',
       :sections=>[
         {
           :is_primary_section=>true,
+          :final_exams => [],
           :schedules=>
             {
               :recurring=>[]
@@ -95,12 +92,11 @@ describe MyAcademics::Exams do
   # a grad class with nothing
   let(:no_recurring_grad_class) do
     {
-      :role=>'Student',
-      :course_code=>'EWMBA 299',
-      :courseCatalog=>'299',
+      :role=>'Student',:course_code=>'EWMBA 299',:courseCatalog=>'299',
       :sections=>[
         {
           :is_primary_section=>true,
+          :final_exams => [],
           :schedules=>
             {
               :recurring=>[]
@@ -113,12 +109,11 @@ describe MyAcademics::Exams do
   # grad class and recurring
   let(:recurring_grad_class) do
     {
-      :role=>'Student',
-      :course_code=>'EWMBA 201B',
-      :courseCatalog=>'201B',
+      :role=>'Student',:course_code=>'EWMBA 201B',:courseCatalog=>'201B',
       :sections=> [
         {
           :is_primary_section=>true,
+          :final_exams => [],
           :schedules=>
             {
               :recurring=>[
@@ -159,11 +154,30 @@ describe MyAcademics::Exams do
   let(:cs_class) do
     {
       :name => 'CHEM 3B',:number => 3,:time => 'MWF 2:00P-2:59P',:waitlisted => nil,
-      :exam_location => 'Dwinelle 155',
-      :exam_date => 'Mon 5/16',
-      :exam_time => '8:00P',
-      :exam_date_no_day => '5/16',
-      :exam_slot => '16/May/2016 20:00:00'.to_datetime
+      :exam_location => 'Kroeber 221',
+      :exam_date => 'Mon 12/12',
+      :exam_time => '07:00PM',
+      :exam_slot => Time.parse('2016-12-12 19:00:00')
+    }
+  end
+
+  # example exams with everything
+  let(:all_exam) do
+    {
+      :location => 'Kroeber 221',
+      :exam_date => Time.parse('2016-12-12 00:00:00 UTC'),
+      :exam_start_time=>Time.parse('1900-01-01 19:00:00 UTC'),
+      :exam_end_time=>Time.parse('1900-01-01 22:00:00 UTC'),
+    }
+  end
+
+  # example exams with nothing
+  let(:no_exam) do
+    {
+      :location => nil,
+      :exam_date => nil,
+      :exam_start_time=> nil,
+      :exam_end_time=> nil,
     }
   end
 
@@ -229,14 +243,13 @@ describe MyAcademics::Exams do
 
   let(:spring_2016_exams_after_parsed) do
     {
-      '16/May/2016 20:00:00'.to_datetime => [
+      Time.parse('2016-12-12 19:00:00') => [
         {
-          :name => 'CHEM 3B',:number => 3,:time => 'MWF 2:00P-2:59P',:waitlisted => nil,
-          :exam_location => 'Dwinelle 155',
-          :exam_date => 'Mon 5/16',
-          :exam_time => '8:00P',
-          :exam_date_no_day => '5/16',
-          :exam_slot => '16/May/2016 20:00:00'.to_datetime
+          :name => 'BIO ENG 131',:number => 131,:time => 'MWF 2:00P-2:59P',:waitlisted => nil,
+          :exam_location => 'Kroeber 221',
+          :exam_date => 'Mon 12/12',
+          :exam_time => '07:00PM',
+          :exam_slot => Time.parse('2016-12-12 19:00:00')
         }
       ],
     }
@@ -289,7 +302,6 @@ describe MyAcademics::Exams do
     }
   end
 
-
   subject do
     MyAcademics::Exams.new(uid)
   end
@@ -322,14 +334,14 @@ describe MyAcademics::Exams do
       end
     end
 
-    context 'with semesters and classes' do
+    context 'with semesters and classes and no cs exams' do
       it 'should parse academic data correctly' do
         result = subject.parse_academic_data(feed[:semesters])
         expect(result.length).to eq 2
         fall_2016 = result[0]
         spring_2016 = result[1]
         expect(fall_2016[:cs_data_available]).to eq false
-        expect(spring_2016[:cs_data_available]).to eq false # will be true with real CS data
+        expect(spring_2016[:cs_data_available]).to eq true
 
         fall_courses = result[0][:courses]
         spring_courses = result[1][:courses]
@@ -338,12 +350,14 @@ describe MyAcademics::Exams do
         fall_courses.each do |course|
           expect(course[:name]).to be
           expect(course[:number]).to be
+          expect(course[:exam_location]).to_not be
         end
 
         expect(spring_courses.length).to eq 3
         spring_courses.each do |course|
           expect(course[:name]).to be
           expect(course[:number]).to be
+          expect(course[:exam_location]).to_not be
         end
       end
 
@@ -359,9 +373,9 @@ describe MyAcademics::Exams do
           data.each do |course|
             expect(course[:exam_slot]).to eq exam_group
             case exam_group
-            when '16/May/2016 20:00:00'.to_datetime
-              expect(course[:exam_date]).to eq 'Mon 5/16'
-              expect(course[:exam_time]).to eq '8:00P'
+            when Time.parse('2016-12-12 19:00:00')
+              expect(course[:exam_date]).to eq 'Mon 12/12'
+              expect(course[:exam_time]).to eq '07:00PM'
             end
           end
         end
@@ -378,6 +392,66 @@ describe MyAcademics::Exams do
               expect(course[:exam_date]).to eq 'Thu 12/15'
               expect(course[:exam_time]).to eq '11:30-2:30P'
             end
+          end
+        end
+      end
+
+    end
+
+    context 'with semesters and classes and cs exams' do
+      let(:ug_class_recurring) do
+        {
+          :role => 'Student',:course_code => 'BIO ENG 131',:courseCatalog => '131',
+          :sections => [
+            {
+              :is_primary_section => true,
+              :final_exams => [all_exam],
+              :schedules => {
+                :recurring => [
+                  {:buildingName=>'LeConte',:roomNumber=>'251',:schedule=>'MWF 2:00P-2:59P'}
+                ]
+              }
+            }
+          ]
+        }
+      end
+
+      let(:no_recurring_ug_class) do
+        {
+          :role=>'Student',:course_code=>'EWMBA 107',:courseCatalog=>'107',
+          :sections=>[
+            {
+              :is_primary_section=>true,
+              :final_exams => [no_exam],
+              :schedules=>
+                {
+                  :recurring=>[]
+                }
+            }
+          ]
+        }
+      end
+
+      it 'should parse academic data correctly' do
+        result = subject.parse_academic_data(feed[:semesters])
+        fall_courses = result[0][:courses]
+        spring_courses = result[1][:courses]
+
+        expect(fall_courses.length).to eq 5
+        expect(fall_courses[0][:exam_location]).to_not be
+        expect(fall_courses[1][:exam_location]).to_not be
+
+        expect(spring_courses.length).to eq 3
+        expect(spring_courses[0][:exam_location]).to eq 'Kroeber 221'
+        expect(spring_courses[0][:exam_date]).to eq 'Mon 12/12'
+        expect(spring_courses[1][:exam_location]).to_not be
+      end
+
+      it 'should transition data correctly' do
+        merged_result.each do |semester|
+          semester[:exams].each do |exam_slot, data|
+            expect(exam_slot).to be_kind_of(Time) if semester[:cs_data_available]
+            expect(exam_slot).to be_kind_of(Integer) if !semester[:cs_data_available]
           end
         end
       end
@@ -417,7 +491,7 @@ describe MyAcademics::Exams do
     it 'should transition data correctly' do
       merged_result.each do |semester|
         semester[:exams].each do |exam_slot, data|
-          expect(exam_slot).to be_kind_of(DateTime) if semester[:cs_data_available]
+          expect(exam_slot).to be_kind_of(Time) if semester[:cs_data_available]
           expect(exam_slot).to be_kind_of(Integer) if !semester[:cs_data_available]
         end
       end
@@ -425,7 +499,7 @@ describe MyAcademics::Exams do
 
     it 'should determine cs data is available correctly' do
       expect(subject.determine_cs_data_available(fall_2016_semester)).to eq false
-      expect(subject.determine_cs_data_available(spring_2016_semester)).to eq false # will be true with real cs data
+      expect(subject.determine_cs_data_available(spring_2016_semester)).to eq true
     end
 
     it 'should determine the exam key correctly' do
@@ -435,10 +509,25 @@ describe MyAcademics::Exams do
       expect(subject.determine_exam_key(spring_2016_semester_after_parsed, cs_class, final_exam_logic)).to eq 'B-CHEM 3B'
     end
 
-    it 'should determine the exam date correctly' do
+    it 'should determine the cs exam date correctly' do
       expect(subject.determine_exam_date(fall_2016_semester_after_parsed, 'Monday')).to eq 'Mon 12/12'
       expect(subject.determine_exam_date(fall_2016_semester_after_parsed, 'Tuesday')).to eq 'Tue 12/13'
       expect(subject.determine_exam_date(spring_2016_semester_after_parsed, 'Monday')).to eq 'Mon 5/9'
+    end
+
+    it 'should parse cs exam dates properly' do
+      expect(subject.parse_cs_exam_date(all_exam)).to eq 'Mon 12/12'
+      expect(subject.parse_cs_exam_date(no_exam)).to eq nil
+    end
+
+    it 'should parse cs exam times properly' do
+      expect(subject.parse_cs_exam_time(all_exam)).to eq '07:00PM-10:00PM'
+      expect(subject.parse_cs_exam_time(no_exam)).to eq nil
+    end
+
+    it 'should create cs exam slots properly' do
+      expect(subject.parse_cs_exam_slot(all_exam)).to eq Time.parse('2016-12-12 19:00:00')
+      expect(subject.parse_cs_exam_slot(no_exam)).to eq nil
     end
 
   end

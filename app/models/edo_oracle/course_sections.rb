@@ -12,7 +12,8 @@ module EdoOracle
       self.class.fetch_from_cache "#{@course_id}-#{@term_id}" do
         {
           instructors: get_section_instructors,
-          schedules: get_section_schedules
+          schedules: get_section_schedules,
+          final_exams: get_section_final_exam
         }
       end
     end
@@ -34,6 +35,19 @@ module EdoOracle
         end
       end
       schedules
+    end
+
+    def get_section_final_exam
+      final_exams = EdoOracle::Queries.get_section_final_exam(@term_id, @course_id).map do |exam|
+        {
+          type: exam['type'],
+          location: exam['location'],
+          exam_date: exam['exam_date'],
+          exam_start_time: exam['exam_start_time'],
+          exam_end_time: exam['exam_end_time']
+        }
+      end
+      final_exams.uniq
     end
 
     def get_section_instructors
