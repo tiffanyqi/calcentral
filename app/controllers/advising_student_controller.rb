@@ -20,7 +20,7 @@ class AdvisingStudentController < ApplicationController
   end
 
   def academics
-    render json: filtered_academics.to_json
+    render json: MyAcademics::FilteredForAdvisor.from_session('user_id' => student_uid_param).get_feed_as_json
   end
 
   def academic_status
@@ -57,27 +57,6 @@ class AdvisingStudentController < ApplicationController
   end
 
   private
-
-  def filtered_academics
-    feed = MyAcademics::Merged.from_session('user_id' => student_uid_param).get_feed
-    if (semesters = feed[:semesters])
-      semesters.each do |s|
-        s.delete :slug
-        (classes = s[:classes]) && classes.each do |c|
-          c.delete :slug
-          c.delete :url
-          (sections = c[:sections]) && sections.each do |section|
-            section.delete :url
-          end
-        end
-      end
-    end
-    (memberships = feed[:otherSiteMemberships]) && memberships.each do |membership|
-      membership.delete :slug
-      membership[:sites].each { |site| site.delete :site_url } if membership[:sites]
-    end
-    feed
-  end
 
   def authorize_for_student
     raise NotAuthorizedError.new('The student lookup feature is disabled') unless is_feature_enabled

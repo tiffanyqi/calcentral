@@ -38,7 +38,7 @@ describe MyAcademics::Merged do
     before { set_mock_merge oski_providers }
 
     it 'should merge all providers into hash' do
-      feed = described_class.new(uid).get_feed
+      feed = described_class.new(uid).get_feed_internal
       provider_classes.each { |provider_class| expect(feed[provider_class.to_s]).to eq true }
       expect(feed[:errors]).to be_blank
     end
@@ -53,26 +53,11 @@ describe MyAcademics::Merged do
 
     it 'should merge other providers and report error' do
       expect(Rails.logger).to receive(:error).with /Failed to merge MyAcademics::Exams for UID #{uid}: NoMethodError/
-      feed = described_class.new(uid).get_feed
+      feed = described_class.new(uid).get_feed_internal
       well_behaved_classes = provider_classes - [MyAcademics::Exams]
       well_behaved_classes.each { |well_behaved_class| expect(feed[well_behaved_class.to_s]).to eq true }
       expect(feed).not_to include 'MyAcademics::Exams'
       expect(feed[:errors]).to eq ['MyAcademics::Exams']
-    end
-  end
-
-  describe '#filter_course_sites' do
-    let(:full_feed) {HashConverter.symbolize JSON.parse(File.read(Rails.root.join('public/dummy/json/academics.json')))}
-    it 'includes bCourses sites in a full feed' do
-      expect(full_feed[:semesters][1][:classes][2][:class_sites].index {|c| c[:emitter] == 'bCourses'}).to_not be_nil
-      expect(full_feed[:teachingSemesters][0][:classes][0][:class_sites].index {|c| c[:emitter] == 'bCourses'}).to_not be_nil
-      expect(full_feed[:otherSiteMemberships][0][:sites].index {|c| c[:emitter] == 'bCourses'}).to_not be_nil
-    end
-    it 'removes course sites from the full feed' do
-      feed = described_class.new(uid).filter_course_sites full_feed
-      expect(feed[:semesters][1][:classes][2][:class_sites]).to be_blank
-      expect(feed[:teachingSemesters][0][:classes][0][:class_sites]).to be_blank
-      expect(feed[:otherSiteMemberships]).to be_blank
     end
   end
 end

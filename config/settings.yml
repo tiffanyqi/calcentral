@@ -240,7 +240,7 @@ cache:
     Cache::FeedUpdateWhiteboard: <%= 5.minutes %>
     LiveUpdatesWarmer: <%= 4.minutes %>
     BackgroundJobsCheck: <%= 29.days %>
-    MyAcademics::Merged: NEXT_08_00
+    MyAcademics::Merged: <%= 15.minutes %>
     MyActivities::Merged: <%= 10.minutes %>
     MyBadges::Merged: <%= 2.hours %>
     MyCampusLinksController: NEXT_08_00
@@ -270,6 +270,9 @@ cache:
 
     CampusOracle::CourseSections: NEXT_08_00
     CampusOracle::UserAttributes: NEXT_08_00
+    CampusOracle::UserCourses::All: NEXT_08_00
+
+    EdoOracle::UserCourses::All: <%= 8.hours %>
 
     Canvas::MergedUserSites: <%= 30.minutes %>
     Canvas::UserCourses: <%= 30.minutes %>
