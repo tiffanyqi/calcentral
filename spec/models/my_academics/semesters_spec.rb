@@ -64,6 +64,7 @@ describe MyAcademics::Semesters do
     format = opts[:format] || ['LEC', 'DIS', 'SEM'].sample
     section_number = opts[:section_number] || "00#{rand(9)}"
     is_primary_section = opts[:is_primary_section] || false
+    waitlisted = opts[:waitlisted]
     section = {
       associated_primary_id: opts[:associated_primary_id],
       ccn: opts[:ccn] || random_ccn,
@@ -81,6 +82,7 @@ describe MyAcademics::Semesters do
           schedule: 'MWF 11:00A-12:00P'
         }]
       },
+      waitlisted: waitlisted,
       instructors: [{name: random_name, uid: random_id}]
     }
     if opts[:edo_source]
@@ -295,6 +297,49 @@ describe MyAcademics::Semesters do
       end
     end
     it_should_behave_like 'a good and proper multiple-primary munge'
+  end
+
+  context 'when a semester has all waitlisted courses, or no enrolled courses' do
+    before do
+      allow(Settings.terms).to receive(:legacy_cutoff).and_return 'summer-2014'
+      allow_any_instance_of(CampusOracle::UserCourses::All).to receive(:get_all_campus_courses).and_return enrollment_data
+    end
+    let(:term_keys) { ['2013-D'] }
+    let(:enrollment_data) { {'2013-D' => waitlisted_term} }
+
+    context 'all waitlisted courses' do
+      let(:waitlisted_term) do
+        enrollment_term('2013-D', edo_source: false).tap do |term|
+          term.each do |course|
+            course[:sections] = [
+              course_enrollment_section(is_primary_section: true, waitlisted: true),
+              course_enrollment_section(is_primary_section: false, waitlisted: true),
+            ]
+          end
+        end
+      end
+      it 'should say that there are no enrolled courses' do
+        feed[:semesters].each do |semester|
+          expect(semester[:has_enrolled_classes]).to be false
+        end
+      end
+    end
+
+    context 'some waitlisted courses' do
+      let(:waitlisted_term) do
+        enrollment_term('2013-D', edo_source: false).tap do |term|
+          term.first[:sections] = [
+            course_enrollment_section(waitlisted: true),
+            course_enrollment_section(waitlisted: true)
+          ]
+        end
+      end
+      it 'should say that there are enrolled courses' do
+        feed[:semesters].each do |semester|
+          expect(semester[:has_enrolled_classes]).to be true
+        end
+      end
+    end
   end
 
   context 'when enrollment data for a term is unavailable' do
