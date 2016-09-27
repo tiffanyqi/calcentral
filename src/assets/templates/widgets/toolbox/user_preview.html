@@ -89,46 +89,39 @@
                 Advising Resources
               </th>
               <td>
-                <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.ucServiceIndicator.url">
+                <div data-ng-if="ucAdvisingResources.csLinks.studentServiceIndicators.url">
                   <div
                     data-cc-campus-solutions-link-item-directive
-                    data-link="ucAdvisingResources.ucAdvisingLinks.ucServiceIndicator"
+                    data-link="ucAdvisingResources.csLinks.studentServiceIndicators"
                   ></div>
                 </div>
-                <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.ucStudentAdvisor.url">
+                <div data-ng-if="ucAdvisingResources.csLinks.studentAdvisingAssignments.url">
                   <div
                     data-cc-campus-solutions-link-item-directive
-                    data-link="ucAdvisingResources.ucAdvisingLinks.ucStudentAdvisor"
-                    data-text="Advising Assignments"
+                    data-link="ucAdvisingResources.csLinks.studentAdvisingAssignments"
                   ></div>
                 </div>
-                <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.multiYearAcademicPlannerStudentSpecific.url">
+                <div data-ng-if="ucAdvisingResources.csLinks.studentMultiYearAcademicPlanner.url">
                   <div
                     data-cc-campus-solutions-link-item-directive
-                    data-link="ucAdvisingResources.ucAdvisingLinks.multiYearAcademicPlannerStudentSpecific"
+                    data-link="ucAdvisingResources.csLinks.studentMultiYearAcademicPlanner"
                   ></div>
                 </div>
-                <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.schedulePlannerStudentSpecific.url">
+                <div data-ng-if="ucAdvisingResources.links.schedulePlannerStudentSpecific.url">
                   <a
-                    data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.schedulePlannerStudentSpecific.url}}"
-                    data-ng-bind="ucAdvisingResources.ucAdvisingLinks.schedulePlannerStudentSpecific.name"></a>
+                    data-ng-href="{{ucAdvisingResources.links.schedulePlannerStudentSpecific.url}}"
+                    data-ng-bind="ucAdvisingResources.links.schedulePlannerStudentSpecific.name"></a>
                 </div>
-                <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.studentAppointments.url">
+                <div data-ng-if="ucAdvisingResources.csLinks.studentAdvisorNotes.url">
                   <div
                     data-cc-campus-solutions-link-item-directive
-                    data-link="ucAdvisingResources.ucAdvisingLinks.studentAppointments"
+                    data-link="ucAdvisingResources.csLinks.studentAdvisorNotes"
                   ></div>
                 </div>
-                <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.studentAdvisorNotes.url">
-                  <div
-                    data-cc-campus-solutions-link-item-directive
-                    data-link="ucAdvisingResources.ucAdvisingLinks.studentAdvisorNotes"
-                  ></div>
-                </div>
-                <div data-ng-if="ucAdvisingResources.ucAdvisingLinks.studentWebnowDocuments.url">
+                <div data-ng-if="ucAdvisingResources.csLinks.studentWebnowDocuments.url">
                   <a
-                    data-ng-href="{{ucAdvisingResources.ucAdvisingLinks.studentWebnowDocuments.url}}"
-                    data-ng-bind="ucAdvisingResources.ucAdvisingLinks.studentWebnowDocuments.name" data-ng-attr-title="{{ucAdvisingResources.ucAdvisingLinks.studentWebnowDocuments.title}}"></a>
+                    data-ng-href="{{ucAdvisingResources.csLinks.studentWebnowDocuments.url}}"
+                    data-ng-bind="ucAdvisingResources.csLinks.studentWebnowDocuments.name" data-ng-attr-title="{{ucAdvisingResources.csLinks.studentWebnowDocuments.title}}"></a>
                 </div>
               </td>
             </tr>

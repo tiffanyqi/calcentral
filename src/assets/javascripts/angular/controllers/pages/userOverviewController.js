@@ -81,7 +81,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       advisingFactory.getAdvisingResources({
         uid: targetUserUid
       }).then(function(data) {
-        angular.extend($scope.ucAdvisingResources, _.get(data, 'data.feed.ucAdvisingResources'));
+        angular.extend($scope.ucAdvisingResources, _.get(data, 'data.feed'));
         $scope.ucAdvisingResources.isLoading = false;
       });
     }).error(function(data, status) {
