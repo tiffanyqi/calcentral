@@ -22,29 +22,65 @@ describe CampusSolutions::AdvisingResourcesController do
       let(:feed_key) { 'ucAdvisingResources' }
 
       shared_examples 'a feed with advising resources' do
-        it 'contains advising links' do
+        it 'contains advising links and csLinks' do
           get feed
           json = JSON.parse response.body
-          expect(links = json['feed']['links']).to_not be_nil
+          expect(json['feed']['links']).to_not be_nil
+          expect(json['feed']['csLinks']).to_not be_nil
+        end
+      end
+
+      context 'links from the CS advising resources API' do
+        let(:key) { 'webNowDocuments' }
+        let(:expected_name) { 'WebNow Documents' }
+
+        it_behaves_like 'a feed with advising resources'
+
+        it 'returns feed with links' do
+          get feed
+          json = JSON.parse response.body
+          links = json['feed']['links']
+
           expect(link = links[key]).to_not be_nil
           expect(link['isCsLink']).to be true
           expect(link['name']).to eq expected_name
         end
       end
 
-      context 'links from the CS API' do
-        let(:key) { 'ucAdviseeStudentCenter' }
-        let(:expected_name) { 'Advisee Student Center' }
-
-        it_behaves_like 'a feed with advising resources'
-      end
-
       context 'links from YAML settings' do
-        let(:key) { 'multiYearAcademicPlannerStudentSpecific' }
-        let(:expected_name) { 'Multi-Year Planner' }
+        let(:key) { 'schedulePlannerStudentSpecific' }
+        let(:expected_name) { 'Schedule Planner' }
 
         it_behaves_like 'a feed with advising resources'
+
+        it 'returns feed with CS links' do
+          get feed
+          json = JSON.parse response.body
+          links = json['feed']['links']
+
+          expect(link = links[key]).to_not be_nil
+          expect(link['isCsLink']).to be true
+          expect(link['name']).to eq expected_name
+        end
       end
+
+      context 'links from CS link API' do
+        let(:key) { 'ucClassSearch' }
+        let(:expected_name) { 'Class Search' }
+
+        it_behaves_like 'a feed with advising resources'
+
+        it 'returns feed with CS links' do
+          get feed
+          json = JSON.parse response.body
+          cs_links = json['feed']['csLinks']
+
+          expect(link = cs_links[key]).to_not be_nil
+          expect(link['isCsLink']).to be true
+          expect(link['name']).to eq expected_name
+        end
+      end
+
     end
   end
 

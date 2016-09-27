@@ -6,6 +6,8 @@ describe CampusSolutions::AdvisingResources do
     it_behaves_like 'a proxy that got data successfully'
     it 'returns data with the expected structure' do
       expect(subject[:feed][:links]).to be
+      # cs_links come from models/campus_solutions/link.rb
+      expect(subject[:feed][:csLinks]).to be
     end
   end
 

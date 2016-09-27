@@ -33,28 +33,44 @@ module CampusSolutions
       return {} unless response && (feed = response['ROOT'])
       links = feed.fetch('UC_ADVISING_RESOURCES').fetch('UC_ADVISING_LINKS', {})
 
+      student_empl_id = @student[:campus_solutions_id]
+
       # The following links are hard-coded, for now. Ideally they would be served by CS API but there is an urgent need
       # thus we manage the content via CalCentral settings.
       add_cs_link links, :web_now_documents, 'WEB_NOW_DOCUMENTS', 'WebNow Documents'
-      add_cs_link links, :multi_year_academic_planner, 'MULTI_YEAR_ACADEMIC_PLANNER_STUDENT_SPECIFIC', 'Multi-Year Planner', "?EMPLID=#{lookup_student_id}"
-      add_cs_link links, :schedule_planner, 'SCHEDULE_PLANNER_STUDENT_SPECIFIC', 'Schedule Planner', "?EMPLID=#{lookup_student_id}"
+      add_cs_link links, :schedule_planner, 'SCHEDULE_PLANNER_STUDENT_SPECIFIC', 'Schedule Planner', "?EMPLID=#{student_empl_id}"
 
       # LINK-API CALLS
+      cs_links = {}
+
       campus_solutions_link_settings = [
-        { feed_key: :uc_appointment_system, cs_link_key: 'UC_CX_APPOINTMENT_ADV_MY_APPTS' },
+        # advisors see these on advisor-specific views
+        { feed_key: :uc_advising_assignments, cs_link_key: 'UC_CX_STUDENT_ADVISOR' },
+        # hide this until 7.2, thanks :)
+        # { feed_key: :uc_appointment_system, cs_link_key: 'UC_CX_APPOINTMENT_ADV_MY_APPTS' },
+        { feed_key: :uc_class_search, cs_link_key: 'UC_CX_CLASS_SEARCH' },
         { feed_key: :uc_eforms_center, cs_link_key: 'UC_CX_GT_ACTION_CENTER' },
         { feed_key: :uc_eforms_work_list, cs_link_key: 'UC_CX_GT_WORK_CENTER' },
         { feed_key: :uc_multi_year_academic_planner_generic, cs_link_key: 'UC_CX_PLANNER_ADV' },
-        { feed_key: :student_appointments, cs_link_key: 'UC_CX_APPOINTMENT_ADV_VIEW_STD', cs_link_params: { :EMPLID => @student[:campus_solutions_id] } },
-        { feed_key: :student_advisor_notes, cs_link_key: 'UC_CX_SCI_NOTE_FLU', cs_link_params: { :EMPLID => @student[:campus_solutions_id] } },
-        { feed_key: :student_webnow_documents, cs_link_key: 'UC_CX_WEBNOW_STUDENT_URI', cs_link_params: { :EMPLID => @student[:campus_solutions_id] } },
+        { feed_key: :uc_reporting_center, cs_link_key: 'UC_CX_REPORTING_CENTER' },
+        { feed_key: :uc_service_indicators, cs_link_key: 'UC_CX_SERVICE_IND_DATA' },
+
+        # advisors and students see these on student-specific views
+        { feed_key: :student_appointments, cs_link_key: 'UC_CX_APPOINTMENT_ADV_VIEW_STD', cs_link_params: { :EMPLID => student_empl_id } },
+        { feed_key: :student_advisor_notes, cs_link_key: 'UC_CX_SCI_NOTE_FLU', cs_link_params: { :EMPLID => student_empl_id } },
+        { feed_key: :student_multi_year_academic_planner, cs_link_key: 'UC_CX_PLANNER_ADV_STDNT', cs_link_params: { :EMPLID => student_empl_id } },
+        { feed_key: :student_webnow_documents, cs_link_key: 'UC_CX_WEBNOW_STUDENT_URI', cs_link_params: { :EMPLID => student_empl_id } },
       ]
+
       campus_solutions_link_settings.each do |setting|
-        generated_cs_link = fetch_link(setting[:cs_link_key], setting[:cs_link_params])
-        links[setting[:feed_key]] = generated_cs_link if generated_cs_link.present?
+        link = fetch_link(setting[:cs_link_key], setting[:cs_link_params])
+        cs_links[setting[:feed_key]] = link unless link.blank?
       end
 
-      {links: links}
+      {
+        links: links,
+        cs_links: cs_links
+      }
     end
 
     def fetch_link(link_key, placeholders = {})

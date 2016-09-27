@@ -1,19 +1,20 @@
 <ul class="cc-list-links">
-  <li data-ng-if="links.ucServiceIndicator.url">
+  <li data-ng-if="csLinks.ucServiceIndicators.url">
     <div
       data-cc-campus-solutions-link-item-directive
-      data-link="links.ucServiceIndicator"
+      data-link="csLinks.ucServiceIndicators"
     ></div>
   </li>
-  <li data-ng-if="links.ucStudentAdvisor.url">
-    <a
-      data-ng-href="{{links.ucStudentAdvisor.url}}"
-    >Advising Assignments</a>
-  </li>
-  <li data-ng-if="links.ucReportingCenter.url">
+  <li data-ng-if="csLinks.ucStudentAdvisor.url">
     <div
       data-cc-campus-solutions-link-item-directive
-      data-link="links.ucReportingCenter"
+      data-link="csLinks.ucStudentAdvisor"
+    ></div>
+  </li>
+  <li data-ng-if="csLinks.ucReportingCenter.url">
+    <div
+      data-cc-campus-solutions-link-item-directive
+      data-link="csLinks.ucReportingCenter"
     ></div>
   </li>
   <li data-ng-if="api.user.profile.features.csAcademicProgressReport && links.ucAcademicProgressReport.url">
@@ -22,16 +23,16 @@
       data-link="links.ucAcademicProgressReport"
     ></div>
   </li>
-  <li data-ng-if="links.ucEformsCenter.url">
+  <li data-ng-if="csLinks.ucEformsCenter.url">
     <a
-      data-ng-href="{{links.ucEformsCenter.url}}"
-      data-ng-bind="links.ucEformsCenter.name"
+      data-ng-href="{{csLinks.ucEformsCenter.url}}"
+      data-ng-bind="csLinks.ucEformsCenter.name"
     ></a>
   </li>
-  <li data-ng-if="links.ucEformsWorkList.url">
+  <li data-ng-if="csLinks.ucEformsWorkList.url">
     <a
-      data-ng-href="{{links.ucEformsWorkList.url}}"
-      data-ng-bind="links.ucEformsWorkList.name"
+      data-ng-href="{{csLinks.ucEformsWorkList.url}}"
+      data-ng-bind="csLinks.ucEformsWorkList.name"
     ></a>
   </li>
   <li data-ng-if="links.webNowDocuments.url">
@@ -40,18 +41,19 @@
       data-ng-bind="links.webNowDocuments.name"
     ></a>
   </li>
-  <li data-ng-if="links.ucMultiYearAcademicPlannerGeneric.url">
+  <li data-ng-if="csLinks.ucMultiYearAcademicPlannerGeneric.url">
     <a
-      data-ng-href="{{links.ucMultiYearAcademicPlannerGeneric.url}}"
-      data-ng-bind="links.ucMultiYearAcademicPlannerGeneric.name"
+      data-ng-href="{{csLinks.ucMultiYearAcademicPlannerGeneric.url}}"
+      data-ng-bind="csLinks.ucMultiYearAcademicPlannerGeneric.name"
     ></a>
   </li>
-  <li data-ng-if="links.ucAppointmentSystem.url">
+  <li data-ng-if="csLinks.ucAppointmentSystem.url">
     <div
       data-cc-campus-solutions-link-item-directive
-      data-link="links.ucAppointmentSystem"
+      data-link="csLinks.ucAppointmentSystem"
     ></div>
   </li>
+
   <!-- This URL is mislabelled in the API, it's in fact the scheduler view link -->
   <li data-ng-if="api.user.profile.features.csAdvisingSchedulerView && links.classSearch.url">
     <div
@@ -60,12 +62,11 @@
       data-text="Schedule of Classes - Scheduler View"
     ></div>
   </li>
-  <!-- This URL is mislabelled in the API, it's in fact the class search link -->
-  <li data-ng-if="links.scheduleClasses.url">
+
+  <li data-ng-if="csLinks.ucClassSearch.url">
     <div
       data-cc-campus-solutions-link-item-directive
-      data-link="links.scheduleClasses"
-      data-text="Schedule of Classes - Class Search"
+      data-link="csLinks.ucClassSearch"
     ></div>
   </li>
 </ul>
