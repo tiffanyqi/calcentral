@@ -133,14 +133,14 @@
                  data-ng-if="students.length">
             <tr class="cc-academics-class-enrollment-table-row">
               <td>
-                <input id="cc-academics-class-enrollment-student-{{$index}}"
+                <input id="cc-academics-class-enrollment-{{studentRole}}-{{$index}}"
                   type="checkbox" name="student_id" data-ng-model="student.selected">
               </td>
               <td data-ng-if="showPosition">
                 <strong data-ng-bind="student.waitlist_position"></strong>
               </td>
               <td>
-                <label for="cc-academics-class-enrollment-student-{{$index}}">
+                <label for="cc-academics-class-enrollment-{{studentRole}}-{{$index}}">
                   <span data-ng-bind="student.last_name"></span>,
                   <span data-ng-bind="student.first_name"></span>
                 </label>
