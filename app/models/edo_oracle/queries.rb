@@ -101,7 +101,9 @@ module EdoOracle
       safe_query <<-SQL
         SELECT
           #{SECTION_COLUMNS},
-          sec."cs-course-id" AS cs_course_id
+          sec."cs-course-id" AS cs_course_id,
+          sec."maxEnroll" AS enroll_limit,
+          sec."maxWaitlist" AS waitlist_limit
         FROM SISEDO.CLASSSECTIONV00_VW sec
         #{JOIN_SECTION_TO_COURSE}
         WHERE sec."status-code" IN ('A','S')
