@@ -447,9 +447,6 @@ campus_solutions_links:
   academics:
     enrollment_verification_google: ''
     enrollment_Verification: ''
-  class_enrollment:
-    concurrent_apply_to_class: ''
-    concurrent_submitted_class_applications: ''
 
 # A feature will be disabled if the corresponding feature-flag is false or nil.
 features:
