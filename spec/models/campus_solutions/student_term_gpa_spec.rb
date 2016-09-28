@@ -22,14 +22,13 @@ describe CampusSolutions::StudentTermGpa do
     let(:proxy) { CampusSolutions::StudentTermGpa.new(user_id: user_id) }
     it_should_behave_like 'a proxy that gets data'
 
-    context 'an invalid request' do
+    context 'a nil UID request' do
       let(:user_id) { '' }
       let(:proxy) { CampusSolutions::StudentTermGpa.new(user_id: user_id, fake: false) }
       subject { proxy.get }
 
-      context 'requesting a nil UID' do
-        it_should_behave_like 'a simple proxy that returns errors'
-        it_should_behave_like 'a proxy that responds to user error gracefully'
+      it 'should return a noStudentId feed' do
+        expect(subject[:noStudentId]).to eq(true)
       end
     end
   end
