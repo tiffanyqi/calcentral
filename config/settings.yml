@@ -457,15 +457,15 @@ features:
   background_jobs_check: true
   cal1card: false
   class_calendar: false
-  class_info_enrollment_tab: false
   class_info_enrollment_section_overview: false
+  class_info_enrollment_tab: false
   course_manage_official_sections: false
   cs_academic_planner: false
   cs_academic_profile_prefers_legacy: true
   cs_academic_progress_report: false
+  cs_advising_links: false
   cs_advising_scheduler_view: false
   cs_advisor_student_lookup: false
-  cs_advising_links: false
   cs_billing: false
   cs_delegated_access: false
   cs_enrollment_card: false
@@ -479,11 +479,11 @@ features:
   cs_profile_work_experience: false
   cs_sir: true
   cs_transfer_credit: false
-  gpa_calculator: true
-  final_exam_schedule: true
-  hub_term_api: true
   enrollment_verification: false
   enrollment_verification_deeplink: false
+  final_exam_schedule: true
+  gpa_calculator: true
+  hub_term_api: true
   legacy_advising: false
   manage_site_mailing_lists: false
   my_fin_aid: false
