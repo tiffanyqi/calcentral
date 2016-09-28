@@ -15,7 +15,7 @@
     </a>
   </div>
 
-  <div data-cc-spinner-directive="myAdvising.isLoading">
+  <div data-cc-spinner-directive="myAdvising.isLoading()">
     <div class="cc-widget-padding">
 
       <div data-ng-if="myAdvising.errored">
@@ -23,23 +23,78 @@
       </div>
 
       <div data-ng-if="!myAdvising.errored">
-        <div class="cc-widget-myadvising-section" data-ng-repeat="advisor in myAdvising.advisors" data-ng-if="myAdvising.advisors.length > 0">
-          <div>
-            <strong data-ng-bind="advisor.assignedAdvisorType"></strong> (<span data-ng-bind="advisor.assignedAdvisorProgram"></span>)
+
+        <div data-ng-if="!showAdvisorsList()">
+          <div data-ng-if="myAdvising.roles.haasFullTimeMba">
+            <a href="http://www.haas.berkeley.edu/MBA/contacts/index.html">
+              Contact the Full-time MBA Program Office
+            </a>
           </div>
-          <div>
-            <span data-ng-bind="advisor.assignedAdvisorName"></span>
+
+          <div data-ng-if="myAdvising.roles.haasEveningWeekendMba">
+            <a href="http://haas.berkeley.edu/EWMBA/contacts/">
+              Contact the Evening and Weekend MBA Program Office
+            </a>
           </div>
-          <div>
-            <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}"
-              data-ng-bind="advisor.assignedAdvisorEmail"
-              data-ng-disabled="!advisor.assignedAdvisorEmail || !api.user.profile.isDirectlyAuthenticated || isAdvisingStudentLookup"
-            ></a>
+
+          <div data-ng-if="myAdvising.roles.haasExecMba">
+            <a href="http://haas.berkeley.edu/EMBA/contacts/">
+              Contact the Berkeley MBA For Executives Program Office
+            </a>
           </div>
-          <div data-ng-bind="advisor.assignedAdvisorLocation"></div>
+
+          <div data-ng-if="myAdvising.roles.haasMastersFinEng">
+            <a href="http://www.haas.berkeley.edu/MFE/">
+              Contact the Master of Financial Engineering Program Office
+            </a>
+          </div>
+
+          <div data-ng-if="myAdvising.roles.haasMbaPublicHealth">
+            Contact the appropriate degree program office at Haas or Public Health:
+            <ul class="cc-list-bullets">
+              <li>
+                <a href="http://www.haas.berkeley.edu/MBA/contacts/index.html">Haas</a>
+              </li>
+              <li>
+                <a href="http://sph.berkeley.edu/areas-study/health-policy-management">Public Health</a>
+              </li>
+            </ul>
+          </div>
+
+          <div data-ng-if="myAdvising.roles.haasMbaJurisDoctor">
+            Contact the appropriate degree program office at Haas or Law:
+            <ul class="cc-list-bullets">
+              <li>
+                <a href="http://www.haas.berkeley.edu/MBA/contacts/index.html">Haas</a>
+              </li>
+              <li>
+                <a href="https://www.law.berkeley.edu/students/student-services/">Law</a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.advisors.length === 0">
-          No advisors are currently assigned to you
+
+        <div data-ng-if="showAdvisorsList()">
+          <div class="cc-widget-myadvising-section"
+            data-ng-repeat="advisor in myAdvising.advisors"
+            data-ng-if="myAdvising.advisors.length > 0">
+            <div>
+              <strong data-ng-bind="advisor.assignedAdvisorType"></strong> (<span data-ng-bind="advisor.assignedAdvisorProgram"></span>)
+            </div>
+            <div>
+              <span data-ng-bind="advisor.assignedAdvisorName"></span>
+            </div>
+            <div>
+              <a data-ng-href="mailto:{{advisor.assignedAdvisorEmail}}"
+                data-ng-bind="advisor.assignedAdvisorEmail"
+                data-ng-disabled="!advisor.assignedAdvisorEmail || !api.user.profile.isDirectlyAuthenticated || isAdvisingStudentLookup"
+              ></a>
+            </div>
+            <div data-ng-bind="advisor.assignedAdvisorLocation"></div>
+          </div>
+          <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.advisors.length === 0">
+            No advisors are currently assigned to you
+          </div>
         </div>
 
         <div class="cc-widget-myadvising-section" data-ng-if="myAdvising.actionItems.length">

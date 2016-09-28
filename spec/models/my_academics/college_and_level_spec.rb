@@ -195,6 +195,22 @@ describe MyAcademics::CollegeAndLevel do
     end
   end
 
+  context 'when providing student plan role codes' do
+    it 'returns all possible student plan role codes' do
+      role_codes = subject.class.student_plan_role_codes
+      expect(role_codes.count).to eq 9
+      expect(role_codes).to include('fpf')
+      expect(role_codes).to include('law')
+      expect(role_codes).to include('concurrent')
+      expect(role_codes).to include('haasFullTimeMba')
+      expect(role_codes).to include('haasEveningWeekendMba')
+      expect(role_codes).to include('haasExecMba')
+      expect(role_codes).to include('haasMastersFinEng')
+      expect(role_codes).to include('haasMbaPublicHealth')
+      expect(role_codes).to include('haasMbaJurisDoctor')
+    end
+  end
+
   context 'data sourcing' do
     it 'always queries hub data' do
       expect(feed[:collegeAndLevel][:statusCode]).to eq 200
@@ -330,6 +346,19 @@ describe MyAcademics::CollegeAndLevel do
         expect(feed[:collegeAndLevel][:plans][2][:college]).to eq 'Undergrad Letters & Science'
       end
 
+      it 'translates roles' do
+        expect(feed[:collegeAndLevel][:roles].keys.count).to eq 9
+        expect(feed[:collegeAndLevel][:roles]['fpf']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['law']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['concurrent']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasFullTimeMba']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasEveningWeekendMba']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasExecMba']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasMastersFinEng']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasMbaPublicHealth']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasMbaJurisDoctor']).to eq false
+      end
+
       it 'translates holds' do
         expect(feed[:collegeAndLevel][:holds][:hasHolds]).to eq true
       end
@@ -420,6 +449,19 @@ describe MyAcademics::CollegeAndLevel do
         expect(feed[:collegeAndLevel][:plans][1][:type][:code]).to eq 'MAJ'
         expect(feed[:collegeAndLevel][:plans][1][:type][:category]).to eq 'Major'
         expect(feed[:collegeAndLevel][:plans][1][:college]).to eq 'Graduate Professional Programs'
+      end
+
+      it 'translates roles' do
+        expect(feed[:collegeAndLevel][:roles].keys.count).to eq 9
+        expect(feed[:collegeAndLevel][:roles]['fpf']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['law']).to eq true
+        expect(feed[:collegeAndLevel][:roles]['concurrent']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasFullTimeMba']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasEveningWeekendMba']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasExecMba']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasMastersFinEng']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasMbaPublicHealth']).to eq false
+        expect(feed[:collegeAndLevel][:roles]['haasMbaJurisDoctor']).to eq false
       end
     end
 
@@ -680,12 +722,12 @@ describe MyAcademics::CollegeAndLevel do
       expect(subject.get_student_plan_role_code(plan)).to eq 'fpf'
     end
 
-    it 'identifies a Haas Business School MBA plan' do
+    it 'identifies a Haas Business School Full Time MBA plan' do
       plan = {
         career: { code: 'GRAD', description: 'Graduate' },
         plan: { code: '70141MBAG', description: 'Business Administration MBA'}
       }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haas_mba'
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haasFullTimeMba'
     end
 
     it 'identifies a Haas Business School Evening and Weekend MBA plan' do
@@ -693,7 +735,7 @@ describe MyAcademics::CollegeAndLevel do
         career: { code: 'GRAD', description: 'Graduate' },
         plan: { code: '701E1MBAG', description: 'Berkeley MBA for Executives'}
       }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haas_ewmba'
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haasEveningWeekendMba'
     end
 
     it 'identifies a Haas Business School Executive MBA plan' do
@@ -701,7 +743,34 @@ describe MyAcademics::CollegeAndLevel do
         career: { code: 'GRAD', description: 'Graduate' },
         plan: { code: '70364MBAG', description: 'Berkeley MBA for Executives'}
       }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haas_execmba'
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haasExecMba'
+    end
+
+    it 'identifies a Haas Business School Masters of Financial Engineering plan' do
+      plan = {
+        career: { code: 'GRAD', description: 'Graduate' },
+        program: { code: 'GSSDP', description: 'Graduate Self-Supporting Pgms' },
+        plan: { code: '701F1MFEG', description: 'Financial Engineering MFE'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haasMastersFinEng'
+    end
+
+    it 'identifies a Haas Business School Business Admin MBA-MPH plan' do
+      plan = {
+        career: { code: 'GRAD', description: 'Graduate' },
+        program: { code: 'GPRFL', description: 'Graduate Professional Programs' },
+        plan: { code: '70141BAPHG', description: 'Business Admin MBA-MPH CDP'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haasMbaPublicHealth'
+    end
+
+    it 'identifies a Haas Business School Business Admin MBA-JD plan' do
+      plan = {
+        career: { code: 'GRAD', description: 'Graduate' },
+        program: { code: 'GPRFL', description: 'Graduate Professional Programs' },
+        plan: { code: '70141BAJDG', description: 'Business Admin MBA-JD CDP'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haasMbaJurisDoctor'
     end
   end
 

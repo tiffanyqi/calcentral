@@ -198,7 +198,7 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
                                  ($scope.hasRegStatus ||
                                  ($scope.numberOfHolds));
     $scope.showLegacyAdvising = !$scope.filteredForDelegate && $scope.api.user.profile.features.legacyAdvising && $scope.isLSStudent;
-    $scope.showAdvising = !$scope.filteredForDelegate && apiService.user.profile.features.advising && apiService.user.profile.roles.student && !apiService.user.profile.roles.law;
+    $scope.showAdvising = !$scope.filteredForDelegate && apiService.user.profile.features.advising && apiService.user.profile.roles.student && isMbaJdOrNotLaw();
 
     if (userService.profile.roles.law) {
       $scope.requestTranscript = {
@@ -211,6 +211,17 @@ angular.module('calcentral.controllers').controller('AcademicsController', funct
         title: 'Request Transcript'
       };
     }
+  };
+
+  /**
+   * Determines if student is either a MBA/JD, or not a Law Student at all
+   * @return {Boolean} Returns true when student is MBA/JD or Not a Law Student
+   */
+  var isMbaJdOrNotLaw = function() {
+    if (!$scope.collegeAndLevel.roles.law || ($scope.collegeAndLevel.roles.law && $scope.collegeAndLevel.roles.haasMbaJurisDoctor)) {
+      return true;
+    }
+    return false;
   };
 
   // Wait until user profile is fully loaded before hitting academics data
