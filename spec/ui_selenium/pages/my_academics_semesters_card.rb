@@ -8,7 +8,7 @@ module CalCentralPages
 
     elements(:semester_card, :div, :class => 'cc-academics-semester')
     elements(:semester_links, :link, :xpath => '//h2[text()="Semesters"]/../following-sibling::div//a[@data-ng-bind="semester.name"]')
-    elements(:no_enrollment_semester_h3, :h3, :xpath => '//h2[text()="Semesters"]/../following-sibling::div//h3[@data-ng-if="!semester.hasEnrollmentData || !semester.slug"]')
+    elements(:no_enrollment_semester_h3, :h3, :xpath => '//h3[contains(@data-ng-if,"!semester.hasEnrollmentData || !semester.slug")]')
     link(:request_transcripts_link, :xpath => '//a[contains(.,"Request Transcripts")]')
     link(:enroll_verif_link, :xpath => '//a[contains(.,"Request your enrollment verification")]')
     button(:show_more, :xpath => '//button[@data-ng-if="pastSemestersCount > 1"]/span[text()="Show More"]')
@@ -32,7 +32,7 @@ module CalCentralPages
       codes = []
       course_code_link_elements = driver.find_elements(:xpath => "//h3[contains(.,'#{semester_name}')]/following-sibling::table//a")
       course_code_link_elements.each { |element| codes.push(element.text) }
-      course_code_no_link_elements = driver.find_elements(:xpath => "//h3[contains(.,'#{semester_name}')]/following-sibling::table//td[@data-ng-if='!class.url']")
+      course_code_no_link_elements = driver.find_elements(:xpath => "//h3[contains(.,'#{semester_name}')]/following-sibling::table//td[contains(@data-ng-if,'!class.url')]")
       course_code_no_link_elements.each { |element| codes.push(element.text) }
       codes
     end

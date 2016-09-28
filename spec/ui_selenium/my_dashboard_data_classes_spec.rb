@@ -335,7 +335,7 @@ describe 'My Dashboard My Classes card', :testui => true do
             faculty_resources = CalCentralPages::MyDashboardFacultyResourcesCard.new driver
             faculty_resources.load_page
 
-            sched_classes_link = faculty_resources.schedule_of_classes?
+            sched_classes_link = WebDriverUtils.verify_block { faculty_resources.schedule_of_classes_element.when_present WebDriverUtils.page_event_timeout }
             course_catalog_link = faculty_resources.course_catalog?
             assist_tech_link = faculty_resources.assistive_tech?
             bcourses_link = faculty_resources.bcourses?
