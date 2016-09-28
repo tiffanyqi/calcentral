@@ -21,16 +21,6 @@ describe CampusSolutions::StudentOutstandingBalance do
   context 'real proxy', testext: true do
     let(:proxy) { CampusSolutions::StudentOutstandingBalance.new(user_id: user_id) }
     it_should_behave_like 'a proxy that gets data'
-
-    context 'a nil UID request' do
-      let(:user_id) { '' }
-      let(:proxy) { CampusSolutions::StudentOutstandingBalance.new(user_id: user_id, fake: false) }
-      subject { proxy.get }
-
-      it 'should return a noStudentId feed' do
-        expect(subject[:noStudentId]).to eq(true)
-      end
-    end
   end
 
 end
