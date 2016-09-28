@@ -30,11 +30,22 @@
     </label>
   </div>
   <div>
-    <input type="text" id="cc_page_widget_profile_emergency_phone" data-ng-model="phone.phone"
-    data-ng-if="phone || !emergencyPhone.isAdding">
-    <input type="text" id="cc_page_widget_profile_emergency_phone" required aria-required="true" data-ng-model="emergencyPhone.currentObject.data.phone" data-ng-if="!phone && emergencyPhone.isAdding">
+    <div data-ng-if="phone || !emergencyPhone.isAdding">
+      <input type="text" name="cc_page_widget_profile_emergency_phone" data-ng-disabled="emergencyPhone.isAdding" data-cc-tel-phone-input-directive data-ng-model="phone.phone"
+      >
+      <p class="cc-page-widget-profile-section-input-error-message cc-text-red" data-ng-show="!emergencyPhone.isAdding && cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber">
+        <i class="cc-icon-red fa fa-exclamation-circle"></i>
+        The phone number, <span data-ng-bind="cc_page_widget_profile_emergency_contact.cc_page_widget_profile_emergency_phone.$viewValue"></span>, is incomplete or formatted incorrectly.
+      </p>
+    </div>
+    <div data-ng-if="!phone && emergencyPhone.isAdding">
+      <input type="text" name="cc_page_widget_profile_emergency_phone_add" required aria-required="true" data-cc-tel-phone-input-directive data-ng-model="emergencyPhone.currentObject.data.phone">
+      <p class="cc-page-widget-profile-section-input-error-message cc-text-red" data-ng-show="emergencyPhone.isAdding && cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber">
+        <i class="cc-icon-red fa fa-exclamation-circle"></i>
+        The phone number, <span data-ng-bind="cc_page_widget_profile_emergency_contact.cc_page_widget_profile_emergency_phone_add.$viewValue"></span>, is incomplete or formatted incorrectly.
+      </p>
+    </div>
   </div>
-
   <div>
     <label for="cc_page_widget_profile_emergency_phone_extension">
       <strong>Phone Extension</strong>
