@@ -85,6 +85,7 @@ campus_solutions_links:
 
 features:
   advising: true
+  advising_student_success: true
   audio: true
   bearfacts: true
   cal1card: true

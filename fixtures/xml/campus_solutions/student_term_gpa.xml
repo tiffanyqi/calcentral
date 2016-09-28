@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UC_AA_TERM_DATA>
+  <UC_AA_TERM_GPA type="array">
+    <TERM_GPA_DATA>
+      <TERM_ID>2128</TERM_ID>
+      <TERM_NAME>2012 Fall</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.6</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2132</TERM_ID>
+      <TERM_NAME>2013 Spring</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.4</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2138</TERM_ID>
+      <TERM_NAME>2013 Fall</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.4</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2168</TERM_ID>
+      <TERM_NAME>2016 Fall</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.4</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2142</TERM_ID>
+      <TERM_NAME>2014 Spring</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.3</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2145</TERM_ID>
+      <TERM_NAME>2014 Summer</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.2</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2148</TERM_ID>
+      <TERM_NAME>2014 Fall</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.3</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2152</TERM_ID>
+      <TERM_NAME>2015 Spring</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.4</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2158</TERM_ID>
+      <TERM_NAME>2015 Fall</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.4</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+    <TERM_GPA_DATA>
+      <TERM_ID>2162</TERM_ID>
+      <TERM_NAME>2016 Spring</TERM_NAME>
+      <TERM_CUM_GPA type="float">3.4</TERM_CUM_GPA>
+    </TERM_GPA_DATA>
+  </UC_AA_TERM_GPA>
+</UC_AA_TERM_DATA>

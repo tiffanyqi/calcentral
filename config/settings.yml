@@ -454,6 +454,7 @@ campus_solutions_links:
 # A feature will be disabled if the corresponding feature-flag is false or nil.
 features:
   advising: false
+  advising_student_success: false
   audio: false
   authentication_validator: false
   background_jobs_check: true
