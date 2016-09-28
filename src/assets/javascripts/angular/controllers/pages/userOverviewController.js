@@ -32,6 +32,26 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     isLoading: true
   };
   $scope.statusHoldsBlocks = {};
+  $scope.highCharts = {
+    dataSeries: []
+  };
+  $scope.studentSuccess = {
+    gpaChart: {
+      series: {
+        className: 'cc-student-success-color-blue'
+      },
+      xAxis: {
+        floor: 0,
+        visible: false
+      },
+      yAxis: {
+        min: 0,
+        max: 4.0,
+        visible: false
+      }
+    },
+    isLoading: true
+  };
 
   $scope.$watchGroup(['regStatus.registrations[0].summary', 'api.user.profile.features.csHolds'], function(newValues) {
     var enabledSections = [];
@@ -162,6 +182,45 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
     });
   };
 
+  var loadStudentSuccess = function() {
+    advisingFactory.getStudentSuccess({
+      uid: $routeParams.uid
+    }).success(function(data) {
+      $scope.studentSuccess.outstandingBalance = _.get(data, 'outstandingBalance');
+      $scope.studentSuccess.termGpa = _.sortBy(data.termGpa, ['termId']);
+      parseTermGpa();
+      $scope.studentSuccess.isLoading = false;
+    });
+  };
+
+  var parseTermGpa = function() {
+    var termGpa = [];
+    _.forEach($scope.studentSuccess.termGpa, function(term) {
+      termGpa.push(term.termCumGpa);
+    });
+    if (termGpa.length < 2) {
+      return;
+    }
+    // The last element of the data series must also contain custom marker information to show the GPA.
+    termGpa[termGpa.length - 1] = {
+      y: termGpa[termGpa.length - 1],
+      dataLabels: {
+        color: termGpa[termGpa.length - 1] >= 2 ? '#2b6281' : '#cf1715',
+        enabled: true,
+        style: {
+          'fontSize': '12px'
+        }
+      },
+      marker: {
+        enabled: true,
+        fillColor: termGpa[termGpa.length - 1] >= 2 ? '#2b6281' : '#cf1715',
+        radius: 3,
+        symbol: 'circle'
+      }
+    };
+    $scope.highCharts.dataSeries.push(termGpa);
+  };
+
   var getRegMessages = function() {
     enrollmentVerificationFactory.getEnrollmentVerificationMessages()
       .then(function(data) {
@@ -187,6 +246,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       apiService.user.fetch()
       .then(loadProfile)
       .then(loadAcademics)
+      .then(loadStudentSuccess)
       .then(loadHolds)
       .then(loadRegistrations)
       .then(getRegMessages);
