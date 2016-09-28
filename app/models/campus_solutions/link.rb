@@ -44,7 +44,7 @@ module CampusSolutions
 
           placeholders.try(:each) do |k, v|
             if v.blank?
-              logger.error "Could not set placeholder for #{k} on link with url_id #{link[:urlId]}"
+              logger.warn "Could not set placeholder for #{k} on link with url_id #{link[:urlId]}"
               link = nil
               break
             else
