@@ -144,7 +144,26 @@ module MyAcademics
     end
 
     def get_links
-      Settings.campus_solutions_links.class_enrollment.as_json['table']
+      cs_links = {}
+
+      campus_solutions_link_settings = [
+        { feed_key: :uc_add_class_enrollment, cs_link_key: 'UC_CX_GT_SSCNTENRL_ADD', cs_link_params: {} },
+        { feed_key: :uc_edit_class_enrollment, cs_link_key: 'UC_CX_GT_SSCNTENRL_UPD', cs_link_params: {} },
+        { feed_key: :uc_view_class_enrollment, cs_link_key: 'UC_CX_GT_SSCNTENRL_VIEW', cs_link_params: {} },
+      ]
+
+      campus_solutions_link_settings.each do |setting|
+        link = fetch_link(setting[:cs_link_key], setting[:cs_link_params])
+        cs_links[setting[:feed_key]] = link unless link.blank?
+      end
+
+      cs_links
+    end
+
+    def fetch_link(link_key, placeholders = {})
+      link = CampusSolutions::Link.new.get_url(link_key, placeholders).try(:[], :link)
+      logger.error "Could not retrieve CS link #{link_key} for Class Enrollments feed, uid = #{@uid}" unless link
+      link
     end
 
     private

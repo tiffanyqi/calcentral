@@ -189,8 +189,10 @@ describe MyAcademics::ClassEnrollments do
         expect(feed[:hasHolds]).to eq false
       end
       it 'includes campus solutions deeplinks' do
-        expect(feed[:links][:concurrentApplyToClass]).to eq Settings.campus_solutions_links.class_enrollment.concurrent_apply_to_class
-        expect(feed[:links][:concurrentSubmittedClassApplications]).to eq Settings.campus_solutions_links.class_enrollment.concurrent_submitted_class_applications
+        expect(feed[:links].count).to be 3
+        expect(feed[:links][:ucAddClassEnrollment]).to be
+        expect(feed[:links][:ucEditClassEnrollment]).to be
+        expect(feed[:links][:ucViewClassEnrollment]).to be
       end
     end
   end
