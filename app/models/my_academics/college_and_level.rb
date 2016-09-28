@@ -105,7 +105,7 @@ module MyAcademics
         majors: [],
         minors: [],
         plans: [],
-        lastExpectedGraduationTerm: { code: nil, description: nil, name: nil }
+        lastExpectedGraduationTerm: { code: nil, name: nil }
       }
 
       statuses.each do |status|
@@ -260,7 +260,6 @@ module MyAcademics
           expected_grad_term_name = hub_plan['expectedGraduationTerm'].try(:[], 'name')
           flat_plan[:expectedGraduationTerm] = {
             code: hub_plan['expectedGraduationTerm'].try(:[], 'id'),
-            description: expected_grad_term_name,
             name: Berkeley::TermCodes.normalized_english(expected_grad_term_name)
           }
         end
