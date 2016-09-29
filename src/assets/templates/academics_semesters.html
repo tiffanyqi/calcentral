@@ -24,8 +24,13 @@
         <h3 data-ng-if="semester.hasEnrollmentData && semester.slug && !isAdvisingStudentLookup"><a class="cc-left" data-ng-href="/academics/semester/{{semester.slug}}" data-ng-bind="semester.name"></a></h3>
         <h3 data-ng-if="!semester.hasEnrollmentData || !semester.slug || isAdvisingStudentLookup" data-ng-bind="semester.name"></h3>
         <h4 data-ng-if="semester.notation" data-ng-bind="semester.notation"></h4>
-        <a class="cc-right cc-academics-semester-title-link" data-ng-href="/academics/booklist/{{semester.slug}}" data-ng-if="semester.hasEnrollmentData && semester.slug && semester.timeBucket !== 'past'  && !isAdvisingStudentLookup">Book List</a>
-        <table>
+        <a class="cc-right cc-academics-semester-title-link" data-ng-href="/academics/booklist/{{semester.slug}}" data-ng-if="semester.hasEnrollmentData && semester.slug && semester.timeBucket !== 'past'">Book List</a>
+        <br>
+        <div class="cc-flex-space-between-vertical-15" data-ng-if="!semester.has_enrolled_classes">
+          You are currently not enrolled in any classes for
+          <span data-ng-bind="semester.name"></span>.
+        </div>
+        <table data-ng-if="semester.has_enrolled_classes">
           <thead>
             <tr>
               <th width="30%" scope="col">Class</th>
