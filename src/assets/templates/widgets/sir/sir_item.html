@@ -22,7 +22,7 @@
             <div class="cc-widget-sir-form-description" data-ng-bind="sirOption.descrLong"></div>
           </label>
           <!-- Show conditions when the user accepts SIR -->
-          <div data-ng-if="sirOption.progAction === 'DEIN' && sirItem.form.option.progAction === 'DEIN'" class="cc-widget-sir-form-subcontainer">
+          <div data-ng-if="sirOption.progAction === 'DEIN' && sirItem.form.option.progAction === 'DEIN' && sirItem.form.option === sirOption" class="cc-widget-sir-form-subcontainer">
             <div data-ng-repeat="sirCondition in item.config.sirConditions">
               <label class="cc-widget-sir-form-label">
                 <input class="cc-widget-sir-form-check" type="checkbox" data-ng-model="sirItem.form.check[sirCondition.seqnum].valid" data-ng-attr-id="cc-widget-sir-form-check-{{$index}}">
@@ -30,7 +30,7 @@
               </label>
             </div>
           </div>
-          <div data-ng-if="sirOption.progAction === 'WAPP' && sirItem.form.option.progAction === 'WAPP'" class="cc-widget-sir-form-subcontainer">
+          <div data-ng-if="sirOption.progAction === 'WAPP' && sirItem.form.option.progAction === 'WAPP' && sirItem.form.option === sirOption" class="cc-widget-sir-form-subcontainer">
             <div class="cc-widget-sir-form-decline-explanation">
               You have indicated that you wish to <strong>decline</strong> our offer of admission. We understand that your decision is an important one and we'd appreciate your reason for doing so.
             </div>
