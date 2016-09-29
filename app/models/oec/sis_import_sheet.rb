@@ -37,6 +37,14 @@ module Oec
       )
     end
 
+    def transient_headers
+      %w(
+        CROSS_LISTED_CCNS
+        CO_SCHEDULED_CCNS
+        COURSE_TITLE_SHORT
+      )
+    end
+
     def sorted_rows
       rows_by_cross_listing = @rows.values.group_by { |row| row['CROSS_LISTED_NAME'] }
       non_cross_listed_rows = rows_by_cross_listing.delete(nil) || []

@@ -70,7 +70,11 @@ module Oec
     end
 
     def []=(key, value)
-      @rows[key] = value
+      @rows[key] = WorksheetRow.new(value, self)
+    end
+
+    def count
+      @rows.count
     end
 
     def csv_export_path
@@ -93,8 +97,12 @@ module Oec
       @opts[:export_name] || self.class.export_name
     end
 
-    def headers
-      # subclasses override
+    # Column names that may be assigned to rows and will be included in CSV export. Subclasses must override.
+    def headers; end
+
+    # Column names that may be assigned to rows but will not be included in CSV export. Subclasses may override.
+    def transient_headers
+      []
     end
 
     def parse_row(row)
@@ -109,7 +117,7 @@ module Oec
           end
         end
       end
-      parsed_row
+      WorksheetRow.new(parsed_row, self)
     end
 
     def sorted_rows
@@ -138,7 +146,7 @@ module Oec
     def write_csv
       if @rows.any?
         output = CSV.open(csv_export_path, 'wb', headers: headers, write_headers: true)
-        sorted_rows.each { |row| output << row }
+        sorted_rows.each { |row| output << row.to_hash }
       else
         output = CSV.open(csv_export_path, 'wb')
         output << headers

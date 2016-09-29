@@ -124,7 +124,7 @@ describe Oec::TermSetupTask do
     it 'sets default term dates as overrides' do
       subject.run
       courses = Oec::Courses.from_csv File.read(Rails.root.join 'tmp', 'oec', 'courses.csv')
-      expect(courses.first).to include({
+      expect(courses.first.to_hash).to include({
         'START_DATE' => '01-22-2013',
         'END_DATE' => '05-12-2013'
       })

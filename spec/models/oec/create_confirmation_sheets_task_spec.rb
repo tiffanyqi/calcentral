@@ -46,7 +46,7 @@ describe Oec::CreateConfirmationSheetsTask do
     let(:template) { double(id: 'template_id', title: 'TEMPLATE', mime_type: 'application/vnd.google-apps.spreadsheet') }
     let(:spreadsheet) { double(worksheets: [courses_worksheet, report_viewers_worksheet]) }
     let(:courses_worksheet) { double(title: 'Courses', rows: [Oec::CourseConfirmation.new.headers]) }
-    let(:report_viewers_worksheet) { double(title: 'Report Viewers', rows: [Oec::Supervisors.new.headers]) }
+    let(:report_viewers_worksheet) { double(title: 'Report Viewers', rows: [Oec::SupervisorConfirmation.new.headers]) }
 
     it 'should copy template, update cells and upload log' do
       expect(fake_remote_drive).to receive(:find_first_matching_item).with('TEMPLATE', anything).and_return template

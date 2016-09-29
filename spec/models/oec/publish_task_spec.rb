@@ -148,12 +148,12 @@ describe Oec::PublishTask do
       end
 
       it 'should merge instructor data from previous terms when current-term data absent' do
-        expect(instructors.find { |i| i['LDAP_UID'] == '66666'}).to include({'FIRST_NAME' => 'Ysidro', 'LAST_NAME' => 'Yyyy', 'EMAIL_ADDRESS' => 'yyyy@berkeley.edu'})
-        expect(instructors.find { |i| i['LDAP_UID'] == '77777'}).to include({'FIRST_NAME' => 'Zaphod', 'LAST_NAME' => 'Zzzz', 'EMAIL_ADDRESS' => 'zzzz@berkeley.edu'})
+        expect(instructors.find { |i| i['LDAP_UID'] == '66666'}.to_hash).to include({'FIRST_NAME' => 'Ysidro', 'LAST_NAME' => 'Yyyy', 'EMAIL_ADDRESS' => 'yyyy@berkeley.edu'})
+        expect(instructors.find { |i| i['LDAP_UID'] == '77777'}.to_hash).to include({'FIRST_NAME' => 'Zaphod', 'LAST_NAME' => 'Zzzz', 'EMAIL_ADDRESS' => 'zzzz@berkeley.edu'})
       end
 
       it 'should not overwrite current-term instructor data with previous-term data' do
-        expect(instructors.find { |i| i['LDAP_UID'] == '128533'}).to include({
+        expect(instructors.find { |i| i['LDAP_UID'] == '128533'}.to_hash).to include({
           'FIRST_NAME' => 'Alan',
           'LAST_NAME' => 'Aaaa',
           'EMAIL_ADDRESS' => 'aaaa@berkeley.edu',
