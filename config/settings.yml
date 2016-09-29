@@ -353,6 +353,7 @@ youtube_splash_id: '3Iz1NT9QKjI'
 
 oec:
   administrator_uid: ''
+  enrollments_batch_size: 120000
   local_write_directory: 'tmp/oec'
   explorance:
     sftp_server: ''

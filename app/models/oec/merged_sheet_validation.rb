@@ -46,10 +46,12 @@ module Oec
       default_dates = default_term_dates
       participating_dept_names = Oec::CourseCode.participating_dept_names
 
+      log :info, "Validating #{supervisor_confirmations.count} supervisor confirmation rows"
       supervisor_confirmations.each do |confirmation|
         validate_and_add(supervisors, confirmation, %w(LDAP_UID))
       end
 
+      log :info, "Validating #{course_confirmations.count} course confirmation rows"
       course_confirmations.each do |confirmation|
         next unless confirmation['EVALUATE'] && confirmation['EVALUATE'].casecmp('Y') == 0
 
@@ -124,23 +126,28 @@ module Oec
         end
       end
 
-      Oec::Queries.students_for_cntl_nums(@term_code, ccns + suffixed_ccns.keys).each do |student_row|
-        validate_and_add(students, Oec::Worksheet.capitalize_keys(student_row), %w(LDAP_UID))
-      end
+      log :warn, "Retrieving enrollment data for the #{@term_code} term. This will take a few minutes...."
+      evaluated_section_ids = ccns + suffixed_ccns.keys
+      enrollments = Oec::Queries.get_enrollments(@term_code, evaluated_section_ids)
+      log :warn, "Enrollment data retrieved. Validating enrollments for #{evaluated_section_ids.length} evaluated sections."
 
-      log :warn, "Getting students for #{ccns.length} non-suffixed CCNs" unless ccns.none?
-      Oec::Queries.enrollments_for_cntl_nums(@term_code, ccns).each do |enrollment_row|
-        validate_and_add(course_students, Oec::Worksheet.capitalize_keys(enrollment_row), %w(LDAP_UID COURSE_ID))
-      end
+      enrollments[:rows].each do |enrollment_row|
+        row = EdoOracle::Adapters::Oec.adapt_enrollment_row(enrollment_row, enrollments[:columns], @term_code)
 
-      # Course IDs with suffixes need a little extra wrangling to match up with Oracle queries.
-      log :warn, "Getting students for #{suffixed_ccns.length} suffixed CCNs" unless suffixed_ccns.none?
-      Oec::Queries.enrollments_for_cntl_nums(@term_code, suffixed_ccns.keys).each do |enrollment_row|
-        ccn = enrollment_row['course_id'].split('-')[2].split('_')[0]
-        suffixed_ccns[ccn].each do |suffix|
-          capitalized_row = Oec::Worksheet.capitalize_keys enrollment_row
-          capitalized_row['COURSE_ID'] = "#{capitalized_row['COURSE_ID']}_#{suffix}"
-          validate_and_add(course_students, capitalized_row, %w(LDAP_UID COURSE_ID))
+        if ccns.include? row['SECTION_ID']
+          validate_and_add(students, row, %w(LDAP_UID))
+          validate_and_add(course_students, row, %w(LDAP_UID COURSE_ID))
+        end
+
+        if suffixed_ccns.has_key? row['SECTION_ID']
+          validate_and_add(students, row, %w(LDAP_UID))
+
+          # Course IDs with suffixes need those suffixes re-appended to Oracle results.
+          suffixed_ccns[row['SECTION_ID']].each do |suffix|
+            row_copy = row.dup
+            row_copy['COURSE_ID'] = "#{row['COURSE_ID']}_#{suffix}"
+            validate_and_add(course_students, row_copy, %w(LDAP_UID COURSE_ID))
+          end
         end
       end
 

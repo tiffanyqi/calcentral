@@ -8,29 +8,26 @@ shared_context 'OEC enrollment data merge' do
 
   let(:course_ids) { merged_course_confirmations_csv.scan(/2015-B-\d+/).uniq.flatten }
 
-  let(:enrollment_data_rows) do
+  def fake_enrollment_data_row(section_id, uid=nil)
+    uid ||= random_id
+    # Consistent mapping between fake UIDs and fake SIDs avoids random test failures.
+    sid = uid.next
+    [section_id, uid, sid, 'Val', 'Valid', 'valid@berkeley.edu']
+  end
+
+  let(:enrollment_data) do
     rows = []
     course_ids.each do |course_id|
       next unless merged_course_confirmations.find { |row| row['COURSE_ID'] == course_id && row['EVALUATE'] == 'Y' }
-      5.times { rows << {'course_id' => course_id, 'ldap_uid' => random_id} }
+      section_id = course_id.split('-')[2].split('_')[0]
+      5.times do
+        rows << fake_enrollment_data_row(section_id)
+      end
     end
-    rows
-  end
-
-  let(:suffixed_enrollment_data_rows) { [] }
-
-  let(:student_data_rows) do
-    rows = []
-    enrollment_data_rows.map { |row| row['ldap_uid'] }.uniq.each do |uid|
-      rows << {
-        'ldap_uid' => uid,
-        'first_name' => 'Val',
-        'last_name' => 'Valid',
-        'email_address' => 'valid@berkeley.edu',
-        'sis_id' => random_id
-      }
-    end
-    rows
+    {
+      rows: rows,
+      columns: %w(SECTION_ID LDAP_UID SIS_ID FIRST_NAME LAST_NAME EMAIL_ADDRESS)
+    }
   end
 
   before(:each) do
@@ -45,8 +42,7 @@ shared_context 'OEC enrollment data merge' do
 
     allow(Oec::CourseCode).to receive(:participating_dept_names).and_return %w(GWS LGBT)
 
-    allow(Oec::Queries).to receive(:students_for_cntl_nums).and_return student_data_rows
-    allow(Oec::Queries).to receive(:enrollments_for_cntl_nums).and_return(enrollment_data_rows, suffixed_enrollment_data_rows)
+    allow(Oec::Queries).to receive(:get_enrollments).and_return enrollment_data
     allow_any_instance_of(Oec::Task).to receive(:default_term_dates).and_return({'START_DATE' => '01-26-2015', 'END_DATE' => '05-11-2015'})
   end
 
