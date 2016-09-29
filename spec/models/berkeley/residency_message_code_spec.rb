@@ -40,7 +40,7 @@ describe Berkeley::ResidencyMessageCode do
     describe 'resident' do
       let(:residency_status) { 'RES' }
       let(:slr_status) { 'ANYTHING' }
-      describe 'no tuition exception' do
+      context 'when no tuition exception' do
         let(:tuition_exception) { '' }
         it {should eq '2003'}
       end
@@ -73,7 +73,7 @@ describe Berkeley::ResidencyMessageCode do
     describe 'non-resident' do
       let(:residency_status) { 'NON' }
       let(:slr_status) { 'ANYTHING' }
-      describe 'no tuition exception' do
+      context 'when no tuition exception' do
         let(:tuition_exception) { '' }
         it {should eq '2004'}
       end
@@ -112,10 +112,19 @@ describe Berkeley::ResidencyMessageCode do
     end
 
     describe 'no match' do
-      let(:slr_status) {'D'}
-      let(:residency_status) { 'RES' }
-      let(:tuition_exception) { 'RE' }
-      it {should be_blank}
+      describe 'for non-resident when tuition_exception requires RES' do
+        let(:slr_status) {'D'}
+        let(:residency_status) { 'NON' }
+        let(:tuition_exception) { 'R8' }
+        it {should be_blank}
+      end
+
+      describe 'for resident when a tuition_exception requires NON' do
+        let(:slr_status) {'Y'}
+        let(:residency_status) { 'RES' }
+        let(:tuition_exception) { 'RA' }
+        it {should be_blank}
+      end
     end
   end
 end

@@ -60,6 +60,18 @@ describe MyAcademics::Residency do
         expect(residency[:message][:description]).to be_blank
       end
     end
+
+    context 'when residency message code params are not recognized' do
+      before do
+        allow(fake_residency_message_proxy).to receive(:get).and_return(
+          {:feed=> {:root=> {}}}
+        )
+      end
+
+      it 'should not bonk out' do
+        expect(feed[:residency]).to be
+      end
+    end
   end
 
 end
