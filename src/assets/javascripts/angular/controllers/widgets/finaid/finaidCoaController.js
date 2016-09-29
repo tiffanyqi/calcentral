@@ -26,6 +26,9 @@ angular.module('calcentral.controllers').controller('FinaidCoaController', funct
 
   var adaptCategoryTitles = function(coa) {
     _.forEach(views, function(view) {
+      if (!coa[view]) {
+        return;
+      }
       var categories = coa[view].data;
       _.forEach(categories, function(category) {
         var categoryTitle = category.title;
