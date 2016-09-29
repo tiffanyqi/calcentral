@@ -132,21 +132,34 @@ describe EdoOracle::Adapters::Oec do
   end
 
   context 'adapting enrollment data' do
-    let(:row) do
-      {
-        'section_id' => '32819',
-        'ldap_uid' => '2345678901'
-      }
-    end
-    let(:enrollment) { described_class.adapt_enrollments([row], term_code).first }
+    let(:columns) { %w(SECTION_ID LDAP_UID SIS_ID FIRST_NAME LAST_NAME EMAIL_ADDRESS) }
+    let(:row) { %w(32819 12345678 87654321 Hedy Lamarr hedy@gmail.com) }
 
-    it 'replaces section id with course id' do
-      expect(enrollment['course_id']).to eq '2016-D-32819'
-      expect(enrollment).not_to include 'section_id'
+    let(:enrollment) { described_class.adapt_enrollment_row(row, columns, term_code) }
+
+    it 'maps row index to column name' do
+      expect(enrollment['SECTION_ID']).to eq '32819'
+      expect(enrollment['LDAP_UID']).to eq '12345678'
+      expect(enrollment['SIS_ID']).to eq '87654321'
+      expect(enrollment['FIRST_NAME']).to eq 'Hedy'
+      expect(enrollment['LAST_NAME']).to eq 'Lamarr'
+      expect(enrollment['EMAIL_ADDRESS']).to eq 'hedy@gmail.com'
     end
 
-    it 'leaves other values unchanged' do
-      expect(enrollment['ldap_uid']).to eq row['ldap_uid']
+    it 'derives course id' do
+      expect(enrollment['COURSE_ID']).to eq '2016-D-32819'
+    end
+
+    context 'missing email address' do
+      before { row[5] = nil }
+      it 'fills in email address from attributes query' do
+        expect(User::BasicAttributes).to receive(:attributes_for_uids).with(['12345678']).and_return([{
+          ldap_uid: '12345678',
+          email_address: 'hedy@gmail.com'
+        }])
+        EdoOracle::Adapters::Oec.supplement_email_addresses([row], columns)
+        expect(enrollment['EMAIL_ADDRESS']).to eq 'hedy@gmail.com'
+      end
     end
   end
 end

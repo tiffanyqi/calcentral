@@ -27,25 +27,29 @@ module EdoOracle
         end
       end
 
-      def self.adapt_enrollments(rows, term_code)
-        supplement_email_addresses rows
-        rows.each do |row|
-          adapt_course_id(row, term_code)
-        end
+      def self.adapt_enrollment_row(row, columns, term_code)
+        hash_row = Hash[columns.zip row]
+        hash_row['COURSE_ID'] = "#{term_code}-#{hash_row['SECTION_ID']}"
+        hash_row
       end
 
-      def self.supplement_email_addresses(rows)
+      def self.supplement_email_addresses(rows, columns=nil)
+        # Depending on source query, the 'rows' argument may be an array of hashes (in which case we retrieve values
+        # using string keys), or an array of arrays (in which case we pass in an additional 'columns' argument and
+        # retrieve values using integer indexes).
+        email_address_key = columns ? columns.index('EMAIL_ADDRESS') : 'email_address'
+        ldap_uid_key = columns ? columns.index('LDAP_UID') : 'ldap_uid'
+
         rows_without_email = rows.inject({}) do |hash, row|
-          # Check for the presence of the email_address key because not all queries are expected to return email addresses.
-          if row['ldap_uid'].present? && row.has_key?('email_address') && row['email_address'].blank?
-            hash[row['ldap_uid']] ||= []
-            hash[row['ldap_uid']] << row
+          if row[ldap_uid_key].present? && row[email_address_key].blank?
+            hash[row[ldap_uid_key].to_s] ||= []
+            hash[row[ldap_uid_key].to_s] << row
           end
           hash
         end
         User::BasicAttributes.attributes_for_uids(rows_without_email.keys).each do |attrs|
           rows_without_email[attrs[:ldap_uid]].each do |row|
-            row['email_address'] = attrs[:email_address]
+            row[email_address_key] = attrs[:email_address]
           end
         end
       end

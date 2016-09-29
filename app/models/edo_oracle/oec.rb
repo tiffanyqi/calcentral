@@ -80,15 +80,39 @@ module EdoOracle
       SQL
     end
 
-    def self.get_enrollments(term_id, select_clause, ccns_clause)
-      safe_query <<-SQL
-        #{select_clause}
-        WHERE
-          enroll."TERM_ID" = '#{term_id}'
-          AND #{ccns_clause}
-          AND (enroll."STDNT_ENRL_STATUS_CODE" = 'E')
-        ORDER BY ldap_uid
+    # See http://www.oracle.com/technetwork/issue-archive/2006/06-sep/o56asktom-086197.html for explanation of
+    # query batching with ROWNUM.
+    def self.get_batch_enrollments(term_id, batch_number, batch_size)
+      mininum_row_exclusive = (batch_number * batch_size)
+      maximum_row_inclusive = mininum_row_exclusive + batch_size
+      sql = <<-SQL
+        SELECT * FROM (
+          SELECT /*+ FIRST_ROWS(n) */ enrollments.*, ROWNUM rnum FROM (
+            SELECT DISTINCT
+              enroll."CLASS_SECTION_ID" as section_id,
+              enroll."CAMPUS_UID" AS ldap_uid,
+              enroll."STUDENT_ID" AS sis_id,
+              TRIM(name."NAME_GIVENNAME" || ' ' || name."NAME_MIDDLENAME") AS first_name,
+              name."NAME_FAMILYNAME" AS last_name,
+              email."EMAIL_EMAILADDRESS" AS email_address
+            FROM SISEDO.ENROLLMENTV00_VW enroll
+            LEFT OUTER JOIN SISEDO.PERSON_EMAILV00_VW email ON (
+              email."PERSON_KEY" = enroll."STUDENT_ID" AND
+              email."EMAIL_TYPE_CODE" = 'CAMP')
+            LEFT OUTER JOIN SISEDO.PERSON_NAMEV00_VW name ON (
+              name."PERSON_KEY" = enroll."STUDENT_ID" AND
+              name."NAME_TYPE_CODE" = 'PRI')
+            WHERE
+              enroll."TERM_ID" = '#{term_id}'
+              AND (enroll."STDNT_ENRL_STATUS_CODE" = 'E')
+            ORDER BY section_id, sis_id
+          ) enrollments
+          WHERE ROWNUM <= #{maximum_row_inclusive}
+        )
+        WHERE rnum > #{mininum_row_exclusive}
       SQL
+      # Result sets are too large for bulk stringification.
+      safe_query(sql, do_not_stringify: true)
     end
 
     # Awkward substring matches on sec."displayName" are necessary because the better-parsed dept_name and catalog_id
@@ -126,33 +150,6 @@ module EdoOracle
         else
           "(#{subclauses.map { |subclause| "(#{subclause})" }.join(' or ')})"
       end
-    end
-
-    def self.course_and_ldap_uid_clause
-      <<-SQL
-        SELECT DISTINCT
-          enroll."CLASS_SECTION_ID" as section_id,
-          enroll."CAMPUS_UID" as ldap_uid
-        FROM SISEDO.ENROLLMENTV00_VW enroll
-      SQL
-    end
-
-    def self.student_info_clause
-      <<-SQL
-        SELECT DISTINCT
-          enroll."CAMPUS_UID" AS ldap_uid,
-          enroll."STUDENT_ID" AS sis_id,
-          TRIM(name."NAME_GIVENNAME" || ' ' || name."NAME_MIDDLENAME") AS first_name,
-          name."NAME_FAMILYNAME" AS last_name,
-          email."EMAIL_EMAILADDRESS" AS email_address
-        FROM SISEDO.ENROLLMENTV00_VW enroll
-        LEFT OUTER JOIN SISEDO.PERSON_EMAILV00_VW email ON (
-          email."PERSON_KEY" = enroll."STUDENT_ID" AND
-          email."EMAIL_TYPE_CODE" = 'CAMP')
-        LEFT OUTER JOIN SISEDO.PERSON_NAMEV00_VW name ON (
-          name."PERSON_KEY" = enroll."STUDENT_ID" AND
-          name."NAME_TYPE_CODE" = 'PRI')
-      SQL
     end
 
     def self.course_ccn_column

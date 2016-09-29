@@ -131,34 +131,4 @@ describe EdoOracle::Oec do
       end
     end
   end
-
-  context 'student and enrollment lookup', testext: true do
-    let(:test_course_id) { '31702' }
-    let(:course_id_list) { EdoOracle::Oec.chunked_whitelist(EdoOracle::Oec.enrollment_ccn_column, [test_course_id]) }
-    let(:students_query) { EdoOracle::Oec.get_enrollments(term_id, EdoOracle::Oec.student_info_clause, course_id_list) }
-    let(:enrollments_query) { EdoOracle::Oec.get_enrollments(term_id, EdoOracle::Oec.course_and_ldap_uid_clause, course_id_list) }
-
-    it 'returns expected student data' do
-      expect(students_query).not_to be_empty
-      students_query.each do |row|
-        expect(row['first_name']).to be_present
-        expect(row['last_name']).to be_present
-        expect(row['email_address']).to be_present
-        expect(row['ldap_uid']).to be_present
-        expect(row['sis_id']).to be_present
-      end
-    end
-
-    it 'returns expected enrollment data' do
-      expect(enrollments_query).not_to be_empty
-      enrollments_query.each do |row|
-        expect(row['ldap_uid']).to be_present
-        expect(row['section_id']).to eq test_course_id
-      end
-    end
-
-    it 'returns matching student and enrollment data' do
-      expect(enrollments_query.map { |row| row['ldap_uid'] }).to match_array(students_query.map { |row| row['ldap_uid'] })
-    end
-  end
 end

@@ -136,7 +136,7 @@ describe Oec::MergeConfirmationSheetsTask do
         confirmation.each do |confirmation_row|
           merged_confirmation_row = merged_supervisor_confirmation.find { |row| row['LDAP_UID'] == confirmation_row['LDAP_UID'] }
           supervisors_row = supervisors_worksheet.find { |row| row['LDAP_UID'] == confirmation_row['LDAP_UID'] }
-          merged_course_confirmation.headers.each do |header|
+          merged_supervisor_confirmation.headers.each do |header|
             if confirmation.headers.include? header
               expect(merged_confirmation_row[header]).to eq confirmation_row[header]
             else

@@ -30,8 +30,7 @@ describe Oec::PublishTask do
       previous_course_supervisors_csv)
     allow(Settings.terms).to receive(:fake_now).and_return DateTime.parse('2015-03-09 12:00:00')
 
-    allow(Oec::Queries).to receive(:students_for_cntl_nums).and_return student_data_rows
-    allow(Oec::Queries).to receive(:enrollments_for_cntl_nums).and_return(enrollment_data_rows, suffixed_enrollment_data_rows)
+    allow(Oec::Queries).to receive(:get_enrollments).and_return enrollment_data
     allow_any_instance_of(Oec::Task).to receive(:default_term_dates).and_return({'START_DATE' => '01-26-2015', 'END_DATE' => '05-11-2015'})
   end
 
@@ -149,12 +148,12 @@ describe Oec::PublishTask do
       end
 
       it 'should merge instructor data from previous terms when current-term data absent' do
-        expect(instructors.find { |i| i['LDAP_UID'] == '66666'}).to include({'FIRST_NAME' => 'Ysidro', 'LAST_NAME' => 'Yyyy', 'EMAIL_ADDRESS' => 'yyyy@berkeley.edu'})
-        expect(instructors.find { |i| i['LDAP_UID'] == '77777'}).to include({'FIRST_NAME' => 'Zaphod', 'LAST_NAME' => 'Zzzz', 'EMAIL_ADDRESS' => 'zzzz@berkeley.edu'})
+        expect(instructors.find { |i| i['LDAP_UID'] == '66666'}.to_hash).to include({'FIRST_NAME' => 'Ysidro', 'LAST_NAME' => 'Yyyy', 'EMAIL_ADDRESS' => 'yyyy@berkeley.edu'})
+        expect(instructors.find { |i| i['LDAP_UID'] == '77777'}.to_hash).to include({'FIRST_NAME' => 'Zaphod', 'LAST_NAME' => 'Zzzz', 'EMAIL_ADDRESS' => 'zzzz@berkeley.edu'})
       end
 
       it 'should not overwrite current-term instructor data with previous-term data' do
-        expect(instructors.find { |i| i['LDAP_UID'] == '128533'}).to include({
+        expect(instructors.find { |i| i['LDAP_UID'] == '128533'}.to_hash).to include({
           'FIRST_NAME' => 'Alan',
           'LAST_NAME' => 'Aaaa',
           'EMAIL_ADDRESS' => 'aaaa@berkeley.edu',
@@ -181,26 +180,12 @@ describe Oec::PublishTask do
     end
 
     context 'data with suffixed course IDs' do
+      let(:student_uids_for_ccn) { %w(1000 2000 3000) }
       before do
         merged_course_confirmations_csv.concat(
           "2015-B-#{ccn}_GSI,2015-B-#{ccn}_GSI,LGBT C146A LEC 001 REP SEXUALITY/LIT,,,LGBT,C146A,LEC,001,P,562283,10945601,Clarice,Cccc,cccc@berkeley.edu,23,Y,LGBT,G,,01-26-2015,05-11-2015")
-        expect(Oec::Queries).to receive(:enrollments_for_cntl_nums)
-          .with(term_code, [ccn])
-          .and_return student_ids_for_ccn.map { |id| {'course_id' => "2015-B-#{ccn}", 'ldap_uid' => id} }
-        expect(Oec::Queries).to receive(:students_for_cntl_nums)
-          .with(term_code, array_including(ccn))
-          .and_return(student_data_rows + student_data_rows_for_ccn)
-      end
-      let(:student_ids_for_ccn) { %w(1000 2000 3000) }
-      let(:student_data_rows_for_ccn) do
-        student_ids_for_ccn.map do |id|
-          {
-            'ldap_uid' => id,
-            'first_name' => 'Val',
-            'last_name' => 'Valid',
-            'email_address' => 'valid@berkeley.edu',
-            'sis_id' => random_id
-          }
+        student_uids_for_ccn.each do |uid|
+          enrollment_data[:rows] << fake_enrollment_data_row(ccn, uid)
         end
       end
 
@@ -208,7 +193,7 @@ describe Oec::PublishTask do
         it 'should match appropriate data to suffixed CCN' do
           task.run
           expect(courses.find { |course| course['COURSE_ID'] == "2015-B-#{ccn}_GSI"}).to be_present
-          student_ids_for_ccn.each do |id|
+          student_uids_for_ccn.each do |id|
             expect(course_students.find { |course_student| course_student['COURSE_ID'] == "2015-B-#{ccn}_GSI" && course_student['LDAP_UID'] == id }).to be_present
           end
           expect(course_instructors.find { |course_instructor| course_instructor['COURSE_ID'] == "2015-B-#{ccn}_GSI" && course_instructor['LDAP_UID'] == '562283'}).to be_present
@@ -228,10 +213,20 @@ describe Oec::PublishTask do
 
   describe 'integrity validation' do
     let(:local_write) { 'Y' }
-    before { allow(Rails.logger).to receive(:warn) }
-    context 'mismatched enrollment data' do
+    before do
+      allow(Rails.logger).to receive(:warn)
+      enrollment_data[:rows] << fake_enrollment_data_row('34821', '99999999')
+    end
+
+    context 'missing students row' do
       before do
-        enrollment_data_rows << {'course_id' => '2016-B-99999', 'ldap_uid' => '99999999'}
+        # Intercept the students row for UID 99999999 only.
+        original_validate_and_add = task.method(:validate_and_add)
+        allow(task).to receive(:validate_and_add) do |sheet, row, key|
+          unless sheet.instance_of?(Oec::Students) && row['LDAP_UID'] == '99999999'
+            original_validate_and_add.call(sheet, row, key)
+          end
+        end
       end
       it 'should report error' do
         expect(Rails.logger).to receive(:warn).with /Validation failed!/
@@ -239,15 +234,16 @@ describe Oec::PublishTask do
         task.run
       end
     end
-    context 'mismatched student data' do
+
+    context 'missing course_students row' do
       before do
-        student_data_rows << {
-          'ldap_uid' => 99999999,
-          'first_name' => 'Inter',
-          'last_name' => 'Loper',
-          'email_address' => 'interloper@berkeley.edu',
-          'sis_id' => random_id
-        }
+        # Intercept the course_students row for UID 99999999 only.
+        original_validate_and_add = task.method(:validate_and_add)
+        allow(task).to receive(:validate_and_add) do |sheet, row, key|
+          unless sheet.instance_of?(Oec::CourseStudents) && row['LDAP_UID'] == '99999999'
+            original_validate_and_add.call(sheet, row, key)
+          end
+        end
       end
       it 'should report error' do
         expect(Rails.logger).to receive(:warn).with /Validation failed!/
