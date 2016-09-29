@@ -3,18 +3,200 @@ describe MyAcademics::CollegeAndLevel do
   let(:uid) { '61889' }
   let(:campus_solutions_id) { '1234567890' }
   let(:legacy_campus_solutions_id) { '11667051' }
-  let(:hub_status_proxy) { HubEdos::AcademicStatus.new(user_id: uid, fake: true) }
   let(:bearfacts_proxy) { Bearfacts::Profile.new(user_id: uid, fake: true) }
   let(:fake_spring_term) { double(is_summer: false, :year => 2015, :code => 'B') }
   let(:feed) { {}.tap { |feed| subject.merge feed } }
+
+  # Hub Academic Status - Response / Feed
+  let(:hub_academic_status_response) do
+    {
+      :statusCode => hub_academic_status_code,
+      :feed => hub_academic_status_feed,
+      :studentNotFound => nil
+    }
+  end
+  let(:hub_academic_status_code) { 200 }
+  let(:hub_academic_status_feed) do
+    {
+      "student" => {
+        "academicStatuses" => hub_academic_statuses,
+        "holds" => hub_holds
+      }
+    }
+  end
+
+  let(:hub_holds) do
+    [
+      {
+        "amountRequired" => 0,
+        "comments" => "",
+        "contact" => {},
+        "department" => {},
+        "fromDate" => "2016-03-19",
+        "fromTerm" => {},
+        "impacts" => [],
+        "reason" => {},
+        "reference" => "",
+        "type" => {}
+      }
+    ]
+  end
+
+  let(:hub_academic_statuses) { [hub_academic_status] }
+  let(:hub_academic_status) do
+    {
+      "cumulativeGPA" => {},
+      "cumulativeUnits" => [],
+      "currentRegistration" => current_registration,
+      "studentCareer" => {
+        "academicCareer"=> academic_career
+      },
+      "studentPlans" => student_plans,
+      "termsInAttendance" => 2
+    }
+  end
+
+  # Hub Academic Status - Current Registrations
+  let(:current_registration) do
+    {
+      "academicCareer" => current_registration_academic_career,
+      "academicLevel" => current_registration_academic_level,
+      "term" => current_registration_term,
+    }
+  end
+  let(:current_registration_academic_career) { undergraduate_academic_career }
+  let(:current_registration_academic_level) { {"level" => { "code" => "30", "description" => "Junior" }} }
+  let(:current_registration_term) { {"id"=>"2168", "name"=>"2016 Fall"} }
+
+  # Hub Academic Status - Student / Academic Careers
+  let(:academic_career) { undergraduate_academic_career }
+  let(:undergraduate_academic_career) { { "code"=>"UGRD", "description"=>"Undergraduate" } }
+
+  # Hub Academic Status - Student Plans (CPP)
+  let(:student_plans) { [
+    undergrad_student_plan_major,
+    undergrad_student_plan_specialization,
+    undergrad_student_plan_minor
+  ] }
+  let(:undergrad_student_plan_major) do
+    hub_edo_academic_status_student_plan({
+      career_code: 'UGRD',
+      career_description: 'Undergraduate',
+      program_code: 'UCLS',
+      program_description: 'Undergrad Letters & Science',
+      plan_code: '25345U',
+      plan_description: 'English BA',
+      admin_owners: [{org_code: 'ENGLISH', org_description: 'English', percentage: 100}],
+      expected_grad_term_id: '2202',
+      expected_grad_term_name: '2020 Spring'
+    })
+  end
+  let(:undergrad_student_plan_specialization) do
+    hub_edo_academic_status_student_plan({
+      career_code: 'UGRD',
+      career_description: 'Undergraduate',
+      program_code: 'UCLS',
+      program_description: 'Undergrad Letters & Science',
+      plan_code: '25971U',
+      plan_description: 'MCB-Cell & Dev Biology BA',
+      type_code: 'SP',
+      type_description: 'Major - UG Specialization',
+      admin_owners: [{org_code: 'MCELLBI', org_description: 'Molecular & Cell Biology', percentage: 100}],
+      is_primary: false
+    })
+  end
+  let(:undergrad_student_plan_minor) do
+    hub_edo_academic_status_student_plan({
+      career_code: 'UGRD',
+      career_description: 'Undergraduate',
+      program_code: 'UCLS',
+      program_description: 'Undergrad Letters & Science',
+      plan_code: '25090U',
+      plan_description: 'Art BA',
+      type_code: 'MIN',
+      type_description: 'Major - UG Specialization',
+      admin_owners: [{org_code: 'MCELLBI', org_description: 'Molecular & Cell Biology', percentage: 100}],
+      is_primary: false
+    })
+  end
+  let(:graduate_master_public_policy_plan) do
+    hub_edo_academic_status_student_plan({
+      career_code: 'GRAD',
+      career_description: 'Graduate',
+      program_code: 'GPRFL',
+      program_description: 'Graduate Professional Programs',
+      plan_code: '82790PPJDG',
+      plan_description: 'Public Policy MPP-JD CDP',
+      admin_owners: [
+        {org_code: 'LAW', org_description: 'School of Law', percentage: 50},
+        {org_code: 'PUBPOL', org_description: 'Goldman School Public Policy', percentage: 50},
+      ]
+    })
+  end
+  let(:law_jd_mpp_cdp_plan) do
+    hub_edo_academic_status_student_plan({
+      career_code: 'LAW',
+      career_description: 'Law',
+      program_code: 'LPRFL',
+      program_description: 'Law Professional Programs',
+      plan_code: '84501JDPPG',
+      plan_description: 'Law JD-MPP CDP',
+      admin_owners: [
+        {org_code: 'LAW', org_description: 'School of Law', percentage: 50},
+        {org_code: 'PUBPOL', org_description: 'Goldman School Public Policy', percentage: 50},
+      ],
+    })
+  end
+  let(:graduate_public_health_plan) do
+    hub_edo_academic_status_student_plan({
+      career_code: 'GRAD',
+      career_description: 'Graduate',
+      program_code: 'GPRFL',
+      program_description: 'Graduate Professional Programs',
+      plan_code: '96789PHBAG',
+      plan_description: 'Public Health MPH-MBA CDP',
+      admin_owners: [
+        {org_code: 'BUS', org_description: 'Haas School of Business', percentage: 50},
+        {org_code: 'PUBHEALTH', org_description: 'School of Public Health', percentage: 50},
+      ]
+    })
+  end
+  let(:graduate_business_admin_mba_haas_plan) do
+    hub_edo_academic_status_student_plan({
+      career_code: 'GRAD',
+      career_description: 'Graduate',
+      program_code: 'GPRFL',
+      program_description: 'Graduate Professional Programs',
+      plan_code: '70141BAPHG',
+      plan_description: 'Business Admin MBA-MPH CDP',
+      admin_owners: [
+        {org_code: 'BUS', org_description: 'Haas School of Business', percentage: 50},
+        {org_code: 'PUBHEALTH', org_description: 'School of Public Health', percentage: 50},
+      ]
+    })
+  end
+
   before do
     allow_any_instance_of(CalnetCrosswalk::ByUid).to receive(:lookup_campus_solutions_id).and_return campus_solutions_id
-    allow(HubEdos::AcademicStatus).to receive(:new).and_return hub_status_proxy
+    allow_any_instance_of(HubEdos::AcademicStatus).to receive(:get).and_return hub_academic_status_response
+  end
+
+  context 'when defining student plan roles' do
+    it 'includes plans and career matchers' do
+      expect(subject.class::STUDENT_PLAN_ROLES[:plan].count).to_not eq 0
+      expect(subject.class::STUDENT_PLAN_ROLES[:career].count).to_not eq 0
+    end
+
+    it 'defines type code and match string for each matcher' do
+      subject.class::STUDENT_PLAN_ROLES.values_at(:plan, :career).flatten.each do |matcher|
+        expect(matcher).to have_key(:student_plan_role_code)
+        expect(matcher).to have_key(:match)
+      end
+    end
   end
 
   context 'data sourcing' do
     it 'always queries hub data' do
-      expect(HubEdos::AcademicStatus).to receive(:new).and_return hub_status_proxy
       expect(feed[:collegeAndLevel][:statusCode]).to eq 200
     end
     context 'when hub response is present' do
@@ -28,7 +210,7 @@ describe MyAcademics::CollegeAndLevel do
     end
 
     context 'when hub response is empty' do
-      before { hub_status_proxy.set_response(status: 200, body: '{}') }
+      let(:hub_academic_status_feed) { {} }
       let(:campus_solutions_id) { legacy_campus_solutions_id }
       context 'when current term is summer' do
         before { allow(subject).to receive(:current_term).and_return(double(is_summer: true)) }
@@ -58,7 +240,6 @@ describe MyAcademics::CollegeAndLevel do
         context 'when bearfacts data is not present' do
           it 'sources from empty EDO Hub response' do
             expect(feed[:collegeAndLevel][:empty]).to eq true
-            expect(feed[:collegeAndLevel][:empty]).to eq true
             expect(feed[:collegeAndLevel][:isCurrent]).to eq true
             expect(feed[:collegeAndLevel][:termName]).to eq 'Fall 2013'
           end
@@ -68,93 +249,203 @@ describe MyAcademics::CollegeAndLevel do
   end
 
   context 'when sourced from Hub academic status' do
-    it 'reports success' do
-      expect(feed[:collegeAndLevel][:statusCode]).to eq 200
+    context 'undergrad with single academic status' do
+      it 'reports success' do
+        expect(feed[:collegeAndLevel][:statusCode]).to eq 200
+      end
+
+      it 'translates careers' do
+        expect(feed[:collegeAndLevel][:careers]).to eq ['Undergraduate']
+      end
+
+      it 'translates level' do
+        expect(feed[:collegeAndLevel][:level]).to eq 'Junior'
+      end
+
+      it 'translates terms in attendance' do
+        expect(feed[:collegeAndLevel][:termsInAttendance]).to eq '2'
+      end
+
+      it 'includes the farthest graduation term available from all plans' do
+        expect(feed[:collegeAndLevel][:lastExpectedGraduationTerm]).to eq({
+          code: "2202",
+          name: 'Spring 2020'
+        })
+      end
+
+      it 'specifies term name' do
+        expect(feed[:collegeAndLevel][:termName]).to eq 'Fall 2016'
+      end
+
+      it 'translates minors' do
+        expect(feed[:collegeAndLevel][:minors].first).to eq({
+          college: 'Undergrad Letters & Science',
+          minor: 'Art BA'
+        })
+      end
+
+      it 'translates majors' do
+        expect(feed[:collegeAndLevel][:majors][0]).to eq({
+          college: 'Undergrad Letters & Science',
+          major: 'English BA'
+        })
+        expect(feed[:collegeAndLevel][:majors][1]).to eq({
+          college: 'Undergrad Letters & Science',
+          major: 'MCB-Cell & Dev Biology BA'
+        })
+      end
+
+      it 'translates plans' do
+        expect(feed[:collegeAndLevel][:plans].count).to eq 3
+
+        expect(feed[:collegeAndLevel][:plans][0][:career][:code]).to eq 'UGRD'
+        expect(feed[:collegeAndLevel][:plans][0][:program][:code]).to eq 'UCLS'
+        expect(feed[:collegeAndLevel][:plans][0][:plan][:code]).to eq '25345U'
+        expect(feed[:collegeAndLevel][:plans][0][:expectedGraduationTerm][:code]).to eq '2202'
+        expect(feed[:collegeAndLevel][:plans][0][:expectedGraduationTerm][:name]).to eq 'Spring 2020'
+        expect(feed[:collegeAndLevel][:plans][0][:role]).to eq 'default'
+        expect(feed[:collegeAndLevel][:plans][0][:primary]).to eq true
+        expect(feed[:collegeAndLevel][:plans][0][:type][:code]).to eq 'MAJ'
+        expect(feed[:collegeAndLevel][:plans][0][:type][:category]).to eq 'Major'
+        expect(feed[:collegeAndLevel][:plans][0][:college]).to eq 'Undergrad Letters & Science'
+
+        expect(feed[:collegeAndLevel][:plans][1][:career][:code]).to eq 'UGRD'
+        expect(feed[:collegeAndLevel][:plans][1][:program][:code]).to eq 'UCLS'
+        expect(feed[:collegeAndLevel][:plans][1][:plan][:code]).to eq '25971U'
+        expect(feed[:collegeAndLevel][:plans][1][:expectedGraduationTerm]).to eq nil
+        expect(feed[:collegeAndLevel][:plans][1][:role]).to eq 'default'
+        expect(feed[:collegeAndLevel][:plans][1][:primary]).to eq false
+        expect(feed[:collegeAndLevel][:plans][1][:type][:code]).to eq 'SP'
+        expect(feed[:collegeAndLevel][:plans][1][:type][:category]).to eq 'Major'
+        expect(feed[:collegeAndLevel][:plans][1][:college]).to eq 'Undergrad Letters & Science'
+
+        expect(feed[:collegeAndLevel][:plans][2][:career][:code]).to eq 'UGRD'
+        expect(feed[:collegeAndLevel][:plans][2][:program][:code]).to eq 'UCLS'
+        expect(feed[:collegeAndLevel][:plans][2][:plan][:code]).to eq '25090U'
+        expect(feed[:collegeAndLevel][:plans][2][:expectedGraduationTerm]).to eq nil
+        expect(feed[:collegeAndLevel][:plans][2][:role]).to eq 'default'
+        expect(feed[:collegeAndLevel][:plans][2][:primary]).to eq false
+        expect(feed[:collegeAndLevel][:plans][2][:type][:code]).to eq 'MIN'
+        expect(feed[:collegeAndLevel][:plans][2][:type][:category]).to eq 'Minor'
+        expect(feed[:collegeAndLevel][:plans][2][:college]).to eq 'Undergrad Letters & Science'
+      end
+
+      it 'translates holds' do
+        expect(feed[:collegeAndLevel][:holds][:hasHolds]).to eq true
+      end
     end
 
-    it 'translates careers' do
-      expect(feed[:collegeAndLevel][:careers]).to eq ['Undergraduate']
-    end
+    context 'when graduate student with multiple academic statuses' do
+      # Hub Academic Statuses - Graduate with Grad / Law Joint Program
+      let(:hub_academic_statuses) { [hub_academic_status, hub_academic_status_secondary] }
+      let(:hub_academic_status_secondary) do
+        {
+          "cumulativeGPA" => {},
+          "cumulativeUnits" => [],
+          "currentRegistration" => current_registration_secondary,
+          "studentCareer" => student_career_secondary,
+          "studentPlans" => student_plans_secondary
+        }
+      end
 
-    it 'translates level' do
-      expect(feed[:collegeAndLevel][:level]).to eq 'Junior'
-    end
+      # Graduate Statuses - Current Registrations
+      let(:current_registration_secondary) do
+        {
+          "academicCareer" => current_registration_academic_career_secondary,
+          "academicLevel" => current_registration_academic_level_secondary,
+          "term" => current_registration_term_secondary,
+        }
+      end
+      let(:current_registration_academic_career) { graduate_academic_career }
+      let(:current_registration_academic_level) { { "level" => { "code" => "GR", "description" => "Graduate" } } }
+      let(:current_registration_term) { {"id" => "2142", "name" => "2014 Spring"} }
+      let(:current_registration_academic_career_secondary) { law_academic_career }
+      let(:current_registration_academic_level_secondary) { { "level" => { "code" => "P2", "description" => "Professional Year 2" } } }
+      let(:current_registration_term_secondary) { {"id" => "2168", "name" => "2016 Fall"} }
 
-    it 'translates terms in attendance' do
-      expect(feed[:collegeAndLevel][:termsInAttendance]).to eq '4'
-    end
+      # Hub Academic Status - Student / Academic Careers
+      let(:academic_career) { graduate_academic_career }
+      let(:student_career_secondary) { {"academicCareer"=> law_academic_career} }
+      let(:graduate_academic_career) { { "code"=>"GRAD", "description"=>"Graduate" } }
+      let(:law_academic_career) { {"code" => "LAW", "description" => "Law"} }
 
-    it 'translates majors' do
-      expect(feed[:collegeAndLevel][:majors][0]).to eq({
-        college: 'Undergrad Letters & Science',
-        major: 'English BA'
-      })
-      expect(feed[:collegeAndLevel][:majors][1]).to eq({
-        college: 'Undergrad Letters & Science',
-        major: 'MCB-Cell & Dev Biology BA'
-      })
-    end
+      # Graduate Statuses - Student Plans
+      let(:student_plans) { [law_jd_mpp_cdp_plan] }
+      let(:student_plans_secondary) { [graduate_master_public_policy_plan] }
 
-    it 'translates minors' do
-      expect(feed[:collegeAndLevel][:minors].first).to eq({
-        college: 'Undergrad Letters & Science',
-        minor: 'Art BA'
-      })
-    end
+      it 'reports success' do
+        expect(feed[:collegeAndLevel][:statusCode]).to eq 200
+      end
 
-    it 'translates plans' do
-      expect(feed[:collegeAndLevel][:plans]).to eq(
-        [
-          {
-            :code => "25345U",
-            :primary => true,
-            :expectedGraduationTerm => {
-              "id" => "2202",
-              "name" => "Spring 2020"
-            }
-          },
-          {
-            :code => "25971U",
-            :primary => true,
-            :expectedGraduationTerm => nil
-          },
-          {
-            :code => "25090U",
-            :primary => false,
-            :expectedGraduationTerm => nil
-          },
-        ]
-      )
-    end
+      it 'translates careers' do
+        expect(feed[:collegeAndLevel][:careers]).to eq ["Graduate", "Law"]
+      end
 
-    it 'includes the farthest graduation term available from all plans' do
-      expect(feed[:collegeAndLevel][:lastExpectedGraduationTerm]).to eq 'Spring 2020'
-    end
+      it 'translates level' do
+        expect(feed[:collegeAndLevel][:level]).to eq 'Graduate and Professional Year 2'
+      end
 
-    it 'specifies term name' do
-      expect(feed[:collegeAndLevel][:termName]).to eq 'Spring 2017'
+      it 'specifies term name' do
+        expect(feed[:collegeAndLevel][:termName]).to eq 'Spring 2014'
+      end
+
+      it 'translates majors' do
+        expect(feed[:collegeAndLevel][:majors][0]).to eq({
+          college: 'Law Professional Programs',
+          major: 'Law JD-MPP CDP'
+        })
+        expect(feed[:collegeAndLevel][:majors][1]).to eq({
+          college: 'Graduate Professional Programs',
+          major: 'Public Policy MPP-JD CDP'
+        })
+      end
+
+      it 'translates plans' do
+        expect(feed[:collegeAndLevel][:plans].count).to eq 2
+        expect(feed[:collegeAndLevel][:plans][0][:career][:code]).to eq 'LAW'
+        expect(feed[:collegeAndLevel][:plans][0][:program][:code]).to eq 'LPRFL'
+        expect(feed[:collegeAndLevel][:plans][0][:plan][:code]).to eq '84501JDPPG'
+        expect(feed[:collegeAndLevel][:plans][0][:expectedGraduationTerm]).to eq nil
+        expect(feed[:collegeAndLevel][:plans][0][:role]).to eq 'law'
+        expect(feed[:collegeAndLevel][:plans][0][:primary]).to eq true
+        expect(feed[:collegeAndLevel][:plans][0][:type][:code]).to eq 'MAJ'
+        expect(feed[:collegeAndLevel][:plans][0][:type][:category]).to eq 'Major'
+        expect(feed[:collegeAndLevel][:plans][0][:college]).to eq 'Law Professional Programs'
+        expect(feed[:collegeAndLevel][:plans][1][:career][:code]).to eq 'GRAD'
+        expect(feed[:collegeAndLevel][:plans][1][:program][:code]).to eq 'GPRFL'
+        expect(feed[:collegeAndLevel][:plans][1][:plan][:code]).to eq '82790PPJDG'
+        expect(feed[:collegeAndLevel][:plans][1][:expectedGraduationTerm]).to eq nil
+        expect(feed[:collegeAndLevel][:plans][1][:role]).to eq 'default'
+        expect(feed[:collegeAndLevel][:plans][1][:primary]).to eq true
+        expect(feed[:collegeAndLevel][:plans][1][:type][:code]).to eq 'MAJ'
+        expect(feed[:collegeAndLevel][:plans][1][:type][:category]).to eq 'Major'
+        expect(feed[:collegeAndLevel][:plans][1][:college]).to eq 'Graduate Professional Programs'
+      end
     end
 
     context 'empty status feed' do
-      before { hub_status_proxy.set_response(status: 200, body: '{}') }
+      let(:hub_academic_status_feed) { {} }
       it 'reports empty' do
         expect(feed[:collegeAndLevel][:empty]).to eq true
       end
     end
 
     context 'errored status feed' do
-      before { hub_status_proxy.set_response(status: 502, body: '') }
+      let(:hub_academic_status_response) do
+        {
+          :statusCode => 502,
+          :body => "An unknown server error occurred",
+          :errored => true,
+          :studentNotFound => nil
+        }
+      end
       it 'reports error' do
         expect(feed[:collegeAndLevel][:errored]).to eq true
       end
     end
 
     context 'status feed lacking some data' do
-      before do
-        hub_status_proxy.override_json do |json|
-          json['apiResponse']['response']['any']['students'][0]['academicStatuses'][0].delete 'currentRegistration'
-        end
-      end
+      let(:current_registration) { {} }
       it 'returns what data it can' do
         expect(feed[:collegeAndLevel][:careers]).to be_present
         expect(feed[:collegeAndLevel][:majors]).to be_present
@@ -289,6 +580,128 @@ describe MyAcademics::CollegeAndLevel do
           expect(feed[:collegeAndLevel]).not_to include :errored
         end
       end
+    end
+  end
+
+  context 'when flattening a student academic plan' do
+    let(:flattened_status) { subject.flatten_plan(undergrad_student_plan_major) }
+
+    context 'when input is empty' do
+      let(:flattened_status) { subject.flatten_plan({}) }
+      it 'returns plan hash with nil values' do
+        expect(flattened_status[:career][:code]).to eq nil
+        expect(flattened_status[:career][:description]).to eq nil
+        expect(flattened_status[:plan][:code]).to eq nil
+        expect(flattened_status[:plan][:description]).to eq nil
+      end
+    end
+
+    it 'handles missing hash nodes gracefully' do
+      undergrad_student_plan_major['academicPlan'].delete('academicProgram')
+      expect(flattened_status[:career][:code]).to be_nil
+      expect(flattened_status[:career][:description]).to be_nil
+      expect(flattened_status[:program][:code]).to eq nil
+      expect(flattened_status[:program][:description]).to eq nil
+      expect(flattened_status[:plan][:code]).to eq '25345U'
+      expect(flattened_status[:plan][:description]).to eq 'English BA'
+    end
+
+    it 'flattens academic status plan into cpp hash' do
+      expect(flattened_status[:career][:code]).to eq 'UGRD'
+      expect(flattened_status[:career][:description]).to eq 'Undergraduate'
+      expect(flattened_status[:program][:code]).to eq 'UCLS'
+      expect(flattened_status[:program][:description]).to eq 'Undergrad Letters & Science'
+      expect(flattened_status[:plan][:code]).to eq '25345U'
+      expect(flattened_status[:plan][:description]).to eq 'English BA'
+    end
+
+    it 'includes the expected graduation term' do
+      expect(flattened_status[:expectedGraduationTerm][:code]).to eq '2202'
+      expect(flattened_status[:expectedGraduationTerm][:name]).to eq 'Spring 2020'
+    end
+
+    it 'includes the students plan role' do
+      expect(flattened_status[:role]).to eq 'default'
+    end
+
+    it 'includes the primary plan boolean' do
+      expect(flattened_status[:primary]).to eq true
+    end
+
+    it 'includes the plan type with category' do
+      expect(flattened_status[:type][:code]).to eq 'MAJ'
+      expect(flattened_status[:type][:description]).to eq 'Major - Regular Acad/Prfnl'
+      expect(flattened_status[:type][:category]).to eq 'Major'
+    end
+
+    it 'includes the college name' do
+      expect(flattened_status[:college]).to eq 'Undergrad Letters & Science'
+    end
+  end
+
+  context 'when determining the student plan role code' do
+    it 'identifies a default plan in undergrad career' do
+      plan = {
+        career: { code: 'UGRD', description: 'Undergraduate' },
+        plan: { code: '25699U', description: 'Political Science'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'default'
+    end
+
+    it 'identifies a default plan in graduate career' do
+      plan = {
+        career: { code: 'GRAD', description: 'Graduate' },
+        plan: { code: '16290PHDG', description: 'Electrical Eng & Comp Sci PhD'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'default'
+    end
+
+    it 'identifies a berkeley law career plan' do
+      plan = {
+        career: { code: 'LAW', description: 'Law' },
+        plan: { code: '842C1JSDG', description: 'Doctor of Science of Law JSD'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'law'
+    end
+
+    it 'identifies a concurrent enrollment plan' do
+      plan = {
+        career: { code: 'UCBX', description: 'UC Berkeley Extension' },
+        plan: { code: '30XCECCENX', description: 'UCBX Concurrent Enrollment'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'concurrent'
+    end
+
+    it 'identifies a fall program for freshmen plan' do
+      plan = {
+        career: { code: 'UGRD', description: 'Undergraduate' },
+        plan: { code: '25000FPFU', description: 'L&S Undcl Fall Pgm Freshmen UG'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'fpf'
+    end
+
+    it 'identifies a Haas Business School MBA plan' do
+      plan = {
+        career: { code: 'GRAD', description: 'Graduate' },
+        plan: { code: '70141MBAG', description: 'Business Administration MBA'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haas_mba'
+    end
+
+    it 'identifies a Haas Business School Evening and Weekend MBA plan' do
+      plan = {
+        career: { code: 'GRAD', description: 'Graduate' },
+        plan: { code: '701E1MBAG', description: 'Berkeley MBA for Executives'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haas_ewmba'
+    end
+
+    it 'identifies a Haas Business School Executive MBA plan' do
+      plan = {
+        career: { code: 'GRAD', description: 'Graduate' },
+        plan: { code: '70364MBAG', description: 'Berkeley MBA for Executives'}
+      }
+      expect(subject.get_student_plan_role_code(plan)).to eq 'haas_execmba'
     end
   end
 

@@ -32,7 +32,7 @@ class AdvisingStudentController < ApplicationController
   end
 
   def registrations
-    render json: MyRegistrations::MyRegistrations.new(student_uid_param).get_feed_as_json
+    render json: MyAcademics::Registrations.new(student_uid_param).get_feed_as_json
   end
 
   def advising

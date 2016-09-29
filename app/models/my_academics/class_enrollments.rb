@@ -5,24 +5,10 @@ module MyAcademics
     include Cache::UserCacheExpiry
     include CampusSolutions::EnrollmentCardFeatureFlagged
 
-    # Used to identify different enrollment instruction presentations
-    ENROLLMENT_INSTRUCTION_TYPES = {
-      plan: [
-        {instruction_type_code: 'fpf', match: '25000FPFU'},
-        {instruction_type_code: 'haas_mba', match: '70141MBAG'},
-        {instruction_type_code: 'haas_ewmba', match: '701E1MBAG'},
-        {instruction_type_code: 'haas_execmba', match: '70364MBAG'},
-      ],
-      career: [
-        {instruction_type_code: 'law', match: 'LAW'},
-        {instruction_type_code: 'concurrent', match: 'UCBX'},
-      ]
-    }
-
     def get_feed_internal
       return {} unless is_feature_enabled && user_is_student?
       HashConverter.camelize({
-        enrollmentTermInstructionTypes: get_enrollment_term_instruction_types,
+        enrollmentTermInstructionTypes: get_career_term_roles,
         enrollmentTermInstructions: get_enrollment_term_instructions,
         enrollmentTermAcademicPlanner: get_enrollment_term_academic_planner,
         hasHolds: user_has_holds?,
@@ -30,19 +16,35 @@ module MyAcademics
       })
     end
 
-    def get_enrollment_term_instruction_types
+    # Groups student plans into groups based on roles (e.g. 'default', 'fpf', 'concurrent')
+    def grouped_student_plan_roles
+      grouped_roles = {}
+      active_plans.each do |plan|
+        role_code = plan[:role]
+        career_code = plan[:career][:code]
+        role_key = [role_code, career_code]
+        grouped_roles[role_key] = { role: role_code, career_code: career_code, academic_plans: [] } if grouped_roles[role_key].blank?
+        grouped_roles[role_key][:academic_plans] << plan
+      end
+      grouped_roles
+    end
+
+    # Returns unique couplings of current career-terms and current student plan roles
+    def get_career_term_roles
       career_terms = get_active_career_terms
-      instruction_types = get_enrollment_instruction_types
-      term_instruction_types = []
-      instruction_types.keys.each do |type_key|
-        instruction_type = instruction_types[type_key]
+
+      grouped_roles = grouped_student_plan_roles
+      career_term_plan_roles = []
+
+      grouped_roles.keys.each do |role_key|
+        student_plan_role = grouped_roles[role_key]
         career_terms.each do |career_term|
-          if (instruction_type[:career_code] == career_term[:acadCareer])
-            term_instruction_types << instruction_type.merge({term: career_term.slice(:termId, :termDescr)})
+          if (student_plan_role[:career_code] == career_term[:acadCareer])
+            career_term_plan_roles << student_plan_role.merge({term: career_term.slice(:termId, :termDescr)})
           end
         end
       end
-      term_instruction_types
+      career_term_plan_roles
     end
 
     def get_enrollment_term_academic_planner
@@ -64,69 +66,20 @@ module MyAcademics
     end
 
     def user_has_holds?
-      has_holds = false
-      response = get_academic_status
-      if (holds = AcademicsModule.parse_hub_holds(response))
-        has_holds = holds.to_a.length > 0
-      end
-      has_holds
+      !!college_and_level.try(:[], :holds).try(:[], :hasHolds)
     end
 
-    def get_enrollment_instruction_types
-      types = {}
-      get_active_plans.each do |plan|
-        type_code = get_enrollment_instruction_type_code(plan)
-        career_code = plan[:career][:code]
-        type_key = [type_code, career_code]
-        types[type_key] = { instruction_type_code: type_code, career_code: career_code, academic_plans: [] } if types[type_key].blank?
-        types[type_key][:academic_plans] << plan
+    def college_and_level
+      worker = Proc.new do
+        feed = {}
+        MyAcademics::CollegeAndLevel.new(@uid).merge(feed)
+        feed.try(:[], :collegeAndLevel)
       end
-      types
+      @college_and_level ||= worker.call
     end
 
-    def get_enrollment_instruction_type_code(plan)
-      type_codes = []
-      ENROLLMENT_INSTRUCTION_TYPES.each do |cpp_category, matchers|
-        category_type_codes = matchers.select {|matcher| plan[cpp_category][:code] == matcher[:match]}
-        type_codes.concat(category_type_codes)
-      end
-      type_codes.empty? ? 'default' : type_codes.first[:instruction_type_code]
-    end
-
-    def get_active_plans
-      active_plans = []
-      response = get_academic_status
-      if (statuses = AcademicsModule.parse_hub_academic_statuses(response))
-        statuses.each do |status|
-          Array.wrap(status.try(:[], 'studentPlans')).each do |plan|
-            active_plans << flatten_plan(plan)
-          end
-        end
-      end
-      active_plans.compact
-    end
-
-    def flatten_plan(plan)
-      flat_plan = {career: {}, plan: {}}
-      if (academic_plan = plan['academicPlan'])
-        plan = academic_plan.try(:[], 'plan')
-        academic_program = academic_plan.try(:[], 'academicProgram')
-        career = academic_program.try(:[], 'academicCareer')
-        program = academic_program.try(:[], 'program')
-        flat_plan[:career].merge!({
-          code: career.try(:[], 'code'),
-          description: career.try(:[], 'description')
-        })
-        flat_plan[:plan].merge!({
-          code: plan.try(:[], 'code'),
-          description: plan.try(:[], 'description')
-        })
-      end
-      flat_plan
-    end
-
-    def get_academic_status
-      @academic_status ||= HubEdos::AcademicStatus.new({user_id: @uid}).get
+    def active_plans
+      college_and_level.try(:[], :plans)
     end
 
     def get_active_term_ids

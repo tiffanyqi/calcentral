@@ -89,7 +89,7 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
    * Determines the sections displayed for card by instruction type
    */
   var setSections = function(enrollmentInstruction) {
-    switch (enrollmentInstruction.instructionTypeCode) {
+    switch (enrollmentInstruction.role) {
       case 'law': {
         enrollmentInstruction.sections = angular.copy(sectionsLaw);
         break;
@@ -171,8 +171,7 @@ angular.module('calcentral.controllers').controller('EnrollmentCardController', 
    * @return {Boolean}            True when any type code provided matches
    */
   $scope.isInstructionType = function(instruction, typeCodes) {
-    return typeCodes.indexOf(instruction.instructionTypeCode) !== -1;
-    // return instruction.instructionTypeCode === typeCode;
+    return typeCodes.indexOf(instruction.role) !== -1;
   };
 
   /**

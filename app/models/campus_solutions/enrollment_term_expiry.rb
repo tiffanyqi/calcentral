@@ -5,7 +5,7 @@ module CampusSolutions
         EdoOracle::UserCourses::All,
         MyAcademics::Merged,
         MyAcademics::ClassEnrollments,
-        MyRegistrations::MyRegistrations
+        MyAcademics::Registrations
       ].each do |klass|
         klass.expire uid
       end

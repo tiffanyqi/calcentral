@@ -34,17 +34,88 @@ describe MyAcademics::ClassEnrollments do
       }
     }
   end
-  let(:edo_hub_academic_status_feed) do
+  let(:college_and_level_feed) do
     {
-      statusCode: 200,
-      feed: {
-        'student' => {
-          'academicStatuses' => academic_statuses,
-          'holds' => []
-        }
+      collegeAndLevel: {
+        statusCode: 200,
+        studentNotFound: nil,
+        holds: college_and_level_holds,
+        careers: ["Undergraduate"],
+        level: "Senior",
+        termName: "Fall 2016",
+        termsInAttendance: "3",
+        majors: college_and_level_majors,
+        minors: college_and_level_minors,
+        plans: college_and_level_plans,
+        lastExpectedGraduationTerm: college_and_level_last_expected_grad_term,
+        isCurrent: true
       }
     }
   end
+  let(:college_and_level_holds) { { hasHolds: false } }
+  let(:college_and_level_majors) { [undergrad_nutritional_science_major] }
+  let(:college_and_level_minors) { [] }
+  let(:college_and_level_last_expected_grad_term) { { code: nil, description: nil, name: nil} }
+  let(:college_and_level_plans) { [undergrad_nutritional_science_plan] }
+  let(:undergrad_nutritional_science_major) do
+    {:college=>"Undergrad Natural Resources", :major=>"Nutritional Science BS"}
+  end
+  let(:undergrad_nutritional_science_plan) do
+    {
+      career: { code: "UGRD", description: "Undergraduate" },
+      program: { code: "UCNR", description: "Undergrad Natural Resources" },
+      plan: { code: "04606U", description: "Nutritional Science BS" },
+      type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major" },
+      college: "Undergrad Natural Resources",
+      role: "default",
+      primary: true,
+    }
+  end
+  let(:undergrad_computer_science_plan) do
+    {
+      career: { code: "UGRD", description: "Undergraduate" },
+      program: { code: "UCLS", description: "Undergrad Letters & Science" },
+      plan: { code: "25201U", description: "Computer Science BA" },
+      type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major" },
+      college: "Undergrad Letters & Science",
+      role: "default",
+      primary: true,
+    }
+  end
+  let(:undergrad_cognitive_science_plan) do
+    {
+      career: { code: "UGRD", description: "Undergraduate" },
+      program: { code: "UCLS", description: "Undergrad Letters & Science" },
+      plan: { code: "25179U", description: "Cognitive Science BA" },
+      type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major"},
+      college: "Undergrad Letters & Science",
+      role: "default",
+      primary: true,
+    }
+  end
+  let(:graduate_electrical_engineering_plan) do
+    {
+      career: { code: "GRAD", description: "Graduate" },
+      program: { code: "GACAD", description: "Graduate Academic Programs" },
+      plan: { code: "16290PHDG", description: "Electrical Eng & Comp Sci PhD" },
+      type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major" },
+      college: "Graduate Academic Programs",
+      role: "default",
+      primary: true,
+    }
+  end
+  let(:law_jsp_plan) do
+    {
+      career: { code: "LAW", description: "Law" },
+      program: { code: "LACAD", description: "Law Academic Programs" },
+      plan: { code: "84485PHDG", description: "JSP PhD" },
+      type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major" },
+      college: "Law Academic Programs",
+      role: "law",
+      primary: true,
+    }
+  end
+
   let(:cs_enrollment_career_terms) do
     [
       { termId: '2165', termDescr: '2016 Summer', acadCareer: 'UGRD' },
@@ -52,94 +123,14 @@ describe MyAcademics::ClassEnrollments do
       { termId: '2168', termDescr: '2016 Fall', acadCareer: 'LAW' }
     ]
   end
-  let(:academic_statuses) { [{'studentPlans' => student_plans}] }
-  let(:student_plans) { [] }
-  let(:compsci_ugrd_plan) do
-    student_plan({
-      career_code: 'UGRD',
-      career_description: 'Undergraduate',
-      program_code: 'UCLS',
-      program_description: 'Undergrad Letters & Science',
-      plan_code: '25201U',
-      plan_description: 'Computer Science BA',
-    })
-  end
-  let(:cogsci_ugrd_plan) do
-    student_plan({
-      career_code: 'UGRD',
-      career_description: 'Undergraduate',
-      program_code: 'UCLS',
-      program_description: 'Undergrad Letters & Science',
-      plan_code: '25179U',
-      plan_description: 'Cognitive Science BA',
-    })
-  end
-  let(:eleng_grad_plan) do
-    student_plan({
-      career_code: 'GRAD',
-      career_description: 'Graduate',
-      program_code: 'GACAD',
-      program_description: 'Graduate Academic Programs',
-      plan_code: '16290PHDG',
-      plan_description: 'Electrical Eng & Comp Sci PhD',
-    })
-  end
-  let(:public_health_grad_plan) do
-    student_plan({
-      career_code: 'GRAD',
-      career_description: 'Graduate',
-      program_code: 'GPRFL',
-      program_description: 'Graduate Professional Programs',
-      plan_code: '96789PHBAG',
-      plan_description: 'Public Health MPH-MBA CDP',
-    })
-  end
-  let(:business_admin_mba_haas_plan) do
-    student_plan({
-      career_code: 'GRAD',
-      career_description: 'Graduate',
-      program_code: 'GPRFL',
-      program_description: 'Graduate Professional Programs',
-      plan_code: '70141BAPHG',
-      plan_description: 'Business Admin MBA-MPH CDP',
-    })
-  end
-  let(:jsp_law_plan) do
-    student_plan({
-      career_code: 'LAW',
-      career_description: 'Law',
-      program_code: 'LACAD',
-      program_description: 'Law Academic Programs',
-      plan_code: '84485PHDG',
-      plan_description: 'JSP PhD',
-    })
-  end
-  def student_plan(cpp_hash)
-    {
-      "academicPlan"=>{
-        "plan"=>{
-          "code"=>cpp_hash[:plan_code],
-          "description"=>cpp_hash[:plan_description]
-        },
-        "academicProgram"=>{
-          "program"=>{
-            "code"=>cpp_hash[:program_code],
-            "description"=>cpp_hash[:program_description]
-          },
-          "academicCareer"=>{
-            "code"=>cpp_hash[:career_code],
-            "description"=>cpp_hash[:career_description]
-          }
-        }
-      },
-      "primary"=>(cpp_hash[:is_primary] || true)
-    }
-  end
+
   subject { MyAcademics::ClassEnrollments.new(student_uid) }
   before do
     allow(subject).to receive(:is_feature_enabled).and_return(is_feature_enabled_flag)
     allow(subject).to receive(:user_is_student?).and_return(user_is_student)
-    allow_any_instance_of(HubEdos::AcademicStatus).to receive(:get).and_return(edo_hub_academic_status_feed)
+    allow_any_instance_of(MyAcademics::CollegeAndLevel).to receive(:merge) do |feed_hash|
+      feed_hash.merge!(college_and_level_feed)
+    end
     allow_any_instance_of(CampusSolutions::EnrollmentTerms).to receive(:get).and_return(cs_enrollment_career_terms_feed)
     allow_any_instance_of(CampusSolutions::EnrollmentTerm).to receive(:get).and_return(cs_enrollment_term_detail_feed)
   end
@@ -159,14 +150,14 @@ describe MyAcademics::ClassEnrollments do
     end
 
     context 'when the user is a student' do
-      let(:student_plans) { [compsci_ugrd_plan] }
+      let(:college_and_level_plans) { [undergrad_computer_science_plan] }
       let(:cs_enrollment_career_terms) { [{ termId: '2168', termDescr: '2016 Fall', acadCareer: 'UGRD' }] }
       let(:user_is_student) { true }
       let(:feed) { subject.get_feed }
       it 'include enrollment instruction types' do
         types = feed[:enrollmentTermInstructionTypes]
         expect(types.count).to eq 1
-        expect(types[0][:instructionTypeCode]).to eq 'default'
+        expect(types[0][:role]).to eq 'default'
         expect(types[0][:careerCode]).to eq 'UGRD'
         expect(types[0][:academicPlans].count).to eq 1
         expect(types[0][:term][:termId]).to eq '2168'
@@ -197,131 +188,50 @@ describe MyAcademics::ClassEnrollments do
     end
   end
 
-  context 'when providing active student plans' do
-    let(:grad_student_plans) { [business_admin_mba_haas_plan, public_health_grad_plan] }
-
-    context 'when one academic status with multiple plans' do
-      let(:student_plans) { grad_student_plans }
-      it 'returns plans that include career code and description' do
-        active_plans = subject.get_active_plans
-        expect(active_plans.count).to eq 2
-        active_plans.each do |plan|
-          expect(plan[:career][:code]).to eq 'GRAD'
-          expect(plan[:career][:description]).to eq 'Graduate'
-        end
-      end
-
-      it 'returns plans that include plan code and description' do
-        active_plans = subject.get_active_plans
-        expect(active_plans.count).to eq 2
-        expect(active_plans[0][:plan][:code]).to eq '70141BAPHG'
-        expect(active_plans[0][:plan][:description]).to eq 'Business Admin MBA-MPH CDP'
-        expect(active_plans[1][:plan][:code]).to eq '96789PHBAG'
-        expect(active_plans[1][:plan][:description]).to eq 'Public Health MPH-MBA CDP'
-      end
-    end
-
-    context 'when multiple academics statuses with one or many plans' do
-      let(:law_student_plans) { [jsp_law_plan] }
-      let(:academic_statuses) { [
-        {'studentPlans' => grad_student_plans},
-        {'studentPlans' => law_student_plans},
-      ] }
-      it 'returns plans that include career code and description' do
-        active_plans = subject.get_active_plans
-        expect(active_plans.count).to eq 3
-        expect(active_plans[0][:career][:code]).to eq 'GRAD'
-        expect(active_plans[0][:career][:description]).to eq 'Graduate'
-        expect(active_plans[1][:career][:code]).to eq 'GRAD'
-        expect(active_plans[1][:career][:description]).to eq 'Graduate'
-        expect(active_plans[2][:career][:code]).to eq 'LAW'
-        expect(active_plans[2][:career][:description]).to eq 'Law'
-      end
-
-      it 'returns plans that include plan code and description' do
-        active_plans = subject.get_active_plans
-        expect(active_plans.count).to eq 3
-        expect(active_plans[0][:plan][:code]).to eq '70141BAPHG'
-        expect(active_plans[0][:plan][:description]).to eq 'Business Admin MBA-MPH CDP'
-        expect(active_plans[1][:plan][:code]).to eq '96789PHBAG'
-        expect(active_plans[1][:plan][:description]).to eq 'Public Health MPH-MBA CDP'
-        expect(active_plans[2][:plan][:code]).to eq '84485PHDG'
-        expect(active_plans[2][:plan][:description]).to eq 'JSP PhD'
-      end
-    end
-  end
-
-  context 'when flattening a student academic plan' do
-    it 'returns plan hash when input is empty' do
-      result = subject.flatten_plan({})
-      expect(result[:career][:code]).to eq nil
-      expect(result[:career][:description]).to eq nil
-      expect(result[:plan][:code]).to eq nil
-      expect(result[:plan][:description]).to eq nil
-    end
-
-    it 'handles missing hash nodes gracefully' do
-      business_admin_mba_haas_plan['academicPlan'].delete('academicProgram')
-      result = subject.flatten_plan(business_admin_mba_haas_plan)
-      expect(result[:career][:code]).to be_nil
-      expect(result[:career][:description]).to be_nil
-      expect(result[:plan][:code]).to eq '70141BAPHG'
-      expect(result[:plan][:description]).to eq 'Business Admin MBA-MPH CDP'
-    end
-    it 'flattens academic status plan into cpp hash' do
-      result = subject.flatten_plan(business_admin_mba_haas_plan)
-      expect(result[:career][:code]).to eq 'GRAD'
-      expect(result[:career][:description]).to eq 'Graduate'
-      expect(result[:plan][:code]).to eq '70141BAPHG'
-      expect(result[:plan][:description]).to eq 'Business Admin MBA-MPH CDP'
-    end
-  end
-
-  context 'when defining enrollment instruction types' do
-    it 'includes plans and career matchers' do
-      expect(subject.class::ENROLLMENT_INSTRUCTION_TYPES[:plan].count).to_not eq 0
-      expect(subject.class::ENROLLMENT_INSTRUCTION_TYPES[:career].count).to_not eq 0
-    end
-
-    it 'defines type code and match string for each matcher' do
-      subject.class::ENROLLMENT_INSTRUCTION_TYPES.values_at(:plan, :career).flatten.each do |matcher|
-        expect(matcher).to have_key(:instruction_type_code)
-        expect(matcher).to have_key(:match)
-      end
-    end
-  end
-
   context 'when determining the users hold status' do
     let(:user_holds_status) { subject.user_has_holds? }
     context 'when no holds present' do
+      let(:college_and_level_holds) { { hasHolds: false } }
       it 'should return false' do
         expect(user_holds_status).to eq false
       end
     end
-    context 'when feed response fails' do
-      let(:edo_hub_academic_status_feed) { {statusCode: 500} }
-      it 'should return false' do
-        expect(user_holds_status).to eq false
-      end
-    end
-    context 'when service indicators are present' do
-      let(:edo_hub_academic_status_feed) {     {
-            statusCode: 200,
-            feed: {
-              'student' => {
-                'holds' => ['hold 1', 'hold 2']
-              }
-            }
-          }
-        }
+    context 'when holds are present' do
+      let(:college_and_level_holds) { { hasHolds: true } }
       it 'should return true' do
         expect(user_holds_status).to eq true
       end
     end
   end
 
-  context 'when providing enrollment term instruction types' do
-    let(:term_instruction_types) { subject.get_enrollment_term_instruction_types }
+  context 'when grouping student plans by role' do
+    let(:student_plan_roles) { subject.grouped_student_plan_roles }
+    let(:college_and_level_plans) { [undergrad_computer_science_plan, graduate_electrical_engineering_plan, law_jsp_plan] }
+    it 'groups plans by role and career code' do
+      expect(student_plan_roles).to have_keys([ ['default','UGRD'], ['default','GRAD'], ['law','LAW'] ])
+    end
+    it 'includes role code with each student plan role' do
+      expect(student_plan_roles[['default','UGRD']][:role]).to eq 'default'
+      expect(student_plan_roles[['default','GRAD']][:role]).to eq 'default'
+      expect(student_plan_roles[['law','LAW']][:role]).to eq 'law'
+    end
+    it 'includes career code with each student plan role' do
+      expect(student_plan_roles[['default','UGRD']][:career_code]).to eq 'UGRD'
+      expect(student_plan_roles[['default','GRAD']][:career_code]).to eq 'GRAD'
+      expect(student_plan_roles[['law','LAW']][:career_code]).to eq 'LAW'
+    end
+    it 'includes plans with each student plan role' do
+      expect(student_plan_roles[['default','UGRD']][:academic_plans].count).to eq 1
+      expect(student_plan_roles[['default','GRAD']][:academic_plans].count).to eq 1
+      expect(student_plan_roles[['law','LAW']][:academic_plans].count).to eq 1
+      expect(student_plan_roles[['default','UGRD']][:academic_plans][0][:plan][:code]).to eq '25201U'
+      expect(student_plan_roles[['default','GRAD']][:academic_plans][0][:plan][:code]).to eq '16290PHDG'
+      expect(student_plan_roles[['law','LAW']][:academic_plans][0][:plan][:code]).to eq '84485PHDG'
+    end
+  end
+
+  context 'when providing career term roles' do
+    let(:career_term_roles) { subject.get_career_term_roles }
     let(:cs_enrollment_career_terms) do
       [
         { termId: '2165', termDescr: '2016 Summer', acadCareer: 'UGRD' },
@@ -329,26 +239,26 @@ describe MyAcademics::ClassEnrollments do
         { termId: '2168', termDescr: '2016 Fall', acadCareer: 'LAW' }
       ]
     end
-    context 'when multiple instruction types match a career code for an active career-term' do
-      let(:student_plans) { [compsci_ugrd_plan, cogsci_ugrd_plan, jsp_law_plan] }
+    context 'when multiple student plan roles match a career code for an active career-term' do
+      let(:college_and_level_plans) { [undergrad_computer_science_plan, undergrad_cognitive_science_plan, law_jsp_plan] }
       let(:cs_enrollment_career_terms) { [{ termId: '2168', termDescr: '2016 Fall', acadCareer: 'UGRD' }] }
-      it 'excludes instruction type with non-matching career code' do
-        expect(term_instruction_types.count).to eq 1
+      it 'excludes student plan roles with non-matching career code' do
+        expect(career_term_roles.count).to eq 1
       end
       it 'includes multiple plans of the same type in the same career-term' do
-        expect(term_instruction_types[0][:academic_plans].count).to eq 2
-        plans = term_instruction_types[0][:academic_plans]
+        expect(career_term_roles[0][:academic_plans].count).to eq 2
+        plans = career_term_roles[0][:academic_plans]
         plan_codes = plans.collect {|plan| plan[:plan][:code] }
         expect(plan_codes).to include('25201U', '25179U')
       end
       it 'includes term code and description' do
-        expect(term_instruction_types[0][:term][:termId]).to eq '2168'
-        expect(term_instruction_types[0][:term][:termDescr]).to eq '2016 Fall'
+        expect(career_term_roles[0][:term][:termId]).to eq '2168'
+        expect(career_term_roles[0][:term][:termDescr]).to eq '2016 Fall'
       end
     end
 
-    context 'when an instruction type matches a career code for multiple active career-terms' do
-      let(:student_plans) { [jsp_law_plan] }
+    context 'when a student plan role matches a career code for multiple active career-terms' do
+      let(:college_and_level_plans) { [law_jsp_plan] }
       let(:cs_enrollment_career_terms) {
         [
           { termId: '2168', termDescr: '2016 Fall', acadCareer: 'LAW' },
@@ -356,114 +266,22 @@ describe MyAcademics::ClassEnrollments do
         ]
       }
       it 'includes the plans for each matching career-term' do
-        expect(term_instruction_types.count).to eq 2
-        expect(term_instruction_types[0][:academic_plans].count).to eq 1
-        expect(term_instruction_types[0][:academic_plans][0][:plan][:code]).to eq '84485PHDG'
-        expect(term_instruction_types[0][:term][:termId]).to eq '2168'
-        expect(term_instruction_types[1][:academic_plans].count).to eq 1
-        expect(term_instruction_types[1][:academic_plans][0][:plan][:code]).to eq '84485PHDG'
-        expect(term_instruction_types[1][:term][:termId]).to eq '2172'
+        expect(career_term_roles.count).to eq 2
+        expect(career_term_roles[0][:academic_plans].count).to eq 1
+        expect(career_term_roles[0][:academic_plans][0][:plan][:code]).to eq '84485PHDG'
+        expect(career_term_roles[0][:term][:termId]).to eq '2168'
+        expect(career_term_roles[1][:academic_plans].count).to eq 1
+        expect(career_term_roles[1][:academic_plans][0][:plan][:code]).to eq '84485PHDG'
+        expect(career_term_roles[1][:term][:termId]).to eq '2172'
       end
     end
 
-    context 'when an instruction type does not match the career code for any active career-term' do
-      let(:student_plans) { [jsp_law_plan] }
+    context 'when a student plan role does not match the career code for any active career-term' do
+      let(:college_and_level_plans) { [law_jsp_plan] }
       let(:cs_enrollment_career_terms) { [{ termId: '2168', termDescr: '2016 Fall', acadCareer: 'UGRD' }] }
-      it 'does not include an enrollment term instruction object for the instruction type' do
-        expect(term_instruction_types.count).to eq 0
+      it 'does not include an career term role object for the student plan role' do
+        expect(career_term_roles.count).to eq 0
       end
-    end
-  end
-
-  context 'when providing enrollment instruction plan types' do
-    let(:instruction_types) { subject.get_enrollment_instruction_types }
-    let(:student_plans) { [compsci_ugrd_plan, eleng_grad_plan, jsp_law_plan] }
-    it 'groups plans by enrollment instruction type and career code' do
-      expect(instruction_types).to have_keys([ ['default','UGRD'], ['default','GRAD'], ['law','LAW'] ])
-    end
-    it 'includes type code with each enrollment instruction type' do
-      expect(instruction_types[['default','UGRD']][:instruction_type_code]).to eq 'default'
-      expect(instruction_types[['default','GRAD']][:instruction_type_code]).to eq 'default'
-      expect(instruction_types[['law','LAW']][:instruction_type_code]).to eq 'law'
-    end
-    it 'includes career code with each enrollment instruction type' do
-      expect(instruction_types[['default','UGRD']][:career_code]).to eq 'UGRD'
-      expect(instruction_types[['default','GRAD']][:career_code]).to eq 'GRAD'
-      expect(instruction_types[['law','LAW']][:career_code]).to eq 'LAW'
-    end
-    it 'includes plans with each enrollment instruction type' do
-      expect(instruction_types[['default','UGRD']][:academic_plans].count).to eq 1
-      expect(instruction_types[['default','GRAD']][:academic_plans].count).to eq 1
-      expect(instruction_types[['law','LAW']][:academic_plans].count).to eq 1
-      expect(instruction_types[['default','UGRD']][:academic_plans][0][:plan][:code]).to eq '25201U'
-      expect(instruction_types[['default','GRAD']][:academic_plans][0][:plan][:code]).to eq '16290PHDG'
-      expect(instruction_types[['law','LAW']][:academic_plans][0][:plan][:code]).to eq '84485PHDG'
-    end
-  end
-
-  context 'when determining the calcentral enrollment instruction type code' do
-    it 'identifies a default plan in undergrad career' do
-      plan = {
-        career: { code: 'UGRD', description: 'Undergraduate' },
-        plan: { code: '25699U', description: 'Political Science'}
-      }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'default'
-    end
-
-    it 'identifies a default plan in graduate career' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        plan: { code: '16290PHDG', description: 'Electrical Eng & Comp Sci PhD'}
-      }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'default'
-    end
-
-    it 'identifies a berkeley law career plan' do
-      plan = {
-        career: { code: 'LAW', description: 'Law' },
-        plan: { code: '842C1JSDG', description: 'Doctor of Science of Law JSD'}
-      }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'law'
-    end
-
-    it 'identifies a concurrent enrollment plan' do
-      plan = {
-        career: { code: 'UCBX', description: 'UC Berkeley Extension' },
-        plan: { code: '30XCECCENX', description: 'UCBX Concurrent Enrollment'}
-      }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'concurrent'
-    end
-
-    it 'identifies a fall program for freshmen plan' do
-      plan = {
-        career: { code: 'UGRD', description: 'Undergraduate' },
-        plan: { code: '25000FPFU', description: 'L&S Undcl Fall Pgm Freshmen UG'}
-      }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'fpf'
-    end
-
-    it 'identifies a Haas Business School MBA plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        plan: { code: '70141MBAG', description: 'Business Administration MBA'}
-      }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'haas_mba'
-    end
-
-    it 'identifies a Haas Business School Evening and Weekend MBA plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        plan: { code: '701E1MBAG', description: 'Berkeley MBA for Executives'}
-      }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'haas_ewmba'
-    end
-
-    it 'identifies a Haas Business School Executive MBA plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        plan: { code: '70364MBAG', description: 'Berkeley MBA for Executives'}
-      }
-      expect(subject.get_enrollment_instruction_type_code(plan)).to eq 'haas_execmba'
     end
   end
 

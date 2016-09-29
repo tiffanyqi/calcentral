@@ -52,7 +52,7 @@ angular.module('calcentral.services').service('academicsService', function() {
   var expectedGradTerm = function(collegeAndLevel) {
     var careers = _.get(collegeAndLevel, 'careers');
     if (isNotGradOrLawStudent(careers) && collegeAndLevel.lastExpectedGraduationTerm) {
-      return collegeAndLevel.lastExpectedGraduationTerm;
+      return collegeAndLevel.lastExpectedGraduationTerm.name;
     }
     return '';
   };
