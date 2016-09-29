@@ -1,77 +1,111 @@
 describe MyAcademics::FilteredForDelegate do
-  let(:provider_classes) do
-    [
-      MyAcademics::CollegeAndLevel,
-      MyAcademics::TransitionTerm,
-      MyAcademics::GpaUnits,
-      MyAcademics::Semesters,
-      MyAcademics::Exams
-    ]
-  end
 
-  let(:uid) { '61889' }
-
-  before do
-    allow(Settings.features).to receive(:cs_delegated_access).and_return(is_feature_enabled)
-    fake_classes = Bearfacts::Proxy.subclasses + [ Regstatus::Proxy ]
-    fake_classes.each do |klass|
-      allow(klass).to receive(:new).and_return klass.new(user_id: uid, fake: true)
+  shared_context 'with stubbed model providers' do
+    before do
+      MyAcademics::Merged.providers.each do |provider_class|
+        provider = double
+        allow(provider).to receive(:merge) do |feed|
+          feed[provider_class.to_s] = true
+        end
+        allow(provider_class).to receive(:new).and_return provider
+      end
     end
-    allow_any_instance_of(AuthenticationState).to receive(:delegated_privileges).and_return(
-      {
-        financial: false,
-        viewEnrollments: view_enrollments,
-        viewGrades: view_grades,
-        phone: false
-      }
-    )
+    let!(:unfiltered_provider_classes) { MyAcademics::Merged.providers }
+    let!(:filtered_provider_classes) { described_class.providers }
+    let!(:verboten_provider_classes) { unfiltered_provider_classes - filtered_provider_classes }
+    let(:uid) { random_id }
   end
-  let(:feed) { JSON.parse described_class.new(uid).get_feed_as_json }
 
-  shared_examples 'filtered feed' do
-    it 'should include expected components' do
-      expect(feed['collegeAndLevel']).to be_present
-      expect(feed['transitionTerm']).to be_present
-      expect(feed['semesters']).to be_present
+  shared_context 'with model providers returning fake data' do
+    before do
+      allow_any_instance_of(AuthenticationState).to receive(:delegated_privileges).and_return(
+        {
+          financial: false,
+          viewEnrollments: view_enrollments,
+          viewGrades: view_grades,
+          phone: false
+        }
+      )
     end
+    let(:uid) { '61889' }
   end
 
-  context 'when feature is not enabled' do
-    let(:is_feature_enabled) { false }
-    let(:view_enrollments) { true }
-    let(:view_grades) { true }
-    it 'should get nothing' do
-      expect(feed.keys).to be_empty
+  describe '#get_feed_as_json' do
+
+    let(:feed) { JSON.parse described_class.new(uid).get_feed_as_json }
+
+    context 'whilst testing provider filtering' do
+      include_context 'with stubbed model providers'
+
+      it 'only includes a subset of providers' do
+        expect(filtered_provider_classes.length).to be < unfiltered_provider_classes.length
+        filtered_provider_classes.map do |provider_class|
+          expect(feed[provider_class.to_s]).to eq true
+        end
+        verboten_provider_classes.map do |provider_class|
+          expect(feed[provider_class.to_s]).to be_nil
+        end
+      end
     end
-  end
 
-  context 'when delegate permissions include grades', if: CampusOracle::Connection.test_data?  do
-    let(:is_feature_enabled) { true }
-    let(:view_enrollments) { true }
-    let(:view_grades) { true }
-    include_examples 'filtered feed'
+    context 'when delegate has full permissions', if: CampusOracle::Connection.test_data? do
+      include_context 'with model providers returning fake data'
+      let(:view_enrollments) { true }
+      let(:view_grades) { true }
 
-    it 'should return grades' do
-      expect(feed['gpaUnits']).to include 'cumulativeGpa'
-      feed['semesters'].each do |semester|
-        semester['classes'].each do |course|
-          expect(course['transcript'].first).to include 'grade'
+      it 'should return grades' do
+        expect(feed['gpaUnits']).to include 'cumulativeGpa'
+        feed['semesters'].each do |semester|
+          semester['classes'].each do |course|
+            expect(course['transcript'].first).to include 'grade'
+          end
+        end
+      end
+    end
+
+    context 'when delegate permissions do not include viewing grades', if: CampusOracle::Connection.test_data? do
+      include_context 'with model providers returning fake data'
+      let(:view_enrollments) { true }
+      let(:view_grades) { false }
+
+      it 'should not return grades' do
+        expect(feed['gpaUnits']).not_to include 'cumulativeGpa'
+        feed['semesters'].each do |semester|
+          semester['classes'].each do |course|
+            expect(course['transcript'].first).not_to include 'grade'
+          end
         end
       end
     end
   end
 
-  context 'when delegate permissions do not include grades', if: CampusOracle::Connection.test_data? do
-    let(:is_feature_enabled) { true }
-    let(:view_enrollments) { true }
-    let(:view_grades) { false }
-    include_examples 'filtered feed'
+  describe '#get_feed_internal' do
+    include_context 'with stubbed model providers'
 
-    it 'should not return grades' do
-      expect(feed['gpaUnits']).not_to include 'cumulativeGpa'
-      feed['semesters'].each do |semester|
-        semester['classes'].each do |course|
-          expect(course['transcript'].first).not_to include 'grade'
+    subject { described_class.new(uid) }
+
+    context 'when feature is not enabled' do
+      before do
+        allow(subject).to receive(:is_feature_enabled).and_return(false)
+      end
+
+      it 'returns an empty feed' do
+        expect(subject.get_feed_internal).to eq({})
+      end
+    end
+
+    context 'when feature is enabled' do
+      before do
+        allow(subject).to receive(:is_feature_enabled).and_return(true)
+      end
+
+      it 'returns a populated feed' do
+        json = subject.get_feed_internal
+        filtered_provider_classes.map do |provider_class|
+          expect(json[provider_class.to_s]).to eq true
+        end
+        verboten_provider_classes.map do |provider_class|
+          expect(json[provider_class.to_s]).to be_nil
         end
       end
     end
