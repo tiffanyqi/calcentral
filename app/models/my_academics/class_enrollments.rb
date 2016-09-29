@@ -44,6 +44,27 @@ module MyAcademics
           end
         end
       end
+      limit_to_single_fpf_career_term_plan_role(career_term_plan_roles)
+    end
+
+    # Hack to ensure that FPF role is only applied to the first applicable career term plan
+    # See SISRP-25837
+    def limit_to_single_fpf_career_term_plan_role(career_term_plan_roles)
+      fpf_detected = false
+      default_role = 'default'
+      career_term_plan_roles.collect do |plan_role|
+        if plan_role[:role] == 'fpf'
+          if fpf_detected == true
+            plan_role[:role] = default_role
+            plan_role[:academic_plans].each do |plan|
+              plan[:role] = default_role
+            end
+          else
+            fpf_detected = true
+          end
+        end
+        plan_role
+      end
       career_term_plan_roles
     end
 
@@ -91,7 +112,7 @@ module MyAcademics
     def get_active_career_terms
       get_career_terms = Proc.new do
         terms = CampusSolutions::EnrollmentTerms.new({user_id: @uid}).get
-        terms.try(:[], :feed).try(:[], :enrollmentTerms)
+        Array.wrap(terms.try(:[], :feed).try(:[], :enrollmentTerms)).sort_by { |term| term.try(:[], :termId) }
       end
       @career_terms ||= get_career_terms.call
     end
