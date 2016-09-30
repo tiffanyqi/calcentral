@@ -26,11 +26,11 @@
         <h4 data-ng-if="semester.notation" data-ng-bind="semester.notation"></h4>
         <a class="cc-right cc-academics-semester-title-link" data-ng-href="/academics/booklist/{{semester.slug}}" data-ng-if="semester.hasEnrollmentData && semester.slug && semester.timeBucket !== 'past'">Book List</a>
         <br>
-        <div class="cc-flex-space-between-vertical-15" data-ng-if="!semester.has_enrolled_classes">
+        <div class="cc-widget-text" data-ng-if="!semester.hasEnrolledClasses && !semester.summaryFromTranscript">
           You are currently not enrolled in any classes for
           <span data-ng-bind="semester.name"></span>.
         </div>
-        <table data-ng-if="semester.has_enrolled_classes">
+        <table data-ng-if="semester.hasEnrolledClasses || semester.summaryFromTranscript">
           <thead>
             <tr>
               <th width="30%" scope="col">Class</th>

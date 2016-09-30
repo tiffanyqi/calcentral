@@ -334,6 +334,7 @@
         }
       ],
       "hasEnrollmentData": true,
+      "hasEnrolledClasses": true,
       "summaryFromTranscript": false
     },
     {
@@ -394,6 +395,7 @@
         }
       ],
       "hasEnrollmentData": true,
+      "hasEnrolledClasses": true,
       "summaryFromTranscript": false
     },
     {
@@ -790,6 +792,7 @@
         }
       ],
       "hasEnrollmentData": true,
+      "hasEnrolledClasses": true,
       "summaryFromTranscript": true
     }
   ],
