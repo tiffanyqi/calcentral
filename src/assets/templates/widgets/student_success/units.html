@@ -1,0 +1,38 @@
+<div class="cc-student-success-subtitle">
+  <h3>
+    Units
+    <p data-ng-if="!gpaUnits.isLegacy">(Cumulative <span data-ng-bind="gpaUnits.totalUnits | number:1"></span>)</p>
+  </h3>
+</div>
+<div class="cc-table cc-student-success-subsection">
+  <table>
+    <tbody data-ng-if="!gpaUnits.isLegacy">
+      <tr>
+        <td>Units for GPA</td>
+        <td class="cc-table-right" colspan="2">
+          <span data-ng-bind="gpaUnits.totalUnitsForGpa | number:1"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>Units not for GPA</td>
+        <td class="cc-table-right" colspan="2">
+          <span data-ng-bind="gpaUnits.totalUnitsNotForGpa | number:1"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>Transfer Units</td>
+        <td class="cc-table-right" colspan="2">
+          <span data-ng-bind="gpaUnits.transferUnitsAccepted | number:1"></span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody data-ng-if="gpaUnits.isLegacy">
+      <tr>
+        <td>Cumulative Units</td>
+        <td class="cc-table-right">
+          <span data-ng-bind="gpaUnits.totalUnits | number:1"></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
