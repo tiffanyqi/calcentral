@@ -1,0 +1,55 @@
+{
+   "outstandingBalance":"$0.00",
+   "termGpa":[
+      {
+         "termId":"2128",
+         "termName":"Fall 2012",
+         "termCumGpa":3.6
+      },
+      {
+         "termId":"2132",
+         "termName":"Spring 2013",
+         "termCumGpa":3.4
+      },
+      {
+         "termId":"2138",
+         "termName":"Fall 2013",
+         "termCumGpa":3.4
+      },
+      {
+         "termId":"2142",
+         "termName":"Spring 2014",
+         "termCumGpa":3.3
+      },
+      {
+         "termId":"2145",
+         "termName":"Summer 2014",
+         "termCumGpa":3.2
+      },
+      {
+         "termId":"2148",
+         "termName":"Fall 2014",
+         "termCumGpa":3.3
+      },
+      {
+         "termId":"2152",
+         "termName":"Spring 2015",
+         "termCumGpa":3.4
+      },
+      {
+         "termId":"2158",
+         "termName":"Fall 2015",
+         "termCumGpa":3.4
+      },
+      {
+         "termId":"2162",
+         "termName":"Spring 2016",
+         "termCumGpa":3.4
+      },
+      {
+         "termId":"2168",
+         "termName":"Fall 2016",
+         "termCumGpa":3.4
+      }
+   ]
+}

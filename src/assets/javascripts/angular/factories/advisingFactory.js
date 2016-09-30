@@ -15,6 +15,9 @@ angular.module('calcentral.factories').factory('advisingFactory', function(apiSe
   var urlAdvisingResources = '/api/advising/resources/';
   // var urlAdvisingResources = '/dummy/json/advising_resources.json';
   var urlAdvisingRegistrations = '/api/advising/registrations/';
+  // var urlAdvisingRegistrations = 'dummy/json/advising_registrations.json';
+  var urlAdvisingStudentSuccess = '/api/advising/student_success/';
+  // var urlAdvisingStudentSuccess = '/dummy/json/advising_student_success.json';
 
   var getResources = function(options) {
     return apiService.http.request(options, urlResources);
@@ -36,11 +39,16 @@ angular.module('calcentral.factories').factory('advisingFactory', function(apiSe
     return apiService.http.request(options, urlAdvisingRegistrations + options.uid);
   };
 
+  var getStudentSuccess = function(options) {
+    return apiService.http.request(options, urlAdvisingStudentSuccess + options.uid);
+  };
+
   return {
     getAdvisingResources: getAdvisingResources,
     getResources: getResources,
     getStudent: getStudent,
     getStudentAcademics: getStudentAcademics,
-    getStudentRegistrations: getStudentRegistrations
+    getStudentRegistrations: getStudentRegistrations,
+    getStudentSuccess: getStudentSuccess
   };
 });

@@ -1,0 +1,29 @@
+<div class="cc-student-success-subtitle">
+  <h3 data-ng-if="studentSuccess.termGpa.length === 1">GPA</h3>
+  <div data-ng-if="studentSuccess.termGpa.length >= 2">
+    <h3>
+      GPA Trends
+      <p>(Cumulative <span data-ng-bind="gpaUnits.cumulativeGpa | number:2"></span>)</p>
+    </h3>
+    <data-cc-line-chart-directive class="cc-student-success-chart-container" data-options="studentSuccess.gpaChart" data-data="highCharts.dataSeries"></data-cc-line-chart-directive>
+  </div>
+</div>
+<div class="cc-table cc-student-success-term-gpa">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Term</th>
+        <th scope="col" class="cc-table-right">GPA</th>
+      </tr>
+    </thead>
+    <tbody data-ng-repeat="term in studentSuccess.termGpa">
+      <tr>
+        <td data-ng-bind="term.termName"></td>
+        <td class="cc-table-right" colspan="2">
+          <i data-ng-if="term.termCumGpa < 2" class="fa fa-exclamation-circle cc-icon-red"></i>
+          <span data-ng-class="{'cc-student-success-sub-gpa': (term.termCumGpa < 2)}" data-ng-bind="term.termCumGpa | number:1"></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
