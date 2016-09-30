@@ -47,6 +47,7 @@
       "termYear": "2014",
       "timeBucket": "future",
       "hasEnrollmentData": true,
+      "hasEnrolledClasses": true,
       "campusSolutionsTerm": false,
       "classes": [
         {
@@ -114,6 +115,7 @@
       "timeBucket": "current",
       "campusSolutionsTerm": false,
       "hasEnrollmentData": true,
+      "hasEnrolledClasses": true,
       "classes": [
         {
           "courseCatalog": "1A",
@@ -330,6 +332,7 @@
       "timeBucket": "past",
       "campusSolutionsTerm": false,
       "hasEnrollmentData": false,
+      "hasEnrolledClasses": false,
       "classes": [
         {
           "courseCatalog": "105",
@@ -376,6 +379,7 @@
       "termYear": "2012",
       "timeBucket": "past",
       "hasEnrollmentData": true,
+      "hasEnrolledClasses": true,
       "classes": [
         {
           "courseCatalog": "1A",

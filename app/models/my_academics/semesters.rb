@@ -31,12 +31,12 @@ module MyAcademics
           semester[:hasEnrollmentData] = true
           semester[:summaryFromTranscript] = (semester[:timeBucket] == 'past')
           semester[:classes] = map_enrollments(enrollment_terms[term_key]).compact
-          semester[:has_enrolled_classes] = has_enrolled_classes?(enrollment_terms[term_key])
+          semester[:hasEnrolledClasses] = has_enrolled_classes?(enrollment_terms[term_key])
           merge_grades(semester, transcript_terms[term_key])
         else
           semester[:hasEnrollmentData] = false
           semester[:summaryFromTranscript] = true
-          semester[:has_enrolled_classes] = false
+          semester[:hasEnrolledClasses] = false
           semester[:classes] = map_transcripts transcript_terms[term_key][:courses]
           semester[:notation] = translate_notation transcript_terms[term_key][:notations]
         end

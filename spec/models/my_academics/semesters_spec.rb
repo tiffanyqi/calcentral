@@ -320,7 +320,7 @@ describe MyAcademics::Semesters do
       end
       it 'should say that there are no enrolled courses' do
         feed[:semesters].each do |semester|
-          expect(semester[:has_enrolled_classes]).to be false
+          expect(semester[:hasEnrolledClasses]).to be false
         end
       end
     end
@@ -336,7 +336,7 @@ describe MyAcademics::Semesters do
       end
       it 'should say that there are enrolled courses' do
         feed[:semesters].each do |semester|
-          expect(semester[:has_enrolled_classes]).to be true
+          expect(semester[:hasEnrolledClasses]).to be true
         end
       end
     end
