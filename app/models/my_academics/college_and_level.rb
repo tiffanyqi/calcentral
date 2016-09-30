@@ -8,15 +8,28 @@ module MyAcademics
     STUDENT_PLAN_ROLES = {
       plan: [
         {student_plan_role_code: 'fpf', match: '25000FPFU'},
-        {student_plan_role_code: 'haas_mba', match: '70141MBAG'},
-        {student_plan_role_code: 'haas_ewmba', match: '701E1MBAG'},
-        {student_plan_role_code: 'haas_execmba', match: '70364MBAG'},
+        {student_plan_role_code: 'haasFullTimeMba', match: '70141MBAG'},
+        {student_plan_role_code: 'haasEveningWeekendMba', match: '701E1MBAG'},
+        {student_plan_role_code: 'haasExecMba', match: '70364MBAG'},
+        {student_plan_role_code: 'haasMastersFinEng', match: '701F1MFEG'},
+        {student_plan_role_code: 'haasMbaPublicHealth', match: '70141BAPHG'},
+        {student_plan_role_code: 'haasMbaJurisDoctor', match: '70141BAJDG'}
       ],
       career: [
         {student_plan_role_code: 'law', match: 'LAW'},
         {student_plan_role_code: 'concurrent', match: 'UCBX'},
       ]
     }
+
+    def self.student_plan_role_codes
+      role_codes = []
+      STUDENT_PLAN_ROLES.each do |role_category, matchers|
+        matchers.each do |matcher|
+          role_codes << matcher[:student_plan_role_code]
+        end
+      end
+      role_codes
+    end
 
     def merge(data)
       college_and_level = hub_college_and_level
@@ -105,13 +118,13 @@ module MyAcademics
         majors: [],
         minors: [],
         plans: [],
-        lastExpectedGraduationTerm: { code: nil, name: nil }
+        lastExpectedGraduationTerm: { code: nil, name: nil },
+        roles: role_booleans
       }
 
       statuses.each do |status|
         Array.wrap(status.try(:[], 'studentPlans')).each do |plan|
           flattened_plan = flatten_plan(plan)
-
           plan_set[:plans] << flattened_plan
 
           # Catch Majors / Minors
@@ -125,6 +138,12 @@ module MyAcademics
               plan_set[:minors] << college_plan.merge({
                 minor: flattened_plan[:plan].try(:[], :description)
               })
+          end
+
+          # Update Roles
+          current_role = flattened_plan.try(:[], :role)
+          if plan_set[:roles].has_key?(current_role)
+            plan_set[:roles][current_role] = true
           end
 
           # Catch Last Expected Graduation Date
@@ -271,6 +290,10 @@ module MyAcademics
         flat_plan[:college] = academic_plan['academicProgram'].try(:[], 'program').try(:[], 'description')
       end
       flat_plan
+    end
+
+    def role_booleans
+      self.class.student_plan_role_codes.inject({}) { |map, role_code| map[role_code] = false; map }
     end
 
     # Designates CalCentral specific plan role (e.g. 'default', 'law', 'fpf', etc.)

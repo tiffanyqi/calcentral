@@ -6,18 +6,47 @@ var _ = require('lodash');
 /**
  * My Advising controller
  */
-angular.module('calcentral.controllers').controller('MyAdvisingController', function(myAdvisingFactory, $scope) {
+angular.module('calcentral.controllers').controller('MyAdvisingController', function(academicsFactory, myAdvisingFactory, $scope) {
   $scope.myAdvising = {
-    isLoading: true
+    feedsLoading: {
+      myAdvising: true,
+      academicsRoles: true
+    },
+    roles: {}
   };
 
-  var loadAdvisingInfo = function() {
+  $scope.myAdvising.isLoading = function() {
+    return $scope.myAdvising.feedsLoading.myAdvising && $scope.myAdvising.feedsLoading.academicsRoles;
+  };
+
+  var isHaasStudent = function() {
+    var roles = $scope.myAdvising.roles;
+    if (roles.haasFullTimeMba ||
+          roles.haasEveningWeekendMba ||
+          roles.haasExecMba ||
+          roles.haasMastersFinEng ||
+          roles.haasMbaPublicHealth ||
+          roles.haasMbaJurisDoctor) {
+      return true;
+    }
+    return false;
+  };
+
+  $scope.showAdvisorsList = function() {
+    return !isHaasStudent() ? true : false;
+  };
+
+  var loadFeeds = function() {
+    academicsFactory.getAcademics().then(function(data) {
+      angular.extend($scope.myAdvising.roles, _.get(data, 'data.collegeAndLevel.roles'));
+      $scope.myAdvising.feedsLoading.academicsRoles = false;
+    });
     myAdvisingFactory.getStudentAdvisingInfo().then(function(data) {
       angular.extend($scope.myAdvising, _.get(data, 'data.feed'));
       $scope.myAdvising.errored = _.get(data, 'data.errored');
-      $scope.myAdvising.isLoading = false;
+      $scope.myAdvising.feedsLoading.myAdvising = false;
     });
   };
 
-  loadAdvisingInfo();
+  loadFeeds();
 });
