@@ -40,7 +40,7 @@ module EdoOracle
     def get_section_final_exam
       final_exams = EdoOracle::Queries.get_section_final_exam(@term_id, @course_id).map do |exam|
         {
-          type: exam['type'],
+          exam_type: exam['exam_type'],
           location: exam['location'],
           exam_date: exam['exam_date'],
           exam_start_time: exam['exam_start_time'],

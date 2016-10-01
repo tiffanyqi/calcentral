@@ -165,9 +165,21 @@ describe MyAcademics::Exams do
   let(:all_exam) do
     {
       :location => 'Kroeber 221',
+      :exam_type => 'Y',
       :exam_date => Time.parse('2016-12-12 00:00:00 UTC'),
       :exam_start_time=>Time.parse('1900-01-01 19:00:00 UTC'),
       :exam_end_time=>Time.parse('1900-01-01 22:00:00 UTC'),
+    }
+  end
+
+  # example exam with an alternate method
+  let(:alternate_exam) do
+    {
+      :location => nil,
+      :exam_type => 'A',
+      :exam_date => nil,
+      :exam_start_time=> nil,
+      :exam_end_time=>nil,
     }
   end
 
@@ -175,6 +187,7 @@ describe MyAcademics::Exams do
   let(:no_exam) do
     {
       :location => nil,
+      :exam_type => 'Y',
       :exam_date => nil,
       :exam_start_time=> nil,
       :exam_end_time=> nil,
@@ -265,7 +278,8 @@ describe MyAcademics::Exams do
         waitlisted_class,
         ug_class_no_time,
         grad_class_no_time
-      ]
+      ],
+      :exams => fall_2016_exams_after_parsed
     }
   end
 
@@ -278,7 +292,8 @@ describe MyAcademics::Exams do
         # the following exams aren't directly a result of parse_academic_data
         ug_class_time,
         grad_class_no_time
-      ]
+      ],
+      :exams => spring_2016_exams_after_parsed
     }
   end
 
@@ -527,7 +542,14 @@ describe MyAcademics::Exams do
 
     it 'should create cs exam slots properly' do
       expect(subject.parse_cs_exam_slot(all_exam)).to eq Time.parse('2016-12-12 19:00:00')
-      expect(subject.parse_cs_exam_slot(no_exam)).to eq nil
+      expect(subject.parse_cs_exam_slot(alternate_exam)).to eq Time.new(99999998)
+      expect(subject.parse_cs_exam_slot(no_exam)).to eq Time.new(99999999)
+    end
+
+    it 'should choose cs exam locations properly' do
+      expect(subject.choose_cs_exam_location(all_exam)).to eq 'Kroeber 221'
+      expect(subject.choose_cs_exam_location(alternate_exam)).to eq 'Final exam time not yet provided.'
+      expect(subject.choose_cs_exam_location(no_exam)).to eq 'Location TBD'
     end
 
   end
