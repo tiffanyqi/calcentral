@@ -1,110 +1,85 @@
 describe MyAcademicsController do
-
-  it_should_behave_like 'a user authenticated api endpoint' do
-    let(:make_request) { get :get_feed }
+  let(:feed_key) { 'feed' }
+  let(:models) do
+    {
+      delegate: MyAcademics::FilteredForDelegate,
+      advisor: MyAcademics::FilteredForAdvisor,
+      merged: MyAcademics::Merged,
+      residency: MyAcademics::Residency
+    }
   end
 
-  context 'fake campus data', if: CampusOracle::Connection.test_data? do
-    let(:uid) { '61889' }
-    before do
-      # Initialize the Profile feed last to test regressions of CLC-6141.
-      fake_profile_class = Bearfacts::Profile
-      fake_classes = Bearfacts::Proxy.subclasses + [ Regstatus::Proxy ]
-      fake_classes.each do |klass|
-        allow(klass).to receive(:new).and_return klass.new(user_id: uid, fake: true) unless klass == fake_profile_class
-      end
-      allow(fake_profile_class).to receive(:new).and_return fake_profile_class.new(user_id: uid, fake: true)
-      session['user_id'] = uid
+  before do
+    models.each_value do |model|
+      allow(model).to receive(:from_session).and_return double get_feed_as_json: { feed: model.name }
     end
-    subject do
-      get :get_feed
-      JSON.parse response.body
-    end
-    context 'normal user session' do
-      it 'should get a feed full of content' do
-        expect(subject['gpaUnits']).to include 'cumulativeGpa'
-        expect(subject['otherSiteMemberships']).to be_present
-        expect(subject['requirements']).to be_present
-        expect(subject['semesters']).to have(24).items
-        expect(subject['semesters'][0]['slug']).to be_present
-        expect(subject['semesters'][1]['classes'][0]['transcript'][0]['grade']).to be_present
-        expect(subject['transitionTerm']).to be_present
-      end
-    end
-    context 'advisor view-as' do
-      include_context 'advisor view-as'
-      it 'filters bCourses sites' do
-        expect(subject['otherSiteMemberships']).to be_blank
-        expect(subject['gpaUnits']).to include 'cumulativeGpa'
-        expect(subject['requirements']).to be_present
-        expect(subject['semesters']).to have(24).items
-        expect(subject['semesters'][0]['slug']).to be_present
-        expect(subject['semesters'][1]['classes'][0]['transcript'][0]['grade']).to be_present
-        expect(subject['transitionTerm']).to be_present
-      end
-    end
-    context 'user with teaching assignments' do
-      let(:uid) {'904715'}
-      context 'logged in directly' do
-        it 'includes teaching-related data' do
-          expect(subject['teachingSemesters']).to be_present
+  end
+
+  describe '#get_feed' do
+    let(:make_request) { get :get_feed }
+
+    it_behaves_like 'a user authenticated api endpoint'
+
+    context 'when authenticated user exists' do
+      let(:uid) { '12345' }
+
+      subject { make_request }
+
+      context 'normal user session' do
+        it 'should return a merged feed' do
+          session['user_id'] = uid
+          json = JSON.parse subject.body
+          expect(json[feed_key]).to eq models[:merged].name
         end
       end
+
+      context 'delegated access' do
+        let(:campus_solutions_id) { '98765' }
+        let(:privileges) {{ viewEnrollments: true }}
+        include_context 'delegated access'
+
+        it 'should return a delegate-filtered feed' do
+          json = JSON.parse subject.body
+          expect(json[feed_key]).to eq models[:delegate].name
+        end
+      end
+
       context 'advisor view-as' do
         include_context 'advisor view-as'
-        it 'excludes teaching-related data' do
-          expect(subject['teachingSemesters']).to be_blank
+        it 'should return an advisor-filtered feed' do
+          json = JSON.parse subject.body
+          expect(json[feed_key]).to eq models[:advisor].name
         end
       end
     end
-    context 'delegate view' do
-      include_context 'delegated access'
-      let(:campus_solutions_id) {'24363318'}
-      context 'no academics-related permissions' do
-        let(:privileges) do
-          {
-            financial: true
-          }
-        end
-        it 'denies all access' do
-          get :get_feed
-          expect(response.status).to eq 403
-          expect(response.body).to eq ' '
+  end
+
+  describe '#residency' do
+    let(:make_request) { get :residency }
+
+    it_behaves_like 'a user authenticated api endpoint'
+
+    context 'when authenticated user exists' do
+      let(:uid) { '12345' }
+
+      subject { make_request }
+
+      context 'normal user session' do
+        it 'should return a populated feed' do
+          session['user_id'] = uid
+          json = JSON.parse subject.body
+          expect(json[feed_key]).to eq models[:residency].name
         end
       end
-      context 'permission for My Academics' do
-        shared_examples 'shared academics feed' do
-          it 'views most data' do
-            expect(subject).not_to include 'otherSiteMemberships'
-            expect(subject).not_to include 'requirements'
-            expect(subject['semesters']).to have(24).items
-            expect(subject['semesters'][0]).not_to include 'slug'
-            expect(subject['transitionTerm']).to be_present
-          end
-        end
-        context 'can view enrollments but not grades' do
-          let(:privileges) do
-            {
-              viewEnrollments: true
-            }
-          end
-          include_examples 'shared academics feed'
-          it 'should get a filtered feed' do
-            expect(subject['gpaUnits']).not_to include 'cumulativeGpa'
-            expect(subject['semesters'][1]['classes'][0]['transcript'][0]).not_to include 'grade'
-          end
-        end
-        context 'can view grades' do
-          let(:privileges) do
-            {
-              viewGrades: true
-            }
-          end
-          include_examples 'shared academics feed'
-          it 'should get a less filtered feed' do
-            expect(subject['gpaUnits']).to include 'cumulativeGpa'
-            expect(subject['semesters'][1]['classes'][0]['transcript'][0]).to include 'grade'
-          end
+
+      context 'delegated access' do
+        let(:campus_solutions_id) { '98765' }
+        let(:privileges) {{ viewEnrollments: true }}
+        include_context 'delegated access'
+
+        it 'should return an empty feed' do
+          json = JSON.parse subject.body
+          expect(json.length).to eq 0
         end
       end
     end
