@@ -47,7 +47,7 @@ module MyAcademics
           }
           if cs_data_available && section[:final_exams].any?
             exam = section[:final_exams].first
-            course[:exam_location] = exam[:location] || 'Location TBD'
+            course[:exam_location] = choose_cs_exam_location(exam)
             course[:exam_date] = parse_cs_exam_date(exam)
             course[:exam_time] = parse_cs_exam_time(exam)
             course[:exam_slot] = parse_cs_exam_slot(exam)
@@ -125,6 +125,20 @@ module MyAcademics
         return Time.parse(date.strftime('%y-%m-%d') + ' ' + time.strftime('%H:%M'))
       elsif date
         return Time.parse(date.strftime('%y-%m-%d'))
+      elsif exam[:exam_type] == 'A' # alternate exams that aren't included
+        return Time.new(99999998)
+      else # no exams should be at the end
+        return Time.new(99999999)
+      end
+    end
+
+    def choose_cs_exam_location(exam)
+      if exam[:location]
+        return exam[:location]
+      elsif exam[:exam_type] == 'A'
+        return 'Final exam time not yet provided.'
+      else
+        return 'Location TBD'
       end
     end
 

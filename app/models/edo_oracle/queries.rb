@@ -171,25 +171,28 @@ module EdoOracle
     def self.get_section_final_exam(term_id, section_id)
       safe_query <<-SQL
         SELECT DISTINCT
-          exam."term-id" AS term_id,
-          exam."session-id" AS session_id,
+          sec."term-id" AS term_id,
+          sec."session-id" AS session_id,
+          sec."id" AS section_id,
+          sec."finalExam" AS exam_type,
           exam."date" AS exam_date,
           exam."startTime" AS exam_start_time,
           exam."endTime" AS exam_end_time,
           exam."location-descr" AS location
         FROM
           SISEDO.EXAMV00_VW exam
-        JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
+        RIGHT JOIN SISEDO.CLASSSECTIONV00_VW sec ON (
           exam."cs-course-id" = sec."cs-course-id" AND
           exam."term-id" = sec."term-id" AND
           exam."session-id" = sec."session-id" AND
           exam."offeringNumber" = sec."offeringNumber" AND
-          exam."sectionNumber" = sec."sectionNumber"
+          exam."sectionNumber" = sec."sectionNumber" AND
+          exam."type-code" = 'FIN'
         )
         WHERE
           sec."term-id" = '#{term_id}' AND
           sec."id" = '#{section_id}' AND
-          exam."type-code" = 'FIN'
+          sec."finalExam" IN ('A', 'Y')
         ORDER BY exam_date
       SQL
     end
