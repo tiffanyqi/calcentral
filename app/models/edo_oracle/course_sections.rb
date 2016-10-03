@@ -38,9 +38,12 @@ module EdoOracle
     end
 
     def get_section_final_exam
+      # EdoOracle::Queries.get_section_final_exam accepts a section_id, which is a unique id
+      # that defines a section per course. Thus, @course_id, despite its naming convention,
+      # still works here.
       final_exams = EdoOracle::Queries.get_section_final_exam(@term_id, @course_id).map do |exam|
         {
-          type: exam['type'],
+          exam_type: exam['exam_type'],
           location: exam['location'],
           exam_date: exam['exam_date'],
           exam_start_time: exam['exam_start_time'],
