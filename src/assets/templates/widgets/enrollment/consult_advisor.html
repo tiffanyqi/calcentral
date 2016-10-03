@@ -1,12 +1,12 @@
 <div class="cc-enrollment-card-advisors-consult">
 
-  <div data-ng-if="enrollmentInstruction.hasHolds" class="cc-flex">
-    <div>
+  <div data-ng-if="enrollmentInstruction.hasHolds">
+    <span>
       <i class="fa fa-exclamation-circle cc-icon-red cc-enrollment-card-icon"></i>
-    </div>
-    <div>
+    </span>
+    <span>
       You have a hold that may affect your ability to enroll in classes. Consult with an advisor.
-    </div>
+    </span>
   </div>
 
   <div data-ng-if="!enrollmentInstruction.hasHolds">
