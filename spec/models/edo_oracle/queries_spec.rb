@@ -157,7 +157,7 @@ describe EdoOracle::Queries, :ignore => true do
     it 'returns exams for section id specified' do
       results = EdoOracle::Queries.get_section_final_exam(fall_term_id, section_ids[0])
       expect(results.count).to eq 1
-      expected_keys = %w(term_id session_id exam_date exam_start_time exam_end_time location)
+      expected_keys = %w(term_id session_id section_id exam_type exam_date exam_start_time exam_end_time location)
       results.each do |result|
         expect(result['term_id']).to eq '2168'
         expect(result['exam_date']).to eq Time.parse('2016-12-12 00:00:00 UTC')

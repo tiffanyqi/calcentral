@@ -141,6 +141,7 @@ describe EdoOracle::CourseSections do
           {
             'term_id'=>'2168',
             'session_id'=>'1',
+            'exam_type' => 'Y',
             'exam_date'=>Time.parse('2016-12-15 00:00:00 UTC'),
             'exam_start_time'=>Time.parse('1900-01-01 19:00:00 UTC'),
             'exam_end_time'=>Time.parse('1900-01-01 22:00:00 UTC'),
@@ -149,6 +150,7 @@ describe EdoOracle::CourseSections do
           {
             'term_id'=>'2168',
             'session_id'=>'1',
+            'exam_type' => 'A',
             'exam_date'=>nil,
             'exam_start_time'=>nil,
             'exam_end_time'=>nil,
