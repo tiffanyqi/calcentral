@@ -1,6 +1,90 @@
 <?xml version="1.0"?>
 <UC_LINK_RESOURCES>
   <Link>
+    <URL_ID>UC_CX_GT_CPPSTACK_ADD</URL_ID>
+    <Description>Change of Academic Plan</Description>
+    <HOVER_OVER_TEXT>Complete this form to change your academic plan.</HOVER_OVER_TEXT>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>FORM</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>URI_TYPE</NAME>
+        <value>PL</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>https://bcswebqat.is.berkeley.edu/psp/bcsqat/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?&amp;G3FORM_FAMILY=SRCPPSTCK&amp;G3FORM_TYPE=CPPSTACK&amp;G3FORM_CONDITION=Default&amp;G3FORM_TASK=ADD</URL>
+    <COMMENTS>Form to change your Academic Plan which includes your major, minor, subplan, graduation date, designated emphasis, or degree</COMMENTS>
+  </Link>
+  <Link>
+    <URL_ID>UC_CX_GT_CPPSTACK_VIEW</URL_ID>
+    <Description>View Change of Academic Plan</Description>
+    <HOVER_OVER_TEXT>View your submitted change of academic plan application.</HOVER_OVER_TEXT>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>FORM</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>URI_TYPE</NAME>
+        <value>PL</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>https://bcswebqat.is.berkeley.edu/psp/bcsqat/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?&amp;G3FORM_FAMILY=SRCPPSTCK&amp;G3FORM_TYPE=CPPSTACK&amp;G3FORM_CONDITION=Default&amp;G3FORM_TASK=VWS</URL>
+    <COMMENTS>Form to view your Academic Plan change requests which includes your major, minor, subplan, graduation date, designated emphasis, or degree</COMMENTS>
+  </Link>
+  <Link>
+    <URL_ID>UC_CX_SRWITHDRL_ADD</URL_ID>
+    <Description>Add a Withdrawal Request</Description>
+    <HOVER_OVER_TEXT></HOVER_OVER_TEXT>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>FORM</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>URI_TYPE</NAME>
+        <value>PL</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>https://bcswebqat.is.berkeley.edu/psp/bcsqat/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?&amp;G3FORM_FAMILY=STUDENT&amp;G3FORM_TYPE=SRWITHDRL&amp;G3FORM_CONDITION=Default&amp;G3FORM_TASK=ADD</URL>
+    <COMMENTS>Add a Withdrawal Request</COMMENTS>
+  </Link>
+  <Link>
+    <URL_ID>UC_CX_GT_FAEMRLAON_VIEW</URL_ID>
+    <Description>View Emergency Loan Status</Description>
+    <HOVER_OVER_TEXT></HOVER_OVER_TEXT>
+    <PROPERTIES type="array">
+      <PROPERTY>
+        <NAME>CALCENTRAL</NAME>
+        <value>FORM</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>NEW_WINDOW</NAME>
+        <value>Y</value>
+      </PROPERTY>
+      <PROPERTY>
+        <NAME>URI_TYPE</NAME>
+        <value>PL</value>
+      </PROPERTY>
+    </PROPERTIES>
+    <URL>https://bcswebqat.is.berkeley.edu/psp/bcsqat/EMPLOYEE/HRMS/c/G3FRAME.G3SEARCH.GBL?&amp;G3FORM_FAMILY=FAEMRLOAN&amp;G3FORM_TYPE=FAEMRLAON&amp;G3FORM_CONDITION=Default&amp;G3FORM_TASK=VWS</URL>
+    <COMMENTS>View Emergency Loans</COMMENTS>
+  </Link>
+  <Link>
     <URL_ID>UC_CX_APPOINTMENT_ADV_SETUP</URL_ID>
     <Description>Appointment System</Description>
     <HOVER_OVER_TEXT></HOVER_OVER_TEXT>
