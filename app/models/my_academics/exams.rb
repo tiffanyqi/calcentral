@@ -39,20 +39,20 @@ module MyAcademics
     def parse_courses(semester, courses, cs_data_available)
       semester[:classes].each do |course|
         course[:sections].select{|x| course[:role] == 'Student' && x[:is_primary_section]}.each do |section|
-          course = {
+          parsed_course = {
             name: course[:course_code],
-            number: course[:course_code].gsub(/[^0-9]/, '').to_i,
+            number: course[:courseCatalog].to_i,
             time: section[:schedules][:recurring].to_a.first.try(:[], :schedule),
             waitlisted: section[:waitlisted]
           }
           if cs_data_available && section[:final_exams].any?
             exam = section[:final_exams].first
-            course[:exam_location] = choose_cs_exam_location(exam)
-            course[:exam_date] = parse_cs_exam_date(exam)
-            course[:exam_time] = parse_cs_exam_time(exam)
-            course[:exam_slot] = parse_cs_exam_slot(exam)
+            parsed_course[:exam_location] = choose_cs_exam_location(exam)
+            parsed_course[:exam_date] = parse_cs_exam_date(exam)
+            parsed_course[:exam_time] = parse_cs_exam_time(exam)
+            parsed_course[:exam_slot] = parse_cs_exam_slot(exam)
           end
-          courses << course
+          courses << parsed_course
         end
       end
     end
