@@ -220,7 +220,7 @@ describe 'My Finances Financial Aid summary card', :testui => true do
                             ui_shows_waivers = page.finaid_funding_waivers?
                             it ("shows no Fee Waivers amount for UID #{uid}") { expect(ui_shows_waivers).to be false }
                           else
-                            ui_waivers = page.finaid_funding_waivers
+                            ui_waivers = WebDriverUtils.currency_to_f page.finaid_funding_waivers
                             it ("shows the right Fee Waivers for UID #{uid}") { expect(ui_waivers).to eql(api_waivers_amt) }
                           end
 
