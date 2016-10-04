@@ -164,6 +164,10 @@ module Oec
           gsi_rows.each do |gsi_row|
             gsi_row['COURSE_ID'] = "#{gsi_row['COURSE_ID']}_GSI"
             gsi_row['COURSE_ID_2'] = "#{gsi_row['COURSE_ID_2']}_GSI"
+            gsi_row['COURSE_NAME'] = "#{gsi_row['COURSE_NAME']} (EVAL FOR GSI)"
+            if gsi_row['CROSS_LISTED_NAME'].present?
+              gsi_row['CROSS_LISTED_NAME'] = "#{gsi_row['CROSS_LISTED_NAME']} (GSI)"
+            end
           end
         end
       end
