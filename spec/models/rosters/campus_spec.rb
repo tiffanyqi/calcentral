@@ -210,171 +210,189 @@ describe Rosters::Campus do
       let(:term_id) { Berkeley::TermCodes.to_edo_id(term_yr, term_cd) }
       let(:fake_oracle) { {} }
       let(:fake_edo) { fake_campus }
-      before do
-        expect(EdoOracle::Queries).to receive(:get_rosters).with([ccn1, ccn2], term_id).and_return enrollments
-        # A method rather than a let so that modifications during a test don't persist.
-        def attributes
+      let(:feed) { feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed }
+
+      context 'when enrollments are present' do
+        before do
+          expect(EdoOracle::Queries).to receive(:get_rosters).with([ccn1, ccn2], term_id).and_return enrollments
+          # A method rather than a let so that modifications during a test don't persist.
+          def attributes
+            [
+              {
+                ldap_uid: enrolled_student_login_id,
+                student_id: enrolled_student_student_id,
+                first_name: 'First Name',
+                last_name: 'Last Name',
+                email_address: "#{enrolled_student_login_id}@example.com"
+              },
+              {
+                ldap_uid: waitlisted_student_login_id,
+                student_id: waitlisted_student_student_id,
+                first_name: 'First Name',
+                last_name: 'Last Name',
+                email_address: "#{waitlisted_student_login_id}@example.com"
+              },
+              {
+                ldap_uid: another_enrolled_login_id,
+                student_id: another_enrolled_student_id,
+                first_name: 'Another Name',
+                last_name: 'One Last Name',
+                email_address: "#{another_enrolled_login_id}@example.com"
+              }
+            ]
+          end
+          expect(User::BasicAttributes).to receive(:attributes_for_uids)
+            .with([enrolled_student_login_id, waitlisted_student_login_id, another_enrolled_login_id])
+            .exactly(2).times.and_return(attributes, attributes)
+        end
+        let(:enrollments) do
           [
             {
-              ldap_uid: enrolled_student_login_id,
-              student_id: enrolled_student_student_id,
-              first_name: 'First Name',
-              last_name: 'Last Name',
-              email_address: "#{enrolled_student_login_id}@example.com"
+              'section_id' => ccn1,
+              'ldap_uid' => enrolled_student_login_id,
+              'enroll_status' => 'E',
+              'student_id' => enrolled_student_student_id,
+              'grading_basis' => 'GRD',
+              'units' => 4.0,
+              'waitlist_position' => nil,
+              'major' => 'Cognitive Science BA',
+              'academic_career' => 'UGRD',
+              'terms_in_attendance_group' => 'R2TA'
             },
             {
-              ldap_uid: waitlisted_student_login_id,
-              student_id: waitlisted_student_student_id,
-              first_name: 'First Name',
-              last_name: 'Last Name',
-              email_address: "#{waitlisted_student_login_id}@example.com"
+              'section_id' => ccn1,
+              'ldap_uid' => enrolled_student_login_id,
+              'enroll_status' => 'E',
+              'student_id' => enrolled_student_student_id,
+              'grading_basis' => 'GRD',
+              'units' => 4.0,
+              'waitlist_position' => nil,
+              'major' => 'Computer Science BA',
+              'academic_career' => 'UGRD',
+              'terms_in_attendance_group' => 'R2TA'
             },
             {
-              ldap_uid: another_enrolled_login_id,
-              student_id: another_enrolled_student_id,
-              first_name: 'Another Name',
-              last_name: 'One Last Name',
-              email_address: "#{another_enrolled_login_id}@example.com"
+              'section_id' => ccn1,
+              'ldap_uid' => waitlisted_student_login_id,
+              'enroll_status' => 'W',
+              'student_id' => waitlisted_student_student_id,
+              'grading_basis' => 'ESU',
+              'units' => 3.0,
+              'waitlist_position' => 9.0,
+              'major' => 'Break Science BA',
+              'academic_career' => 'UGRD',
+              'terms_in_attendance_group' => 'R6TA'
+            },
+            {
+              'section_id' => ccn1,
+              'ldap_uid' => another_enrolled_login_id,
+              'enroll_status' => 'E',
+              'student_id' => another_enrolled_student_id,
+              'grading_basis' => 'GRD',
+              'units' => 4.0,
+              'waitlist_position' => nil,
+              'major' => 'Philosophy BA',
+              'academic_career' => 'PHIL',
+              'terms_in_attendance_group' => 'R2TA'
+            },
+            {
+              'section_id' => ccn2,
+              'ldap_uid' => enrolled_student_login_id,
+              'enroll_status' => 'E',
+              'student_id' => enrolled_student_student_id,
+              'grading_basis' => 'GRD',
+              'units' => 4.0,
+              'waitlist_position' => nil,
+              'major' => 'Computer Science BA',
+              'academic_career' => 'UGRD',
+              'terms_in_attendance_group' => 'R2TA'
+            },
+            {
+              'section_id' => ccn2,
+              'ldap_uid' => waitlisted_student_login_id,
+              'enroll_status' => 'W',
+              'student_id' => waitlisted_student_student_id,
+              'grading_basis' => 'ESU',
+              'units' => 3.0,
+              'waitlist_position' => 9.0,
+              'major' => 'Break Science BA',
+              'academic_career' => 'UGRD',
+              'terms_in_attendance_group' => 'R6TA'
+            },
+            {
+              'section_id' => ccn2,
+              'ldap_uid' => enrolled_student_login_id,
+              'enroll_status' => 'E',
+              'student_id' => enrolled_student_student_id,
+              'grading_basis' => 'GRD',
+              'units' => 4.0,
+              'waitlist_position' => nil,
+              'major' => 'Computer Science BA',
+              'academic_career' => 'UGRD',
+              'terms_in_attendance_group' => 'R2TA'
+            },
+            {
+              'section_id' => ccn2,
+              'ldap_uid' => another_enrolled_login_id,
+              'enroll_status' => 'E',
+              'student_id' => another_enrolled_student_id,
+              'grading_basis' => 'GRD',
+              'units' => 4.0,
+              'waitlist_position' => nil,
+              'major' => 'Philosophy BA',
+              'academic_career' => 'PHIL',
+              'terms_in_attendance_group' => 'R2TA'
             }
           ]
         end
-        expect(User::BasicAttributes).to receive(:attributes_for_uids)
-          .with([enrolled_student_login_id, waitlisted_student_login_id, another_enrolled_login_id])
-          .exactly(2).times.and_return(attributes, attributes)
-      end
-      let(:feed) { feed = Rosters::Campus.new(user_id, course_id: campus_course_id).get_feed }
-      let(:enrollments) do
-        [
-          {
-            'section_id' => ccn1,
-            'ldap_uid' => enrolled_student_login_id,
-            'enroll_status' => 'E',
-            'student_id' => enrolled_student_student_id,
-            'grading_basis' => 'GRD',
-            'units' => 4.0,
-            'waitlist_position' => nil,
-            'major' => 'Cognitive Science BA',
-            'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R2TA'
-          },
-          {
-            'section_id' => ccn1,
-            'ldap_uid' => enrolled_student_login_id,
-            'enroll_status' => 'E',
-            'student_id' => enrolled_student_student_id,
-            'grading_basis' => 'GRD',
-            'units' => 4.0,
-            'waitlist_position' => nil,
-            'major' => 'Computer Science BA',
-            'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R2TA'
-          },
-          {
-            'section_id' => ccn1,
-            'ldap_uid' => waitlisted_student_login_id,
-            'enroll_status' => 'W',
-            'student_id' => waitlisted_student_student_id,
-            'grading_basis' => 'ESU',
-            'units' => 3.0,
-            'waitlist_position' => 9.0,
-            'major' => 'Break Science BA',
-            'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R6TA'
-          },
-          {
-            'section_id' => ccn1,
-            'ldap_uid' => another_enrolled_login_id,
-            'enroll_status' => 'E',
-            'student_id' => another_enrolled_student_id,
-            'grading_basis' => 'GRD',
-            'units' => 4.0,
-            'waitlist_position' => nil,
-            'major' => 'Philosophy BA',
-            'academic_career' => 'PHIL',
-            'terms_in_attendance_group' => 'R2TA'
-          },
-          {
-            'section_id' => ccn2,
-            'ldap_uid' => enrolled_student_login_id,
-            'enroll_status' => 'E',
-            'student_id' => enrolled_student_student_id,
-            'grading_basis' => 'GRD',
-            'units' => 4.0,
-            'waitlist_position' => nil,
-            'major' => 'Computer Science BA',
-            'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R2TA'
-          },
-          {
-            'section_id' => ccn2,
-            'ldap_uid' => waitlisted_student_login_id,
-            'enroll_status' => 'W',
-            'student_id' => waitlisted_student_student_id,
-            'grading_basis' => 'ESU',
-            'units' => 3.0,
-            'waitlist_position' => 9.0,
-            'major' => 'Break Science BA',
-            'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R6TA'
-          },
-          {
-            'section_id' => ccn2,
-            'ldap_uid' => enrolled_student_login_id,
-            'enroll_status' => 'E',
-            'student_id' => enrolled_student_student_id,
-            'grading_basis' => 'GRD',
-            'units' => 4.0,
-            'waitlist_position' => nil,
-            'major' => 'Computer Science BA',
-            'academic_career' => 'UGRD',
-            'terms_in_attendance_group' => 'R2TA'
-          },
-          {
-            'section_id' => ccn2,
-            'ldap_uid' => another_enrolled_login_id,
-            'enroll_status' => 'E',
-            'student_id' => another_enrolled_student_id,
-            'grading_basis' => 'GRD',
-            'units' => 4.0,
-            'waitlist_position' => nil,
-            'major' => 'Philosophy BA',
-            'academic_career' => 'PHIL',
-            'terms_in_attendance_group' => 'R2TA'
-          }
-        ]
-      end
-      it_should_behave_like 'a good and proper roster'
-      context 'when the number of enrollments exceeds the limit' do
-        before do
-          fake_campus[term_slug][0][:sections][0][:enroll_limit] = 1
+        it_should_behave_like 'a good and proper roster'
+        context 'when the number of enrollments exceeds the limit' do
+          before do
+            fake_campus[term_slug][0][:sections][0][:enroll_limit] = 1
+          end
+          it 'should report zero available enrollment spots' do
+            expect(feed[:sections][0][:enroll_limit]).to eq 1
+            expect(feed[:sections][0][:enroll_count]).to eq 2
+            expect(feed[:sections][0][:enroll_open]).to eq 0
+            expect(feed[:sections][0][:waitlist_count]).to eq 1
+          end
         end
-        it 'should report zero available enrollment spots' do
-          expect(feed[:sections][0][:enroll_limit]).to eq 1
-          expect(feed[:sections][0][:enroll_count]).to eq 2
-          expect(feed[:sections][0][:enroll_open]).to eq 0
-          expect(feed[:sections][0][:waitlist_count]).to eq 1
+
+        it 'should translate additional enrollment data from section with grade component' do
+          expect(feed[:students][0][:grade_option]).to eq 'Letter'
+          expect(feed[:students][0][:units]).to eq '4.0'
+          expect(feed[:students][0][:waitlist_position]).to be_nil
+          expect(feed[:students][0][:academic_career]).to eq 'UGRD'
+          expect(feed[:students][1][:grade_option]).to eq 'S/U'
+          expect(feed[:students][1][:units]).to eq '3.0'
+          expect(feed[:students][1][:waitlist_position]).to eq 9
+          expect(feed[:students][1][:academic_career]).to eq 'UGRD'
+        end
+        it 'should include majors and terms in attendance count' do
+          expect(feed[:students][0][:majors][0]).to eq 'Cognitive Science BA'
+          expect(feed[:students][0][:majors][1]).to eq 'Computer Science BA'
+          expect(feed[:students][0][:terms_in_attendance]).to eq '2'
+          expect(feed[:students][1][:majors][0]).to eq 'Break Science BA'
+          expect(feed[:students][1][:terms_in_attendance]).to eq '6'
         end
       end
 
-      it 'should translate additional enrollment data from section with grade component' do
-        expect(feed[:students][0][:grade_option]).to eq 'Letter'
-        expect(feed[:students][0][:units]).to eq '4.0'
-        expect(feed[:students][0][:waitlist_position]).to be_nil
-        expect(feed[:students][0][:academic_career]).to eq 'UGRD'
-        expect(feed[:students][1][:grade_option]).to eq 'S/U'
-        expect(feed[:students][1][:units]).to eq '3.0'
-        expect(feed[:students][1][:waitlist_position]).to eq 9
-        expect(feed[:students][1][:academic_career]).to eq 'UGRD'
+      context 'when no enrollments are present' do
+        before { expect(User::BasicAttributes).to receive(:attributes_for_uids).exactly(0).times }
+        let(:enrollments) { [] }
+        it 'should report open enrollment spots that match the limit' do
+          expect(feed[:sections][0][:enroll_limit]).to eq 650
+          expect(feed[:sections][0][:enroll_count]).to eq 0
+          expect(feed[:sections][0][:enroll_open]).to eq 650
+          expect(feed[:sections][0][:waitlist_limit]).to eq 110
+          expect(feed[:sections][0][:waitlist_count]).to eq 0
+          expect(feed[:sections][0][:waitlist_open]).to eq 110
+        end
       end
-      it 'should include majors and terms in attendance count' do
-        expect(feed[:students][0][:majors][0]).to eq 'Cognitive Science BA'
-        expect(feed[:students][0][:majors][1]).to eq 'Computer Science BA'
-        expect(feed[:students][0][:terms_in_attendance]).to eq '2'
-        expect(feed[:students][1][:majors][0]).to eq 'Break Science BA'
-        expect(feed[:students][1][:terms_in_attendance]).to eq '6'
-      end
+
     end
   end
+
 
   context 'cross-listed courses', if: CampusOracle::Connection.test_data? do
     include_context 'instructor for crosslisted courses'
