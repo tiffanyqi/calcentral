@@ -161,6 +161,17 @@ describe MyAcademics::Exams do
     }
   end
 
+  # after parsed academic data, cs still has no exams
+  let(:no_cs_exam_class) do
+    {
+      :name => 'CHEM 3B',:number => 3,:time => 'MWF 2:00P-2:59P',:waitlisted => nil,
+      :exam_location => 'No exam.',
+      :exam_date => nil,
+      :exam_time => nil,
+      :exam_slot => 'none'
+    }
+  end
+
   # example exams with everything
   let(:all_exam) do
     {
@@ -265,6 +276,22 @@ describe MyAcademics::Exams do
           :exam_slot => Time.parse('2016-12-12 19:00:00')
         }
       ],
+      'none' => [
+        {
+          :name => 'CHEM 3B',:number => 3,:time => 'MWF 2:00P-2:59P',:waitlisted => nil,
+          :exam_location => 'No exam.',
+          :exam_date => nil,
+          :exam_time => nil,
+          :exam_slot => 'none'
+        },
+        {
+          :name => 'EWMBA 201B',:number => 201,:time => 'Sa 2:00P-6:00P',:waitlisted => nil,
+          :exam_location => 'No exam.',
+          :exam_date => nil,
+          :exam_time => nil,
+          :exam_slot => 'none'
+        }
+      ]
     }
   end
 
@@ -289,9 +316,7 @@ describe MyAcademics::Exams do
       :term_year => '2016',:timeBucket => 'current',:slug=>'spring-2016',
       :courses => [
         cs_class,
-        # the following exams aren't directly a result of parse_academic_data
-        ug_class_time,
-        grad_class_no_time
+        no_cs_exam_class
       ],
       :exams => spring_2016_exams_after_parsed
     }
@@ -372,7 +397,7 @@ describe MyAcademics::Exams do
         spring_courses.each do |course|
           expect(course[:name]).to be
           expect(course[:number]).to be
-          expect(course[:exam_location]).to_not be
+          expect(course[:exam_location]).to eq 'No exam.'
         end
       end
 
@@ -383,7 +408,7 @@ describe MyAcademics::Exams do
         spring_exams = result[0][:exams]
         fall_exams = result[1][:exams]
 
-        expect(spring_exams.length).to eq 1
+        expect(spring_exams.length).to eq 2
         spring_exams.each do |exam_group, data|
           data.each do |course|
             expect(course[:exam_slot]).to eq exam_group
@@ -391,21 +416,25 @@ describe MyAcademics::Exams do
             when Time.parse('2016-12-12 19:00:00')
               expect(course[:exam_date]).to eq 'Mon 12/12'
               expect(course[:exam_time]).to eq '07:00PM'
+            when 'none'
+              expect(course[:exam_date]).to_not be
+              expect(course[:exam_time]).to_not be
+              expect(course[:exam_location]).to eq 'No exam.'
             end
           end
         end
 
         expect(fall_exams.length).to eq 3
-        spring_exams.each do |exam_group, data|
+        fall_exams.each do |exam_group, data|
           data.each do |course|
             expect(course[:exam_slot]).to eq exam_group
             case exam_group
             when 3
               expect(course[:exam_date]).to eq 'Mon 12/12'
               expect(course[:exam_time]).to eq '3-6P'
-            when 14
+            when 15
               expect(course[:exam_date]).to eq 'Thu 12/15'
-              expect(course[:exam_time]).to eq '11:30-2:30P'
+              expect(course[:exam_time]).to eq '3-6P'
             end
           end
         end
@@ -447,6 +476,24 @@ describe MyAcademics::Exams do
         }
       end
 
+      let(:recurring_grad_class) do
+        {
+          :role=>'Student',:course_code=>'EWMBA 201B',:courseCatalog=>'201B',
+          :sections=> [
+            {
+              :is_primary_section=>true,
+              :final_exams => [no_exam],
+              :schedules=>
+                {
+                  :recurring=>[
+                    {:schedule=>'Sa 2:00P-6:00P'}
+                  ]
+                }
+            }
+          ]
+        }
+      end
+
       it 'should parse academic data correctly' do
         result = subject.parse_academic_data(feed[:semesters])
         fall_courses = result[0][:courses]
@@ -459,16 +506,8 @@ describe MyAcademics::Exams do
         expect(spring_courses.length).to eq 3
         expect(spring_courses[0][:exam_location]).to eq 'Kroeber 221'
         expect(spring_courses[0][:exam_date]).to eq 'Mon 12/12'
-        expect(spring_courses[1][:exam_location]).to_not be
-      end
-
-      it 'should transition data correctly' do
-        merged_result.each do |semester|
-          semester[:exams].each do |exam_slot, data|
-            expect(exam_slot).to be_kind_of(Time) if semester[:cs_data_available]
-            expect(exam_slot).to be_kind_of(Integer) if !semester[:cs_data_available]
-          end
-        end
+        expect(spring_courses[1][:exam_location]).to eq 'No exam.'
+        expect(spring_courses[2][:exam_location]).to eq 'Location TBD'
       end
     end
 
@@ -486,13 +525,16 @@ describe MyAcademics::Exams do
       let(:feed_after_parse_academic_data) do
         [{
           :cs_data_available => true,:name => 'Fall 2016',:term => 'D',:term_year => '2016',:timeBucket => 'future',
-          :courses => [ug_class_time,ug_course_exception,waitlisted_class]
+          :courses => [no_cs_exam_class]
         }]
       end
 
       it 'should assign exams correctly' do
         result = subject.assign_exams(feed_after_parse_academic_data, final_exam_logic)
-        expect(result[0][:exams].length).to eq 0
+        expect(result[0][:exams].length).to eq 1
+        result[0][:exams].each do |exam_slot, data|
+          expect(exam_slot).to eq 'none'
+        end
       end
     end
 
@@ -500,15 +542,6 @@ describe MyAcademics::Exams do
       merged_result.each do |semester|
         expect(semester[:term]).not_to eq('C')
         expect(semester[:timeBucket]).not_to eq('past')
-      end
-    end
-
-    it 'should transition data correctly' do
-      merged_result.each do |semester|
-        semester[:exams].each do |exam_slot, data|
-          expect(exam_slot).to be_kind_of(Time) if semester[:cs_data_available]
-          expect(exam_slot).to be_kind_of(Integer) if !semester[:cs_data_available]
-        end
       end
     end
 
@@ -542,13 +575,13 @@ describe MyAcademics::Exams do
 
     it 'should create cs exam slots properly' do
       expect(subject.parse_cs_exam_slot(all_exam)).to eq Time.parse('2016-12-12 19:00:00')
-      expect(subject.parse_cs_exam_slot(alternate_exam)).to eq Time.new(99999998)
-      expect(subject.parse_cs_exam_slot(no_exam)).to eq Time.new(99999999)
+      expect(subject.parse_cs_exam_slot(alternate_exam)).to eq 'none'
+      expect(subject.parse_cs_exam_slot(no_exam)).to eq 'none'
     end
 
     it 'should choose cs exam locations properly' do
       expect(subject.choose_cs_exam_location(all_exam)).to eq 'Kroeber 221'
-      expect(subject.choose_cs_exam_location(alternate_exam)).to eq 'Final exam time not yet provided.'
+      expect(subject.choose_cs_exam_location(alternate_exam)).to eq 'Final exam information not available. Please consult instructors.'
       expect(subject.choose_cs_exam_location(no_exam)).to eq 'Location TBD'
     end
 
