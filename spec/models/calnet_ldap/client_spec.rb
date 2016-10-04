@@ -2,7 +2,7 @@ describe CalnetLdap::Client do
 
   it 'should initialize with a configured Net::LDAP object' do
     ldap = subject.instance_variable_get :@ldap
-    expect(ldap).to be_an_instance_of Net::LDAP
+    expect(ldap).to be_a Net::LDAP
     expect(ldap.host).to eq 'nds-test.berkeley.edu'
     expect(ldap.port).to eq 636
     if ENV['RAILS_ENV'] == 'test'
@@ -13,44 +13,45 @@ describe CalnetLdap::Client do
   end
 
   it 'should search and return people', testext: true do
-    args = {}
-    args[:base] = CalnetLdap::Client::PEOPLE_DN
-    args[:filter] = Net::LDAP::Filter.eq('uid', '212373')
-    results = subject.send :search, args
-    expect(results.count).to eq 1
-    expect(results[0][:berkeleyedutestidflag]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:givenname]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:displayname]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:berkeleyedufirstname]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:berkeleyedulastname]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:cn]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:sn]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:mail]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:berkeleyeduaffiliations]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:berkeleyeduismemberof]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:berkeleyedutestidflag].count).to eq 1
-    expect(results[0][:givenname].count).to eq 1
-    expect(results[0][:displayname].count).to eq 1
-    expect(results[0][:berkeleyedufirstname].count).to eq 1
-    expect(results[0][:berkeleyedulastname].count).to eq 1
-    expect(results[0][:cn].count).to eq 1
-    expect(results[0][:sn].count).to eq 1
-    expect(results[0][:mail].count).to eq 1
-    expect(results[0][:uid][0]).to eq '212373'
-    expect(results[0][:berkeleyedutestidflag][0]).to be_truthy
-    expect(results[0][:displayname][0]).to eq 'AFF-GUEST TEST'
-    expect(results[0][:berkeleyedufirstname][0]).to eq 'AFF-GUEST'
-    expect(results[0][:berkeleyedulastname][0]).to eq 'TEST'
-    expect(results[0][:cn][0]).to eq 'TEST, AFF-GUEST'
-    expect(results[0][:sn][0]).to eq 'TEST'
+    results = subject.send :search, {
+      base: CalnetLdap::Client::PEOPLE_DN,
+      filter: Net::LDAP::Filter.eq('uid', '212373')
+    }
+    expect(results).to have(1).item
+    item = results[0]
+    expect(item[:berkeleyedutestidflag]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:givenname]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:displayname]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:berkeleyedufirstname]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:berkeleyedulastname]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:cn]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:sn]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:mail]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:berkeleyeduaffiliations]).to be_an Enumerable
+    expect(item[:berkeleyeduismemberof]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:berkeleyedutestidflag].count).to eq 1
+    expect(item[:givenname].count).to eq 1
+    expect(item[:displayname].count).to eq 1
+    expect(item[:berkeleyedufirstname].count).to eq 1
+    expect(item[:berkeleyedulastname].count).to eq 1
+    expect(item[:cn].count).to eq 1
+    expect(item[:sn].count).to eq 1
+    expect(item[:mail].count).to eq 1
+    expect(item[:uid][0]).to eq '212373'
+    expect(item[:berkeleyedutestidflag][0]).to be_truthy
+    expect(item[:displayname][0]).to eq 'AFF-GUEST TEST'
+    expect(item[:berkeleyedufirstname][0]).to eq 'AFF-GUEST'
+    expect(item[:berkeleyedulastname][0]).to eq 'TEST'
+    expect(item[:cn][0]).to eq 'TEST, AFF-GUEST'
+    expect(item[:sn][0]).to eq 'TEST'
     # IST alters 'mail' attribute value to generate events in the LDAP changelog
     # to monitor their real-time sync processes. Cannot rely on specific test value.
-    expect(results[0][:mail][0]).to be_an_instance_of Net::BER::BerIdentifiedString
+    expect(item[:mail][0]).to be_a Net::BER::BerIdentifiedString
   end
 
   it 'should receive array when querying for modified guests', testext: true do
     result = subject.guests_modified_since(Time.now.utc - 1.hour)
-    expect(result).to be_an_instance_of Array
+    expect(result).to be_an Array
   end
 
   it 'should have access to dependent attributes for guest entries', testext: true do
@@ -58,15 +59,16 @@ describe CalnetLdap::Client do
       base: CalnetLdap::Client::GUEST_DN,
       filter: Net::LDAP::Filter.eq('uid', '11000023')
     }
-    expect(results).to have(1).items
-    expect(results[0][:uid]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:givenname]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:sn]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:mail]).to be_an_instance_of Net::BER::BerIdentifiedArray
-    expect(results[0][:uid][0]).to eq '11000023'
-    expect(results[0][:givenname][0]).to eq 'RickGuest'
-    expect(results[0][:sn][0]).to eq 'Jaffe'
-    expect(results[0][:mail][0]).to eq 'rjaffe@lmi.net'
+    expect(results).to have(1).item
+    item = results[0]
+    expect(item[:uid]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:givenname]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:sn]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:mail]).to be_a Net::BER::BerIdentifiedArray
+    expect(item[:uid][0]).to eq '11000023'
+    expect(item[:givenname][0]).to eq 'RickGuest'
+    expect(item[:sn][0]).to eq 'Jaffe'
+    expect(item[:mail][0]).to eq 'rjaffe@lmi.net'
   end
 
   it 'performs a bulk query on a mixed person-and-guest set of UIDs', testext: true do
