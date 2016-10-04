@@ -66,6 +66,11 @@ module Rosters
               logger.error "Section Waitlist limit exceeded in Section ID #{section[:ccn]}; Waitlist Count: #{section_waitlisted_count}; Limit: #{section_waitlist_limit}"
               section_waitlisted_open = 0
             end
+          else
+            section_enrollments_open = section_enrollment_limit
+            section_enrolled_count = 0
+            section_waitlisted_open = section_waitlist_limit
+            section_waitlisted_count = 0
           end
 
           if (recurring_schedules.size > 0)
