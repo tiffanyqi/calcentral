@@ -68,7 +68,7 @@ describe Oec::ReportDiffTask do
 
     it 'should report STAT diff' do
       pstat_diff_rows = subject.diff_report.select { |row| row['DEPT_CODE'] == 'PSTAT' }
-      expect(pstat_diff_rows).to have(8).items
+      expect(pstat_diff_rows).to have(9).items
       expected_diff = {
         '2015-B-87672-10316' => {
           '+/-' => ' ',
