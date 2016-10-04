@@ -5,11 +5,11 @@ module CalCentralPages
     include PageObject
     include CalCentralPages
 
+    h2(:teaching_heading, :xpath => '//h2[text()="Teaching"]')
     elements(:semester_link, :link, :xpath => '//div[@data-ng-if="hasTeachingClasses"]//a[@data-ng-bind="semester.name"]')
     elements(:course_code, :link, :xpath => '//a[@data-ng-bind="listing.course_code"]')
     button(:show_more, :xpath => '//button[@data-ng-if="pastSemestersTeachingCount > 1"]/span[text()="Show More"]')
     button(:show_less, :xpath => '//button[@data-ng-if="pastSemestersTeachingCount > 1"]/span[text()="Show Less"]')
-    paragraph(:no_classes_msg, :xpath => '//p[contains(text(),"You are officially an instructor, tutor, or other academic employee at UC Berkeley, but no courses assigned to you are currently available through campus services.")]')
 
     def teaching_terms_visible?(term_names)
       terms_in_ui = []

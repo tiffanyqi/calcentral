@@ -32,10 +32,12 @@ describe 'My Academics teaching semesters UI', :testui => true do
               all_semesters = academics_api_page.all_teaching_semesters
               teaching_card = CalCentralPages::MyAcademicsTeachingCard.new(driver)
               teaching_card.load_page
-              teaching_card.page_heading_element.when_visible(timeout=WebDriverUtils.academics_timeout)
+              has_teaching_card = WebDriverUtils.verify_block { teaching_card.teaching_heading_element.when_visible WebDriverUtils.academics_timeout }
 
               if all_semesters.present?
                 testable_users.push(uid)
+
+                it("shows a Teaching card for UID #{uid}") { expect(has_teaching_card).to be true }
 
                 all_semester_names = academics_api_page.semester_names(all_semesters)
                 default_semesters = academics_api_page.default_semesters_in_ui(all_semesters)
@@ -198,11 +200,8 @@ describe 'My Academics teaching semesters UI', :testui => true do
                   end
                 end
               else
-                has_no_classes_msg = teaching_card.no_classes_msg?
 
-                it "shows a 'you have no courses assigned to you' message for UID #{uid}" do
-                  expect(has_no_classes_msg).to be true
-                end
+                it("shows no Teaching card for UID #{uid}") { expect(has_teaching_card).to be false }
 
               end
             end
