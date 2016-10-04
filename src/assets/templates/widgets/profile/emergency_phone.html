@@ -16,7 +16,13 @@
           <strong data-ng-if="phone.extension">ext:</strong> <span data-ng-bind="phone.extension"></span>
         </div>
         <div>
-          <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showEdit(phone)" data-ng-disabled="emergencyPhone.isAdding || (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Edit</button> | <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.deletePhone(phone)" data-ng-disabled="emergencyPhone.isAdding || (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Delete</button>
+          <button class="cc-button-link" type="button"
+            data-ng-click="emergencyPhone.showEdit(phone)"
+            data-ng-disabled="cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber || emergencyPhone.isAdding || (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Edit</button>
+          <span> | </span>
+          <button class="cc-button-link" type="button"
+            data-ng-click="emergencyPhone.deletePhone(phone)"
+            data-ng-disabled="cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber || emergencyPhone.isAdding ||  (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Delete</button>
         </div>
       </div>
     </div>
@@ -26,7 +32,10 @@
     <div data-ng-include="'widgets/profile/emergency_phone_editor.html'" data-ng-if="emergencyPhone.items.editorEnabled && emergencyPhone.isAdding"></div>
   </div>
 
-  <button class="cc-button-link" type="button" data-ng-click="emergencyPhone.showAdd()" data-ng-disabled="cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber || emergencyPhone.items.editorEnabled || currentObject.isAdding" data-ng-if="currentObject.data.emergencyPhones.length < currentObject.data.addPhoneLimit">
+  <button class="cc-button-link" type="button"
+    data-ng-click="emergencyPhone.showAdd()"
+    data-ng-disabled="cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber || emergencyPhone.items.editorEnabled || currentObject.isAdding"
+    data-ng-if="currentObject.data.emergencyPhones.length < currentObject.data.addPhoneLimit">
     <i class="fa fa-plus cc-text-small"></i> Add additional phone number
   </button>
 </div>
