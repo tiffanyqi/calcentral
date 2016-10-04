@@ -8,12 +8,12 @@ describe CalnetLdap::UserAttributes do
     let(:ldap_result) do
       {
         dn: ['uid=61889,ou=people,dc=berkeley,dc=edu'],
-        objectclass: ['top', 'eduPerson', 'inetorgperson', 'berkeleyEduPerson', 'organizationalperson', 'person', 'ucEduPerson'],
+        objectclass: %w(top eduPerson inetorgperson berkeleyEduPerson organizationalperson person ucEduPerson),
         o: ['University of California, Berkeley'],
         ou: ['people'],
         mail: ['oski@berkeley.edu'],
         berkeleyeduofficialemail: ['oski_bearable@berkeley.edu'],
-        berkeleyeduaffiliations: ['AFFILIATE-TYPE-ADVCON-STUDENT', 'AFFILIATE-TYPE-ADVCON-ATTENDEE', 'STUDENT-TYPE-NOT REGISTERED'],
+        berkeleyeduaffiliations: %w(AFFILIATE-TYPE-ADVCON-STUDENT AFFILIATE-TYPE-ADVCON-ATTENDEE STUDENT-TYPE-NOT REGISTERED),
         givenname: ['Oski'],
         berkeleyeduconfidentialflag: ['false'],
         berkeleyeduemailrelflag: ['false'],
@@ -91,7 +91,7 @@ describe CalnetLdap::UserAttributes do
     context 'when both active and expired student affiliations appear' do
       let(:ldap_result) do
         {
-          berkeleyeduaffiliations: ['EMPLOYEE-TYPE-STAFF', 'STUDENT-STATUS-EXPIRED', 'STUDENT-TYPE-REGISTERED'],
+          berkeleyeduaffiliations: %w(EMPLOYEE-TYPE-STAFF STUDENT-STATUS-EXPIRED STUDENT-TYPE-REGISTERED),
           berkeleyedustuexpdate: ['20140901145959Z'],
           uid: ['61889']
         }
