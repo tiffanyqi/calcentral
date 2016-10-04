@@ -53,7 +53,8 @@ describe Oec::SisImportTask do
         'MATH' => 'PMATH',
         'STAT' => 'PSTAT',
         'ANTHRO' => 'SZANT',
-        'POL SCI' => 'SPOLS'
+        'POL SCI' => 'SPOLS',
+        'SPANISH' => 'LPSPP'
       }
     end
 
@@ -94,21 +95,34 @@ describe Oec::SisImportTask do
       include_context 'local-write mode and no follow-up diff'
 
       it { expect(course_id_column).to contain_exactly(*expected_ids) }
-      it 'should include dept_form only for non-crosslisted courses' do
+      it 'should include expected columns and values' do
         subject.each do |row|
           courses.headers.each { |header| expect(row).to have_key header }
+          expect(row['BLUE_ROLE']).to eq '23'
+          expect(row['EVALUATE']).to be_nil
+          %w(COURSE_ID COURSE_NAME DEPT_NAME CATALOG_ID INSTRUCTION_FORMAT SECTION_NUM).each do |key|
+            expect(row[key]).to be_present
+          end
+          expect(%w(P S)).to include row['PRIMARY_SECONDARY_CD']
+          expect(row['COURSE_ID_2']).to eq row['COURSE_ID']
+        end
+      end
+    end
+
+    shared_examples 'expected DEPT_FORM and EVALUATION_TYPE' do
+      include_context 'local-write mode and no follow-up diff'
+      it 'should include DEPT_FORM only for non-crosslisted courses' do
+        subject.each do |row|
           if row['CROSS_LISTED_FLAG'] == 'Y'
             expect(row['DEPT_FORM']).to be_nil
           else
             expect(row['DEPT_FORM']).to eq row['DEPT_NAME']
           end
-          expect(row['BLUE_ROLE']).to eq '23'
-          expect(row['EVALUATE']).to be_nil
-          %w(COURSE_ID COURSE_NAME DEPT_NAME CATALOG_ID INSTRUCTION_FORMAT SECTION_NUM EVALUATION_TYPE).each do |key|
-            expect(row[key]).to be_present
-          end
-          expect(%w(P S)).to include row['PRIMARY_SECONDARY_CD']
-          expect(row['COURSE_ID_2']).to eq row['COURSE_ID']
+        end
+      end
+      it 'should include EVALUATION_TYPE' do
+        subject.each do |row|
+          expect(row['EVALUATION_TYPE']).to be_present
         end
       end
     end
@@ -118,6 +132,7 @@ describe Oec::SisImportTask do
       let(:friendly_dept_name) { 'ANTHROPOLOGY' }
       let(:expected_ids) { %w(2015-B-02567) }
       include_examples 'expected CSV structure'
+      include_examples 'expected DEPT_FORM and EVALUATION_TYPE'
       it 'should not include IND course' do
         expect(course_id_column).not_to include('2015-B-06789')
       end
@@ -129,6 +144,7 @@ describe Oec::SisImportTask do
       let(:expected_ids) { %w(2015-B-54432 2015-B-54441 2015-B-87672 2015-B-87675) }
       before { allow(Oec::CourseCode).to receive(:included?).with('STAT', anything).and_return true  }
       include_examples 'expected CSV structure'
+      include_examples 'expected DEPT_FORM and EVALUATION_TYPE'
     end
 
     context 'POL SCI dept' do
@@ -136,6 +152,7 @@ describe Oec::SisImportTask do
       let(:friendly_dept_name) { 'POLITICAL SCIENCE' }
       let(:expected_ids) { %w(2015-B-87690 2015-B-72198 2015-B-72198_GSI 2015-B-72199) }
       include_examples 'expected CSV structure'
+      include_examples 'expected DEPT_FORM and EVALUATION_TYPE'
       it 'should not include GRP course' do
         expect(course_id_column).not_to include('2015-B-71523')
       end
@@ -187,6 +204,18 @@ describe Oec::SisImportTask do
       end
     end
 
+    context 'SPANISH dept' do
+      let(:dept_name) { 'SPANISH' }
+      let(:expected_ids) { %w(2015-B-70000) }
+      include_examples 'expected CSV structure'
+      it 'should set DEPT_FORM to SPANISH regardless of DEPT_NAME' do
+        subject.each { |row| expect(row['DEPT_FORM']).to eq 'SPANISH' }
+      end
+      it 'should not prepopulate EVALUATION_TYPE' do
+        subject.each { |row| expect(row['EVALUATION_TYPE']).to be_blank }
+      end
+    end
+
     context 'STAT dept' do
       let(:dept_name) { 'STAT' }
       let(:friendly_dept_name) { 'STATISTICS' }
@@ -195,6 +224,7 @@ describe Oec::SisImportTask do
       let(:math_included) { true }
 
       include_examples 'expected CSV structure'
+      include_examples 'expected DEPT_FORM and EVALUATION_TYPE'
 
       it 'should not include course supervisor assignments' do
         expect(subject.select{ |row| row['EMAIL_ADDRESS'] == 'stat_supervisor@berkeley.edu' }).to be_empty
