@@ -1,0 +1,33 @@
+[
+  {
+    "term_cd": "B",
+    "course_id": "2015-B-70000",
+    "course_name": "PORTUG 120 LEC 001 ATTRACTIONS OF DECADENCE",
+    "cross_listed_flag": null,
+    "course_title_short": null,
+    "dept_name": "PORTUG",
+    "catalog_id": "120",
+    "instruction_format": "LEC",
+    "section_num": "001",
+    "primary_secondary_cd": "P",
+    "sis_id": "UID:87654",
+    "affiliations": "EMPLOYEE-TYPE-ACADEMIC,STUDENT-STATUS-EXPIRED",
+    "first_name": "José Maria",
+    "last_name": "Eça de Queirós",
+    "email_address": "queiros@berkeley.edu",
+    "blue_role": "23",
+    "evaluate": null,
+    "dept_form": null,
+    "evaluation_type": null,
+    "modular_course": null,
+    "start_date": "1/20/2015",
+    "end_date": "5/8/2015",
+    "term_yr": "2015",
+    "course_cntl_num": "70000",
+    "ldap_uid": "87654",
+    "instructor_func": "1",
+    "enrollment_count": "20",
+    "cross_listed_ccns": null,
+    "co_scheduled_ccns": null
+  }
+]

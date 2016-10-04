@@ -67,9 +67,8 @@ module Oec
           skip_course course, 'course with non-evaluated instruction format'
         else
           course['course_id_2'] = course['course_id']
-          set_dept_form course
-          # Course rows sourced from EdoOracle::Adapters::Oec may have evaluation type already set.
-          set_evaluation_type course unless course['evaluation_type']
+          set_dept_form(worksheet, course)
+          set_evaluation_type course
           worksheet[row_key] = Oec::Worksheet.capitalize_keys course
         end
       end
@@ -126,7 +125,7 @@ module Oec
       end
     end
 
-    def set_dept_form(course)
+    def set_dept_form(worksheet, course)
       return if course['cross_listed_flag'].present?
 
       # Sets 'dept_form' to either 'MCELLBI' or 'INTEGBI' for BIOLOGY courses; otherwise uses 'dept_name'.
@@ -136,12 +135,19 @@ module Oec
       if (mapping = Oec::CourseCode.catalog_id_specific_mapping(course['dept_name'], course['catalog_id']))
         @dept_forms[mapping] ||= Oec::CourseCode.where(dept_code: mapping.dept_code, catalog_id: '').pluck(:dept_name).first
         course['dept_form'] = @dept_forms[mapping]
+      # The Spanish and Portuguese department is another special case where all courses use the SPANISH department form,
+      # regardless of subject area.
+      elsif worksheet.dept_code == 'LPSPP'
+        course['dept_form'] = 'SPANISH'
       else
         course['dept_form'] = course['dept_name']
       end
     end
 
     def set_evaluation_type(course)
+      # LAW and SPANISH are special cases that don't use F/G evaluation types.
+      return if %w(LAW SPANISH).include? course['dept_form']
+
       roles = Berkeley::UserRoles.roles_from_campus_row course
       course['evaluation_type'] = if roles[:student]
                                     'G'
