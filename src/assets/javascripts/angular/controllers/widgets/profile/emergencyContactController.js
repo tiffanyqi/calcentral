@@ -123,10 +123,10 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
   };
 
   /**
-   * Emergency Phone editor is an inner controller in that is initialized by the
-   * EmergencyContactController. Defined as an inner scope, emergencyPhone, on
-   * the parent or EmergencyContact scope, we can pass it to the
-   * `profileService` methods for safely updating the phone editor state.
+   * Emergency Phone editor acts as an "inner scope" - `emergencyPhone` - with
+   * respect to the parent or `EmergencyContact` scope. That allows us to pass
+   * it to the `profileService` methods for safely updating the phone editor
+   * state.
    */
   angular.extend($scope, {
     emergencyPhone: {
@@ -148,6 +148,7 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       isAdding: false,
       isDeleting: false,
       isLoading: true,
+      isModifying: false,
       isSaving: false,
       items: {
         content: [],
@@ -172,6 +173,7 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
 
   $scope.emergencyPhone.cancelEdit = function() {
     var item = $scope.emergencyPhone.currentObject.data;
+    $scope.emergencyPhone.isModifying = false;
     $scope.emergencyPhone.isSaving = false;
     $scope.emergencyPhone.closeEditor();
 
@@ -215,10 +217,11 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
     // Phone case where a contact may already have at least one phone with a
     // phone type.
     var currentPhones = $scope.currentObject.data.emergencyPhones;
-    var availablePhoneTypes = $scope.emergencyPhone.currentObject.data.availablePhoneTypes;
+    var item = $scope.emergencyPhone.currentObject.data;
+    var availablePhoneTypes = item.availablePhoneTypes;
     var usingTypes = [];
 
-    $scope.emergencyPhone.currentObject.data.availablePhoneTypes = _.filter(availablePhoneTypes, function(type) {
+    item.availablePhoneTypes = _.filter(availablePhoneTypes, function(type) {
       _.forEach(currentPhones, function(phone) {
         if (type.fieldvalue === phone.phoneType) {
           usingTypes.push(type.fieldvalue);
@@ -226,9 +229,9 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
       });
       return usingTypes.indexOf(type.fieldvalue) < 0;
     });
-    if ($scope.emergencyPhone.currentObject.data.availablePhoneTypes.length === 1) {
-      $scope.emergencyPhone.currentObject.data.phoneType = $scope.emergencyPhone.currentObject.data.availablePhoneTypes[0].fieldvalue;
-      $scope.emergencyPhone.currentObject.data.phoneTypeDescr = $scope.emergencyPhone.currentObject.data.availablePhoneTypes[0].xlatlongname;
+    if (item.availablePhoneTypes.length === 1) {
+      item.phoneType = item.availablePhoneTypes[0].fieldvalue;
+      item.phoneTypeDescr = item.availablePhoneTypes[0].xlatlongname;
     }
 
     $scope.emergencyPhone.isAdding = true;
@@ -240,6 +243,8 @@ angular.module('calcentral.controllers').controller('EmergencyContactController'
     _.forEach(item, function(v, k) {
       item[k] = sanitizeContactData(v);
     });
+
+    $scope.emergencyPhone.isModifying = true;
     apiService.profile.showEdit($scope.emergencyPhone, item);
   };
 
