@@ -9,34 +9,41 @@ module CampusSolutions
     end
 
     def get
-      resource_links = {}
       empl_id = lookup_campus_solutions_id
-      link_ids = {
-        change_of_academic_plan_add: 'UC_CX_GT_CPPSTACK_ADD',
-        change_of_academic_plan_view: 'UC_CX_GT_CPPSTACK_VIEW',
-        emergency_loan_form_add: 'UC_CX_GT_FAEMRLAON_ADD',
-        emergency_loan_form_view: 'UC_CX_GT_FAEMRLAON_VIEW',
-        withdraw_from_semester_add: 'UC_CX_SRWITHDRL_ADD',
-        veterans_benefits_add: 'UC_CX_GT_SRVAONCE_ADD'
-      }
+      return {} if empl_id.blank?
 
-      link_ids.each do |key, url_id|
-        link = CampusSolutions::Link.new.get_url(url_id, { :EMPLID => empl_id }).try(:[], :link)
-        if link
-          resource_links[key.to_s.camelize(:lower).to_sym] = link
-        end
+      cs_links = {}
+
+      campus_solutions_link_settings = [
+        { feed_key: :change_of_academic_plan_add, cs_link_key: 'UC_CX_GT_CPPSTACK_ADD' },
+        { feed_key: :change_of_academic_plan_view, cs_link_key: 'UC_CX_GT_CPPSTACK_VIEW' },
+        { feed_key: :emergency_loan_form_add, cs_link_key: 'UC_CX_GT_FAEMRLAON_ADD' },
+        { feed_key: :emergency_loan_form_view, cs_link_key: 'UC_CX_GT_FAEMRLAON_VIEW' },
+        { feed_key: :withdraw_from_semester_add, cs_link_key: 'UC_CX_SRWITHDRL_ADD' },
+        { feed_key: :veterans_benefits_add, cs_link_key: 'UC_CX_GT_SRVAONCE_ADD' },
+      ]
+
+      campus_solutions_link_settings.each do |setting|
+        link = fetch_link(setting[:cs_link_key])
+        cs_links[setting[:feed_key]] = link unless link.blank?
       end
 
       {
         statusCode: 200,
         feed: {
-          resources: resource_links
+          resources: cs_links
         }
       }
     end
 
     def xml_filename
       'file_is_not_used_in_test.xml'
+    end
+
+    def fetch_link(link_key, placeholders = {})
+      link = CampusSolutions::Link.new.get_url(link_key, placeholders).try(:[], :link)
+      logger.error "Could not retrieve CS link #{link_key} for Student Resources feed, uid = #{@uid}" unless link
+      link
     end
 
   end
