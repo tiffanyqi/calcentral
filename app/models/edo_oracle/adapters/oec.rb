@@ -18,7 +18,6 @@ module EdoOracle
           adapt_course_id(row, term_code)
           adapt_cross_listed_flag row
           adapt_dates(row, default_dates)
-          adapt_evaluation_type row
           adapt_instructor_func row
           adapt_primary_secondary_cd row
           adapt_sis_id row
@@ -90,13 +89,6 @@ module EdoOracle
             row['end_date'] = row['end_date'].strftime ::Oec::Worksheet::WORKSHEET_DATE_FORMAT
           end
         end
-      end
-
-      def self.adapt_evaluation_type(row)
-        row['evaluation_type'] = case row['affiliations']
-                                   when /STUDENT/ then 'G'
-                                   when /INSTRUCTOR/ then 'F'
-                                 end
       end
 
       def self.adapt_sis_id(row)

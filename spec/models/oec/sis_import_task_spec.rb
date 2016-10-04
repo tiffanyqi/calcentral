@@ -53,7 +53,8 @@ describe Oec::SisImportTask do
         'MATH' => 'PMATH',
         'STAT' => 'PSTAT',
         'ANTHRO' => 'SZANT',
-        'POL SCI' => 'SPOLS'
+        'POL SCI' => 'SPOLS',
+        'SPANISH' => 'LPSPP'
       }
     end
 
@@ -94,21 +95,34 @@ describe Oec::SisImportTask do
       include_context 'local-write mode and no follow-up diff'
 
       it { expect(course_id_column).to contain_exactly(*expected_ids) }
-      it 'should include dept_form only for non-crosslisted courses' do
+      it 'should include expected columns and values' do
         subject.each do |row|
           courses.headers.each { |header| expect(row).to have_key header }
+          expect(row['BLUE_ROLE']).to eq '23'
+          expect(row['EVALUATE']).to be_nil
+          %w(COURSE_ID COURSE_NAME DEPT_NAME CATALOG_ID INSTRUCTION_FORMAT SECTION_NUM).each do |key|
+            expect(row[key]).to be_present
+          end
+          expect(%w(P S)).to include row['PRIMARY_SECONDARY_CD']
+          expect(row['COURSE_ID_2']).to eq row['COURSE_ID']
+        end
+      end
+    end
+
+    shared_examples 'expected DEPT_FORM and EVALUATION_TYPE' do
+      include_context 'local-write mode and no follow-up diff'
+      it 'should include DEPT_FORM only for non-crosslisted courses' do
+        subject.each do |row|
           if row['CROSS_LISTED_FLAG'] == 'Y'
             expect(row['DEPT_FORM']).to be_nil
           else
             expect(row['DEPT_FORM']).to eq row['DEPT_NAME']
           end
-          expect(row['BLUE_ROLE']).to eq '23'
-          expect(row['EVALUATE']).to be_nil
-          %w(COURSE_ID COURSE_NAME DEPT_NAME CATALOG_ID INSTRUCTION_FORMAT SECTION_NUM EVALUATION_TYPE).each do |key|
-            expect(row[key]).to be_present
-          end
-          expect(%w(P S)).to include row['PRIMARY_SECONDARY_CD']
-          expect(row['COURSE_ID_2']).to eq row['COURSE_ID']
+        end
+      end
+      it 'should include EVALUATION_TYPE' do
+        subject.each do |row|
+          expect(row['EVALUATION_TYPE']).to be_present
         end
       end
     end
@@ -118,6 +132,7 @@ describe Oec::SisImportTask do
       let(:friendly_dept_name) { 'ANTHROPOLOGY' }
       let(:expected_ids) { %w(2015-B-02567) }
       include_examples 'expected CSV structure'
+      include_examples 'expected DEPT_FORM and EVALUATION_TYPE'
       it 'should not include IND course' do
         expect(course_id_column).not_to include('2015-B-06789')
       end
@@ -126,9 +141,10 @@ describe Oec::SisImportTask do
     context 'MATH dept' do
       let(:dept_name) { 'MATH' }
       let(:friendly_dept_name) { 'MATHEMATICS' }
-      let(:expected_ids) { %w(2015-B-54432 2015-B-54441 2015-B-87672 2015-B-87675) }
+      let(:expected_ids) { %w(2015-B-54432 2015-B-54441 2015-B-87672 2015-B-87675 2015-B-87675_GSI) }
       before { allow(Oec::CourseCode).to receive(:included?).with('STAT', anything).and_return true  }
       include_examples 'expected CSV structure'
+      include_examples 'expected DEPT_FORM and EVALUATION_TYPE'
     end
 
     context 'POL SCI dept' do
@@ -136,6 +152,7 @@ describe Oec::SisImportTask do
       let(:friendly_dept_name) { 'POLITICAL SCIENCE' }
       let(:expected_ids) { %w(2015-B-87690 2015-B-72198 2015-B-72198_GSI 2015-B-72199) }
       include_examples 'expected CSV structure'
+      include_examples 'expected DEPT_FORM and EVALUATION_TYPE'
       it 'should not include GRP course' do
         expect(course_id_column).not_to include('2015-B-71523')
       end
@@ -144,7 +161,10 @@ describe Oec::SisImportTask do
         joint_course_rows = subject.select { |row| row['COURSE_ID'].start_with? '2015-B-72198' }
         expect(joint_course_rows).to have(2).items
         expect(joint_course_rows.find { |row| row['COURSE_ID'] == '2015-B-72198' }['EVALUATION_TYPE']).to eq 'F'
-        expect(joint_course_rows.find { |row| row['COURSE_ID'] == '2015-B-72198_GSI' }['EVALUATION_TYPE']).to eq 'G'
+
+        gsi_row = joint_course_rows.find { |row| row['COURSE_ID'] == '2015-B-72198_GSI' }
+        expect(gsi_row['EVALUATION_TYPE']).to eq 'G'
+        expect(gsi_row['COURSE_NAME']).to end_with ' (EVAL FOR GSI)'
       end
 
       context 'data overrides' do
@@ -187,14 +207,27 @@ describe Oec::SisImportTask do
       end
     end
 
+    context 'SPANISH dept' do
+      let(:dept_name) { 'SPANISH' }
+      let(:expected_ids) { %w(2015-B-70000) }
+      include_examples 'expected CSV structure'
+      it 'should set DEPT_FORM to SPANISH regardless of DEPT_NAME' do
+        subject.each { |row| expect(row['DEPT_FORM']).to eq 'SPANISH' }
+      end
+      it 'should not prepopulate EVALUATION_TYPE' do
+        subject.each { |row| expect(row['EVALUATION_TYPE']).to be_blank }
+      end
+    end
+
     context 'STAT dept' do
       let(:dept_name) { 'STAT' }
       let(:friendly_dept_name) { 'STATISTICS' }
-      let(:expected_ids) { %w(2015-B-87672 2015-B-87673 2015-B-87675 2015-B-54432 2015-B-54441 2015-B-72199 2015-B-87690 2015-B-87693) }
+      let(:expected_ids) { %w(2015-B-87672 2015-B-87673 2015-B-87675 2015-B-87675_GSI 2015-B-54432 2015-B-54441 2015-B-72199 2015-B-87690 2015-B-87693) }
       before { allow(Oec::CourseCode).to receive(:included?).with('MATH', anything).and_return math_included  }
       let(:math_included) { true }
 
       include_examples 'expected CSV structure'
+      include_examples 'expected DEPT_FORM and EVALUATION_TYPE'
 
       it 'should not include course supervisor assignments' do
         expect(subject.select{ |row| row['EMAIL_ADDRESS'] == 'stat_supervisor@berkeley.edu' }).to be_empty
@@ -206,17 +239,21 @@ describe Oec::SisImportTask do
         expect(crosslisting).to all include({'CROSS_LISTED_FLAG' => 'Y'})
       end
 
-      it 'groups cross-listings together' do
+      it 'groups cross-listings together except for _GSI rows' do
         cross_listed_names = subject.map { |row| row['CROSS_LISTED_NAME'] }.compact.uniq
         cross_listed_names.each do |name|
           index_of_first_listing = subject.index { |row| row['CROSS_LISTED_NAME'] == name }
-          expect(subject[index_of_first_listing + 1]['CROSS_LISTED_NAME']).to eq name
+          if subject[index_of_first_listing]['COURSE_ID'].end_with? '_GSI'
+            expect(subject[index_of_first_listing]['CROSS_LISTED_NAME']).to end_with ' (GSI)'
+          else
+            expect(subject[index_of_first_listing + 1]['CROSS_LISTED_NAME']).to eq name
+          end
         end
       end
 
       it 'sorts within home department by numeric portion of catalog id' do
         stat_catalog_ids = subject.map { |row| row['CATALOG_ID'] if row['DEPT_NAME'] == 'STAT' }.compact
-        expect(stat_catalog_ids).to eq %w(65 65 C205A 206A C236A)
+        expect(stat_catalog_ids).to eq %w(65 65 C205A 206A 206A C236A)
       end
 
       it 'sorts primary sections first' do
