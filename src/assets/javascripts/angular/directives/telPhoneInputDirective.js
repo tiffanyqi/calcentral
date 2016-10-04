@@ -20,14 +20,14 @@ angular.module('calcentral.directives').directive('ccTelPhoneInputDirective', fu
    *  + `valid` boolean property set to true if a pattern was matched, false if
    *   no pattern is matched.
    */
-  var reIntlPhone = /^(\+?((?:\d ?){6,14}\d))$/;
-  var reUsPhone = /^([\d][\W])?(\d{3})\W?[\W]?(\d{3})[\W]?(\d{4})$/;
+  var reIntlPhone = /^(\+?((?:\d ?){6,14}\d))?$/;
+  var reUsPhone = /^([\d][\W])?(\d{3})\W?[\W]?(\d{3})[\W]?(\d{4})?$/;
   var space = ' ';
   var blank = '';
 
   var validPhone = function(phone) {
     var value = (phone || blank).replace(/[\W]{1,}/gm, space).trim();
-    var valid = value && (reUsPhone.test(value) || reIntlPhone.test(value));
+    var valid = reUsPhone.test(value) || reIntlPhone.test(value);
 
     return {
       valid: valid,
