@@ -147,12 +147,9 @@ module Oec
     def set_evaluation_type(course)
       # LAW and SPANISH are special cases that don't use F/G evaluation types.
       return if %w(LAW SPANISH).include? course['dept_form']
-
-      roles = Berkeley::UserRoles.roles_from_campus_row course
-      course['evaluation_type'] = if roles[:student]
-                                    'G'
-                                  elsif roles[:faculty]
-                                    'F'
+      course['evaluation_type'] = case course['affiliations']
+                                    when /STUDENT/ then 'G'
+                                    when /INSTRUCTOR/ then 'F'
                                   end
     end
 
