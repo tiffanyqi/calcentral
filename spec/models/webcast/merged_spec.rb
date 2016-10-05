@@ -92,7 +92,7 @@ describe Webcast::Merged do
     end
 
     context 'two matching course' do
-      let(:ldap_uid) { '18938' }
+      let(:ldap_uid) { '248421' }
       let(:policy) do
         AuthenticationStatePolicy.new(AuthenticationState.new('user_id' => ldap_uid), nil)
       end
@@ -140,12 +140,12 @@ describe Webcast::Merged do
                       {
                         name: 'Geoffrey Nunberg',
                         uid: ldap_uid,
-                        instructor_func: '3'
+                        instructor_func: '5'
                       },
                       {
                         name: 'Nikolai Smith',
                         uid: '1016717',
-                        instructor_func: '2'
+                        instructor_func: '4'
                       }
                     ]
                   }
@@ -158,6 +158,7 @@ describe Webcast::Merged do
         expect_any_instance_of(MyAcademics::Teaching).to receive(:courses_list_from_ccns).with(2014, 'B', [7620]).and_return webcast_eligible
         expect_any_instance_of(AuthenticationStatePolicy).to receive(:can_view_webcast_sign_up?).once.and_return true
       end
+
       it 'returns course media' do
         expect(feed[:videoErrorMessage]).to be_nil
         media = feed[:media]
@@ -181,7 +182,7 @@ describe Webcast::Merged do
 
         # Instructors that can sign up for Webcast
         eligible_for_sign_up = feed[:eligibleForSignUp]
-        expect(eligible_for_sign_up).to have(1).items
+        expect(eligible_for_sign_up).to have(1).item
         expect(eligible_for_sign_up[0][:userCanSignUp]).to be true
         bio_lab = eligible_for_sign_up[0]
         expect(bio_lab[:ccn]).to eq '07620'
@@ -193,7 +194,6 @@ describe Webcast::Merged do
         expect(sign_up_url).to be_url
         expect(sign_up_url).to include('http://', 'signUp', '2014B7620')
         instructors = bio_lab[:webcastAuthorizedInstructors]
-        expect(instructors).to have(2).items
         expect(instructors).to have(2).items
         expect(instructors[0][:name]).to eq 'Paul Duguid'
         expect(instructors[1][:name]).to eq 'Geoffrey Nunberg'

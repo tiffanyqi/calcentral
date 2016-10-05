@@ -122,7 +122,7 @@ module Webcast
     end
 
     def extract_authorized(instructors)
-      instructors ? instructors.select { |instructor| %w(1 3).include? instructor[:instructor_func] } : []
+      instructors ? instructors.select { |i| %w(1 2 3 5).include? i[:instructor_func] } : []
     end
 
     def instance_key
