@@ -25,8 +25,10 @@ describe 'My Academics teaching semesters UI', :testui => true do
             splash_page.basic_auth uid
             status_api_page = ApiMyStatusPage.new(driver)
             status_api_page.get_json(driver)
+            student_api_page = ApiEdosStudentPage.new driver
+            student_api_page.get_json driver
 
-            if status_api_page.is_faculty? && status_api_page.has_academics_tab?
+            if (status_api_page.is_faculty? || status_api_page.has_instructor_history? || student_api_page.affiliation_types.include?('INSTRUCTOR')) && status_api_page.has_academics_tab?
               academics_api_page = ApiMyAcademicsPageSemesters.new(driver)
               academics_api_page.get_json(driver)
               all_semesters = academics_api_page.all_teaching_semesters
