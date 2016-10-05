@@ -18,11 +18,11 @@
         <div>
           <button class="cc-button-link" type="button"
             data-ng-click="emergencyPhone.showEdit(phone)"
-            data-ng-disabled="cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber || emergencyPhone.isAdding || (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Edit</button>
+            data-ng-disabled="cc_page_widget_profile_emergency_contact.$invalid || emergencyPhone.isAdding || (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Edit</button>
           <span> | </span>
           <button class="cc-button-link" type="button"
             data-ng-click="emergencyPhone.deletePhone(phone)"
-            data-ng-disabled="cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber || emergencyPhone.isAdding ||  (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Delete</button>
+            data-ng-disabled="cc_page_widget_profile_emergency_contact.$invalid || emergencyPhone.isAdding ||  (emergencyPhone.items.editorEnabled && !currentObject.isModifying)">Delete</button>
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
 
   <button class="cc-button-link" type="button"
     data-ng-click="emergencyPhone.showAdd()"
-    data-ng-disabled="cc_page_widget_profile_emergency_contact.$error.invalidPhoneNumber || emergencyPhone.items.editorEnabled || currentObject.isAdding"
+    data-ng-disabled="cc_page_widget_profile_emergency_contact.$invalid || emergencyPhone.items.editorEnabled || currentObject.isAdding"
     data-ng-if="currentObject.data.emergencyPhones.length < currentObject.data.addPhoneLimit">
     <i class="fa fa-plus cc-text-small"></i> Add additional phone number
   </button>
