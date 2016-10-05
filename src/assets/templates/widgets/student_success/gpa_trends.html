@@ -3,7 +3,7 @@
   <div data-ng-if="studentSuccess.termGpa.length >= 2">
     <h3>
       GPA Trends
-      <p>(Cumulative <span data-ng-bind="gpaUnits.cumulativeGpa | number:2"></span>)</p>
+      <span data-ng-bind-template="(Cumulative {{gpaUnits.cumulativeGpa | number:2}})"></span>
     </h3>
     <data-cc-line-chart-directive class="cc-student-success-chart-container" data-options="studentSuccess.gpaChart" data-data="highCharts.dataSeries"></data-cc-line-chart-directive>
   </div>

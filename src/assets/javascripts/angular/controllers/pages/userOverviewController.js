@@ -189,6 +189,7 @@ angular.module('calcentral.controllers').controller('UserOverviewController', fu
       $scope.studentSuccess.outstandingBalance = _.get(data, 'outstandingBalance');
       $scope.studentSuccess.termGpa = _.sortBy(data.termGpa, ['termId']);
       parseTermGpa();
+    }).finally(function() {
       $scope.studentSuccess.isLoading = false;
     });
   };
