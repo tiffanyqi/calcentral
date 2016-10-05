@@ -11,7 +11,7 @@ module CalCentralPages
     h1(:page_heading, :xpath => '//h1[contains(.,"My Academics")]')
     h2(:no_data_heading, :xpath => '//h2[contains(text(),"Data not available")]')
     div(:student_semesters, :xpath => '//div[@data-ng-if="api.user.profile.hasStudentHistory && semesters.length"]')
-    div(:teaching_semesters, :xpath => '//div[@data-ng-if="hasTeachingClasses"]')
+    div(:teaching_semesters, :xpath => '//div[contains(@data-ng-if,"hasTeachingClasses")]')
 
     def load_page
       logger.info('Loading My Academics page')
