@@ -7,17 +7,17 @@ module MyAcademics
     # Student Plan Roles represent the type of student based on their student plans
     STUDENT_PLAN_ROLES = {
       plan: [
-        {student_plan_role_code: 'fpf', match: '25000FPFU'},
-        {student_plan_role_code: 'haasFullTimeMba', match: '70141MBAG'},
-        {student_plan_role_code: 'haasEveningWeekendMba', match: '701E1MBAG'},
-        {student_plan_role_code: 'haasExecMba', match: '70364MBAG'},
-        {student_plan_role_code: 'haasMastersFinEng', match: '701F1MFEG'},
-        {student_plan_role_code: 'haasMbaPublicHealth', match: '70141BAPHG'},
-        {student_plan_role_code: 'haasMbaJurisDoctor', match: '70141BAJDG'}
+        {student_plan_role_code: 'fpf', match: '25000FPFU', types: [:enrollment]},
+        {student_plan_role_code: 'haasFullTimeMba', match: '70141MBAG', types: []},
+        {student_plan_role_code: 'haasEveningWeekendMba', match: '701E1MBAG', types: []},
+        {student_plan_role_code: 'haasExecMba', match: '70364MBAG', types: []},
+        {student_plan_role_code: 'haasMastersFinEng', match: '701F1MFEG', types: []},
+        {student_plan_role_code: 'haasMbaPublicHealth', match: '70141BAPHG', types: []},
+        {student_plan_role_code: 'haasMbaJurisDoctor', match: '70141BAJDG', types: []}
       ],
       career: [
-        {student_plan_role_code: 'law', match: 'LAW'},
-        {student_plan_role_code: 'concurrent', match: 'UCBX'},
+        {student_plan_role_code: 'law', match: 'LAW', types: [:enrollment]},
+        {student_plan_role_code: 'concurrent', match: 'UCBX', types: [:enrollment]}
       ]
     }
 
@@ -283,6 +283,7 @@ module MyAcademics
           }
         end
         flat_plan[:role] = get_student_plan_role_code(flat_plan)
+        flat_plan[:enrollmentRole] = get_student_plan_role_code(flat_plan, :enrollment)
         flat_plan[:primary] = !!hub_plan['primary']
         flat_plan[:type] = categorize_plan_type(academic_plan['type'])
 
@@ -297,10 +298,14 @@ module MyAcademics
     end
 
     # Designates CalCentral specific plan role (e.g. 'default', 'law', 'fpf', etc.)
-    def get_student_plan_role_code(plan)
+    def get_student_plan_role_code(plan, type = nil)
       role_codes = []
       STUDENT_PLAN_ROLES.each do |cpp_category, matchers|
-        category_role_codes = matchers.select {|matcher| plan[cpp_category][:code] == matcher[:match]}
+        category_role_codes = matchers.select do |matcher|
+          category_code_match = plan[cpp_category][:code] == matcher[:match]
+          type_match = type.nil? || matcher[:types].include?(type.to_sym)
+          category_code_match && type_match
+        end
         role_codes.concat(category_role_codes)
       end
       role_codes.empty? ? 'default' : role_codes.first[:student_plan_role_code]

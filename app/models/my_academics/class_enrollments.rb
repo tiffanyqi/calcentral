@@ -20,7 +20,7 @@ module MyAcademics
     def grouped_student_plan_roles
       grouped_roles = {}
       active_plans.each do |plan|
-        role_code = plan[:role]
+        role_code = plan[:enrollmentRole]
         career_code = plan[:career][:code]
         role_key = [role_code, career_code]
         grouped_roles[role_key] = { role: role_code, career_code: career_code, academic_plans: [] } if grouped_roles[role_key].blank?
