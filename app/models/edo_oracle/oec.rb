@@ -124,7 +124,7 @@ module EdoOracle
         if (default_code = codes.find { |code| code.catalog_id.blank? }) && (default_code.include_in_oec || import_all)
           #All catalog IDs are included by default; note explicit exclusions
           excluded_catalog_ids = codes.reject(&:include_in_oec).map(&:catalog_id)
-          subclause << "sec.\"displayName\" LIKE '#{SubjectAreas.compress dept_name}%'"
+          subclause << "sec.\"displayName\" LIKE '#{SubjectAreas.compress dept_name} %'"
           if !import_all && excluded_catalog_ids.any?
             excluded_catalog_ids.each do |id|
               subclause << " and sec.\"displayName\" NOT LIKE '%#{id}')"
@@ -134,7 +134,7 @@ module EdoOracle
           #No catalog IDs are included by default; note explicit inclusions
           included_catalog_ids = codes.select(&:include_in_oec).map(&:catalog_id)
           if included_catalog_ids.any?
-            subclause << "sec.\"displayName\" LIKE '#{SubjectAreas.compress dept_name}%' and ("
+            subclause << "sec.\"displayName\" LIKE '#{SubjectAreas.compress dept_name} %' and ("
             subclause << included_catalog_ids.map { |id| "sec.\"displayName\" LIKE '%#{id}'" }.join(' or ')
             subclause << ')'
           end

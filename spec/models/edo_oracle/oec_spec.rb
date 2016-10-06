@@ -18,16 +18,16 @@ describe EdoOracle::Oec do
         ]
       end
       it { should include(
-        "(sec.\"displayName\" LIKE 'CATALAN%')",
-        "(sec.\"displayName\" LIKE 'PORTUG%')",
-        "(sec.\"displayName\" LIKE 'SPANISH%')"
+        "(sec.\"displayName\" LIKE 'CATALAN %')",
+        "(sec.\"displayName\" LIKE 'PORTUG %')",
+        "(sec.\"displayName\" LIKE 'SPANISH %')"
       ) }
-      it { should_not include "(sec.\"displayName\" LIKE 'ILA%')" }
+      it { should_not include "(sec.\"displayName\" LIKE 'ILA %')" }
       it { should_not include 'NOT' }
 
       context 'with import_all flag' do
         let(:import_all) { true }
-        it { should include "(sec.\"displayName\" LIKE 'ILA%')" }
+        it { should include "(sec.\"displayName\" LIKE 'ILA %')" }
       end
     end
 
@@ -40,8 +40,8 @@ describe EdoOracle::Oec do
         ]
       end
       it { should include(
-        "(sec.\"displayName\" LIKE 'INTEGBI%'",
-        "(sec.\"displayName\" LIKE 'BIOLOGY%' and (sec.\"displayName\" LIKE '%1B' or sec.\"displayName\" LIKE '%1BL')"
+        "(sec.\"displayName\" LIKE 'INTEGBI %'",
+        "(sec.\"displayName\" LIKE 'BIOLOGY %' and (sec.\"displayName\" LIKE '%1B' or sec.\"displayName\" LIKE '%1BL')"
       )}
       it { should_not include 'NOT' }
     end
