@@ -29,8 +29,8 @@
       </button>
     </div>
   </div>
-  <div class="cc-page-widget-profile-section-add" data-ng-if="!items.editorEnabled && api.user.profile.actAsOptions.canPost">
-    <button class="cc-button-link" data-ng-click="showAdd()">
+  <div class="cc-page-widget-profile-section-add" data-ng-if="!items.editorEnabled">
+    <button class="cc-button-link" data-ng-click="showAdd()" data-ng-disabled="!api.user.profile.isDirectlyAuthenticated">
       <i class="fa fa-plus"></i> Add <span class="cc-visuallyhidden">Emergency Contact</span>
     </button>
   </div>
