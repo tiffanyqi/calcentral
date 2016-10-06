@@ -10,8 +10,7 @@ module MyAcademics
         CollegeAndLevel,
         TransitionTerm,
         GpaUnits,
-        Semesters,
-        Exams
+        Semesters
       ]
     end
 
