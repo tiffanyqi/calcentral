@@ -31,7 +31,7 @@ module CampusSolutions
       {
         statusCode: 200,
         feed: {
-          resources: cs_links
+          resources: HashConverter.camelize(cs_links)
         }
       }
     end
