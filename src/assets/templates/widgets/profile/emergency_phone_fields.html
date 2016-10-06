@@ -1,7 +1,7 @@
 <div class="cc-page-widget-profile-section-emergency-phone-fields">
   <div data-ng-if="(!phone && emergencyPhone.isAdding) || phone.availablePhoneTypes.length > 0">
     <label for="cc_page_widget_profile_emergency_phone_type">
-      <strong>Phone Type</strong>
+      <strong>Phone Type</strong> <span class="cc-text-light">(Required)</span>
     </label>
   </div>
 
@@ -10,7 +10,7 @@
       <span data-ng-bind="phone.phoneTypeDescr" data-ng-if="phone.availablePhoneTypes.length === 1"></span>
       <div class="cc-select" data-ng-if="phone.availablePhoneTypes.length > 1">
         <select id="cc_page_widget_profile_emergency_phone_type" data-ng-model="phone.phoneType" data-ng-options="type.fieldvalue as type.xlatlongname for type in phone.availablePhoneTypes">
-          <option value="" selected>Choose&hellip;</option>
+          <option value="" disabled selected>Choose&hellip;</option>
         </select>
       </div>
     </div>
@@ -31,7 +31,7 @@
   </div>
   <div>
     <div data-ng-if="!phone && emergencyPhone.isAdding">
-      <input type="text" name="cc_page_widget_profile_emergency_phone_add"
+      <input type="text" name="cc_page_widget_profile_emergency_phone_add" required aria-required="true"
         data-cc-tel-phone-input-directive
         data-ng-model="emergencyPhone.currentObject.data.phone"
       >
@@ -42,7 +42,7 @@
       </p>
     </div>
     <div data-ng-if="phone.isModifying">
-      <input type="text" name="cc_page_widget_profile_emergency_phone_edit"
+      <input type="text" name="cc_page_widget_profile_emergency_phone_edit" required aria-required="true"
         data-cc-tel-phone-input-directive
         data-ng-model="phone.phone"
       >
