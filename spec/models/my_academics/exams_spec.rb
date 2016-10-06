@@ -172,6 +172,17 @@ describe MyAcademics::Exams do
     }
   end
 
+  # example exam with no location
+  let(:no_location_exam) do
+    {
+      :location => nil,
+      :exam_type => 'Y',
+      :exam_date => Time.parse('2016-12-12 00:00:00 UTC'),
+      :exam_start_time=> Time.parse('1900-01-01 19:00:00 UTC'),
+      :exam_end_time=>Time.parse('1900-01-01 22:00:00 UTC'),
+    }
+  end
+
   # example exam with an alternate method
   let(:alternate_exam) do
     {
@@ -431,6 +442,23 @@ describe MyAcademics::Exams do
         }
       end
 
+      let(:chem_3b_ug_class) do
+        {
+          :role=>'Student',:course_code=>'CHEM 3B',:courseCatalog=>'3B',
+          :sections=> [
+            {
+              :is_primary_section=>true,
+              :final_exams => [no_location_exam],
+              :schedules=> {
+                :recurring=>[
+                  {:buildingName=>'Pimentel',:roomNumber=>'1',:schedule=>'MWF 2:00P-2:59P'}
+                ]
+              }
+            }
+          ]
+        }
+      end
+
       let(:no_recurring_ug_class) do
         {
           :role=>'Student',:course_code=>'EWMBA 107',:courseCatalog=>'107',
@@ -459,7 +487,9 @@ describe MyAcademics::Exams do
         expect(spring_courses.length).to eq 3
         expect(spring_courses[0][:exam_location]).to eq 'Kroeber 221'
         expect(spring_courses[0][:exam_date]).to eq 'Mon 12/12'
-        expect(spring_courses[1][:exam_location]).to_not be
+        expect(spring_courses[1][:exam_date]).to eq 'Mon 12/12'
+        expect(spring_courses[1][:exam_location]).to eq 'Location TBD'
+        expect(spring_courses[2][:exam_location]).to_not be
       end
 
       it 'should transition data correctly' do
@@ -532,22 +562,26 @@ describe MyAcademics::Exams do
 
     it 'should parse cs exam dates properly' do
       expect(subject.parse_cs_exam_date(all_exam)).to eq 'Mon 12/12'
+      expect(subject.parse_cs_exam_date(no_location_exam)).to eq 'Mon 12/12'
       expect(subject.parse_cs_exam_date(no_exam)).to eq nil
     end
 
     it 'should parse cs exam times properly' do
       expect(subject.parse_cs_exam_time(all_exam)).to eq '07:00PM-10:00PM'
+      expect(subject.parse_cs_exam_time(no_location_exam)).to eq '07:00PM-10:00PM'
       expect(subject.parse_cs_exam_time(no_exam)).to eq nil
     end
 
     it 'should create cs exam slots properly' do
       expect(subject.parse_cs_exam_slot(all_exam)).to eq Time.parse('2016-12-12 19:00:00')
+      expect(subject.parse_cs_exam_slot(no_location_exam)).to eq Time.parse('2016-12-12 19:00:00')
       expect(subject.parse_cs_exam_slot(alternate_exam)).to eq Time.new(99999998)
       expect(subject.parse_cs_exam_slot(no_exam)).to eq Time.new(99999999)
     end
 
     it 'should choose cs exam locations properly' do
       expect(subject.choose_cs_exam_location(all_exam)).to eq 'Kroeber 221'
+      expect(subject.choose_cs_exam_location(no_location_exam)).to eq 'Location TBD'
       expect(subject.choose_cs_exam_location(alternate_exam)).to eq 'Final exam time not yet provided.'
       expect(subject.choose_cs_exam_location(no_exam)).to eq 'Location TBD'
     end
