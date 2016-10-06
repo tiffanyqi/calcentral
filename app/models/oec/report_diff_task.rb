@@ -105,7 +105,7 @@ module Oec
           validate(dept_code, id[:ccn]) do |errors|
             report(errors, id, :annotation, false, %w(A B GSI CHEM MCB))
             report(errors, id, :ldap_uid, false, (1..99999999))
-            report(errors, row, 'EVALUATION_TYPE', false, %w(F G))
+            report(errors, row, 'EVALUATION_TYPE', false, %w(F G LANG SEMI LECT WRIT 1 1A 2 2A 3 3A 4 4A))
             report(errors, row, 'MODULAR_COURSE', false, %w(Y N y n))
             report(errors, row, 'START_DATE', true)
             report(errors, row, 'END_DATE', true)
