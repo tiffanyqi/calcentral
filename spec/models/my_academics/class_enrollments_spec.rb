@@ -68,6 +68,7 @@ describe MyAcademics::ClassEnrollments do
       type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major" },
       college: "Undergrad Natural Resources",
       role: "default",
+      enrollmentRole: "default",
       primary: true,
     }
   end
@@ -79,6 +80,7 @@ describe MyAcademics::ClassEnrollments do
       type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major" },
       college: "Undergrad Letters & Science",
       role: "default",
+      enrollmentRole: "default",
       primary: true,
     }
   end
@@ -90,6 +92,7 @@ describe MyAcademics::ClassEnrollments do
       type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major"},
       college: "Undergrad Letters & Science",
       role: "default",
+      enrollmentRole: "default",
       primary: true,
     }
   end
@@ -101,6 +104,7 @@ describe MyAcademics::ClassEnrollments do
       type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major"},
       college: "Undergrad Letters & Science",
       role: "fpf",
+      enrollmentRole: "fpf",
       primary: true,
     }
   end
@@ -112,6 +116,7 @@ describe MyAcademics::ClassEnrollments do
       type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major" },
       college: "Graduate Academic Programs",
       role: "default",
+      enrollmentRole: "default",
       primary: true,
     }
   end
@@ -123,6 +128,7 @@ describe MyAcademics::ClassEnrollments do
       type: { code: "MAJ", description: "Major - Regular Acad/Prfnl", category: "Major" },
       college: "Law Academic Programs",
       role: "law",
+      enrollmentRole: "law",
       primary: true,
     }
   end
