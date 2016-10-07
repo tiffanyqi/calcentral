@@ -45,12 +45,17 @@ module MyAcademics
             time: section[:schedules][:recurring].to_a.first.try(:[], :schedule),
             waitlisted: section[:waitlisted]
           }
-          if cs_data_available && section[:final_exams].any?
-            exam = section[:final_exams].first
-            parsed_course[:exam_location] = choose_cs_exam_location(exam)
-            parsed_course[:exam_date] = parse_cs_exam_date(exam)
-            parsed_course[:exam_time] = parse_cs_exam_time(exam)
-            parsed_course[:exam_slot] = parse_cs_exam_slot(exam)
+          if cs_data_available
+            if section[:final_exams].any?
+              exam = section[:final_exams].first
+              parsed_course[:exam_location] = choose_cs_exam_location(exam)
+              parsed_course[:exam_date] = parse_cs_exam_date(exam)
+              parsed_course[:exam_time] = parse_cs_exam_time(exam)
+              parsed_course[:exam_slot] = parse_cs_exam_slot(exam)
+            else
+              parsed_course[:exam_slot] = 'none'
+              parsed_course[:exam_location] = 'No exam.'
+            end
           end
           courses << parsed_course
         end
@@ -77,18 +82,25 @@ module MyAcademics
       academics_data.sort_by{|semester| semester[:timeBucket] == 'current' ? 0 : 1 }
     end
 
-    # Groups exams by exam_slot for conflicts, then sorts by exam_slot for each semester
-    # Adds a new attribute called :exams to display such information
     def sort_exams(semester)
+      semester[:exams] = semester[:courses].reject{|course| course[:exam_slot].nil?}
       if semester[:cs_data_available]
-        # remove all exam slots that aren't datetime from cs
-        semester[:exams] = semester[:courses].reject{|course| course[:exam_slot].nil? || !course[:exam_slot].is_a?(Time)}.group_by{|course| course[:exam_slot]}
-      else # interim, use numbered exam slots as assigned, remove everything else
-        semester[:exams] = semester[:courses].reject{|course| course[:exam_slot].nil? || !course[:exam_slot].is_a?(Integer)}.group_by{|course| course[:exam_slot]}
+        # brings none exam_slots to the bottom
+        semester[:exams] = semester[:courses].sort do |a,b|
+          if a[:exam_slot] == 'none'
+            1
+          elsif b[:exam_slot] == 'none'
+            -1
+          else
+            a[:exam_slot] <=> b[:exam_slot]
+          end
+        end
+      else # interim
+        semester[:exams].sort!{|a,b| a[:exam_slot] <=> b[:exam_slot]}
       end
-      # sort exams by datetime or by integer, depending on what was preserved
-      semester[:exams] = Hash[semester[:exams].sort_by {|k,v| k }]
+      semester[:exams] = semester[:exams].group_by{|course| course[:exam_slot]}
     end
+
 
     ## Support Functions
 
@@ -125,10 +137,8 @@ module MyAcademics
         return Time.parse(date.strftime('%y-%m-%d') + ' ' + time.strftime('%H:%M'))
       elsif date
         return Time.parse(date.strftime('%y-%m-%d'))
-      elsif exam[:exam_type] == 'A' # alternate exams that aren't included
-        return Time.new(99999998)
-      else # no exams should be at the end
-        return Time.new(99999999)
+      else
+        return 'none'
       end
     end
 
@@ -136,7 +146,7 @@ module MyAcademics
       if exam[:location]
         return exam[:location]
       elsif exam[:exam_type] == 'A'
-        return 'Final exam time not yet provided.'
+        return 'Final exam information not available. Please consult instructors.'
       else
         return 'Location TBD'
       end
