@@ -193,6 +193,16 @@ describe MyAcademics::CollegeAndLevel do
         expect(matcher).to have_key(:match)
       end
     end
+
+    it 'includes types array' do
+      subject.class::STUDENT_PLAN_ROLES.values_at(:plan, :career).flatten.each do |matcher|
+        expect(matcher).to have_key(:types)
+        expect(matcher[:types]).to be_an Array
+        matcher[:types].each do |type|
+          expect(type).to be_a Symbol
+        end
+      end
+    end
   end
 
   context 'when providing student plan role codes' do
@@ -320,6 +330,7 @@ describe MyAcademics::CollegeAndLevel do
         expect(feed[:collegeAndLevel][:plans][0][:expectedGraduationTerm][:code]).to eq '2202'
         expect(feed[:collegeAndLevel][:plans][0][:expectedGraduationTerm][:name]).to eq 'Spring 2020'
         expect(feed[:collegeAndLevel][:plans][0][:role]).to eq 'default'
+        expect(feed[:collegeAndLevel][:plans][0][:enrollmentRole]).to eq 'default'
         expect(feed[:collegeAndLevel][:plans][0][:primary]).to eq true
         expect(feed[:collegeAndLevel][:plans][0][:type][:code]).to eq 'MAJ'
         expect(feed[:collegeAndLevel][:plans][0][:type][:category]).to eq 'Major'
@@ -330,6 +341,7 @@ describe MyAcademics::CollegeAndLevel do
         expect(feed[:collegeAndLevel][:plans][1][:plan][:code]).to eq '25971U'
         expect(feed[:collegeAndLevel][:plans][1][:expectedGraduationTerm]).to eq nil
         expect(feed[:collegeAndLevel][:plans][1][:role]).to eq 'default'
+        expect(feed[:collegeAndLevel][:plans][1][:enrollmentRole]).to eq 'default'
         expect(feed[:collegeAndLevel][:plans][1][:primary]).to eq false
         expect(feed[:collegeAndLevel][:plans][1][:type][:code]).to eq 'SP'
         expect(feed[:collegeAndLevel][:plans][1][:type][:category]).to eq 'Major'
@@ -340,6 +352,7 @@ describe MyAcademics::CollegeAndLevel do
         expect(feed[:collegeAndLevel][:plans][2][:plan][:code]).to eq '25090U'
         expect(feed[:collegeAndLevel][:plans][2][:expectedGraduationTerm]).to eq nil
         expect(feed[:collegeAndLevel][:plans][2][:role]).to eq 'default'
+        expect(feed[:collegeAndLevel][:plans][2][:enrollmentRole]).to eq 'default'
         expect(feed[:collegeAndLevel][:plans][2][:primary]).to eq false
         expect(feed[:collegeAndLevel][:plans][2][:type][:code]).to eq 'MIN'
         expect(feed[:collegeAndLevel][:plans][2][:type][:category]).to eq 'Minor'
@@ -436,6 +449,7 @@ describe MyAcademics::CollegeAndLevel do
         expect(feed[:collegeAndLevel][:plans][0][:plan][:code]).to eq '84501JDPPG'
         expect(feed[:collegeAndLevel][:plans][0][:expectedGraduationTerm]).to eq nil
         expect(feed[:collegeAndLevel][:plans][0][:role]).to eq 'law'
+        expect(feed[:collegeAndLevel][:plans][0][:enrollmentRole]).to eq 'law'
         expect(feed[:collegeAndLevel][:plans][0][:primary]).to eq true
         expect(feed[:collegeAndLevel][:plans][0][:type][:code]).to eq 'MAJ'
         expect(feed[:collegeAndLevel][:plans][0][:type][:category]).to eq 'Major'
@@ -445,6 +459,7 @@ describe MyAcademics::CollegeAndLevel do
         expect(feed[:collegeAndLevel][:plans][1][:plan][:code]).to eq '82790PPJDG'
         expect(feed[:collegeAndLevel][:plans][1][:expectedGraduationTerm]).to eq nil
         expect(feed[:collegeAndLevel][:plans][1][:role]).to eq 'default'
+        expect(feed[:collegeAndLevel][:plans][1][:enrollmentRole]).to eq 'default'
         expect(feed[:collegeAndLevel][:plans][1][:primary]).to eq true
         expect(feed[:collegeAndLevel][:plans][1][:type][:code]).to eq 'MAJ'
         expect(feed[:collegeAndLevel][:plans][1][:type][:category]).to eq 'Major'
@@ -666,6 +681,10 @@ describe MyAcademics::CollegeAndLevel do
       expect(flattened_status[:role]).to eq 'default'
     end
 
+    it 'includes the students plan enrollment role' do
+      expect(flattened_status[:enrollmentRole]).to eq 'default'
+    end
+
     it 'includes the primary plan boolean' do
       expect(flattened_status[:primary]).to eq true
     end
@@ -682,95 +701,89 @@ describe MyAcademics::CollegeAndLevel do
   end
 
   context 'when determining the student plan role code' do
-    it 'identifies a default plan in undergrad career' do
-      plan = {
-        career: { code: 'UGRD', description: 'Undergraduate' },
-        plan: { code: '25699U', description: 'Political Science'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'default'
+    let(:plan) { { career: { code: 'GRAD' }, plan: { code: '70141MBAG' } } }
+
+    context 'when role type not specified' do
+      let(:plan_role_code) { subject.get_student_plan_role_code(plan) }
+
+      it 'identifies a default plan in undergrad career' do
+        plan[:career][:code] = 'UGRD'
+        plan[:plan][:code] = '25699U'
+        expect(plan_role_code).to eq 'default'
+      end
+
+      it 'identifies a default plan in graduate career' do
+        plan[:career][:code] = 'GRAD'
+        plan[:plan][:code] = '16290PHDG'
+        expect(plan_role_code).to eq 'default'
+      end
+
+      it 'identifies a berkeley law career plan' do
+        plan[:career][:code] = 'LAW'
+        plan[:plan][:code] = '842C1JSDG'
+        expect(plan_role_code).to eq 'law'
+      end
+
+      it 'identifies a concurrent enrollment plan' do
+        plan[:career][:code] = 'UCBX'
+        plan[:plan][:code] = '30XCECCENX'
+        expect(plan_role_code).to eq 'concurrent'
+      end
+
+      it 'identifies a fall program for freshmen plan' do
+        plan[:career][:code] = 'UGRD'
+        plan[:plan][:code] = '25000FPFU'
+        expect(plan_role_code).to eq 'fpf'
+      end
+
+      it 'identifies a Haas Business School Fulltime MBA plan' do
+        plan[:career][:code] = 'GRAD'
+        plan[:plan][:code] = '70141MBAG'
+        expect(plan_role_code).to eq 'haasFullTimeMba'
+      end
+
+      it 'identifies a Haas Business School Evening and Weekend MBA plan' do
+        plan[:career][:code] = 'GRAD'
+        plan[:plan][:code] = '701E1MBAG'
+        expect(plan_role_code).to eq 'haasEveningWeekendMba'
+      end
+
+      it 'identifies a Haas Business School Executive MBA plan' do
+        plan[:career][:code] = 'GRAD'
+        plan[:plan][:code] = '70364MBAG'
+        expect(plan_role_code).to eq 'haasExecMba'
+      end
+
+      it 'identifies a Haas Business School Masters of Financial Engineering plan' do
+        plan[:career][:code] = 'GRAD'
+        plan[:plan][:code] = '701F1MFEG'
+        expect(plan_role_code).to eq 'haasMastersFinEng'
+      end
+
+      it 'identifies a Haas Business School Business Admin MBA-MPH plan' do
+        plan[:career][:code] = 'GRAD'
+        plan[:plan][:code] = '70141BAPHG'
+        expect(plan_role_code).to eq 'haasMbaPublicHealth'
+      end
+
+      it 'identifies a Haas Business School Business Admin MBA-JD plan' do
+        plan[:career][:code] = 'GRAD'
+        plan[:plan][:code] = '70141BAJDG'
+        expect(plan_role_code).to eq 'haasMbaJurisDoctor'
+      end
     end
 
-    it 'identifies a default plan in graduate career' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        plan: { code: '16290PHDG', description: 'Electrical Eng & Comp Sci PhD'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'default'
-    end
+    context 'when enrollment role type specified' do
+      let(:role_type) { :enrollment }
+      let(:plan_role_code) { subject.get_student_plan_role_code(plan, role_type) }
 
-    it 'identifies a berkeley law career plan' do
-      plan = {
-        career: { code: 'LAW', description: 'Law' },
-        plan: { code: '842C1JSDG', description: 'Doctor of Science of Law JSD'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'law'
-    end
-
-    it 'identifies a concurrent enrollment plan' do
-      plan = {
-        career: { code: 'UCBX', description: 'UC Berkeley Extension' },
-        plan: { code: '30XCECCENX', description: 'UCBX Concurrent Enrollment'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'concurrent'
-    end
-
-    it 'identifies a fall program for freshmen plan' do
-      plan = {
-        career: { code: 'UGRD', description: 'Undergraduate' },
-        plan: { code: '25000FPFU', description: 'L&S Undcl Fall Pgm Freshmen UG'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'fpf'
-    end
-
-    it 'identifies a Haas Business School Full Time MBA plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        plan: { code: '70141MBAG', description: 'Business Administration MBA'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haasFullTimeMba'
-    end
-
-    it 'identifies a Haas Business School Evening and Weekend MBA plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        plan: { code: '701E1MBAG', description: 'Berkeley MBA for Executives'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haasEveningWeekendMba'
-    end
-
-    it 'identifies a Haas Business School Executive MBA plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        plan: { code: '70364MBAG', description: 'Berkeley MBA for Executives'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haasExecMba'
-    end
-
-    it 'identifies a Haas Business School Masters of Financial Engineering plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        program: { code: 'GSSDP', description: 'Graduate Self-Supporting Pgms' },
-        plan: { code: '701F1MFEG', description: 'Financial Engineering MFE'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haasMastersFinEng'
-    end
-
-    it 'identifies a Haas Business School Business Admin MBA-MPH plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        program: { code: 'GPRFL', description: 'Graduate Professional Programs' },
-        plan: { code: '70141BAPHG', description: 'Business Admin MBA-MPH CDP'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haasMbaPublicHealth'
-    end
-
-    it 'identifies a Haas Business School Business Admin MBA-JD plan' do
-      plan = {
-        career: { code: 'GRAD', description: 'Graduate' },
-        program: { code: 'GPRFL', description: 'Graduate Professional Programs' },
-        plan: { code: '70141BAJDG', description: 'Business Admin MBA-JD CDP'}
-      }
-      expect(subject.get_student_plan_role_code(plan)).to eq 'haasMbaJurisDoctor'
+      it 'identifies Haas Business School plans as default' do
+        haas_plan_codes = ['70141MBAG', '701E1MBAG', '70364MBAG', '701F1MFEG', '70141BAPHG', '70141BAJDG']
+        haas_plan_codes.each do |haas_plan_code|
+          plan_hash = { career: { code: 'GRAD' }, plan: { code: haas_plan_code } }
+          expect(plan_role_code).to eq 'default'
+        end
+      end
     end
   end
 
