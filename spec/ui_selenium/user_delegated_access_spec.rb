@@ -241,7 +241,7 @@ describe 'Delegated access', :testui => true do
                     # Final Exams
                     shows_exams = @final_exams_card.all_exam_courses.any?
                     if @academics_api.has_exam_schedules
-                      it ("shows delegate UID #{uid} the final exams for UID #{student_uid}") { expect(shows_exams).to be true }
+                      it ("shows delegate UID #{uid} no final exams for UID #{student_uid}") { expect(shows_exams).to be false }
                     end
 
                     # University Requirements
