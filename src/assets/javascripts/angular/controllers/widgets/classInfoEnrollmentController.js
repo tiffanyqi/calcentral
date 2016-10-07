@@ -23,7 +23,7 @@ angular.module('calcentral.controllers').controller('ClassInfoEnrollmentControll
   };
 
   $scope.tableSort = {
-    'column': ['!is_primary', 'ccn'],
+    'column': ['!is_primary', 'section_label'],
     'reverse': false
   };
 
