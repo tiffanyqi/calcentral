@@ -869,41 +869,9 @@
       "curr": false,
       "time_bucket": "future",
       "exams": {
-        "5": [
+        "2017-05-05": [
           {
-            "name": "INTEGBI 35AC",
-            "number": 35,
-            "time": "TuTh 2:00P-3:29P",
-            "waitlisted": null,
-            "exam_location": "",
-            "exam_time": "8-11A",
-            "exam_slot": 5,
-            "exam_date": "Tue 12/13"
-          },
-          {
-            "name": "POLI SCI 112B",
-            "number": 112,
-            "time": "TuTh 5:00P-6:29P",
-            "waitlisted": true,
-            "exam_location": "",
-            "exam_time": "11:30-2:30P",
-            "exam_slot": 14,
-            "exam_date": "Thu 12/15"
-          }
-        ],
-        "13": [
-          {
-            "name": "MATH 53",
-            "number": 53,
-            "time": "MWF 4:00P-4:59P",
-            "waitlisted": null,
-            "exam_location": "",
-            "exam_time": "8-11A",
-            "exam_slot": 13,
-            "exam_date": "Thu 12/15"
-          },
-          {
-            "name": "MATH 54",
+            "name": "INTEGBI 54",
             "number": 54,
             "time": "MWF 4:00P-4:59P",
             "waitlisted": null,
@@ -911,6 +879,36 @@
             "exam_time": "8-11A",
             "exam_slot": 13,
             "exam_date": "Thu 12/15"
+          }
+        ],
+        "none": [
+          {
+            "name": "INTEGBI 35AC",
+            "number": 35,
+            "time": "TuTh 2:00P-3:29P",
+            "waitlisted": null,
+            "exam_location": "Final exam information not available. Please consult instructors.",
+            "exam_time": null,
+            "exam_slot": 5,
+            "exam_date": null
+          },
+          {
+            "name": "POLI SCI 112B",
+            "number": 112,
+            "time": "TuTh 5:00P-6:29P",
+            "waitlisted": true,
+            "exam_location": "No exam.",
+            "exam_slot": 14
+          },
+          {
+            "name": "INTEGBI 35AC",
+            "number": 35,
+            "time": "TuTh 2:00P-3:29P",
+            "waitlisted": null,
+            "exam_location": "Final exam information not available. Please consult instructors.",
+            "exam_time": null,
+            "exam_slot": 5,
+            "exam_date": null
           }
         ]
       }
