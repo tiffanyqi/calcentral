@@ -79,4 +79,12 @@ class AuthenticationStatePolicy
     feature_flag.present? && feature_flag && (can_administrate? || can_view_as? || can_add_current_official_sections?)
   end
 
+  def can_view_other_user_photo?
+    real_auth = @user.real_user_auth
+    return false unless real_auth.active?
+    attributes = User::AggregatedAttributes.new(@user.user_id).get_feed
+    has_advisor_role = attributes.try(:[], :roles).try(:[], :advisor)
+    real_auth.is_superuser? || has_advisor_role
+  end
+
 end
