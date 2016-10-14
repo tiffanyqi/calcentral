@@ -1,47 +1,55 @@
 #!/bin/bash
-# Script to start a shared deployment of CalCentral.
+
+######################################################
+#
+# Start CalCentral, running on Torquebox
+#
+######################################################
 
 cd $( dirname "${BASH_SOURCE[0]}" )/..
 
-LOG=`date +"$PWD/log/start-stop_%Y-%m-%d.log"`
-TORQUEBOX_LOG=`date +"$PWD/log/torquebox_%Y-%m-%d.log"`
+LOG=`date +"${PWD}/log/start-stop_%Y-%m-%d.log"`
+TORQUEBOX_LOG=`date +"${PWD}/log/torquebox_%Y-%m-%d.log"`
 
-LOGIT="tee -a $LOG"
+LOGIT="tee -a ${LOG}"
 
-# Kill all instances of torquebox if there are any running.
-echo | $LOGIT
-echo "------------------------------------------" | $LOGIT
-echo "`date`: Stopping running instances of CalCentral..." | $LOGIT
+# Kill active Torquebox processes, if any.
+echo | ${LOGIT}
+echo "------------------------------------------" | ${LOGIT}
+echo "`date`: Stopping running instances of CalCentral..." | ${LOGIT}
 ./script/stop-torquebox.sh
 
 # Enable rvm and use the correct Ruby version and gem set.
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
-source .rvmrc
+[[ -s "${HOME}/.rvm/scripts/rvm" ]] && . "${HOME}/.rvm/scripts/rvm"
+source ../.rvmrc
 
 export RAILS_ENV=${RAILS_ENV:-production}
 
-echo | $LOGIT
-echo "------------------------------------------" | $LOGIT
-echo "`date`: Starting CalCentral..." | $LOGIT
-OPTS=${CALCENTRAL_JRUBY_OPTS:="-Xcompile.invokedynamic=false -Xcext.enabled=true -J-Djruby.thread.pool.enabled=true -J-Djava.io.tmpdir=$PWD/tmp"}
-export JRUBY_OPTS=$OPTS
+echo | ${LOGIT}
+echo "------------------------------------------" | ${LOGIT}
+echo "`date`: Starting CalCentral..." | ${LOGIT}
+OPTS=${CALCENTRAL_JRUBY_OPTS:="-Xcompile.invokedynamic=false -Xcext.enabled=true -J-Djruby.thread.pool.enabled=true -J-Djava.io.tmpdir=${PWD}/tmp"}
+export JRUBY_OPTS=${OPTS}
 
-# Limit Metaspace size to reduce potential impact on system memory.
-JVM_OPTS=${CALCENTRAL_JVM_OPTS:="\-server \-verbose:gc \-XX:MaxMetaspaceSize=1024m \-XX:+PrintGCDateStamps \-XX:+PrintGCCause \-XX:+PrintGCDetails \-XX:+UseConcMarkSweepGC \-Xms3000m \-Xmx3000m \-Xmn500m \-XX:ReservedCodeCacheSize=256m \-XX:+UseCodeCacheFlushing"}
+# The CALCENTRAL_JVM_OPTS env variable (optional) will override default JVM args
+JVM_OPTS=${CALCENTRAL_JVM_OPTS:="\-server \-verbose:gc \-Xmn500m \-Xms3000m \-Xmx3000m \-XX:+CMSParallelRemarkEnabled \-XX:+CMSScavengeBeforeRemark \-XX:+PrintGCCause \-XX:+PrintGCDateStamps \-XX:+PrintGCDetails \-XX:+ScavengeBeforeFullGC \-XX:+UseCMSInitiatingOccupancyOnly \-XX:+UseCodeCacheFlushing \-XX:+UseConcMarkSweepGC \-XX:CMSInitiatingOccupancyFraction=70 \-XX:MaxMetaspaceSize=1024m \-XX:ReservedCodeCacheSize=256m"}
+
 LOG_DIR=${CALCENTRAL_LOG_DIR:=`pwd`"/log"}
 MAX_THREADS=${CALCENTRAL_MAX_THREADS:="90"}
-export CALCENTRAL_LOG_DIR=$LOG_DIR
-IP_ADDR=`/sbin/ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
+export CALCENTRAL_LOG_DIR=${LOG_DIR}
+IP_ADDR=`/sbin/ifconfig | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
 
 cd deploy
 
 JBOSS_HOME=`bundle exec torquebox env jboss_home`
-cp ~/.calcentral_config/standalone-ha.xml $JBOSS_HOME/standalone/configuration/
+cp ~/.calcentral_config/standalone-ha.xml ${JBOSS_HOME}/standalone/configuration/
 
-nohup bundle exec torquebox run -b $IP_ADDR -p=3000 --jvm-options="$JVM_OPTS" --clustered --max-threads=$MAX_THREADS < /dev/null >> $TORQUEBOX_LOG 2>> $LOG  &
+nohup bundle exec torquebox run -b ${IP_ADDR} -p=3000 --jvm-options="${JVM_OPTS}" --clustered --max-threads=${MAX_THREADS} < /dev/null >> ${TORQUEBOX_LOG} 2>> ${LOG} &
 cd ..
 
-# now check if the app is alive (which will also warm up caches)
+# Verify that CalCentral is alive and warm up caches.
 ./script/check-alive.sh || exit 1
 
 ./script/init.d/calcentral online
+
+exit 0
