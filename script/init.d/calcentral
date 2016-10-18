@@ -1,116 +1,118 @@
 #!/bin/bash
-# Startup script for calcentral
+
+######################################################
+#
+# init.d script for CalCentral
+#
 # chkconfig: 2345 90 05
 # description: start script for calcentral
 # processname: calcentral
+#
+######################################################
 
-# Customize the following variables
 RUN_AS_USER="app_calcentral"
-CC_BASE="$HOME/calcentral"
-START_SCRIPT="$CC_BASE/script/start-torquebox.sh"
-STOP_SCRIPT="$CC_BASE/script/stop-torquebox.sh"
+BASE="${HOME}/calcentral"
+START_SCRIPT="${BASE}/script/start-torquebox.sh"
+STOP_SCRIPT="${BASE}/script/stop-torquebox.sh"
 DOCROOT="/var/www/html/calcentral"
-OFFLINE_FILE="$DOCROOT/calcentral-in-maintenance"
-MAINT_HTML="$DOCROOT/index_maintenance.html"
-EMERGENCY_HTML="$DOCROOT/index_emergency.html"
-INDEX_HTML="$DOCROOT/index.html"
-RM="/bin/rm"
-CP="/bin/cp -p"
-TOUCH="/bin/touch"
-HOSTNAME=`uname -n`
+OFFLINE_FILE="${DOCROOT}/calcentral-in-maintenance"
+MAINT_HTML="${DOCROOT}/index_maintenance.html"
+EMERGENCY_HTML="${DOCROOT}/index_emergency.html"
+INDEX_HTML="${DOCROOT}/index.html"
 
 if [ -x "/usr/bin/id" ]; then
-  CURR_USER=`/usr/bin/id -u -n`
+  CURR_USER="$(/usr/bin/id -u -n)"
 else
-  CURR_USER="$USER"
+  CURR_USER="${USER}"
 fi
 
-if [ $CURR_USER != "$RUN_AS_USER" ]; then
-  echo "Only $RUN_AS_USER can execute this script"
+if [ "${CURR_USER}" != "${RUN_AS_USER}" ]; then
+  echo "Only ${RUN_AS_USER} can execute this script"
   exit 1
 fi
 
-if [[ "${HOSTNAME}" = *calcentral-*-01\.ist.berkeley.edu ]]; then
-  NODEONE="yes"
+if [[ "$(uname -n)" = *calcentral-*-01\.ist.berkeley.edu ]]; then
+  NODE_ONE="yes"
 fi
 
 online() {
-    if [ -f $OFFLINE_FILE ]; then
-      $RM $OFFLINE_FILE
-    fi
+  if [ -f "${OFFLINE_FILE}" ]; then
+    rm "${OFFLINE_FILE}"
+  fi
 }
 
 offline () {
-    $TOUCH $OFFLINE_FILE
+  touch "${OFFLINE_FILE}"
 }
 
 maint () {
-    $CP $MAINT_HTML $INDEX_HTML
-    offline
+  cp -p "${MAINT_HTML}" "${INDEX_HTML}"
+  offline
 }
 
 emergency () {
-    $CP $EMERGENCY_HTML $INDEX_HTML
-    offline
+  cp -p "${EMERGENCY_HTML}" "${INDEX_HTML}"
+  offline
 }
 
 start() {
-  if [ ! -x "$START_SCRIPT" ]; then
-    echo "$START_SCRIPT doesn't exist or is not executable"
+  if [ ! -x "${START_SCRIPT}" ]; then
+    echo "${START_SCRIPT} does not exist or is not executable"
     exit 1
   fi
   echo "Starting calcentral..."
-  $START_SCRIPT || exit 1
+  ${START_SCRIPT} || exit 1
 }
 
 stop() {
-  if [ ! -x "$STOP_SCRIPT" ]; then
-    echo "$STOP_SCRIPT doesn't exist or is not executable"
+  if [ ! -x "${STOP_SCRIPT}" ]; then
+    echo "${STOP_SCRIPT} does not exist or is not executable"
     exit 1
   fi
   echo "Shutting down calcentral..."
-  $STOP_SCRIPT
+  ${STOP_SCRIPT}
 }
 
 status() {
   # The return value of this function may be used by other scripts
-  JPS_RESULTS=`jps -mlv | grep torquebox | cut -d ' ' -f 1`
-  if [ -n "$JPS_RESULTS" ]; then
-    echo "PID: $JPS_RESULTS"
+  JPS_RESULTS=$(jps -mlv | grep torquebox | cut -d ' ' -f 1)
+
+  if [ -n "${JPS_RESULTS}" ]; then
+    echo "PID: ${JPS_RESULTS}"
   else
     echo "PID: no pid found"
   fi
 }
 
-case "$1" in
+case "${1}" in
   start)
-        start
-        ;;
+    start
+    ;;
   stop)
-        stop
-        ;;
+    stop
+    ;;
   restart)
-        stop
-        sleep 10
-        start
-        ;;
+    stop
+    sleep 10
+    start
+    ;;
   status)
-        status
-        ;;
+    status
+    ;;
   online)
-        online
-        ;;
+    online
+    ;;
   offline)
-        offline
-        ;;
+    offline
+    ;;
   maint)
-        maint
-        ;;
+    maint
+    ;;
   emergency)
-        emergency
-        ;;
+    emergency
+    ;;
   *)
-        echo "Usage: $0 {start|stop|restart|status|online|offline|maint|emergency}"
+    echo "Usage: ${0} {start|stop|restart|status|online|offline|maint|emergency}"
 esac
 
-exit
+exit 0

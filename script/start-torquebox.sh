@@ -21,7 +21,7 @@ echo "`date`: Stopping running instances of CalCentral..." | ${LOGIT}
 
 # Enable rvm and use the correct Ruby version and gem set.
 [[ -s "${HOME}/.rvm/scripts/rvm" ]] && . "${HOME}/.rvm/scripts/rvm"
-source ../.rvmrc
+source "${PWD}/.rvmrc"
 
 export RAILS_ENV=${RAILS_ENV:-production}
 
